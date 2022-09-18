@@ -7,8 +7,10 @@
 
 import Foundation
 
-enum Types: String {
-    case DMSansBold = "DMSans-Bold"
+enum SFProText: String {
+    case bold = "SFProText-Bold"
+    case medium = "SFProText-Medium"
+    case semibold = "SFProText-Semibold"
     var value: String {
         self.rawValue
     }

@@ -23,6 +23,30 @@ struct FrameModifier: ViewModifier {
 
 extension View {
     
+    /// Sets the Height to a fraction of maximum space available in Y axis
+    func fillHeightFraction(
+        fraction: Double,
+        alignment: Alignment = .center
+    ) -> some View {
+        self.frame(
+            height: fraction * Dimensions.Screen.height,
+            alignment: alignment
+        )
+    }
+    
+    /// Sets the Width and Height of View
+    func size(
+        length: CGFloat,
+        alignment: Alignment = .center
+    ) -> some View {
+        self.frame(
+            width: length,
+            height: length,
+            alignment: alignment
+        )
+    }
+    
+    /// Sets the Height to maximum space available in Y axis
     func fillMaxHeight(
         alignment: Alignment = .center
     ) -> some View {
@@ -35,6 +59,7 @@ extension View {
         )
     }
     
+    /// Sets the Width to maximum space available in X axis
     func fillMaxWidth(
         alignment: Alignment = .center
     ) -> some View {
@@ -47,6 +72,7 @@ extension View {
         )
     }
     
+    /// Sets the Width and Height to maximum space available in both X and Y axis
     func fillMaxSize(
         alignment: Alignment = .center
     ) -> some View {

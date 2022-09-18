@@ -49,12 +49,12 @@ extension View {
     ///
     /// - Returns: A Text View with new Style
     func textStyle(
-        foregroundColor: Colors = .primary,
-        font: Types = .DMSansBold,
+        foregroundColor: Colors = .onSurface,
+        font: SFProText = .semibold,
         size: Int,
         maxWidth: CGFloat? = nil,
         alignment: Alignment = .leading,
-        lineLimit: Int? = nil,
+        lineLimit: Int? = 1,
         lineSpacing: CGFloat = 0
     ) -> some View {
         self.modifier(
@@ -70,4 +70,27 @@ extension View {
         )
     }
     
+}
+
+extension String {
+    
+    /// Capitalizes first letter of word
+    func firstCap() -> String {
+        self.prefix(1).capitalized + dropFirst()
+    }
+    
+}
+
+/**
+ Formats the label for Preview
+ ```
+ "picker", "wheel"     = "Picker / Wheel"
+ "picker", "segmented" = "Picker / Segmeted"
+ "picker", "inline"    = "Picker / Inline"
+ ```
+*/
+func displayName(_ components: String...) -> String {
+    components.reduce("") { acc, component in
+        acc + ((acc.isEmpty) ? "" : " / ") + component
+    }
 }

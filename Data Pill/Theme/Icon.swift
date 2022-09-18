@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum Icons: String {
-    case icon = "iconName"
+    case navigateIcon = "Right Arrow Icon"
     var image: Image {
         Image(self.rawValue)
     }

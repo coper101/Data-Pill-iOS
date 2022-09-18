@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct Data_PillApp: App {
+    var appState: AppState = .init()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .environmentObject(appState)
         }
     }
 }

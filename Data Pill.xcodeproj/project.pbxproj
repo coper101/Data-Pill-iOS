@@ -18,9 +18,17 @@
 		27801DC528D6C96800201339 /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DC428D6C96800201339 /* Frame.swift */; };
 		27801DC728D6C96800201339 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DC628D6C96800201339 /* Color.swift */; };
 		27801DC928D6C96800201339 /* Data_PillApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DC828D6C96800201339 /* Data_PillApp.swift */; };
-		27801DCB28D6C96800201339 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DCA28D6C96800201339 /* ContentView.swift */; };
 		27801DCD28D6C96B00201339 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27801DCC28D6C96B00201339 /* Assets.xcassets */; };
 		27801DD028D6C96B00201339 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27801DCF28D6C96B00201339 /* Preview Assets.xcassets */; };
+		27801DDC28D6CF3900201339 /* SFProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27801DD928D6CF3900201339 /* SFProText-Bold.ttf */; };
+		27801DDD28D6CF3900201339 /* SFProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27801DDA28D6CF3900201339 /* SFProText-Medium.ttf */; };
+		27801DDE28D6CF3900201339 /* SFProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27801DDB28D6CF3900201339 /* SFProText-Semibold.ttf */; };
+		27801DE228D6D15000201339 /* ItemCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE128D6D15000201339 /* ItemCardView.swift */; };
+		27801DE428D6F01900201339 /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE328D6F01900201339 /* Modifier.swift */; };
+		27801DE628D6F59700201339 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE528D6F59700201339 /* PillView.swift */; };
+		27801DE828D7215D00201339 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE728D7215D00201339 /* Enums.swift */; };
+		27801DEA28D72A6600201339 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE928D72A6600201339 /* DateFormatter.swift */; };
+		27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DEB28D73AC900201339 /* UsedCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,9 +44,18 @@
 		27801DC428D6C96800201339 /* Frame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Frame.swift; sourceTree = "<group>"; };
 		27801DC628D6C96800201339 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		27801DC828D6C96800201339 /* Data_PillApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_PillApp.swift; sourceTree = "<group>"; };
-		27801DCA28D6C96800201339 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		27801DCC28D6C96B00201339 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27801DCF28D6C96B00201339 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		27801DD928D6CF3900201339 /* SFProText-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Bold.ttf"; sourceTree = "<group>"; };
+		27801DDA28D6CF3900201339 /* SFProText-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Medium.ttf"; sourceTree = "<group>"; };
+		27801DDB28D6CF3900201339 /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
+		27801DDF28D6CF4F00201339 /* Data-Pill-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Data-Pill-Info.plist"; sourceTree = SOURCE_ROOT; };
+		27801DE128D6D15000201339 /* ItemCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCardView.swift; sourceTree = "<group>"; };
+		27801DE328D6F01900201339 /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
+		27801DE528D6F59700201339 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
+		27801DE728D7215D00201339 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		27801DE928D72A6600201339 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		27801DEB28D73AC900201339 /* UsedCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,14 +88,14 @@
 		27801DAE28D6C96800201339 /* Data Pill */ = {
 			isa = PBXGroup;
 			children = (
+				27801DDF28D6CF4F00201339 /* Data-Pill-Info.plist */,
 				27801DBE28D6C96800201339 /* LaunchScreen.storyboard */,
-				27801DC828D6C96800201339 /* Data_PillApp.swift */,
-				27801DCA28D6C96800201339 /* ContentView.swift */,
-				27801DCC28D6C96B00201339 /* Assets.xcassets */,
+				27801DD628D6C9F200201339 /* App */,
 				27801DAF28D6C96800201339 /* Views */,
 				27801DB528D6C96800201339 /* Models */,
 				27801DB828D6C96800201339 /* Utils */,
 				27801DBB28D6C96800201339 /* Theme */,
+				27801DD728D6C9FB00201339 /* Assets */,
 				27801DCE28D6C96B00201339 /* Preview Content */,
 			);
 			path = "Data Pill";
@@ -88,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				27801DB028D6C96800201339 /* AppView.swift */,
+				27801DE028D6D12C00201339 /* Reusables */,
 				27801DB228D6C96800201339 /* (1) Home */,
 			);
 			path = Views;
@@ -97,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				27801DB328D6C96800201339 /* HomeView.swift */,
+				27801DEB28D73AC900201339 /* UsedCardView.swift */,
 			);
 			path = "(1) Home";
 			sourceTree = "<group>";
@@ -115,6 +134,9 @@
 				27801DB928D6C96800201339 /* Dimensions.swift */,
 				27801DC028D6C96800201339 /* Text.swift */,
 				27801DC428D6C96800201339 /* Frame.swift */,
+				27801DE328D6F01900201339 /* Modifier.swift */,
+				27801DE728D7215D00201339 /* Enums.swift */,
+				27801DE928D72A6600201339 /* DateFormatter.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -135,6 +157,42 @@
 				27801DCF28D6C96B00201339 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		27801DD628D6C9F200201339 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				27801DC828D6C96800201339 /* Data_PillApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		27801DD728D6C9FB00201339 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				27801DD828D6CF2D00201339 /* Fonts */,
+				27801DCC28D6C96B00201339 /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		27801DD828D6CF2D00201339 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				27801DD928D6CF3900201339 /* SFProText-Bold.ttf */,
+				27801DDA28D6CF3900201339 /* SFProText-Medium.ttf */,
+				27801DDB28D6CF3900201339 /* SFProText-Semibold.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		27801DE028D6D12C00201339 /* Reusables */ = {
+			isa = PBXGroup;
+			children = (
+				27801DE128D6D15000201339 /* ItemCardView.swift */,
+				27801DE528D6F59700201339 /* PillView.swift */,
+			);
+			path = Reusables;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,6 +256,9 @@
 				27801DCD28D6C96B00201339 /* Assets.xcassets in Resources */,
 				27801DD028D6C96B00201339 /* Preview Assets.xcassets in Resources */,
 				27801DBF28D6C96800201339 /* LaunchScreen.storyboard in Resources */,
+				27801DDC28D6CF3900201339 /* SFProText-Bold.ttf in Resources */,
+				27801DDD28D6CF3900201339 /* SFProText-Medium.ttf in Resources */,
+				27801DDE28D6CF3900201339 /* SFProText-Semibold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,14 +270,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				27801DBA28D6C96800201339 /* Dimensions.swift in Sources */,
-				27801DCB28D6C96800201339 /* ContentView.swift in Sources */,
 				27801DC528D6C96800201339 /* Frame.swift in Sources */,
 				27801DB728D6C96800201339 /* AppState.swift in Sources */,
+				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
+				27801DE828D7215D00201339 /* Enums.swift in Sources */,
 				27801DBD28D6C96800201339 /* Icon.swift in Sources */,
+				27801DE628D6F59700201339 /* PillView.swift in Sources */,
 				27801DC328D6C96800201339 /* Type.swift in Sources */,
 				27801DC128D6C96800201339 /* Text.swift in Sources */,
+				27801DEA28D72A6600201339 /* DateFormatter.swift in Sources */,
 				27801DB428D6C96800201339 /* HomeView.swift in Sources */,
+				27801DE428D6F01900201339 /* Modifier.swift in Sources */,
+				27801DE228D6D15000201339 /* ItemCardView.swift in Sources */,
 				27801DC928D6C96800201339 /* Data_PillApp.swift in Sources */,
 				27801DC728D6C96800201339 /* Color.swift in Sources */,
 			);
@@ -275,7 +341,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -329,7 +395,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -350,6 +416,7 @@
 				DEVELOPMENT_TEAM = KB9D3Y7M29;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Data-Pill-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -379,6 +446,7 @@
 				DEVELOPMENT_TEAM = KB9D3Y7M29;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Data-Pill-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
