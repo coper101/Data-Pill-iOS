@@ -14,6 +14,7 @@ struct AppView: View {
     var body: some View {
         VStack(spacing: 0) {
             HomeView()
+                .background(Colors.background.color)
         }
     }
     

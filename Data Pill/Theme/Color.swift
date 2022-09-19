@@ -12,6 +12,7 @@ enum Colors: String {
     case onBackground = "Black"
     case surface = "Gray50"
     case onSurface = "Gray"
+    case onSurfaceDark = "Gray10"
     case onSurfaceLight = "Gray200"
     case onSurfaceLight2 = "Gray100"
     case secondaryBlue = "Blue"

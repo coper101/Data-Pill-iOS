@@ -11,7 +11,7 @@ struct HomeView: View {
     // MARK: - Props
     @EnvironmentObject var appState: AppState
     
-    var spaceInBetween: CGFloat = 16
+    var spaceInBetween: CGFloat = 21
     var paddingHorizontal: CGFloat = 21
     
     // MARK: - UI
@@ -35,36 +35,28 @@ struct HomeView: View {
                     VStack(spacing: spaceInBetween) {
                         
                         // USED
-                        ItemCardView(
-                            style: .mini,
-                            subtitle: "USED",
-                            width: cardWidth
-                        ) {
-                            Text("Hello")
-                        }
+                        UsedCardView(
+                            width: cardWidth,
+                            dataInMB: 130,
+                            maxDataInMB: 300
+                        )
                         
                         // USAGE TOGGLE
-                        ItemCardView(
-                            style: .mini,
-                            subtitle: "USAGE",
+                        UsageCardView(
+                            selectedItem: $appState.selectedItem,
                             width: cardWidth
-                        ) {
-                            Text("Hello")
-                        }
+                        )
                         
                         // NOTIF TOGGLE
-                        ItemCardView(
-                            style: .mini,
-                            subtitle: "NOTIF",
+                        NotifCardView(
+                            isTurnedOn: $appState.isTurnedOn,
                             width: cardWidth
-                        ) {
-                            Text("Hello")
-                        }
+                        )
                         
-                    }
+                    } //: VStack
                     .fillMaxWidth()
                     
-                }
+                } //: GeometryReader
                 
             } //: HStack
             .frame(height: 388)

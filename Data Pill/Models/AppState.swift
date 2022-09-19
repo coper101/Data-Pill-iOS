@@ -7,12 +7,10 @@
 
 import Foundation
 
-struct Data {
-    let date: Date
-    let percentageUsed: Double
-}
-
 class AppState: ObservableObject {
+    
+    @Published var selectedItem: Item = .item1
+    @Published var isTurnedOn = false
     
     @Published var days: [DayPill] = [
         .init(color: .secondaryBlue, day: .sunday),
