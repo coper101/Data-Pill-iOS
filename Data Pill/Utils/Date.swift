@@ -1,5 +1,5 @@
 //
-//  DateFormatter.swift
+//  Date.swift
 //  Data Pill
 //
 //  Created by Wind Versi on 18/9/22.
@@ -25,8 +25,29 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    func toDayFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d"
+        return dateFormatter.string(from: self)
+    }
+    
     func isToday() -> Bool {
         Calendar.current.isDateInToday(self)
+    }
+    
+}
+
+extension Calendar {
+    
+    func daysBetween(start: Date, end: Date) -> Int {
+        let from = startOfDay(for: start)
+        let to = startOfDay(for: end)
+        let numberOfDays = dateComponents(
+            [.day],
+            from: from,
+            to: to
+        )
+        return numberOfDays.day!
     }
     
 }

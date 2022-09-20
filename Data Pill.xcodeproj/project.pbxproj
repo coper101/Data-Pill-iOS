@@ -27,13 +27,20 @@
 		27801DE428D6F01900201339 /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE328D6F01900201339 /* Modifier.swift */; };
 		27801DE628D6F59700201339 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE528D6F59700201339 /* PillView.swift */; };
 		27801DE828D7215D00201339 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE728D7215D00201339 /* Enums.swift */; };
-		27801DEA28D72A6600201339 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE928D72A6600201339 /* DateFormatter.swift */; };
+		27801DEA28D72A6600201339 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE928D72A6600201339 /* Date.swift */; };
 		27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DEB28D73AC900201339 /* UsedCardView.swift */; };
 		27801DEE28D8B7FA00201339 /* Numbers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DED28D8B7FA00201339 /* Numbers.swift */; };
 		27801DF028D8BA2400201339 /* UsageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DEF28D8BA2400201339 /* UsageCardView.swift */; };
 		27801DF228D8BDBE00201339 /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DF128D8BDBE00201339 /* ToggleView.swift */; };
 		27801DF428D8C71C00201339 /* NotifCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DF328D8C71C00201339 /* NotifCardView.swift */; };
 		27801DF628D8CA9500201339 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DF528D8CA9500201339 /* Data.swift */; };
+		27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DF828DA0A8600201339 /* DataPlanCardView.swift */; };
+		27801DFB28DA0B0D00201339 /* NavRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DFA28DA0B0D00201339 /* NavRowView.swift */; };
+		27801DFD28DA0CF500201339 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DFC28DA0CF500201339 /* DividerView.swift */; };
+		27801DFF28DA13C500201339 /* DataPlanLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DFE28DA13C500201339 /* DataPlanLimitView.swift */; };
+		27801E0128DA15C600201339 /* DailyLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0028DA15C600201339 /* DailyLimitView.swift */; };
+		27801E0328DA196E00201339 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0228DA196E00201339 /* HistoryView.swift */; };
+		27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0428DA1A7A00201339 /* DraggablePillView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,13 +66,20 @@
 		27801DE328D6F01900201339 /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
 		27801DE528D6F59700201339 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
 		27801DE728D7215D00201339 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
-		27801DE928D72A6600201339 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		27801DE928D72A6600201339 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		27801DEB28D73AC900201339 /* UsedCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedCardView.swift; sourceTree = "<group>"; };
 		27801DED28D8B7FA00201339 /* Numbers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Numbers.swift; sourceTree = "<group>"; };
 		27801DEF28D8BA2400201339 /* UsageCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageCardView.swift; sourceTree = "<group>"; };
 		27801DF128D8BDBE00201339 /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		27801DF328D8C71C00201339 /* NotifCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifCardView.swift; sourceTree = "<group>"; };
 		27801DF528D8CA9500201339 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		27801DF828DA0A8600201339 /* DataPlanCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlanCardView.swift; sourceTree = "<group>"; };
+		27801DFA28DA0B0D00201339 /* NavRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavRowView.swift; sourceTree = "<group>"; };
+		27801DFC28DA0CF500201339 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
+		27801DFE28DA13C500201339 /* DataPlanLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlanLimitView.swift; sourceTree = "<group>"; };
+		27801E0028DA15C600201339 /* DailyLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLimitView.swift; sourceTree = "<group>"; };
+		27801E0228DA196E00201339 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		27801E0428DA1A7A00201339 /* DraggablePillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggablePillView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,9 +139,8 @@
 			isa = PBXGroup;
 			children = (
 				27801DB328D6C96800201339 /* HomeView.swift */,
-				27801DEB28D73AC900201339 /* UsedCardView.swift */,
-				27801DEF28D8BA2400201339 /* UsageCardView.swift */,
-				27801DF328D8C71C00201339 /* NotifCardView.swift */,
+				27801E0228DA196E00201339 /* HistoryView.swift */,
+				27801DF728DA0A6B00201339 /* Cards */,
 			);
 			path = "(1) Home";
 			sourceTree = "<group>";
@@ -149,7 +162,7 @@
 				27801DC428D6C96800201339 /* Frame.swift */,
 				27801DE328D6F01900201339 /* Modifier.swift */,
 				27801DE728D7215D00201339 /* Enums.swift */,
-				27801DE928D72A6600201339 /* DateFormatter.swift */,
+				27801DE928D72A6600201339 /* Date.swift */,
 				27801DED28D8B7FA00201339 /* Numbers.swift */,
 			);
 			path = Utils;
@@ -205,9 +218,25 @@
 			children = (
 				27801DE128D6D15000201339 /* ItemCardView.swift */,
 				27801DE528D6F59700201339 /* PillView.swift */,
+				27801E0428DA1A7A00201339 /* DraggablePillView.swift */,
 				27801DF128D8BDBE00201339 /* ToggleView.swift */,
+				27801DFA28DA0B0D00201339 /* NavRowView.swift */,
+				27801DFC28DA0CF500201339 /* DividerView.swift */,
 			);
 			path = Reusables;
+			sourceTree = "<group>";
+		};
+		27801DF728DA0A6B00201339 /* Cards */ = {
+			isa = PBXGroup;
+			children = (
+				27801DEB28D73AC900201339 /* UsedCardView.swift */,
+				27801DEF28D8BA2400201339 /* UsageCardView.swift */,
+				27801DF328D8C71C00201339 /* NotifCardView.swift */,
+				27801DF828DA0A8600201339 /* DataPlanCardView.swift */,
+				27801DFE28DA13C500201339 /* DataPlanLimitView.swift */,
+				27801E0028DA15C600201339 /* DailyLimitView.swift */,
+			);
+			path = Cards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,12 +314,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				27801DBA28D6C96800201339 /* Dimensions.swift in Sources */,
+				27801DFB28DA0B0D00201339 /* NavRowView.swift in Sources */,
+				27801DFF28DA13C500201339 /* DataPlanLimitView.swift in Sources */,
 				27801DC528D6C96800201339 /* Frame.swift in Sources */,
 				27801DB728D6C96800201339 /* AppState.swift in Sources */,
 				27801DF428D8C71C00201339 /* NotifCardView.swift in Sources */,
+				27801E0128DA15C600201339 /* DailyLimitView.swift in Sources */,
+				27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */,
+				27801E0328DA196E00201339 /* HistoryView.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
+				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
 				27801DF628D8CA9500201339 /* Data.swift in Sources */,
 				27801DF028D8BA2400201339 /* UsageCardView.swift in Sources */,
 				27801DBD28D6C96800201339 /* Icon.swift in Sources */,
@@ -298,12 +333,13 @@
 				27801DC328D6C96800201339 /* Type.swift in Sources */,
 				27801DC128D6C96800201339 /* Text.swift in Sources */,
 				27801DEE28D8B7FA00201339 /* Numbers.swift in Sources */,
-				27801DEA28D72A6600201339 /* DateFormatter.swift in Sources */,
+				27801DEA28D72A6600201339 /* Date.swift in Sources */,
 				27801DB428D6C96800201339 /* HomeView.swift in Sources */,
 				27801DE428D6F01900201339 /* Modifier.swift in Sources */,
 				27801DE228D6D15000201339 /* ItemCardView.swift in Sources */,
 				27801DC928D6C96800201339 /* Data_PillApp.swift in Sources */,
 				27801DC728D6C96800201339 /* Color.swift in Sources */,
+				27801DFD28DA0CF500201339 /* DividerView.swift in Sources */,
 				27801DF228D8BDBE00201339 /* ToggleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

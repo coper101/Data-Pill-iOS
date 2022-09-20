@@ -91,13 +91,17 @@ struct ItemCardView<Content>: View where Content: View {
                 content()
 
                 // Row 2: LABEL
-                HStack(spacing: 5) {
+                HStack(
+                    alignment: .bottom,
+                    spacing: 0
+                ) {
                     
                     // Col 1: SUBTITLE
                     label
                     
                     // Col 2: ICON
                     if (style == .mini2) {
+                        Spacer()
                         Button(action: navigateAction) {
                             Icons.navigateIcon.image
                                 .resizable()
@@ -134,8 +138,8 @@ struct ItemCardView_Previews: PreviewProvider {
         ForEach(ItemCardStyle.allCases) { style in
             ItemCardView(
                 style: style,
-                subtitle: "Subtitle Subtitle",
-                width: 210
+                subtitle: "Subtitle Subtitle Subtitle",
+                width: 150
             ) {
                 Text("").frame(height: 50)
             }

@@ -31,6 +31,7 @@ struct ToggleItemView: View {
                     size: 20
                 )
                 .frame(height: 35)
+                .fillMaxWidth()
                 .opacity(opacity)
         } //: Button
     }

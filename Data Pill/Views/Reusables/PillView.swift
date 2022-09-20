@@ -28,6 +28,7 @@ struct PillView: View {
     var color: Colors = .secondaryBlue
     var percentage: Double
     var date: Date
+    var hasBackground = true
     
     let maxHeight: CGFloat = 388
     var paddingTop: CGFloat {
@@ -75,7 +76,9 @@ struct PillView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             // Layer 1:
-            Colors.surface.color
+            Colors.surface.color.opacity(
+                hasBackground ? 1 : 0
+            )
             
             // Layer 2:
             RoundedRectangle(cornerRadius: 5)
@@ -98,7 +101,8 @@ struct PillView: View {
                         endPoint: .bottom
                     )
                 )
-        }
+            
+        } //: ZStack
         .frame(width: 171, height: maxHeight)
         .clipShape(Capsule(style: .circular))
     }
