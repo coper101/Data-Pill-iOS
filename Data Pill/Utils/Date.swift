@@ -19,6 +19,12 @@ extension String {
 
 extension Date {
     
+    func toDayMonthYearFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d MMM yyyy"
+        return dateFormatter.string(from: self)
+    }
+  
     func toDayMonthFormat() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d MMM"
@@ -31,10 +37,26 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    func toWeekdayFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        return dateFormatter.string(from: self)
+    }
+    
+    func toDateComp() -> DateComponents {
+        Calendar.current.dateComponents(
+            [.day, .month, .year, .weekday],
+            from: self
+        )
+    }
+    
     func isToday() -> Bool {
         Calendar.current.isDateInToday(self)
     }
     
+    func toNumOfDays(to end: Date) -> Int {
+        Calendar.current.daysBetween(start: self, end: end)
+    }
 }
 
 extension Calendar {

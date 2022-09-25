@@ -11,6 +11,7 @@ struct NotifCardView: View {
     // MARK: - Props
     @Binding var isTurnedOn: Bool
     var width: CGFloat
+    var height: CGFloat?
     
     // MARK: - UI
     var body: some View {
@@ -35,6 +36,7 @@ struct NotifCardView: View {
             }
             .fillMaxWidth()
         }
+        .frame(height: height)
     }
     
     // MARK: - Actions

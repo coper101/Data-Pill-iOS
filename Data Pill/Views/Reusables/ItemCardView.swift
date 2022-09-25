@@ -55,9 +55,13 @@ struct ItemCardView<Content>: View where Content: View {
     // MARK: - Props
     var style: ItemCardStyle
     var subtitle: String
+    var caption: String = ""
     var verticalSpacing: CGFloat = 0
     var navigateAction: () -> Void = {}
-    var width: CGFloat? = nil
+    var hasBackground = true
+    var width: CGFloat?
+    var height: CGFloat?
+    var textColor: Colors = .onSurfaceLight2
     @ViewBuilder var content: () -> Content
         
     // MARK: - UI
@@ -65,9 +69,20 @@ struct ItemCardView<Content>: View where Content: View {
         Text(style.allCaps ? subtitle.uppercased() : subtitle)
             .kerning(style.letterSpacing)
             .textStyle(
-                foregroundColor: .onSurfaceLight2,
+                foregroundColor: textColor,
                 font: style.type,
                 size: style.fontSize,
+                lineLimit: style.lineLimit
+            )
+    }
+    
+    var secondaryLabel: some View {
+        Text(caption)
+            .kerning(style.letterSpacing)
+            .textStyle(
+                foregroundColor: Colors.onSurfaceLight2,
+                font: style.type,
+                size: 18,
                 lineLimit: style.lineLimit
             )
     }
@@ -80,7 +95,11 @@ struct ItemCardView<Content>: View where Content: View {
             if (style == .wide) {
                 
                 // Row 1: LABEL
-                label
+                HStack(spacing: 0) {
+                    label
+                    Spacer()
+                    secondaryLabel
+                }
                 
                 // Row 2: CONTENT
                 content()
@@ -110,23 +129,28 @@ struct ItemCardView<Content>: View where Content: View {
                                     Colors.onSurfaceLight2.color
                                 )
                         }
-                    }
+                    } //: if
                     
                 } //: HStack
                 
             } //: if-else
             
         } //: VStack
-        .if(width != nil) { view in
-            view.frame(
-                width: width,
-                alignment: .leading
-            )
-        }
+        .frame(
+            width: width,
+            height: height,
+            alignment: .leading
+        )
         .padding(.vertical, 14)
         .padding(.horizontal, 20)
-        .background(Colors.surface.color)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .background(
+            Colors.surface.color.opacity(
+                hasBackground ? 1 : 0
+            )
+        )
+        .clipShape(
+            RoundedRectangle(cornerRadius: 20)
+        )
     }
     
     // MARK: - Actions
@@ -135,6 +159,25 @@ struct ItemCardView<Content>: View where Content: View {
 // MARK: - Preview
 struct ItemCardView_Previews: PreviewProvider {
     static var previews: some View {
+        
+        ItemCardView(
+            style: .wide,
+            subtitle: "Subtitle Subtitle Subtitle",
+            caption: "Caption",
+            width: 150,
+            textColor: .onBackground
+        ) {
+            Text("").frame(height: 50)
+        }
+        .previewLayout(.sizeThatFits)
+        .previewDisplayName(
+            displayName(
+                "Item Card",
+                ItemCardStyle.wide.id.firstCap(),
+                "Editing"
+            )
+        )
+        
         ForEach(ItemCardStyle.allCases) { style in
             ItemCardView(
                 style: style,

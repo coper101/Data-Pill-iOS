@@ -10,29 +10,56 @@ import SwiftUI
 struct HistoryView: View {
     // MARK: - Props
     var paddingHorizontal: CGFloat = 21
+    var days: [DayPill]
+    var weekData: [Data]
+    var dataLimitPerDay: Double
+    var closeAction: () -> Void
 
     // MARK: - UI
     var body: some View {
-        VStack(
-            alignment: .leading,
-            spacing: 0
-        ) {
+        VStack(spacing: 0) {
             
-            // Row 1: TITLE
-            Text("This Week")
-                .textStyle(
-                    foregroundColor: .onBackground,
-                    font: .semibold,
-                    size: 30,
-                    maxWidth: .infinity,
-                    lineLimit: 1
-                )
-                .padding(.horizontal, paddingHorizontal)
+            // Row 1:
+            HStack(spacing: 0) {
+                
+                // TITLE
+                Text("This Week")
+                    .textStyle(
+                        foregroundColor: .onBackground,
+                        font: .semibold,
+                        size: 30,
+                        maxWidth: .infinity,
+                        lineLimit: 1
+                    )
+                
+                // CLOSE
+                CloseIconView(action: closeAction)
+                
+            } //: HStack
+            .padding(.horizontal, 35)
+            .padding(.bottom, 17)
+            .padding(.top, 17)
             
-            // Row 
+            
+            // Row 2: WEEKDAYS
+            ZStack {
+                
+                ForEach(weekData) { weekdayData in
+                    
+                    DraggablePillView(
+                        date: weekdayData.date,
+                        color: days[dayPillIndex(weekdayData)].color,
+                        percentage: weekdayData.dataUsed.toPerc(max: dataLimitPerDay),
+                        widthScale: 0.75
+                    )
+                    
+                } //: ForEach
+                
+            } //: Group
+            .padding(.bottom, 40)
+            .fillMaxSize(alignment: .bottom)
             
         } //: VStack
-        .fillMaxSize()
     }
     
     // MARK: - Actions
@@ -40,8 +67,15 @@ struct HistoryView: View {
 
 // MARK: - Preview
 struct HistoryView_Previews: PreviewProvider {
+    static var appState = AppState()
+    
     static var previews: some View {
-        HistoryView()
+        HistoryView(
+            days: appState.days,
+            weekData: appState.weeksData,
+            dataLimitPerDay: appState.dataLimitPerDay,
+            closeAction: {}
+        )
             .previewLayout(.sizeThatFits)
     }
 }

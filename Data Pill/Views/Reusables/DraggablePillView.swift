@@ -9,34 +9,46 @@ import SwiftUI
 
 struct DraggablePillView: View {
     // MARK: - Props
-    @State var heightTranslation: CGFloat = .zero
-    @State var cardYOffset: CGFloat = .zero
+    @State private var translation: CGSize = .zero
+    @State private var cardOffset: CGSize = .zero
     var date: Date = .init()
+    var color: Colors
+    var percentage: Int
+    var widthScale: CGFloat = 0.45
     
     // MARK: - UI
     var drag: some Gesture {
         DragGesture()
             .onChanged { value in
-                let newTranslationHeight = value.translation.height
-                let amountChange = newTranslationHeight - heightTranslation
-                heightTranslation = newTranslationHeight
-        
-                let newCardYOffset = cardYOffset + amountChange
-                guard newCardYOffset < 388 else { return }
-                withAnimation() {
-                    cardYOffset = newCardYOffset
+                
+                let heightTrans = value.translation.height
+                let widthTrans = value.translation.width
+                
+                let amountChange = CGSize(
+                    width: widthTrans - translation.width,
+                    height: heightTrans - translation.height
+                )
+                translation = value.translation
+                        
+                let newCardOffset = CGSize(
+                    width: cardOffset.width + amountChange.width,
+                    height: cardOffset.height + amountChange.height
+                )
+                
+                guard newCardOffset.height < 388 else { return }
+                withAnimation(
+                    .linear(duration: 0.2)
+                ) {
+                    cardOffset = newCardOffset
                 }
             }
             .onEnded { _ in
                 // reset
-                heightTranslation = .zero
+                translation = .zero
                 withAnimation(
-                    .interactiveSpring(
-                        response: 0.1,
-                        dampingFraction: 5
-                    )
+                    .spring(dampingFraction: 0.6)
                 ) {
-                    cardYOffset = .zero
+                    cardOffset = .zero
                 }
             }
     }
@@ -44,13 +56,14 @@ struct DraggablePillView: View {
     var body: some View {
         ZStack {
             PillView(
-                color: .secondaryBlue,
-                percentage: 20,
+                color: color,
+                percentage: percentage,
                 date: date,
-                hasBackground: false
+                hasBackground: false,
+                widthScale: widthScale
             )
-            .padding(.horizontal, 21)
-            .offset(y: cardYOffset)
+            .padding(.horizontal, Dimensions.HorizontalPadding)
+            .offset(cardOffset)
             .gesture(drag)
         }
         
@@ -62,7 +75,10 @@ struct DraggablePillView: View {
 // MARK: - Preview
 struct DraggablePillView_Previews: PreviewProvider {
     static var previews: some View {
-        DraggablePillView()
+        DraggablePillView(
+            color: .secondaryBlue,
+            percentage: 20
+        )
             .previewLayout(.sizeThatFits)
             .padding()
     }

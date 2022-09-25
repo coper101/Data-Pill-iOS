@@ -10,6 +10,7 @@ import SwiftUI
 enum Colors: String {
     case background = "White"
     case onBackground = "Black"
+    case onBackgroundLight = "Gray300"
     case surface = "Gray50"
     case onSurface = "Gray"
     case onSurfaceDark = "Gray10"

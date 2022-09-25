@@ -10,7 +10,7 @@ import Foundation
 public extension CaseIterable where Self: Equatable {
 
     ///  Gets the index of enum case according to the order declared
-    public func ordinal() -> Self.AllCases.Index {
+    func ordinal() -> Self.AllCases.Index {
         return Self.allCases.firstIndex(of: self)!
     }
 

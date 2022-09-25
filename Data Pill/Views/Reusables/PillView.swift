@@ -26,13 +26,20 @@ struct DayPill: Identifiable {
 struct PillView: View {
     // MARK: - Props
     var color: Colors = .secondaryBlue
-    var percentage: Double
+    var percentage: Int
     var date: Date
     var hasBackground = true
+    var widthScale: CGFloat = 0.45
     
-    let maxHeight: CGFloat = 388
+    var width: CGFloat {
+        Dimensions.Screen.width * widthScale
+    }
+    var maxHeight: CGFloat {
+        (Dimensions.Screen.width * widthScale) * 2.26
+    }
+    
     var paddingTop: CGFloat {
-        percentage > 80 ?
+        percentage > 90 ?
             50 : 10
     }
     var displayedDate: String {
@@ -46,7 +53,7 @@ struct PillView: View {
         HStack(spacing: 0) {
             
             // Col 1: PERCENTAGE
-            Text("\(Int(percentage))%")
+            Text("\(percentage)%")
                 .textStyle(
                     foregroundColor: .onSecondary,
                     font: .semibold,
@@ -84,7 +91,7 @@ struct PillView: View {
             RoundedRectangle(cornerRadius: 5)
                 .fill(color.color)
                 .frame(
-                    height: (percentage / 100) * maxHeight
+                    height: (CGFloat(percentage) / 100) * maxHeight
                 )
                 .overlay(
                     label
@@ -103,7 +110,7 @@ struct PillView: View {
                 )
             
         } //: ZStack
-        .frame(width: 171, height: maxHeight)
+        .frame(width: width, height: maxHeight)
         .clipShape(Capsule(style: .circular))
     }
     
@@ -119,7 +126,7 @@ struct PillView_Previews: PreviewProvider {
         ForEach(appState.days) { dayPill in
             let index = dayPill.day.ordinal()
             let data = appState.data[index]
-            let percentage = data.percentageUsed
+            let percentage =  data.dataUsed.toPerc(max: appState.dataLimitPerDay)
             PillView(
                 color: dayPill.color,
                 percentage: percentage,

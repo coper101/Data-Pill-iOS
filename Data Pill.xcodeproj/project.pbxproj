@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		27801DB128D6C96800201339 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB028D6C96800201339 /* AppView.swift */; };
-		27801DB428D6C96800201339 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB328D6C96800201339 /* HomeView.swift */; };
+		27801DB428D6C96800201339 /* BasicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB328D6C96800201339 /* BasicInfoView.swift */; };
 		27801DB728D6C96800201339 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB628D6C96800201339 /* AppState.swift */; };
 		27801DBA28D6C96800201339 /* Dimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB928D6C96800201339 /* Dimensions.swift */; };
 		27801DBD28D6C96800201339 /* Icon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DBC28D6C96800201339 /* Icon.swift */; };
@@ -41,12 +41,14 @@
 		27801E0128DA15C600201339 /* DailyLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0028DA15C600201339 /* DailyLimitView.swift */; };
 		27801E0328DA196E00201339 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0228DA196E00201339 /* HistoryView.swift */; };
 		27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0428DA1A7A00201339 /* DraggablePillView.swift */; };
+		27801E0928E054C500201339 /* CloseIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0828E054C400201339 /* CloseIconView.swift */; };
+		27801E0D28E0C02200201339 /* DateInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0C28E0C02200201339 /* DateInputView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		27801DAC28D6C96800201339 /* Data Pill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Data Pill.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27801DB028D6C96800201339 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
-		27801DB328D6C96800201339 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		27801DB328D6C96800201339 /* BasicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicInfoView.swift; sourceTree = "<group>"; };
 		27801DB628D6C96800201339 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		27801DB928D6C96800201339 /* Dimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dimensions.swift; sourceTree = "<group>"; };
 		27801DBC28D6C96800201339 /* Icon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icon.swift; sourceTree = "<group>"; };
@@ -80,6 +82,8 @@
 		27801E0028DA15C600201339 /* DailyLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLimitView.swift; sourceTree = "<group>"; };
 		27801E0228DA196E00201339 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		27801E0428DA1A7A00201339 /* DraggablePillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggablePillView.swift; sourceTree = "<group>"; };
+		27801E0828E054C400201339 /* CloseIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseIconView.swift; sourceTree = "<group>"; };
+		27801E0C28E0C02200201339 /* DateInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateInputView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +142,7 @@
 		27801DB228D6C96800201339 /* (1) Home */ = {
 			isa = PBXGroup;
 			children = (
-				27801DB328D6C96800201339 /* HomeView.swift */,
+				27801DB328D6C96800201339 /* BasicInfoView.swift */,
 				27801E0228DA196E00201339 /* HistoryView.swift */,
 				27801DF728DA0A6B00201339 /* Cards */,
 			);
@@ -222,6 +226,8 @@
 				27801DF128D8BDBE00201339 /* ToggleView.swift */,
 				27801DFA28DA0B0D00201339 /* NavRowView.swift */,
 				27801DFC28DA0CF500201339 /* DividerView.swift */,
+				27801E0828E054C400201339 /* CloseIconView.swift */,
+				27801E0C28E0C02200201339 /* DateInputView.swift */,
 			);
 			path = Reusables;
 			sourceTree = "<group>";
@@ -326,7 +332,9 @@
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
+				27801E0928E054C500201339 /* CloseIconView.swift in Sources */,
 				27801DF628D8CA9500201339 /* Data.swift in Sources */,
+				27801E0D28E0C02200201339 /* DateInputView.swift in Sources */,
 				27801DF028D8BA2400201339 /* UsageCardView.swift in Sources */,
 				27801DBD28D6C96800201339 /* Icon.swift in Sources */,
 				27801DE628D6F59700201339 /* PillView.swift in Sources */,
@@ -334,7 +342,7 @@
 				27801DC128D6C96800201339 /* Text.swift in Sources */,
 				27801DEE28D8B7FA00201339 /* Numbers.swift in Sources */,
 				27801DEA28D72A6600201339 /* Date.swift in Sources */,
-				27801DB428D6C96800201339 /* HomeView.swift in Sources */,
+				27801DB428D6C96800201339 /* BasicInfoView.swift in Sources */,
 				27801DE428D6F01900201339 /* Modifier.swift in Sources */,
 				27801DE228D6D15000201339 /* ItemCardView.swift in Sources */,
 				27801DC928D6C96800201339 /* Data_PillApp.swift in Sources */,

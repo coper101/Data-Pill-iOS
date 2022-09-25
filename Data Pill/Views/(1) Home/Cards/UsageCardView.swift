@@ -11,6 +11,7 @@ struct UsageCardView: View {
     // MARK: - Props
     @Binding var selectedItem: Item
     var width: CGFloat
+    var height: CGFloat?
 
     // MARK: - UI
     var body: some View {
@@ -25,8 +26,9 @@ struct UsageCardView: View {
                 title1: "Plan",
                 title2: "Daily"
             )
-            .padding(.bottom, 10)
+            .padding(.bottom, 5)
         }
+        .frame(height: height)
     }
     
     // MARK: - Actions
