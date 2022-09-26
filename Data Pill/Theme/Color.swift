@@ -23,6 +23,8 @@ enum Colors: String {
     case secondaryPurple = "Purple"
     case secondaryRed = "Red"
     static let onSecondary = Self.background
+    static let tertiary = Self.onSurface
+    static let onTertiary = Self.background
     var color: Color {
         Color(self.rawValue)
     }

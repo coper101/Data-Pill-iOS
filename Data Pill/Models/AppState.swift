@@ -15,8 +15,13 @@ class AppState: ObservableObject, CustomDebugStringConvertible {
     /// Notification
     @Published var isNotifOn = false
     @Published var isHistoryShown = false
-    @Published var isBlurVisibleHistory = false
-    @Published var isBlurVisibleDataPlan = false
+    @Published var isBlurShown = false
+    
+    /// Edit
+    @Published var isDataPlanEditing = false
+    @Published var editDataPlanType: EditDataPlan = .dataPlan
+    @Published var isDatePickerShownPlan = false
+    @Published var isDatePickerShownDataPlan = false
     
     /// Weekday color can be customizable in the future
     @Published var days: [DayPill] = [

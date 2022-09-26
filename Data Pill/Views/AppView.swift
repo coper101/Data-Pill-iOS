@@ -7,21 +7,16 @@
 
 import SwiftUI
 
+struct VisualEffectView: UIViewRepresentable {
+    var effect: UIVisualEffect?
+    func makeUIView(context: UIViewRepresentableContext<Self>) -> UIVisualEffectView { UIVisualEffectView() }
+    func updateUIView(_ uiView: UIVisualEffectView, context: UIViewRepresentableContext<Self>) { uiView.effect = effect }
+}
+
 struct AppView: View {
     // MARK: - Props
     @EnvironmentObject var appState: AppState
-    
-    @State var isDatePickerShown = true
-    
-    var blurRadiusHistory: CGFloat {
-        appState.isBlurVisibleHistory ?
-            15 : 0
-    }
-    
-    var blurRadiusDataPlan: CGFloat {
-        appState.isBlurVisibleDataPlan ?
-            15 : 0
-    }
+            
     
     var width: CGFloat {
         Dimensions.Screen.width * 0.45
@@ -37,44 +32,65 @@ struct AppView: View {
             
             // Layer 1:
             BasicInfoView()
+                .fillMaxSize(alignment: .top)
                 .background(Colors.background.color)
-                .blur(radius: blurRadiusHistory)
-                .allowsHitTesting(!appState.isBlurVisibleHistory)
+                .blur(radius: appState.isBlurShown ? 15 : 0)
+                .allowsHitTesting(!appState.isBlurShown)
                 .zIndex(0)
             
-            // Layer 2
-            VStack(spacing: 21) {
-                
-                // DATA PLAN
-                DataPlanCardView(
-                    startDate: appState.startDate,
-                    endDate: appState.endDate,
-                    numberOfdays: appState.numOfDaysOfPlan,
-                    periodAction: didTapPlanPeriod,
-                    dataAmountAction: didTapPlanAmount
-                )
-                
-                // DATA LIMIT
-                HStack(spacing: 21) {
-                    
-                    DataPlanLimitView(
-                        dataLimitAmount: appState.dataLimit
+            // Layer 2:
+            if appState.isDataPlanEditing {
+                VStack(alignment: .trailing, spacing: 50) {
+                    DataPlanCardView(
+                        editType: appState.editDataPlanType,
+                        startDate: appState.startDate,
+                        endDate: appState.endDate,
+                        numberOfdays: appState.numOfDaysOfPlan,
+                        periodAction: {},
+                        dataAmountAction: {}
                     )
-                    
-                    DailyLimitView(
-                        dataLimitAmount: appState.dataLimitPerDay
-                    )
-                    
-                } //: HStack
-                .frame(height: 145)
-                
+                    SaveButtonView(action: didTapSave)
+                        .alignmentGuide(.trailing) { $0.width + 10 }
+                }
+                .zIndex(1)
+                .padding(.horizontal, 21)
+                .padding(.top, height + 21 * 2)
             }
-            .padding(.horizontal, 21)
-            .padding(.top, height + 21 * 2)
-            .blur(radius: blurRadiusDataPlan)
-            .zIndex(1)
             
-            // Layer 3:
+//            // Layer 3:
+//            if appState.isDatePickerShownPlan {
+//                DatePicker(
+//                    selection: .constant(appState.startDate),
+//                    displayedComponents: .date,
+//                    label: {}
+//                )
+//                .labelsHidden()
+//                .padding()
+//                .frame(width: Dimensions.Screen.width * 0.85)
+//                .background(Color.white)
+//                .clipShape(RoundedRectangle(cornerRadius: 10))
+//                .datePickerStyle(.graphical)
+//                .zIndex(3)
+//            }
+//
+//            // Layer 4:
+//            if appState.isDatePickerShownDataPlan {
+//                DatePicker(
+//                    selection: .constant(appState.startDate),
+//                    displayedComponents: .date,
+//                    label: {}
+//                )
+//                .labelsHidden()
+//                .padding()
+//                .frame(width: Dimensions.Screen.width * 0.85)
+//                .background(Color.white)
+//                .clipShape(RoundedRectangle(cornerRadius: 10))
+//                .datePickerStyle(.graphical)
+//                .zIndex(4)
+//            }
+//
+            
+            // Layer 5:
             if appState.isHistoryShown {
                 HistoryView(
                     days: appState.days,
@@ -82,47 +98,24 @@ struct AppView: View {
                     dataLimitPerDay: appState.dataLimitPerDay,
                     closeAction: didTapClose
                 )
-                .zIndex(2)
-            }
-            
-            // Layer 4:
-            if isDatePickerShown {
-                DatePicker(
-                    selection: .constant(appState.startDate),
-                    displayedComponents: .date,
-                    label: {}
-                )
-                .labelsHidden()
-                .padding()
-                .frame(width: Dimensions.Screen.width * 0.85)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .datePickerStyle(.graphical)
-                .zIndex(3)
+                .zIndex(1)
             }
             
         } //: ZStack
-        .fillMaxSize()
     }
     
     // MARK: - Actions
     func didTapClose() {
         withAnimation {
-            appState.isBlurVisibleHistory = false
-            appState.isBlurVisibleDataPlan = false
+            appState.isBlurShown = false
             appState.isHistoryShown = false
         }
     }
     
-    func didTapPlanPeriod() {
+    func didTapSave() {
         withAnimation {
-            appState.isBlurVisibleDataPlan = true
-        }
-    }
-    
-    func didTapPlanAmount() {
-        withAnimation {
-            appState.isBlurVisibleDataPlan = true
+            appState.isBlurShown = false
+            appState.isDataPlanEditing = false
         }
     }
 }

@@ -20,7 +20,7 @@ struct DateInputView: View {
             // TITLE
             Text(title)
                 .textStyle(
-                    foregroundColor: .onSurfaceLight2,
+                    foregroundColor: .onSurfaceLight,
                     font: .semibold,
                     size: 18,
                     maxWidth: .infinity
@@ -41,7 +41,7 @@ struct DateInputView: View {
                 } //: VStack
                 .fillMaxWidth()
                 .frame(height: 53)
-                .background(Colors.surface.color)
+                .background(Colors.onSurfaceDark.color)
                 .clipShape(
                     RoundedRectangle(cornerRadius: 15)
                 )

@@ -80,7 +80,7 @@ struct ItemCardView<Content>: View where Content: View {
         Text(caption)
             .kerning(style.letterSpacing)
             .textStyle(
-                foregroundColor: Colors.onSurfaceLight2,
+                foregroundColor: Colors.onSurfaceLight,
                 font: style.type,
                 size: 18,
                 lineLimit: style.lineLimit

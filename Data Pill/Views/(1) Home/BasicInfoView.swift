@@ -81,6 +81,30 @@ struct BasicInfoView: View {
             } //: HStack
             .frame(height: height)
             
+            // DATA PLAN
+            DataPlanCardView(
+                startDate: appState.startDate,
+                endDate: appState.endDate,
+                numberOfdays: appState.numOfDaysOfPlan,
+                periodAction: didTapPlanPeriod,
+                dataAmountAction: didTapPlanAmount
+            )
+            
+            // DATA LIMIT
+            HStack(spacing: 21) {
+                
+                DataPlanLimitView(
+                    dataLimitAmount: appState.dataLimit
+                )
+                
+                DailyLimitView(
+                    dataLimitAmount: appState.dataLimitPerDay
+                )
+
+                
+            } //: HStack
+            .frame(height: 145)
+            
         } //: VStack
         .padding(.horizontal, paddingHorizontal)
         .padding(.vertical, paddingHorizontal)
@@ -89,21 +113,24 @@ struct BasicInfoView: View {
     // MARK: - Actions
     func didTapDataPill() {
         withAnimation {
-            appState.isBlurVisibleHistory = true
-            appState.isBlurVisibleDataPlan = true
+            appState.isBlurShown = true
             appState.isHistoryShown = true
         }
     }
     
     func didTapPlanPeriod() {
         withAnimation {
-            appState.isBlurVisibleDataPlan = true
+            appState.isBlurShown = true
+            appState.isDataPlanEditing = true
+            appState.editDataPlanType = .dataPlan
         }
     }
     
     func didTapPlanAmount() {
         withAnimation {
-            appState.isBlurVisibleDataPlan = true
+            appState.isBlurShown = true
+            appState.isDataPlanEditing = true
+            appState.editDataPlanType = .data
         }
     }
 }
