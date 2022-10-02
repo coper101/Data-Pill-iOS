@@ -18,13 +18,25 @@ struct DataPlanCardView: View {
     var startDate: Date
     var endDate: Date
     var numberOfdays: Int
+    
     var periodAction: () -> Void
     var dataAmountAction: () -> Void
-    var startPeriodAction: () -> Void = {}
-    var endPeriodAction: () -> Void = {}
+    var startPeriodAction: () -> Void
+    var endPeriodAction: () -> Void
+    
+    @Binding var dataValue: String
+    var dataUnit: Unit = .gb
+    var plusDataAction: () -> Void
+    var minusDataAction: () -> Void
         
     var periodTitle: String {
         "\(startDate.toDayMonthFormat()) - \(endDate.toDayMonthFormat())".uppercased()
+    }
+    
+    var caption: String {
+        editType == nil || editType == .data ?
+            "" :
+            "\(numberOfdays) Days"
     }
     
     var subtitle: String {
@@ -50,20 +62,35 @@ struct DataPlanCardView: View {
                 title: "To",
                 action: endPeriodAction
             )
-        }
+        } //: HStack
         .fillMaxWidth()
         .padding(.top, 10)
     }
     
     var data: some View {
-        Text("hello")
+        HStack(spacing: 10) {
+            StepperButtonView(
+                operator: .minus,
+                action: minusDataAction
+            )
+            TextInputView(
+                data: $dataValue,
+                unit: dataUnit
+            )
+            StepperButtonView(
+                operator: .plus,
+                action: plusDataAction
+            )
+        } //: VStack
+        .padding(.top, 20)
+        .fillMaxWidth(alignment: .center)
     }
     
     var body: some View {
         ItemCardView(
             style: .wide,
             subtitle: subtitle,
-            caption: editType == nil ? "" : "\(numberOfdays) Days",
+            caption: caption,
             hasBackground: editType == nil,
             textColor: editType == nil ? .onSurfaceLight2 : .onBackground
         ) {
@@ -84,17 +111,18 @@ struct DataPlanCardView: View {
                     action: periodAction
                 )
                 .padding(.top, 10)
+                
                 DividerView()
                     .padding(.vertical, 5)
                 
                 // Row 2: DATA AMOUNT
                 NavRowView(
-                    title: "10 GB",
+                    title: "\(dataValue) \(dataUnit.rawValue)",
                     subtitle: "",
                     action: dataAmountAction
                 )
                 
-            }
+            } // if-else
             
         } //: ItemCardView
     }
@@ -112,7 +140,12 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endDate: appState.endDate,
             numberOfdays: appState.numOfDaysOfPlan,
             periodAction: {},
-            dataAmountAction: {}
+            dataAmountAction: {},
+            startPeriodAction: {},
+            endPeriodAction: {},
+            dataValue: .constant("10"),
+            plusDataAction: {},
+            minusDataAction: {}
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Information")
@@ -124,7 +157,12 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endDate: appState.endDate,
             numberOfdays: appState.numOfDaysOfPlan,
             periodAction: {},
-            dataAmountAction: {}
+            dataAmountAction: {},
+            startPeriodAction: {},
+            endPeriodAction: {},
+            dataValue: .constant("10"),
+            plusDataAction: {},
+            minusDataAction: {}
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit Data")
@@ -136,10 +174,16 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endDate: appState.endDate,
             numberOfdays: appState.numOfDaysOfPlan,
             periodAction: {},
-            dataAmountAction: {}
+            dataAmountAction: {},
+            startPeriodAction: {},
+            endPeriodAction: {},
+            dataValue: .constant("10"),
+            plusDataAction: {},
+            minusDataAction: {}
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit Data Plan")
             .padding()
     }
 }
+

@@ -6,22 +6,41 @@
 //
 
 import Foundation
+import Combine
 
 class AppState: ObservableObject, CustomDebugStringConvertible {
     
+    var cancellables: Set<AnyCancellable> = .init()
+    
     // MARK: - UI
-    /// Usage - Plan or Daily
-    @Published var selectedItem: Item = .item2
+    /// Usage Type - Plan or Daily
+    @Published var usageType: ToggleItem = .daily
+    
     /// Notification
     @Published var isNotifOn = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
     
-    /// Edit
+    /// Edit Data Plan
     @Published var isDataPlanEditing = false
     @Published var editDataPlanType: EditDataPlan = .dataPlan
-    @Published var isDatePickerShownPlan = false
-    @Published var isDatePickerShownDataPlan = false
+    @Published var isStartDatePickerShown = false
+    @Published var isEndDatePickerShown = false
+    
+    @Published var dataValue = "0.0"
+    @Published var startDateValue: Date = .init()
+    @Published var endDateValue: Date = .init()
+    
+    /// Edit Data Limit
+    @Published var isDataLimitEditing = false
+    @Published var isDataLimitPerDayEditing = false
+    
+    @Published var dataLimitValue = "0.0"
+    @Published var dataLimitPerDayValue = "0.0"
+    
+    var numOfDaysOfPlanValue: Int {
+        startDateValue.toNumOfDays(to: endDateValue)
+    }
     
     /// Weekday color can be customizable in the future
     @Published var days: [DayPill] = [
@@ -35,97 +54,139 @@ class AppState: ObservableObject, CustomDebugStringConvertible {
     ]
         
     // MARK: - Data
-    /// Data plan
+    /// Data Plan
     @Published var startDate = "2022-09-12T10:44:00+0000".toDate()
     @Published var endDate = "2022-10-12T10:44:00+0000".toDate()
-    @Published var dataAmount = 10.0 /// in GB
+    @Published var dataAmount = 0.0
     @Published var dataLimit = 0.0
+    @Published var dataLimitPerDay = 0.0
+    @Published var unit: Unit = .gb
     
     var numOfDaysOfPlan: Int {
         startDate.toNumOfDays(to: endDate)
     }
     
-    /// Daily data plan
-    @Published var dataLimitPerDay = 0.0 /// in GB
-    
-    /// Data usage per day
-    @Published var data: [Data] = [
-        // Sun to Sat 11-17 sep
-        .init(
-            date: "2022-09-11T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-12T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-13T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-14T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-15T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-16T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-17T10:44:00+0000".toDate()
-        ),
-        // Sun to Sat 18-24 sep
-        .init(
-            date: "2022-09-18T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-19T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-20T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-21T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-22T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-23T10:44:00+0000".toDate()
-        ),
-        .init(
-            date: "2022-09-24T10:44:00+0000".toDate()
-        ),
-        // Sun to Sat 25 Sep 1 Oct
-        .init(
-            date: "2022-09-25T10:44:00+0000".toDate(),
-            dataUsed: 0.07
-        )
-    ]
+    /// Data Records
+    @Published var data: [Data] = .init()
+//    [
+//        // Sun to Sat 11-17 sep
+//        .init(
+//            date: "2022-09-11T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-12T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-13T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-14T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-15T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-16T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-17T10:44:00+0000".toDate()
+//        ),
+//        // Sun to Sat 18-24 sep
+//        .init(
+//            date: "2022-09-18T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-19T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-20T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-21T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-22T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-23T10:44:00+0000".toDate()
+//        ),
+//        .init(
+//            date: "2022-09-24T10:44:00+0000".toDate()
+//        ),
+//        // Sun to Sat 25 Sep 1 Oct
+//        .init(
+//            date: "2022-09-25T10:44:00+0000".toDate(),
+//            dailyUsedData: 0.07
+//        )
+//    ]
     
     var todaysData: Data {
-        let data = data.first { data in
-            data.date.isToday()
+        guard let today = data.first(
+            where: {
+                guard let date = $0.date else {
+                    return false
+                }
+                return date.isToday()
+            }
+        ) else {
+            // create new data if today doesn't exist
+            let newToday = Data(date: .init())
+            data.append(newToday)
+            return newToday
         }
-        return data ?? Data(date: Date())
+        return today
     }
     
     var weeksData: [Data] {
-        weekData(data)
+        guard
+            let date = todaysData.date,
+            let weekday = date.toDateComp().weekday
+        else {
+            return .init()
+        }
+        return data.suffix(weekday)
     }
     
-    // MARK: Init
-    init() {
-        dataLimitPerDay = dataAmount / Double(numOfDaysOfPlan)
-        dataLimit = dataAmount - 1
+    var usedData: Double {
+        usageType == .daily ?
+            todaysData.dailyUsedData :
+            totalUsedData(
+                data,
+                from: startDate,
+                to: endDate
+            )
     }
     
+    var maxData: Double {
+        usageType == .daily ?
+            dataLimitPerDay :
+            dataLimit
+    }
+    
+    var dateUsedInPercentage: Int {
+        return usedData.toPercentage(with: maxData)
+    }
+    
+    // MARK: - Debug
     var debugDescription: String {
         """
-            selectedItem: \(selectedItem)
-            dataAmount: \(dataAmount)
-            dataLimitPerDay: \(dataLimitPerDay)
-            dataLimit: \(dataLimit)
-            todaysData: \(todaysData)
-            weeksData: \(weeksData)
+            * AppState *
+            
+            - UI
+              selectedItem: \(usageType)
+              isNotifOn: \(isNotifOn)
+            
+            - Data
+              dataAmount: \(dataAmount)
+              dataLimitPerDay: \(dataLimitPerDay)
+              dataLimit: \(dataLimit)
+
+              startDate: \(startDate)
+              endDate: \(endDate)
+             
+              todaysData: \(todaysData)
+              weeksData: \(weeksData)
+            
             """
     }
 }

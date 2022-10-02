@@ -35,8 +35,9 @@ struct BasicInfoView: View {
                 Button(action: didTapDataPill) {
                     PillView(
                         color: .secondaryBlue,
-                        percentage: appState.todaysData.dataUsed.toPerc(max: appState.dataLimitPerDay),
-                        date: appState.todaysData.date
+                        percentage: appState.dateUsedInPercentage,
+                        date: appState.todaysData.date ?? Date(),
+                        usageType: appState.usageType
                     )
                 }
                 .buttonStyle(
@@ -53,15 +54,16 @@ struct BasicInfoView: View {
                         
                         // USED
                         UsedCardView(
+                            usedData: appState.usedData,
+                            maxData: appState.maxData,
+                            dataUnit: appState.unit,
                             width: cardWidth,
-                            usedData: appState.todaysData.dataUsed,
-                            maxData: appState.dataLimitPerDay,
                             height: 0.34 * cardHeight
                         )
                         
                         // USAGE TOGGLE
                         UsageCardView(
-                            selectedItem: $appState.selectedItem,
+                            selectedItem: $appState.usageType,
                             width: cardWidth,
                             height: 0.4 * cardHeight
                         )
@@ -87,20 +89,36 @@ struct BasicInfoView: View {
                 endDate: appState.endDate,
                 numberOfdays: appState.numOfDaysOfPlan,
                 periodAction: didTapPlanPeriod,
-                dataAmountAction: didTapPlanAmount
+                dataAmountAction: didTapPlanAmount,
+                startPeriodAction: {},
+                endPeriodAction: {},
+                dataValue: $appState.dataValue,
+                plusDataAction: {},
+                minusDataAction: {}
             )
             
             // DATA LIMIT
             HStack(spacing: 21) {
                 
                 DataPlanLimitView(
-                    dataLimitAmount: appState.dataLimit
+                    dataLimitValue: $appState.dataLimitValue,
+                    dataAmount: appState.dataLimit,
+                    isEditing: false,
+                    usageType: .plan,
+                    editAction: didTapLimit,
+                    minusDataAction: {},
+                    plusDataAction: {}
                 )
                 
-                DailyLimitView(
-                    dataLimitAmount: appState.dataLimitPerDay
+                DataPlanLimitView(
+                    dataLimitValue: $appState.dataLimitPerDayValue,
+                    dataAmount: appState.dataLimitPerDay,
+                    isEditing: false,
+                    usageType: .daily,
+                    editAction: didTapLimitPerDay,
+                    minusDataAction: {},
+                    plusDataAction: {}
                 )
-
                 
             } //: HStack
             .frame(height: 145)
@@ -111,6 +129,7 @@ struct BasicInfoView: View {
     }
     
     // MARK: - Actions
+    // Show History
     func didTapDataPill() {
         withAnimation {
             appState.isBlurShown = true
@@ -118,6 +137,7 @@ struct BasicInfoView: View {
         }
     }
     
+    // Edit Data Plan
     func didTapPlanPeriod() {
         withAnimation {
             appState.isBlurShown = true
@@ -133,6 +153,22 @@ struct BasicInfoView: View {
             appState.editDataPlanType = .data
         }
     }
+    
+    // Edit Data Limit
+    func didTapLimit() {
+        withAnimation {
+            appState.isBlurShown = true
+            appState.isDataLimitEditing = true
+        }
+    }
+    
+    func didTapLimitPerDay() {
+        withAnimation {
+            appState.isBlurShown = true
+            appState.isDataLimitPerDayEditing = true
+        }
+    }
+    
 }
 
 // MARK: - Preview

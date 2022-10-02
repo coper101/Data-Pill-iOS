@@ -9,13 +9,18 @@ import SwiftUI
 
 struct UsedCardView: View {
     // MARK: - Props
-    var width: CGFloat
     var usedData: Double
     var maxData: Double
+    var dataUnit: Unit
+    var width: CGFloat
     var height: CGFloat?
     
     var percentageUsed: Int {
-        ((usedData / maxData) * 100).toInt()
+        usedData.toPercentage(with: maxData)
+    }
+    
+    var data: String {
+        "\(usedData.toDp(n: 2)) / \(maxData.toDp(n: 2)) \(dataUnit.rawValue)"
     }
         
     // MARK: - UI
@@ -36,8 +41,8 @@ struct UsedCardView: View {
                     lineLimit: 1
                 )
             
-            // Row 2: DATA in MB
-            Text("\(usedData.to1dp()) / \(maxData.to1dp()) GB")
+            // Row 2: DATA
+            Text(data)
                 .textStyle(
                     foregroundColor: .onSurface,
                     font: .semibold,
@@ -60,9 +65,11 @@ struct UsedCardView_Previews: PreviewProvider {
     
     static var previews: some View {
         UsedCardView(
+            usedData: appState.todaysData.dailyUsedData,
+            maxData: appState.dataLimitPerDay,
+            dataUnit: appState.unit,
             width: 150,
-            usedData: appState.todaysData.dataUsed,
-            maxData: appState.dataLimitPerDay
+            height: 0.34 * 400
         )
             .previewLayout(.sizeThatFits)
             .padding()

@@ -23,7 +23,7 @@ struct DailyLimitView: View {
             ) {
                 
                 // Col 1: AMOUNT
-                Text(dataLimitAmount.to1dp())
+                Text(dataLimitAmount.toDp())
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .semibold,

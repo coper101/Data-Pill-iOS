@@ -29,6 +29,7 @@ struct PillView: View {
     var percentage: Int
     var date: Date
     var hasBackground = true
+    var usageType: ToggleItem
     var widthScale: CGFloat = 0.45
     
     var width: CGFloat {
@@ -43,9 +44,14 @@ struct PillView: View {
             50 : 10
     }
     var displayedDate: String {
-        date.isToday() ?
-            "TODAY" :
-            date.toDayMonthFormat().uppercased()
+        switch usageType {
+        case .plan:
+            return "TOTAL"
+        case .daily:
+            return date.isToday() ?
+                "TODAY" :
+                date.toDayMonthFormat().uppercased()
+        }
     }
     
     // MARK: - UI
@@ -126,11 +132,12 @@ struct PillView_Previews: PreviewProvider {
         ForEach(appState.days) { dayPill in
             let index = dayPill.day.ordinal()
             let data = appState.data[index]
-            let percentage =  data.dataUsed.toPerc(max: appState.dataLimitPerDay)
+            let percentage =  data.dailyUsedData.toPercentage(with: appState.dataLimitPerDay)
             PillView(
                 color: dayPill.color,
                 percentage: percentage,
-                date: data.date
+                date: data.date ?? Date(),
+                usageType: .daily
             )
             .previewLayout(.sizeThatFits)
             .padding()

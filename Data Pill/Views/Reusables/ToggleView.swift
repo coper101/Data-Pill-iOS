@@ -37,14 +37,14 @@ struct ToggleItemView: View {
     }
 }
 
-enum Item {
-    case item1
-    case item2
+enum ToggleItem: String {
+    case plan = "Plan"
+    case daily = "Daily"
 }
 
 struct ToggleView: View {
     // MARK: - Props
-    @Binding var selectedItem: Item
+    @Binding var selectedItem: ToggleItem
     var title1: String
     var title2: String
     
@@ -57,7 +57,7 @@ struct ToggleView: View {
                 .fill(Colors.onSurfaceDark.color)
                 .fillMaxWidth()
                 .frame(height: 35)
-                .offset(y: selectedItem == .item1 ? 0 : (35 + 15))
+                .offset(y: selectedItem == .plan ? 0 : (35 + 15))
             
             // MARK: - Layer 2:
             VStack(spacing: 15) {
@@ -65,14 +65,14 @@ struct ToggleView: View {
                 // Row 1: ITEM 1
                 ToggleItemView(
                     title: title1,
-                    isSelected: selectedItem == .item1,
+                    isSelected: selectedItem == .plan,
                     action: didTapItem1
                 )
                 
                 // Row 1: ITEM 2
                 ToggleItemView(
                     title: title2,
-                    isSelected: selectedItem == .item2,
+                    isSelected: selectedItem == .daily,
                     action: didTapItem2
                 )
                     
@@ -84,13 +84,13 @@ struct ToggleView: View {
     // MARK: - Actions
     func didTapItem1() {
         withAnimation {
-            selectedItem = .item1
+            selectedItem = .plan
         }
     }
     
     func didTapItem2() {
         withAnimation {
-            selectedItem = .item2
+            selectedItem = .daily
         }
     }
                 
@@ -100,7 +100,7 @@ struct ToggleView: View {
 struct ToggleView_Previews: PreviewProvider {
     static var previews: some View {
         ToggleView(
-            selectedItem: .constant(.item1),
+            selectedItem: .constant(.plan),
             title1: "Title",
             title2: "Title"
         )

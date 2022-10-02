@@ -13,6 +13,7 @@ struct HistoryView: View {
     var days: [DayPill]
     var weekData: [Data]
     var dataLimitPerDay: Double
+    var usageType: ToggleItem
     var closeAction: () -> Void
 
     // MARK: - UI
@@ -47,9 +48,10 @@ struct HistoryView: View {
                 ForEach(weekData) { weekdayData in
                     
                     DraggablePillView(
-                        date: weekdayData.date,
+                        date: weekdayData.date ?? Date(),
                         color: days[dayPillIndex(weekdayData)].color,
-                        percentage: weekdayData.dataUsed.toPerc(max: dataLimitPerDay),
+                        percentage: weekdayData.dailyUsedData.toPercentage(with: dataLimitPerDay),
+                        usageType: usageType,
                         widthScale: 0.75
                     )
                     
@@ -74,6 +76,7 @@ struct HistoryView_Previews: PreviewProvider {
             days: appState.days,
             weekData: appState.weeksData,
             dataLimitPerDay: appState.dataLimitPerDay,
+            usageType: .daily,
             closeAction: {}
         )
             .previewLayout(.sizeThatFits)

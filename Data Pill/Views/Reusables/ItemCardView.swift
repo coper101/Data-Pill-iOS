@@ -59,6 +59,7 @@ struct ItemCardView<Content>: View where Content: View {
     var verticalSpacing: CGFloat = 0
     var navigateAction: () -> Void = {}
     var hasBackground = true
+    var hasNavigateIcon = true
     var width: CGFloat?
     var height: CGFloat?
     var textColor: Colors = .onSurfaceLight2
@@ -119,7 +120,7 @@ struct ItemCardView<Content>: View where Content: View {
                     label
                     
                     // Col 2: ICON
-                    if (style == .mini2) {
+                    if (style == .mini2 && hasNavigateIcon) {
                         Spacer()
                         Button(action: navigateAction) {
                             Icons.navigateIcon.image

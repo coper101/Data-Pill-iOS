@@ -14,6 +14,7 @@ struct DraggablePillView: View {
     var date: Date = .init()
     var color: Colors
     var percentage: Int
+    var usageType: ToggleItem
     var widthScale: CGFloat = 0.45
     
     // MARK: - UI
@@ -60,6 +61,7 @@ struct DraggablePillView: View {
                 percentage: percentage,
                 date: date,
                 hasBackground: false,
+                usageType: usageType,
                 widthScale: widthScale
             )
             .padding(.horizontal, Dimensions.HorizontalPadding)
@@ -77,7 +79,8 @@ struct DraggablePillView_Previews: PreviewProvider {
     static var previews: some View {
         DraggablePillView(
             color: .secondaryBlue,
-            percentage: 20
+            percentage: 20,
+            usageType: .daily
         )
             .previewLayout(.sizeThatFits)
             .padding()
