@@ -16,15 +16,9 @@ struct VisualEffectView: UIViewRepresentable {
 struct AppView: View {
     // MARK: - Props
     @EnvironmentObject var appState: AppState
-    @EnvironmentObject var networkDataRepo: NetworkDataRepository
-    @EnvironmentObject var dataModelRepo: DataModelRepository
     
     var homeActions: HomeActions {
-        .init(
-            appState: appState,
-            networkDataRepo: networkDataRepo,
-            dataModelRepo: dataModelRepo
-        )
+        .init(appState: appState)
     }
     
     var width: CGFloat {
@@ -184,7 +178,6 @@ struct AppView: View {
         } //: ZStack
         .onAppear {
             homeActions.refreshUsedDataToday()
-            homeActions.loadUserPreferences()
             homeActions.observeForDataChanges()
         }
         .onChange(of: appState.isDataPlanEditing) { isEditing in

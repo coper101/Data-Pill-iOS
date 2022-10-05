@@ -46,15 +46,15 @@
 		27801E1128E1F29400201339 /* BlurContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1028E1F29400201339 /* BlurContentView.swift */; };
 		27801E1528E8227500201339 /* StepperButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1428E8227500201339 /* StepperButtonView.swift */; };
 		27801E1728E82B9100201339 /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1628E82B9100201339 /* TextInputView.swift */; };
-		27801E1928E951A100201339 /* NetworkDataRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1828E951A000201339 /* NetworkDataRepo.swift */; };
+		27801E1928E951A100201339 /* NetworkDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1828E951A000201339 /* NetworkDataRepository.swift */; };
 		27801E1B28E974D800201339 /* HomeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1A28E974D700201339 /* HomeActions.swift */; };
-		27801E1E28E98F0D00201339 /* AppStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1D28E98F0D00201339 /* AppStorage.swift */; };
+		27801E1E28E98F0D00201339 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1D28E98F0D00201339 /* LocalStorage.swift */; };
 		27801E2128E9B16E00201339 /* DataUsage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1F28E9B16E00201339 /* DataUsage.xcdatamodeld */; };
-		27801E2328E9B29D00201339 /* AppDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E2228E9B29D00201339 /* AppDatabase.swift */; };
+		27801E2328E9B29D00201339 /* LocalDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E2228E9B29D00201339 /* LocalDatabase.swift */; };
 		27801E2928E9DE3C00201339 /* DataManipulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E2828E9DE3C00201339 /* DataManipulation.swift */; };
 		27801E3728E9E3D100201339 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3628E9E3D100201339 /* Data.swift */; };
-		27801E3D28E9F72F00201339 /* DataModelRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3C28E9F72F00201339 /* DataModelRepo.swift */; };
-		27801E3F28E9FDAA00201339 /* AppModelRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3E28E9FDAA00201339 /* AppModelRepo.swift */; };
+		27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3C28E9F72F00201339 /* DataUsageRepository.swift */; };
+		27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3E28E9FDAA00201339 /* AppDataRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -99,15 +99,15 @@
 		27801E1028E1F29400201339 /* BlurContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurContentView.swift; sourceTree = "<group>"; };
 		27801E1428E8227500201339 /* StepperButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperButtonView.swift; sourceTree = "<group>"; };
 		27801E1628E82B9100201339 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
-		27801E1828E951A000201339 /* NetworkDataRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRepo.swift; sourceTree = "<group>"; };
+		27801E1828E951A000201339 /* NetworkDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRepository.swift; sourceTree = "<group>"; };
 		27801E1A28E974D700201339 /* HomeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeActions.swift; sourceTree = "<group>"; };
-		27801E1D28E98F0D00201339 /* AppStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStorage.swift; sourceTree = "<group>"; };
+		27801E1D28E98F0D00201339 /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
 		27801E2028E9B16E00201339 /* DataUsage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataUsage.xcdatamodel; sourceTree = "<group>"; };
-		27801E2228E9B29D00201339 /* AppDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDatabase.swift; sourceTree = "<group>"; };
+		27801E2228E9B29D00201339 /* LocalDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabase.swift; sourceTree = "<group>"; };
 		27801E2828E9DE3C00201339 /* DataManipulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManipulation.swift; sourceTree = "<group>"; };
 		27801E3628E9E3D100201339 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
-		27801E3C28E9F72F00201339 /* DataModelRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModelRepo.swift; sourceTree = "<group>"; };
-		27801E3E28E9FDAA00201339 /* AppModelRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelRepo.swift; sourceTree = "<group>"; };
+		27801E3C28E9F72F00201339 /* DataUsageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsageRepository.swift; sourceTree = "<group>"; };
+		27801E3E28E9FDAA00201339 /* AppDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,11 +280,11 @@
 		27801E1C28E98E6300201339 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				27801E1828E951A000201339 /* NetworkDataRepo.swift */,
-				27801E3C28E9F72F00201339 /* DataModelRepo.swift */,
-				27801E3E28E9FDAA00201339 /* AppModelRepo.swift */,
-				27801E1D28E98F0D00201339 /* AppStorage.swift */,
-				27801E2228E9B29D00201339 /* AppDatabase.swift */,
+				27801E1828E951A000201339 /* NetworkDataRepository.swift */,
+				27801E3C28E9F72F00201339 /* DataUsageRepository.swift */,
+				27801E3E28E9FDAA00201339 /* AppDataRepository.swift */,
+				27801E1D28E98F0D00201339 /* LocalStorage.swift */,
+				27801E2228E9B29D00201339 /* LocalDatabase.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -381,18 +381,18 @@
 				27801E0F28E1E7C500201339 /* SaveButtonView.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
 				27801E0928E054C500201339 /* CloseIconView.swift in Sources */,
-				27801E1E28E98F0D00201339 /* AppStorage.swift in Sources */,
-				27801E1928E951A100201339 /* NetworkDataRepo.swift in Sources */,
+				27801E1E28E98F0D00201339 /* LocalStorage.swift in Sources */,
+				27801E1928E951A100201339 /* NetworkDataRepository.swift in Sources */,
 				27801E0D28E0C02200201339 /* DateInputView.swift in Sources */,
-				27801E2328E9B29D00201339 /* AppDatabase.swift in Sources */,
+				27801E2328E9B29D00201339 /* LocalDatabase.swift in Sources */,
 				27801DF028D8BA2400201339 /* UsageCardView.swift in Sources */,
 				27801DBD28D6C96800201339 /* Icon.swift in Sources */,
 				27801DE628D6F59700201339 /* PillView.swift in Sources */,
 				27801DC328D6C96800201339 /* Type.swift in Sources */,
 				27801E2128E9B16E00201339 /* DataUsage.xcdatamodeld in Sources */,
-				27801E3D28E9F72F00201339 /* DataModelRepo.swift in Sources */,
+				27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */,
 				27801DC128D6C96800201339 /* Text.swift in Sources */,
-				27801E3F28E9FDAA00201339 /* AppModelRepo.swift in Sources */,
+				27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */,
 				27801DEE28D8B7FA00201339 /* Numbers.swift in Sources */,
 				27801DEA28D72A6600201339 /* Date.swift in Sources */,
 				27801DB428D6C96800201339 /* BasicInfoView.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  NetworkDataRepo.swift
+//  NetworkDataRepository.swift
 //  Data Pill
 //
 //  Created by Wind Versi on 2/10/22.
@@ -32,13 +32,13 @@ class NetworkDataRepository: ObservableObject, CustomStringConvertible {
     @Published var totalUsedData = 0.0
     var cancellables: Set<AnyCancellable> = .init()
 
-    // MARK: - Init
+    // MARK: - Initializer
     init() {
-        publishedUsedData()
+        loadTotalUsedData()
     }
     
     // MARK: - Functions
-    func publishedUsedData() {
+    func loadTotalUsedData() {
         usedDataInfo = getTotalUsedData()
         
         $usedDataInfo

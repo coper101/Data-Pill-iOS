@@ -1,5 +1,5 @@
 //
-//  DataStore.swift
+//  LocalDatabase.swift
 //  Data Pill
 //
 //  Created by Wind Versi on 2/10/22.
@@ -22,7 +22,7 @@ enum Entities: String {
     }
 }
 
-class AppDatabase<Entity: NSManagedObject> {
+class LocalDatabase<Entity: NSManagedObject> {
     
     private let container: NSPersistentContainer
     private let entityName: String
@@ -53,6 +53,12 @@ class AppDatabase<Entity: NSManagedObject> {
     
     func getAllItems() throws -> [Entity] {
         let request = NSFetchRequest<Entity>(entityName: entityName)
+        return try context.fetch(request)
+    }
+    
+    func getItemsWith(format: String, _ args: CVarArg) throws -> [Entity] {
+        let request = NSFetchRequest<Entity>(entityName: entityName)
+        request.predicate = .init(format: format, args)
         return try context.fetch(request)
     }
     
