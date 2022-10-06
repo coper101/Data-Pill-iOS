@@ -19,5 +19,14 @@ public class Data: NSManagedObject {
         (date ?? Date()).toDayFormat()
     }
     
+    public override var description: String {
+        """
+            Date: \(date ?? Date())
+            Total Used Data: \(totalUsedData)
+            Daily Used Data: \(dailyUsedData)
+            Has Last Total: \(hasLastTotal)
+            """
+    }
+    
 }
 

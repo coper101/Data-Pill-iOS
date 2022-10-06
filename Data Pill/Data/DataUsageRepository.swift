@@ -19,6 +19,7 @@ enum DatabaseError: Error, Equatable {
     case updating(String)
     case removing(String)
     case gettingTodaysData(String)
+    case filteringData(String)
     
     var id: String {
         switch self {
@@ -34,6 +35,8 @@ enum DatabaseError: Error, Equatable {
             return "Removing"
         case .gettingTodaysData(_):
             return "GettingTodaysData"
+        case .filteringData(_):
+            return "FilteringData"
         }
     }
     static func == (lhs: DatabaseError, rhs: DatabaseError) -> Bool {
@@ -42,6 +45,8 @@ enum DatabaseError: Error, Equatable {
 }
 
 class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
+    
+    private let HAS_LAST_TOTAL = "hasLastTotal"
     
     private let database: LocalDatabase<Data> = .init(container: .dataUsage, entity: .data)
     @Published var data: [Data] = .init()
@@ -54,7 +59,9 @@ class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
         } onSuccess: { [weak self] in
             self?.loadAllData()
             self?.data.forEach { data in
-                print("data: date: ", data.date)
+                if let date = data.date {
+                    print("data date: ", date)
+                }
             }
         }
     }
@@ -127,7 +134,8 @@ class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
     /// gets Data with todays Date from Database
     func getTodaysData() -> Data? {
         do {
-            let dataItems = try database.getItemsWith(format: "date = %@", Date() as NSDate)
+            let todaysDate = Calendar.current.startOfDay(for: .init()) // time starts at 00:00
+            let dataItems = try database.getItemsWith(format: "date == %@", todaysDate as NSDate)
             return dataItems.first
         } catch let error {
             dataError = DatabaseError.gettingTodaysData(error.localizedDescription)
@@ -135,8 +143,22 @@ class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
             return nil
         }
     }
-    
-    func totalUsedData() {
+
+}
+
+// MARK: - Filters
+extension DataUsageRepository {
         
+    /// gets the recent Data that has a value set for Total Used Data
+    func getDataWithHasTotal() -> Data? {
+        do {
+            let data = try database.getItemsWith(format: "\(HAS_LAST_TOTAL) == %@", true as NSNumber)
+            return data.first
+        } catch let error {
+            dataError = DatabaseError.filteringData(error.localizedDescription)
+            print("filter data with has total data error: ", error.localizedDescription)
+            return nil
+        }
     }
+    
 }

@@ -65,7 +65,7 @@ class AppDataRepository: ObservableObject {
         LocalStorage.setItem(date, forKey: .startDatePlan)
     }
     
-    func setEndDate(_ date: String) {
+    func setEndDate(_ date: Date) {
         LocalStorage.setItem(date, forKey: .endDatePlan)
     }
     

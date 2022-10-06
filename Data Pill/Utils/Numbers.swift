@@ -36,14 +36,20 @@ extension Double {
     
     /// convert decimal to a percentage number
     func toPercentage(with decimal: Double) -> Int {
-        guard decimal <= 0 else {
+        /// prevent infinty
+        guard decimal > 0 else {
             return 0
         }
         let percentageDouble = (self / decimal) * 100
-        guard percentageDouble <= 0 else {
+        /// prevent infinty
+        guard percentageDouble > 0 else {
             return 0
         }
-        let percentage = Int(percentageDouble)
+        var percentage = Int(percentageDouble)
+        /// limit to max 100
+        if percentage > 100 {
+            percentage = 100
+        }
         return percentage
     }
     

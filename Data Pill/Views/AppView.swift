@@ -178,7 +178,6 @@ struct AppView: View {
         } //: ZStack
         .onAppear {
             homeActions.refreshUsedDataToday()
-            homeActions.observeForDataChanges()
         }
         .onChange(of: appState.isDataPlanEditing) { isEditing in
             switch appState.editDataPlanType {

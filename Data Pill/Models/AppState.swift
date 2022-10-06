@@ -8,25 +8,25 @@
 import Foundation
 import Combine
 
-final class AppState: ObservableObject, CustomDebugStringConvertible {
+final class AppState: ObservableObject {
     
     var cancellables: Set<AnyCancellable> = .init()
     
     // MARK: - Data
-    private let appDataRepository: AppDataRepository
-    private let dataUsageRepository: DataUsageRepository
-    private let networkDataRepository: NetworkDataRepository
+    let appDataRepository: AppDataRepository
+    let dataUsageRepository: DataUsageRepository
+    let networkDataRepository: NetworkDataRepository
     
     /// App Data
-    @Published var startDate = "2022-09-12T10:44:00+0000".toDate()
-    @Published var endDate = "2022-10-12T10:44:00+0000".toDate()
+    @Published var startDate = Date()
+    @Published var endDate = Date()
     @Published var dataAmount = 0.0
     @Published var dataLimit = 0.0
     @Published var dataLimitPerDay = 0.0
-    @Published var unit: Unit = .gb
+    @Published var unit = Unit.gb
     
     /// Data Usage
-    @Published var data: [Data] = .init()
+    @Published var data = [Data]()
     @Published var dataError: DatabaseError?
     
     /// Network Data
@@ -43,25 +43,15 @@ final class AppState: ObservableObject, CustomDebugStringConvertible {
     }
     
     var todaysData: Data {
-        guard let todaysData = data.first(where: { data in
-            if let date = data.date {
-                return date.isToday()
-            }
-            return false
-        }) else {
+        guard let todaysData = dataUsageRepository.getTodaysData() else {
             // create a new data if it doesn't exist
             dataUsageRepository.addData(
-                date: .init(),
+                date: Calendar.current.startOfDay(for: .init()),
                 totalUsedData: 0,
                 dailyUsedData: 0,
                 hasLastTotal: false
             )
-            return data.first(where: { data in
-                if let date = data.date {
-                    return date.isToday()
-                }
-                return false
-            })!
+            return dataUsageRepository.getTodaysData()!
         }
         return todaysData
     }
@@ -71,7 +61,7 @@ final class AppState: ObservableObject, CustomDebugStringConvertible {
             let date = todaysData.date,
             let weekday = date.toDateComp().weekday
         else {
-            return .init()
+            return []
         }
         return data.suffix(weekday)
     }
@@ -133,7 +123,6 @@ final class AppState: ObservableObject, CustomDebugStringConvertible {
         .init(color: .secondaryBlue, day: .saturday)
     ]
     
-    // MARK: - Initialize
     init(
         appDataRepository: AppDataRepository = .init(),
         dataUsageRepository: DataUsageRepository = .init(),
@@ -146,9 +135,31 @@ final class AppState: ObservableObject, CustomDebugStringConvertible {
         republishAppData()
         republishDataUsage()
         republishNetworkData()
+        
+        setInputValues()
+        
+        observeUsageType()
+        observeNotification()
+        observeStartDate()
+        observeEndDate()
+        observeDataAmount()
+        observeDailyDataLimit()
+        observeTotalDataLimit()
     }
     
-    // MARK: - Functions
+    func setInputValues() {
+        dataValue = "\(dataAmount)"
+        startDateValue = startDate
+        endDateValue = endDate
+        dataLimitValue = "\(dataLimit)"
+        dataLimitPerDayValue = "\(dataLimitPerDay)"
+    }
+    
+}
+
+// MARK: - Republish Data
+extension AppState {
+    
     func republishAppData() {
         appDataRepository.$usageType
             .sink { [weak self] usageType in self?.usageType = usageType }
@@ -199,8 +210,58 @@ final class AppState: ObservableObject, CustomDebugStringConvertible {
             .store(in: &cancellables)
     }
     
+}
+
+// MARK: - Observe Data
+extension AppState {
     
-    // MARK: - Debug
+    func observeUsageType() {
+        $usageType
+            .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
+            .store(in: &cancellables)
+    }
+    
+    func observeNotification() {
+        $isNotifOn
+            .sink { [weak self] in self?.appDataRepository.setIsNotification($0) }
+            .store(in: &cancellables)
+    }
+    
+    func observeStartDate() {
+        $startDate
+            .sink { [weak self] in self?.appDataRepository.setStartDate($0) }
+            .store(in: &cancellables)
+    }
+    
+    func observeEndDate() {
+        $endDate
+            .sink { [weak self] in self?.appDataRepository.setEndDate($0) }
+            .store(in: &cancellables)
+    }
+    
+    func observeDataAmount() {
+        $dataAmount
+            .sink { [weak self] in self?.appDataRepository.setDataAmount($0) }
+            .store(in: &cancellables)
+    }
+    
+    func observeDailyDataLimit() {
+        $dataLimitPerDay
+            .sink { [weak self] in self?.appDataRepository.setDataLimitPerDay($0) }
+            .store(in: &cancellables)
+    }
+    
+    func observeTotalDataLimit() {
+        $dataLimit
+            .sink { [weak self] in self?.appDataRepository.setDataLimit($0) }
+            .store(in: &cancellables)
+    }
+    
+}
+
+// MARK: - Debug
+extension AppState: CustomDebugStringConvertible {
+    
     var debugDescription: String {
         """
             * AppState *
@@ -219,4 +280,5 @@ final class AppState: ObservableObject, CustomDebugStringConvertible {
             
             """
     }
+    
 }
