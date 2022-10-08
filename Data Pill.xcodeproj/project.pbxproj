@@ -55,6 +55,7 @@
 		27801E3728E9E3D100201339 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3628E9E3D100201339 /* Data.swift */; };
 		27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3C28E9F72F00201339 /* DataUsageRepository.swift */; };
 		27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3E28E9FDAA00201339 /* AppDataRepository.swift */; };
+		278D6B6928F17065006931DA /* DataInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D6B6828F17065006931DA /* DataInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,6 +109,7 @@
 		27801E3628E9E3D100201339 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		27801E3C28E9F72F00201339 /* DataUsageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsageRepository.swift; sourceTree = "<group>"; };
 		27801E3E28E9FDAA00201339 /* AppDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository.swift; sourceTree = "<group>"; };
+		278D6B6828F17065006931DA /* DataInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,10 +179,10 @@
 		27801DB528D6C96800201339 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				27801DB628D6C96800201339 /* AppState.swift */,
 				27801E1A28E974D700201339 /* HomeActions.swift */,
 				27801E3628E9E3D100201339 /* Data.swift */,
 				27801E1F28E9B16E00201339 /* DataUsage.xcdatamodeld */,
+				278D6B6828F17065006931DA /* DataInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -280,6 +282,7 @@
 		27801E1C28E98E6300201339 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				27801DB628D6C96800201339 /* AppState.swift */,
 				27801E1828E951A000201339 /* NetworkDataRepository.swift */,
 				27801E3C28E9F72F00201339 /* DataUsageRepository.swift */,
 				27801E3E28E9FDAA00201339 /* AppDataRepository.swift */,
@@ -389,6 +392,7 @@
 				27801DBD28D6C96800201339 /* Icon.swift in Sources */,
 				27801DE628D6F59700201339 /* PillView.swift in Sources */,
 				27801DC328D6C96800201339 /* Type.swift in Sources */,
+				278D6B6928F17065006931DA /* DataInfo.swift in Sources */,
 				27801E2128E9B16E00201339 /* DataUsage.xcdatamodeld in Sources */,
 				27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */,
 				27801DC128D6C96800201339 /* Text.swift in Sources */,

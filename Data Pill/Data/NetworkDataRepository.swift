@@ -8,44 +8,54 @@
 import Foundation
 import Combine
 
-// Source: https://stackoverflow.com/questions/25888272/track-cellular-data-usage-using-swift
-
-struct UsedDataInfo {
-    var wifiReceived: UInt64 = 0
-    var wifiSent: UInt64 = 0
-    var wirelessWanDataReceived: UInt64 = 0
-    var wirelessWanDataSent: UInt64 = 0
-
-    mutating func updateInfoByAdding(_ info: Self) {
-        wifiSent += info.wifiSent
-        wifiReceived += info.wifiReceived
-        wirelessWanDataSent += info.wirelessWanDataSent
-        wirelessWanDataReceived += info.wirelessWanDataReceived
-    }
-    
+// MARK: - Protocol
+protocol NetworkDataRepositoryProtocol {
+    var totalUsedData: Double { get set }
+    var totalUsedDataPublisher: Published<Double>.Publisher { get }
 }
 
-class NetworkDataRepository: ObservableObject, CustomStringConvertible {
+// MARK: - Implementations
+// Source: https://stackoverflow.com/questions/25888272/track-cellular-data-usage-using-swift
+class NetworkDataRepository: ObservableObject, CustomStringConvertible, NetworkDataRepositoryProtocol {
     
     // MARK: - Data
     @Published var usedDataInfo: UsedDataInfo = .init()
+    
     @Published var totalUsedData = 0.0
-    var cancellables: Set<AnyCancellable> = .init()
+    var totalUsedDataPublisher: Published<Double>.Publisher { $totalUsedData }
+        
+    private var timer: AnyCancellable?
+    private var cancellables: Set<AnyCancellable> = .init()
 
     // MARK: - Initializer
     init() {
-        loadTotalUsedData()
+        receiveUpdatedDataInfo()
+        receiveTotalUsedData()
     }
     
     // MARK: - Functions
-    func loadTotalUsedData() {
-        usedDataInfo = getTotalUsedData()
-        
+    
+    /// receive Data Usage Info every 2 seconds
+    func receiveUpdatedDataInfo() {
+        timer = Timer
+            .publish(every: 2, on: .main, in: .default)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.usedDataInfo = self.getTotalUsedData()
+            }
+    }
+    
+    /// receive total amount of used Data every 2 seconds
+    /// Data is retrieved from Data Info which is updated by a Timer
+    func receiveTotalUsedData() {
         $usedDataInfo
             .map { $0.wirelessWanDataReceived + $0.wirelessWanDataSent }
             .map { $0.toInt64().toMB() }
             .sink { [weak self] in
-                self?.totalUsedData = $0 // in MB
+                self?.totalUsedData = $0
             }
             .store(in: &cancellables)
     }
@@ -55,7 +65,7 @@ class NetworkDataRepository: ObservableObject, CustomStringConvertible {
         case wifiInterfacePrefix = "en"
     }
     
-    private func getTotalUsedData() -> UsedDataInfo {
+    func getTotalUsedData() -> UsedDataInfo {
         var ifaddr: UnsafeMutablePointer<ifaddrs>?
         var dataUsageInfo = UsedDataInfo()
 
@@ -133,3 +143,13 @@ class NetworkDataRepository: ObservableObject, CustomStringConvertible {
     }
 }
 
+class NetworkDataFakeRepository: ObservableObject, NetworkDataRepositoryProtocol {
+    
+    // MARK: - Data
+    @Published var totalUsedData = 0.0
+    var totalUsedDataPublisher: Published<Double>.Publisher { $totalUsedData }
+        
+    init(totalUsedData: Double) {
+        self.totalUsedData = totalUsedData
+    }
+}

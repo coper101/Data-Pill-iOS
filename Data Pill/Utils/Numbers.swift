@@ -53,15 +53,23 @@ extension Double {
         return percentage
     }
     
+    /// convert decimal number from MB to GB
+    /// no changes for unit that is not MB
+    func toGB(from unit: Unit = .mb) -> Double {
+        if unit == .mb {
+            return self / 1_000
+        }
+        return self
+    }
 }
 
 extension Int64 {
     
     /// convert bytes (B) to megabytes (MB)
     func toMB() -> Double {
-        (Double(self) / 1_024) / 1_024
+        Double(self) / pow(1_024, 2)
     }
-    
+
 }
 
 extension UInt64 {

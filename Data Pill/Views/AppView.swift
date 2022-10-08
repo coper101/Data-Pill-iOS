@@ -58,7 +58,7 @@ struct AppView: View {
                         dataAmountAction: {},
                         startPeriodAction: didTapStartPeriod,
                         endPeriodAction: didTapEndPeriod,
-                        dataValue: $appState.dataValue,
+                        dataAmountValue: $appState.dataValue,
                         plusDataAction: didTapPlus,
                         minusDataAction: didTapMinus
                     )
@@ -167,7 +167,7 @@ struct AppView: View {
             if appState.isHistoryShown {
                 HistoryView(
                     days: appState.days,
-                    weekData: appState.weeksData,
+                    weekData: appState.thisWeeksData,
                     dataLimitPerDay: appState.dataLimitPerDay,
                     usageType: appState.usageType,
                     closeAction: didTapClose
@@ -176,9 +176,6 @@ struct AppView: View {
             }
             
         } //: ZStack
-        .onAppear {
-            homeActions.refreshUsedDataToday()
-        }
         .onChange(of: appState.isDataPlanEditing) { isEditing in
             switch appState.editDataPlanType {
             case .dataPlan:

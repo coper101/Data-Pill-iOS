@@ -92,7 +92,7 @@ struct BasicInfoView: View {
                 dataAmountAction: didTapPlanAmount,
                 startPeriodAction: {},
                 endPeriodAction: {},
-                dataValue: $appState.dataValue,
+                dataAmountValue: $appState.dataValue,
                 plusDataAction: {},
                 minusDataAction: {}
             )
@@ -173,9 +173,20 @@ struct BasicInfoView: View {
 
 // MARK: - Preview
 struct BasicInfoView_Previews: PreviewProvider {
+    static var appState: AppState {
+        let networkDataRepo = NetworkDataFakeRepository(totalUsedData: 10)
+        let dataUsageRepo = DataUsageFakeRepository(thisWeeksData: [], dataError: nil)
+        let appDataRepo = AppDataFakeRepository()
+        return AppState.init(
+            appDataRepository: appDataRepo,
+            dataUsageRepository: dataUsageRepo,
+            networkDataRepository: networkDataRepo
+        )
+    }
+    
     static var previews: some View {
         BasicInfoView()
             .previewLayout(.sizeThatFits)
-            .environmentObject(AppState())
+            .environmentObject(appState)
     }
 }

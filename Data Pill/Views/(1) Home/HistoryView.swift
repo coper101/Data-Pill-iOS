@@ -74,7 +74,7 @@ struct HistoryView_Previews: PreviewProvider {
     static var previews: some View {
         HistoryView(
             days: appState.days,
-            weekData: appState.weeksData,
+            weekData: appState.thisWeeksData,
             dataLimitPerDay: appState.dataLimitPerDay,
             usageType: .daily,
             closeAction: {}

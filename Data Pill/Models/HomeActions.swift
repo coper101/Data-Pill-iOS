@@ -20,7 +20,7 @@ class HomeActions {
     func refreshUsedDataToday() {
         
         // total data used from network data source
-        let totalUsedData = 1.0 // appState.totalUsedData
+        let totalUsedData = appState.totalUsedData
         
         // calculate new amount used data
         var amountUsed = 0.0
@@ -32,7 +32,7 @@ class HomeActions {
         if amountUsed < 0 {
             amountUsed = 0
         }
-        
+                
         let todaysData = appState.todaysData
         todaysData.dailyUsedData += amountUsed
         todaysData.totalUsedData = totalUsedData
@@ -40,7 +40,16 @@ class HomeActions {
         
         appState.dataUsageRepository.updateData(item: todaysData)
 
-        print("todaysData edited: ", todaysData)
+        print(
+            """
+                * Network Data *
+                  Total Data Used: \(totalUsedData) MB
+                  Amount Used: \(amountUsed) MB
+                
+                - Updated Today's Data:
+                \(todaysData)
+                """
+        )
     }
     
 }

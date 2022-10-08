@@ -129,25 +129,26 @@ struct PillView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ForEach(appState.days) { dayPill in
-            let index = dayPill.day.ordinal()
-            let data = appState.data[index]
-            let percentage =  data.dailyUsedData.toPercentage(with: appState.dataLimitPerDay)
-            PillView(
-                color: dayPill.color,
-                percentage: percentage,
-                date: data.date ?? Date(),
-                usageType: .daily
-            )
-            .previewLayout(.sizeThatFits)
-            .padding()
-            .previewDisplayName(
-                displayName(
-                    dayPill.day.rawValue.firstCap(),
-                    "\(Int(percentage))%"
-                )
-            )
-        }
+//        ForEach(appState.days) { dayPill in
+//            let index = dayPill.day.ordinal()
+//            let data = appState.data[index]
+//            let percentage =  data.dailyUsedData.toPercentage(with: appState.dataLimitPerDay)
+//            PillView(
+//                color: dayPill.color,
+//                percentage: percentage,
+//                date: data.date ?? Date(),
+//                usageType: .daily
+//            )
+//            .previewLayout(.sizeThatFits)
+//            .padding()
+//            .previewDisplayName(
+//                displayName(
+//                    dayPill.day.rawValue.firstCap(),
+//                    "\(Int(percentage))%"
+//                )
+//            )
+//        }
+        Text("Test")
             
     }
 }

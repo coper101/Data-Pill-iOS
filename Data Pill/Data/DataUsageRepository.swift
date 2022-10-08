@@ -7,11 +7,28 @@
 
 import Foundation
 
+// MARK: - Protocol
 protocol DataUsageRepositoryProtocol {
-    func loadAllData() -> Void
-//    func addData()
+    var thisWeeksData: [Data] { get set }
+    var thisWeeksDataPublisher: Published<[Data]>.Publisher { get }
+    
+    var dataError: DatabaseError? { get set }
+    var dataErrorPublisher: Published<DatabaseError?>.Publisher { get }
+    
+    func addData(
+        date: Date,
+        totalUsedData: Double,
+        dailyUsedData: Double,
+        hasLastTotal: Bool
+    ) -> Void
+    func updateData(item: Data) -> Void
+    
+    func getTodaysData() -> Data?
+    func getDataWithHasTotal() -> Data?
+    func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double
 }
 
+// MARK: - Implementations
 enum DatabaseError: Error, Equatable {
     case loadingContainer(String)
     case loadingAll(String)
@@ -44,35 +61,39 @@ enum DatabaseError: Error, Equatable {
     }
 }
 
+private enum DataAttribute: String {
+    case date
+    case hasLastTotal
+}
+
 class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
     
-    private let HAS_LAST_TOTAL = "hasLastTotal"
-    
     private let database: LocalDatabase<Data> = .init(container: .dataUsage, entity: .data)
-    @Published var data: [Data] = .init()
+    
+    @Published var thisWeeksData: [Data] = .init()
+    var thisWeeksDataPublisher: Published<[Data]>.Publisher { $thisWeeksData }
+    
     @Published var dataError: DatabaseError?
+    var dataErrorPublisher: Published<DatabaseError?>.Publisher { $dataError }
     
     init() {
         database.loadContainer { [weak self] error in
             self?.dataError = DatabaseError.loadingContainer(error.localizedDescription)
             print(error.localizedDescription)
         } onSuccess: { [weak self] in
-            self?.loadAllData()
-            self?.data.forEach { data in
+            guard let self = self else {
+                return
+            }
+            self.updateToLatestData()
+            self.thisWeeksData.forEach { data in
                 if let date = data.date {
-                    print("data date: ", date)
+                    print("this week data date: ", date)
                 }
             }
-        }
-    }
-    
-    /// loads Data Usage records from Database and stores them to this repository
-    func loadAllData() {
-        do {
-            data = try database.getAllItems()
-        } catch let error {
-            dataError = DatabaseError.loadingAll(error.localizedDescription)
-            print("load data error: ", error.localizedDescription)
+            let weeksData = self.getThisWeeksData()
+            print("weeksData: ", weeksData)
+            print("totalUsedData: ", self.getTotalUsedData(from: "2022-10-08T10:44:00+0000".toDate(), to: "2022-10-09T10:44:00+0000".toDate()))
+
         }
     }
     
@@ -93,7 +114,7 @@ class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
             guard isAdded else {
                 return
             }
-            loadAllData()
+            updateToLatestData()
             
         } catch let error {
             dataError = DatabaseError.adding(error.localizedDescription)
@@ -108,8 +129,8 @@ class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
             guard isUpdated else {
                 return
             }
-            loadAllData()
-            
+            updateToLatestData()
+
         } catch let error {
             dataError = DatabaseError.updating(error.localizedDescription)
             print("update data error: ", error.localizedDescription)
@@ -123,24 +144,11 @@ class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
             guard isRemoved else {
                 return
             }
-            loadAllData()
-            
+            updateToLatestData()
+
         } catch let error {
             dataError = DatabaseError.removing(error.localizedDescription)
             print("remove data error: ", error.localizedDescription)
-        }
-    }
-    
-    /// gets Data with todays Date from Database
-    func getTodaysData() -> Data? {
-        do {
-            let todaysDate = Calendar.current.startOfDay(for: .init()) // time starts at 00:00
-            let dataItems = try database.getItemsWith(format: "date == %@", todaysDate as NSDate)
-            return dataItems.first
-        } catch let error {
-            dataError = DatabaseError.gettingTodaysData(error.localizedDescription)
-            print("get todays data error: ", error.localizedDescription)
-            return nil
         }
     }
 
@@ -148,17 +156,145 @@ class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
 
 // MARK: - Filters
 extension DataUsageRepository {
+    
+    /// gets Data with todays Date from Database
+    func getTodaysData() -> Data? {
+        do {
+            var calendar = Calendar.current
+            let todaysDate = calendar.startOfDay(for: .init()) // time starts at 00:00
+            print("todays date: ", todaysDate.toDayFormat())
+            let dateAttribute = DataAttribute.date.rawValue
+            let dataItems = try database.getItemsWith(
+                format: "\(dateAttribute) == %@",
+                todaysDate as NSDate
+            )
+            return dataItems.first
+        } catch let error {
+            dataError = DatabaseError.gettingTodaysData(error.localizedDescription)
+            print("get todays data error: ", error.localizedDescription)
+            return nil
+        }
+    }
         
     /// gets the recent Data that has a value set for Total Used Data
     func getDataWithHasTotal() -> Data? {
         do {
-            let data = try database.getItemsWith(format: "\(HAS_LAST_TOTAL) == %@", true as NSNumber)
+            let hasLastTotalAttribute = DataAttribute.hasLastTotal.rawValue
+            let data = try database.getItemsWith(
+                format: "\(hasLastTotalAttribute) == %@",
+                true as NSNumber
+            )
             return data.first
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
             print("filter data with has total data error: ", error.localizedDescription)
             return nil
         }
+    }
+    
+    /// gets all the Data for this Week from Sunday to Saturday with index from 1 to 7
+    func getThisWeeksData() -> [Data] {
+        // let todaysDate = "2022-10-31T10:44:00+0000".toDate() // Sunday
+        guard
+            let todaysData = getTodaysData(),
+            let todaysDate = todaysData.date,
+            let todaysWeek = todaysDate.toDateComp().weekday,
+            todaysWeek > 1
+        else {
+            // if Sunday, dont get previous days as week has began
+            return []
+        }
+        let prevDaysOfWeekCount = todaysWeek - 1
+        
+        guard let firstDayOfWeekDate = Calendar.current.date(
+            byAdding: .day,
+            value: -prevDaysOfWeekCount,
+            to: todaysDate
+        ) else {
+            return []
+        }
+                    
+        print(
+            """
+                
+                Today: \(todaysDate)
+                First Day of Week: \(firstDayOfWeekDate)
+                """
+        )
+                
+        do {
+            let dateAttribute = DataAttribute.date.rawValue
+            return try database.getItemsWith(
+                format: "(\(dateAttribute) >= %@) AND (\(dateAttribute) < %@)",
+                firstDayOfWeekDate as NSDate,
+                todaysDate as NSDate
+            )
+        } catch let error {
+            dataError = DatabaseError.filteringData(error.localizedDescription)
+            print("get weeks data error: ", error.localizedDescription)
+            return []
+        }
+    }
+    
+    func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double {
+        do {
+            let dateAttribute = DataAttribute.date.rawValue
+            let currentPlanDataItems = try database.getItemsWith(
+                format: "(\(dateAttribute) >= %@) AND (\(dateAttribute) <= %@)",
+                startDate as NSDate,
+                endDate as NSDate
+            )
+            return currentPlanDataItems
+                .reduce(0) { acc, data in acc + data.dailyUsedData }
+        } catch let error {
+            dataError = DatabaseError.filteringData(error.localizedDescription)
+            print("getTotalUsedData error: ", error.localizedDescription)
+            return 0
+        }
+    }
+    
+    func updateToLatestData() {
+        
+    }
+    
+}
+
+class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
+    
+    @Published var thisWeeksData: [Data]
+    var thisWeeksDataPublisher: Published<[Data]>.Publisher { $thisWeeksData }
+    
+    @Published var dataError: DatabaseError?
+    var dataErrorPublisher: Published<DatabaseError?>.Publisher { $dataError }
+    
+    init(thisWeeksData: [Data], dataError: DatabaseError?) {
+        self.thisWeeksData = thisWeeksData
+        self.dataError = dataError
+    }
+    
+    func addData(
+        date: Date,
+        totalUsedData: Double,
+        dailyUsedData: Double,
+        hasLastTotal: Bool
+    ) {
+        
+    }
+    
+    func updateData(item: Data) {
+        
+    }
+    
+    func getTodaysData() -> Data? {
+        Data()
+    }
+    
+    func getDataWithHasTotal() -> Data? {
+        nil
+    }
+    
+    func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double {
+        0
     }
     
 }

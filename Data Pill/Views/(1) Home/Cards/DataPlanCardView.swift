@@ -24,7 +24,7 @@ struct DataPlanCardView: View {
     var startPeriodAction: () -> Void
     var endPeriodAction: () -> Void
     
-    @Binding var dataValue: String
+    @Binding var dataAmountValue: String
     var dataUnit: Unit = .gb
     var plusDataAction: () -> Void
     var minusDataAction: () -> Void
@@ -74,7 +74,7 @@ struct DataPlanCardView: View {
                 action: minusDataAction
             )
             TextInputView(
-                data: $dataValue,
+                data: $dataAmountValue,
                 unit: dataUnit
             )
             StepperButtonView(
@@ -117,7 +117,7 @@ struct DataPlanCardView: View {
                 
                 // Row 2: DATA AMOUNT
                 NavRowView(
-                    title: "\(dataValue) \(dataUnit.rawValue)",
+                    title: "\(dataAmountValue) \(dataUnit.rawValue)",
                     subtitle: "",
                     action: dataAmountAction
                 )
@@ -143,7 +143,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             dataAmountAction: {},
             startPeriodAction: {},
             endPeriodAction: {},
-            dataValue: .constant("10"),
+            dataAmountValue: .constant("10"),
             plusDataAction: {},
             minusDataAction: {}
         )
@@ -160,7 +160,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             dataAmountAction: {},
             startPeriodAction: {},
             endPeriodAction: {},
-            dataValue: .constant("10"),
+            dataAmountValue: .constant("10"),
             plusDataAction: {},
             minusDataAction: {}
         )
@@ -177,7 +177,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             dataAmountAction: {},
             startPeriodAction: {},
             endPeriodAction: {},
-            dataValue: .constant("10"),
+            dataAmountValue: .constant("10"),
             plusDataAction: {},
             minusDataAction: {}
         )

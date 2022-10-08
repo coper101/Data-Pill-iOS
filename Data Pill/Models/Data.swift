@@ -21,10 +21,10 @@ public class Data: NSManagedObject {
     
     public override var description: String {
         """
-            Date: \(date ?? Date())
-            Total Used Data: \(totalUsedData)
-            Daily Used Data: \(dailyUsedData)
-            Has Last Total: \(hasLastTotal)
+              Date: \(date ?? Date())
+              Total Used Data: \(totalUsedData) MB
+              Daily Used Data: \(dailyUsedData) MB
+              Has Last Total: \(hasLastTotal)
             """
     }
     

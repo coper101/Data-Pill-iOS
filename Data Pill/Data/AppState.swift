@@ -13,9 +13,9 @@ final class AppState: ObservableObject {
     var cancellables: Set<AnyCancellable> = .init()
     
     // MARK: - Data
-    let appDataRepository: AppDataRepository
-    let dataUsageRepository: DataUsageRepository
-    let networkDataRepository: NetworkDataRepository
+    let appDataRepository: AppDataRepositoryProtocol
+    let dataUsageRepository: DataUsageRepositoryProtocol
+    let networkDataRepository: NetworkDataRepositoryProtocol
     
     /// App Data
     @Published var startDate = Date()
@@ -26,7 +26,8 @@ final class AppState: ObservableObject {
     @Published var unit = Unit.gb
     
     /// Data Usage
-    @Published var data = [Data]()
+    @Published var thisWeeksData = [Data]()
+    @Published var totalUsedDataPlan = 0.0
     @Published var dataError: DatabaseError?
     
     /// Network Data
@@ -56,25 +57,10 @@ final class AppState: ObservableObject {
         return todaysData
     }
     
-    var weeksData: [Data] {
-        guard
-            let date = todaysData.date,
-            let weekday = date.toDateComp().weekday
-        else {
-            return []
-        }
-        return data.suffix(weekday)
-    }
-    
     var usedData: Double {
         usageType == .daily ?
-            todaysData.dailyUsedData :
-        0
-//            totalUsedData(
-//                data,
-//                from: startDate,
-//                to: endDate
-//            )
+            todaysData.dailyUsedData.toGB() :
+            totalUsedData.toGB()
     }
     
     
@@ -124,9 +110,9 @@ final class AppState: ObservableObject {
     ]
     
     init(
-        appDataRepository: AppDataRepository = .init(),
-        dataUsageRepository: DataUsageRepository = .init(),
-        networkDataRepository: NetworkDataRepository = .init()
+        appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
+        dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(),
+        networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository()
     ) {
         self.appDataRepository = appDataRepository
         self.dataUsageRepository = dataUsageRepository
@@ -145,6 +131,7 @@ final class AppState: ObservableObject {
         observeDataAmount()
         observeDailyDataLimit()
         observeTotalDataLimit()
+        observeTotalUsedData()
     }
     
     func setInputValues() {
@@ -161,52 +148,61 @@ final class AppState: ObservableObject {
 extension AppState {
     
     func republishAppData() {
-        appDataRepository.$usageType
-            .sink { [weak self] usageType in self?.usageType = usageType }
+        appDataRepository.usageTypePublisher
+            .sink { [weak self] in self?.usageType = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.$isNotifOn
-            .sink { [weak self] isNotifOn in self?.isNotifOn = isNotifOn }
+        appDataRepository.isNotifOnPublisher
+            .sink { [weak self] in self?.isNotifOn = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.$startDate
-            .sink { [weak self] startDate in self?.startDate = startDate }
+        appDataRepository.startDatePublisher
+            .sink { [weak self] in self?.startDate = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.$endDate
-            .sink { [weak self] endDate in self?.endDate = endDate }
+        appDataRepository.endDatePublisher
+            .sink { [weak self] in self?.endDate = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.$dataAmount
-            .sink { [weak self] dataAmount in self?.dataAmount = dataAmount }
+        appDataRepository.dataAmountPublisher
+            .sink { [weak self] in self?.dataAmount = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.$dataLimit
-            .sink { [weak self] dataLimit in self?.dataLimit = dataLimit }
+        appDataRepository.dataLimitPublisher
+            .sink { [weak self] in self?.dataLimit = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.$dataLimitPerDay
-            .sink { [weak self] dataLimitPerDay in self?.dataLimitPerDay = dataLimitPerDay }
+        appDataRepository.dataLimitPerDayPublisher
+            .sink { [weak self] in self?.dataLimitPerDay = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.$unit
-            .sink { [weak self] unit in self?.unit = unit }
+        appDataRepository.unitPublisher
+            .sink { [weak self] in self?.unit = $0 }
             .store(in: &cancellables)
     }
     
     func republishDataUsage() {
-        dataUsageRepository.$data
-            .sink { [weak self] data in self?.data = data }
+        dataUsageRepository.thisWeeksDataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.thisWeeksData = $0
+                self.totalUsedDataPlan = self.dataUsageRepository
+                    .getTotalUsedData(from: self.startDate, to: self.endDate)
+            }
             .store(in: &cancellables)
         
-        dataUsageRepository.$dataError
-            .sink { [weak self] dataError in self?.dataError = dataError }
+        dataUsageRepository.dataErrorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.dataError = $0 }
             .store(in: &cancellables)
     }
     
     func republishNetworkData() {
-        networkDataRepository.$totalUsedData
-            .sink { [weak self] totalUsedData in self?.totalUsedData = totalUsedData }
+        networkDataRepository.totalUsedDataPublisher
+            .sink { [weak self] in self?.totalUsedData = $0 }
             .store(in: &cancellables)
     }
     
@@ -257,6 +253,57 @@ extension AppState {
             .store(in: &cancellables)
     }
     
+    func observeTotalUsedData() {
+        $totalUsedData
+            .sink { [weak self] in self?.refreshUsedDataToday($0) }
+            .store(in: &cancellables)
+    }
+    
+}
+
+// MARK: - Mutate Data
+extension AppState {
+    
+    /// updates the amount used Data today
+    func refreshUsedDataToday(_ totalUsedData: Double) {
+        
+        // ignore initial value which is exactly zero
+        if totalUsedData == 0 {
+            return
+        }
+                
+        // calculate new amount used data
+        var amountUsed = 0.0
+        if let recentDataWithHasTotal = dataUsageRepository.getDataWithHasTotal() {
+            print("recentDataWithHasTotal:\n", recentDataWithHasTotal)
+            let recentTotalUsedData = recentDataWithHasTotal.totalUsedData
+            amountUsed = totalUsedData - recentTotalUsedData
+        }
+        
+        // new amount can't be calculated since device was restarted
+        if amountUsed < 0 {
+            amountUsed = 0
+        }
+                
+        let todaysData = todaysData
+        todaysData.dailyUsedData += amountUsed
+        todaysData.totalUsedData = totalUsedData
+        todaysData.hasLastTotal = true
+        
+        dataUsageRepository.updateData(item: todaysData)
+
+        print(
+            """
+                * Network Data *
+                  Total Data Used: \(totalUsedData) MB
+                  Amount Used: \(amountUsed) MB
+                
+                - Updated Today's Data:
+                \(todaysData)
+                """
+        )
+    }
+    
 }
 
 // MARK: - Debug
@@ -264,7 +311,7 @@ extension AppState: CustomDebugStringConvertible {
     
     var debugDescription: String {
         """
-            * AppState *
+            - * AppState *
             
             - UI
               selectedItem: \(usageType)

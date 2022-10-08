@@ -65,8 +65,8 @@ struct UsedCardView_Previews: PreviewProvider {
     
     static var previews: some View {
         UsedCardView(
-            usedData: appState.todaysData.dailyUsedData,
-            maxData: appState.dataLimitPerDay,
+            usedData: 0.13,
+            maxData: 0.3,
             dataUnit: appState.unit,
             width: 150,
             height: 0.34 * 400

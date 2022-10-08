@@ -56,7 +56,7 @@ class LocalDatabase<Entity: NSManagedObject> {
         return try context.fetch(request)
     }
     
-    func getItemsWith(format: String, _ args: CVarArg) throws -> [Entity] {
+    func getItemsWith(format: String, _ args: CVarArg...) throws -> [Entity] {
         let request = NSFetchRequest<Entity>(entityName: entityName)
         request.predicate = .init(format: format, args)
         return try context.fetch(request)
