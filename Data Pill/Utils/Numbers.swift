@@ -9,13 +9,14 @@ import Foundation
 
 extension Double {
     
-    /// convert decimal to a whole number
+    /// Convert decimal to a whole number.
+    /// Negative number is not acceptable
     func toInt() -> Int {
-        self.isInfinite ? 0 : Int(self)
+        return (self.isInfinite || self < 0) ? 0 : Int(self)
     }
     
-    /// convert decimal to a whole number if the decimals are 0s
-    /// otherwise, take 2 decimal places
+    /// Convert decimal to a whole number if the decimals are 0s.
+    /// Otherwise, take 2 decimal places
     func toIntOrDp() -> String {
         let dps = self - Double(self.toInt())
         let dp1 = (dps * 10)
@@ -23,18 +24,26 @@ extension Double {
         let dp2 = (dp1s * 10).toInt()
         
         // print(dp1.toInt(), dp2)
-        return dp1.toInt() == 0 && dp2 == 0 ?
+        return (dp1.toInt() == 0 && dp2 == 0) ?
             "\(self.toInt())" :
             "\(self.toDp(n: 2))"
     }
     
-    /// retains n number of decimal places of a decimal number
-    /// default is 1 decimal place
+    /// Retains n number of decimal places of a decimal number without rounding up or down.
+    /// Default is 1 decimal place
+    /// - Parameter n: A value to specify the number of decimal places
     func toDp(n: Int = 1) -> String {
-        String(format: "%.\(n)f", self)
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = n
+        formatter.roundingMode = .down
+        let number = NSNumber(value: self)
+        let formatedNumber = formatter.string(from: number) ?? "0"
+        return (self < 0) ? "0" : formatedNumber
     }
     
-    /// convert decimal to a percentage number
+    /// Convert decimal to a percentage number.
+    /// - Parameter decimal: A denaminator value to divide with the decimal number
     func toPercentage(with decimal: Double) -> Int {
         /// prevent infinty
         guard decimal > 0 else {
@@ -55,10 +64,15 @@ extension Double {
     
     /// convert decimal number from MB to GB
     /// no changes for unit that is not MB
+    /// - Parameter unit: A value to specify the current unit to convet from
     func toGB(from unit: Unit = .mb) -> Double {
-        if unit == .mb {
+        if (self < 0) {
+            return 0
+        }
+        if (unit == .mb) {
             return self / 1_000
         }
+        /// no change
         return self
     }
 }
@@ -74,7 +88,7 @@ extension Int64 {
 
 extension UInt64 {
     
-    /// convert to Int64
+    /// convert UInt64 to Int64
     func toInt64() -> Int64 {
         Int64(self)
     }

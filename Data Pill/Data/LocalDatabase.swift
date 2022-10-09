@@ -22,23 +22,37 @@ enum Entities: String {
     }
 }
 
+enum StorageType {
+  case sql
+  case memory
+}
+
 class LocalDatabase<Entity: NSManagedObject> {
     
-    private let container: NSPersistentContainer
+    let container: NSPersistentContainer
     private let entityName: String
     
     var context: NSManagedObjectContext {
         container.viewContext
     }
     
+    // MARK: - Initializer
     init(
         container: Containers,
-        entity: Entities
+        entity: Entities,
+        storageType: StorageType = .sql
     ) {
         self.container = NSPersistentContainer(name: container.name)
+        if storageType == .memory {
+            let description = NSPersistentStoreDescription()
+            description.type = NSInMemoryStoreType
+//            description.url = URL(fileURLWithPath: "/dev/null")
+            self.container.persistentStoreDescriptions = [description]
+        }
         entityName = entity.name
     }
     
+    // MARK: - Operations
     func loadContainer(
         onError: @escaping (Error) -> Void,
         onSuccess: @escaping () -> Void
@@ -56,8 +70,13 @@ class LocalDatabase<Entity: NSManagedObject> {
         return try context.fetch(request)
     }
     
-    func getItemsWith(format: String, _ args: CVarArg...) throws -> [Entity] {
+    func getItemsWith(
+        format: String,
+        _ args: CVarArg...,
+        sortDescriptors: [NSSortDescriptor] = []
+    ) throws -> [Entity] {
         let request = NSFetchRequest<Entity>(entityName: entityName)
+        request.sortDescriptors = sortDescriptors
         request.predicate = .init(format: format, args)
         return try context.fetch(request)
     }

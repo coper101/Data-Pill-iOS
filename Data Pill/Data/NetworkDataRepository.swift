@@ -87,22 +87,17 @@ class NetworkDataRepository: ObservableObject, CustomStringConvertible, NetworkD
         return dataUsageInfo
     }
 
-    private func getUsedDataInfo(
-        from infoPointer: UnsafeMutablePointer<ifaddrs>
-    ) -> UsedDataInfo? {
-    let pointer = infoPointer
-    let name: String! = String(cString: pointer.pointee.ifa_name)
-    let address = pointer.pointee.ifa_addr.pointee
-    guard address.sa_family == UInt8(AF_LINK) else {
-        return nil
+    private func getUsedDataInfo(from infoPointer: UnsafeMutablePointer<ifaddrs>) -> UsedDataInfo? {
+        let pointer = infoPointer
+        let name: String! = String(cString: pointer.pointee.ifa_name)
+        let address = pointer.pointee.ifa_addr.pointee
+        guard address.sa_family == UInt8(AF_LINK) else {
+            return nil
+        }
+        return usedDataInfo(from: pointer, name: name)
     }
-    return usedDataInfo(from: pointer, name: name)
-}
 
-    private func usedDataInfo(
-        from pointer: UnsafeMutablePointer<ifaddrs>,
-        name: String
-    ) -> UsedDataInfo {
+    private func usedDataInfo(from pointer: UnsafeMutablePointer<ifaddrs>, name: String) -> UsedDataInfo {
         var networkData: UnsafeMutablePointer<if_data>?
         var dataUsageInfo = UsedDataInfo()
 
@@ -133,11 +128,14 @@ class NetworkDataRepository: ObservableObject, CustomStringConvertible, NetworkD
     var description: String {
           """
             
-            * NetworkDataRepository *
+            
+            * * Network Data Repository * *
             
             - Data
-              dataReceived: \(usedDataInfo.wirelessWanDataReceived.toInt64().toMB())
-              dataSent: \(usedDataInfo.wirelessWanDataSent.toInt64().toMB())
+              data received: \(usedDataInfo.wirelessWanDataReceived.toInt64().toMB())
+              data sent: \(usedDataInfo.wirelessWanDataSent.toInt64().toMB())
+              total used data: \(totalUsedData)
+            
             
             """
     }

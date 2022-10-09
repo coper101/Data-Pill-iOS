@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct HistoryView: View {
     // MARK: - Props
@@ -15,12 +16,24 @@ struct HistoryView: View {
     var dataLimitPerDay: Double
     var usageType: ToggleItem
     var closeAction: () -> Void
+    
+    var descendingWeeksData: [Data] {
+        weekData.sorted {
+            guard
+                let date1 = $0.date,
+                let date2 = $1.date
+            else {
+                return false
+            }
+            return date1 > date2
+        }
+    }
 
     // MARK: - UI
     var body: some View {
         VStack(spacing: 0) {
             
-            // Row 1:
+            // MARK: - Row 1: Top Bar
             HStack(spacing: 0) {
                 
                 // TITLE
@@ -41,18 +54,17 @@ struct HistoryView: View {
             .padding(.bottom, 17)
             .padding(.top, 17)
             
-            
-            // Row 2: WEEKDAYS
+            // MARK: - Row 2: Days of Week
             ZStack {
                 
-                ForEach(weekData) { weekdayData in
+                ForEach(descendingWeeksData) { weekdayData in
                     
                     DraggablePillView(
                         date: weekdayData.date ?? Date(),
                         color: days[dayPillIndex(weekdayData)].color,
-                        percentage: weekdayData.dailyUsedData.toPercentage(with: dataLimitPerDay),
+                        percentage: weekdayData.dailyUsedData.toGB().toPercentage(with: dataLimitPerDay),
                         usageType: usageType,
-                        widthScale: 0.75
+                        widthScale: 0.65
                     )
                     
                 } //: ForEach
@@ -69,16 +81,18 @@ struct HistoryView: View {
 
 // MARK: - Preview
 struct HistoryView_Previews: PreviewProvider {
-    static var appState = AppState()
+    static var repo = DataUsageFakeRepository(thisWeeksData: weeksDataSample)
+    static var dataLimitPerDay = 2.0
     
     static var previews: some View {
         HistoryView(
-            days: appState.days,
-            weekData: appState.thisWeeksData,
-            dataLimitPerDay: appState.dataLimitPerDay,
+            days: dayPills,
+            weekData: repo.thisWeeksData,
+            dataLimitPerDay: dataLimitPerDay,
             usageType: .daily,
             closeAction: {}
         )
             .previewLayout(.sizeThatFits)
     }
 }
+

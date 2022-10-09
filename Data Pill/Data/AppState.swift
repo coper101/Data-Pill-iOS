@@ -99,15 +99,7 @@ final class AppState: ObservableObject {
     }
     
     /// Weekday color can be customizable in the future
-    @Published var days: [DayPill] = [
-        .init(color: .secondaryBlue, day: .sunday),
-        .init(color: .secondaryPurple, day: .monday),
-        .init(color: .secondaryGreen, day: .tuesday),
-        .init(color: .secondaryRed, day: .wednesday),
-        .init(color: .secondaryOrange, day: .thursday),
-        .init(color: .secondaryPurple, day: .friday),
-        .init(color: .secondaryBlue, day: .saturday)
-    ]
+    @Published var days = [DayPill]()
     
     init(
         appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
@@ -118,6 +110,7 @@ final class AppState: ObservableObject {
         self.dataUsageRepository = dataUsageRepository
         self.networkDataRepository = networkDataRepository
         
+        days = dayPills
         republishAppData()
         republishDataUsage()
         republishNetworkData()
@@ -191,6 +184,7 @@ extension AppState {
                 self.thisWeeksData = $0
                 self.totalUsedDataPlan = self.dataUsageRepository
                     .getTotalUsedData(from: self.startDate, to: self.endDate)
+                print(self.networkDataRepository, self, separator: "\n")
             }
             .store(in: &cancellables)
         
@@ -266,25 +260,22 @@ extension AppState {
     
     /// updates the amount used Data today
     func refreshUsedDataToday(_ totalUsedData: Double) {
-        
+        // print("- * Network Data *")
         // ignore initial value which is exactly zero
         if totalUsedData == 0 {
             return
         }
-                
         // calculate new amount used data
         var amountUsed = 0.0
         if let recentDataWithHasTotal = dataUsageRepository.getDataWithHasTotal() {
-            print("recentDataWithHasTotal:\n", recentDataWithHasTotal)
+            // print("- recentDataWithHasTotal:\n", recentDataWithHasTotal)
             let recentTotalUsedData = recentDataWithHasTotal.totalUsedData
             amountUsed = totalUsedData - recentTotalUsedData
         }
-        
         // new amount can't be calculated since device was restarted
         if amountUsed < 0 {
             amountUsed = 0
         }
-                
         let todaysData = todaysData
         todaysData.dailyUsedData += amountUsed
         todaysData.totalUsedData = totalUsedData
@@ -292,16 +283,15 @@ extension AppState {
         
         dataUsageRepository.updateData(item: todaysData)
 
-        print(
-            """
-                * Network Data *
-                  Total Data Used: \(totalUsedData) MB
-                  Amount Used: \(amountUsed) MB
-                
-                - Updated Today's Data:
-                \(todaysData)
-                """
-        )
+//        print(
+//            """
+//                  Total Data Used: \(totalUsedData) MB
+//                  Amount Used: \(amountUsed) MB
+//
+//                - Updated Today's Data:
+//                \(todaysData)
+//                """
+//        )
     }
     
 }
@@ -311,19 +301,25 @@ extension AppState: CustomDebugStringConvertible {
     
     var debugDescription: String {
         """
-            - * AppState *
+            
+            
+            * * App State * *
             
             - UI
-              selectedItem: \(usageType)
-              isNotifOn: \(isNotifOn)
+              selected item: \(usageType)
+              is Notification On: \(isNotifOn)
             
             - Data
-              dataAmount: \(dataAmount)
-              dataLimitPerDay: \(dataLimitPerDay)
-              dataLimit: \(dataLimit)
+              data amount: \(dataAmount)
+              data limit per day: \(dataLimitPerDay)
+              data limit: \(dataLimit)
 
-              startDate: \(startDate)
-              endDate: \(endDate)
+              start date: \(startDate)
+              end date: \(endDate)
+            
+              this weeks data:\n\(thisWeeksData)
+            
+            
             
             """
     }
