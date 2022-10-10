@@ -77,6 +77,23 @@ final class Numbers_Test_Case: XCTestCase {
         XCTAssertEqual(output, "0")
     }
     
+    // MARK: - toPerc()
+    func test_to_percentage() throws {
+        let output = 2.toPercentage(with: 10)
+        XCTAssertEqual(output, 20)
+    }
+    
+    func test_to_percentage_exceeds_max() throws {
+        let output = 14.toPercentage(with: 10)
+        XCTAssertEqual(output, 100)
+    }
+    
+    func test_to_percentage_negative() throws {
+        let number = -2.0
+        let output = number.toPercentage(with: 10)
+        XCTAssertEqual(output, 0)
+    }
+    
     // MARK: - toGB()
     func test_megabyte_to_gigabye() throws {
         let output = 1_400.toGB()
@@ -88,8 +105,5 @@ final class Numbers_Test_Case: XCTestCase {
         let output = number.toGB()
         XCTAssertEqual(output, 0.0)
     }
-    
-    // MARK: - toMB()
-//    func test_
     
 }

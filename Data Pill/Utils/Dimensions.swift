@@ -16,7 +16,7 @@ struct Dimensions {
 
 struct EdgeInsets {
     
-    func getKeyWindows() -> UIWindow? {
+    static func getKeyWindows() -> UIWindow? {
         // Get connected scenes
         return UIApplication.shared.connectedScenes
             // Keep only active scenes, onscreen and visible to the user
@@ -29,7 +29,7 @@ struct EdgeInsets {
             .first(where: \.isKeyWindow)
     }
     
-    var insets: (
+    static var insets: (
         top: CGFloat,
         bottom: CGFloat,
         leading: CGFloat,

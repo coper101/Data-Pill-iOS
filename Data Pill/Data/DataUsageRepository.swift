@@ -235,8 +235,8 @@ extension DataUsageRepository {
                 startDate as NSDate,
                 endDate as NSDate
             )
-            return currentPlanDataItems
-                .reduce(0) { acc, data in acc + data.dailyUsedData }
+            // print("currentPlanDataItems: ", currentPlanDataItems)
+            return currentPlanDataItems.reduce(0) { (acc, data) in acc + data.dailyUsedData }
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
             print("getTotalUsedData error: ", error.localizedDescription)

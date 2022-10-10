@@ -77,4 +77,11 @@ final class Date_Test_Class: XCTestCase {
         XCTAssertEqual(output, 10)
     }
     
+    func test_to_num_of_days_negative() throws {
+        let start = "2022-10-11T00:00:00+00:00".toDate()
+        let end = "2022-10-01T00:00:00+00:00".toDate()
+        let output = start.toNumOfDays(to: end)
+        XCTAssertEqual(output, -10)
+    }
+    
 }

@@ -35,8 +35,8 @@ struct AppView: View {
             
             // Layer 0: BASIC INFO
             BasicInfoView()
+                .padding(.top, 12)
                 .fillMaxSize(alignment: .top)
-                .background(Colors.background.color)
                 .blur(radius: appState.isBlurShown ? 15 : 0)
                 .allowsHitTesting(!appState.isBlurShown)
                 .zIndex(0)
@@ -176,6 +176,8 @@ struct AppView: View {
             }
             
         } //: ZStack
+        .background(Colors.background.color)
+        .edgesIgnoringSafeArea(.all)
         .onChange(of: appState.isDataPlanEditing) { isEditing in
             switch appState.editDataPlanType {
             case .dataPlan:

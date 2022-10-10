@@ -60,7 +60,7 @@ final class AppState: ObservableObject {
     var usedData: Double {
         usageType == .daily ?
             todaysData.dailyUsedData.toGB() :
-            totalUsedData.toGB()
+            dataUsageRepository.getTotalUsedData(from: startDate, to: endDate).toGB()
     }
     
     
@@ -310,17 +310,18 @@ extension AppState: CustomDebugStringConvertible {
               is Notification On: \(isNotifOn)
             
             - Data
-              data amount: \(dataAmount)
-              data limit per day: \(dataLimitPerDay)
-              data limit: \(dataLimit)
-
-              start date: \(startDate)
-              end date: \(endDate)
+              plan data amount: \(dataAmount)
+              plan data limit per day: \(dataLimitPerDay)
+              plan data limit: \(dataLimit)
+              plan start date: \(startDate)
+              plan end date: \(endDate)
+            
+              today's data:\n(\(todaysData)  )
             
               this weeks data:\n\(thisWeeksData)
-            
-            
-            
+
+              used data (plan or daily): \(usedData)
+                        
             """
     }
     

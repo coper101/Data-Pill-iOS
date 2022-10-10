@@ -40,7 +40,7 @@ struct HistoryView: View {
                 Text("This Week")
                     .textStyle(
                         foregroundColor: .onBackground,
-                        font: .semibold,
+                        font: .bold,
                         size: 30,
                         maxWidth: .infinity,
                         lineLimit: 1
@@ -50,19 +50,19 @@ struct HistoryView: View {
                 CloseIconView(action: closeAction)
                 
             } //: HStack
-            .padding(.horizontal, 35)
+            .padding(.leading, 16)
+            .padding(.trailing, 20)
             .padding(.bottom, 17)
-            .padding(.top, 17)
+            .padding(.top, EdgeInsets.insets.top + 4)
             
             // MARK: - Row 2: Days of Week
             ZStack {
                 
-                ForEach(descendingWeeksData) { weekdayData in
-                    
+                ForEach(Array(descendingWeeksData.enumerated()), id: \.element) { index, element in
                     DraggablePillView(
-                        date: weekdayData.date ?? Date(),
-                        color: days[dayPillIndex(weekdayData)].color,
-                        percentage: weekdayData.dailyUsedData.toGB().toPercentage(with: dataLimitPerDay),
+                        date: element.date ?? Date(),
+                        color: days[index].color,
+                        percentage: element.dailyUsedData.toGB().toPercentage(with: dataLimitPerDay),
                         usageType: usageType,
                         widthScale: 0.65
                     )

@@ -8,5 +8,7 @@
 		<string>SFProText-Medium.ttf</string>
 		<string>SFProText-Semibold.ttf</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>
