@@ -199,7 +199,7 @@ extension DataUsageRepository {
         }
         
         // if Sunday, dont get previous days as week has began
-        if todaysWeek > 1 {
+        guard todaysWeek > 1 else {
             return [todaysData]
         }
         
