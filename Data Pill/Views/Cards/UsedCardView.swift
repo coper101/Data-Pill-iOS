@@ -61,13 +61,13 @@ struct UsedCardView: View {
 
 // MARK: - Preview
 struct UsedCardView_Previews: PreviewProvider {
-    static var appState: AppState = .init()
+    static var appViewModel: AppViewModel = .init()
     
     static var previews: some View {
         UsedCardView(
             usedData: 0.13,
             maxData: 0.3,
-            dataUnit: appState.unit,
+            dataUnit: appViewModel.unit,
             width: 150,
             height: 0.34 * 400
         )

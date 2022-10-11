@@ -7,19 +7,9 @@
 
 import SwiftUI
 
-struct VisualEffectView: UIViewRepresentable {
-    var effect: UIVisualEffect?
-    func makeUIView(context: UIViewRepresentableContext<Self>) -> UIVisualEffectView { UIVisualEffectView() }
-    func updateUIView(_ uiView: UIVisualEffectView, context: UIViewRepresentableContext<Self>) { uiView.effect = effect }
-}
-
 struct AppView: View {
     // MARK: - Props
-    @EnvironmentObject var appState: AppState
-    
-    var homeActions: HomeActions {
-        .init(appState: appState)
-    }
+    @EnvironmentObject var appViewModel: AppViewModel
     
     var width: CGFloat {
         Dimensions.Screen.width * 0.45
@@ -34,37 +24,37 @@ struct AppView: View {
         ZStack(alignment: .top) {
             
             // Layer 0: BASIC INFO
-            BasicInfoView()
+            PillGroupView()
                 .padding(.top, 12)
                 .fillMaxSize(alignment: .top)
-                .blur(radius: appState.isBlurShown ? 15 : 0)
-                .allowsHitTesting(!appState.isBlurShown)
+                .blur(radius: appViewModel.isBlurShown ? 15 : 0)
+                .allowsHitTesting(!appViewModel.isBlurShown)
                 .zIndex(0)
             
             // Layer 1: EDIT PLAN
             // another layer of data plan card
-            if appState.isDataPlanEditing {
+            if appViewModel.isDataPlanEditing {
                 VStack(
                     alignment: .trailing,
                     spacing: 50
                 ) {
                     // Edit Cards
                     DataPlanCardView(
-                        editType: appState.editDataPlanType,
-                        startDate: appState.startDateValue,
-                        endDate: appState.endDateValue,
-                        numberOfdays: appState.numOfDaysOfPlanValue,
+                        editType: appViewModel.editDataPlanType,
+                        startDate: appViewModel.startDateValue,
+                        endDate: appViewModel.endDateValue,
+                        numberOfdays: appViewModel.numOfDaysOfPlanValue,
                         periodAction: {},
                         dataAmountAction: {},
-                        startPeriodAction: didTapStartPeriod,
-                        endPeriodAction: didTapEndPeriod,
-                        dataAmountValue: $appState.dataValue,
-                        plusDataAction: didTapPlus,
-                        minusDataAction: didTapMinus
+                        startPeriodAction: startPeriodAction,
+                        endPeriodAction: endPeriodAction,
+                        dataAmountValue: $appViewModel.dataValue,
+                        plusDataAction: plusDataAction,
+                        minusDataAction: minusDataAction
                     )
                                         
                     // Save Button
-                    SaveButtonView(action: didTapSave)
+                    SaveButtonView(action: saveAction)
                         .alignmentGuide(.trailing) { $0.width + 21 }
                     
                 } //: VStack
@@ -73,248 +63,142 @@ struct AppView: View {
                 .padding(.top, height + 21 * 2)
             }
             
-            // Layer 2: EDIT LIMIT - 1 Cycle
-            if appState.isDataLimitEditing {
+            // Layer 2: EDIT LIMIT - Data
+            if appViewModel.isDataLimitEditing {
                 VStack(
                     alignment: .trailing,
                     spacing: 50
                 ) {
                     // Edit Card
                     DataPlanLimitView(
-                        dataLimitValue: $appState.dataLimitValue,
-                        dataAmount: appState.dataLimit,
+                        dataLimitValue: $appViewModel.dataLimitValue,
+                        dataAmount: appViewModel.dataAmount,
                         isEditing: true,
                         usageType: .plan,
                         editAction: {},
-                        minusDataAction: didTapMinusLimit,
-                        plusDataAction: didTapPlusLimit
+                        minusDataAction: minusLimitAction,
+                        plusDataAction: plusLimitAction
                     )
                     .padding(.horizontal, 21)
                     .frame(height: 145)
                     .zIndex(2)
                     
                     // Save Button
-                    SaveButtonView(action: didTapSave)
+                    SaveButtonView(action: saveAction)
                         .alignmentGuide(.trailing) { $0.width + 21 }
                     
                 } //: VStack
                 .padding(.top, height + 21 * 2)
             }
             
-            // Layer 3: EDIT LIMIT - Daily
-            if appState.isDataLimitPerDayEditing {
+            // Layer 3: EDIT LIMIT - Daily or Plan
+            if appViewModel.isDataLimitPerDayEditing {
                 VStack(
                     alignment: .trailing,
                     spacing: 50
                 ) {
                     // Edit Card
                     DataPlanLimitView(
-                        dataLimitValue: $appState.dataLimitPerDayValue,
-                        dataAmount: appState.dataLimitPerDay,
+                        dataLimitValue: $appViewModel.dataLimitPerDayValue,
+                        dataAmount: appViewModel.dataLimitPerDay,
                         isEditing: true,
                         usageType: .daily,
                         editAction: {},
-                        minusDataAction: didTapMinusLimit,
-                        plusDataAction: didTapPlusLimit
+                        minusDataAction: minusLimitAction,
+                        plusDataAction: plusLimitAction
                     )
                     .padding(.horizontal, 21)
                     .frame(height: 145)
                     .zIndex(3)
                     
                     // Save Button
-                    SaveButtonView(action: didTapSave)
+                    SaveButtonView(action: saveAction)
                         .alignmentGuide(.trailing) { $0.width + 21 }
                     
                 } //: VStack
                 .padding(.top, height + 21 * 2)
             }
             
-            // Layer 4: EDIT PLAN - Start Date Input
-            if appState.isStartDatePickerShown {
+            // Layer 4: EDIT PLAN - Period
+            if appViewModel.isStartDatePickerShown || appViewModel.isEndDatePickerShown {
                 DatePicker(
-                    selection: $appState.startDateValue,
+                    selection: appViewModel.isStartDatePickerShown ?
+                        $appViewModel.startDateValue : $appViewModel.endDateValue,
                     displayedComponents: .date,
                     label: {}
                 )
-                .labelsHidden()
-                .padding()
-                .frame(width: Dimensions.Screen.width * 0.85)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .preferredColorScheme(.light)
                 .datePickerStyle(.graphical)
-                .transition(.slide)
+                .transition(.move(edge: .bottom))
+                .frame(width: Dimensions.Screen.width * 0.9)
+                .scaleEffect(0.9)
+                .background(
+                    Colors.surface.color
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                )
+                .padding(.top, EdgeInsets.insets.top + 14)
+//                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .zIndex(4)
             }
-
-            // Layer 5: EDIT PLAN - End Date Input
-            if appState.isEndDatePickerShown {
-                DatePicker(
-                    selection: $appState.endDateValue,
-                    displayedComponents: .date,
-                    label: {}
-                )
-                .labelsHidden()
-                .padding()
-                .frame(width: Dimensions.Screen.width * 0.85)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .datePickerStyle(.graphical)
-                .transition(.slide)
-                .zIndex(5)
-            }
             
-            // Layer 6: OVERVIEW OF USED DATA THIS WEEK
-            if appState.isHistoryShown {
+            // Layer 5: OVERVIEW OF USED DATA THIS WEEK
+            if appViewModel.isHistoryShown {
                 HistoryView(
-                    days: appState.days,
-                    weekData: appState.thisWeeksData,
-                    dataLimitPerDay: appState.dataLimitPerDay,
-                    usageType: appState.usageType,
-                    closeAction: didTapClose
+                    days: appViewModel.days,
+                    weekData: appViewModel.thisWeeksData,
+                    dataLimitPerDay: appViewModel.dataLimitPerDay,
+                    usageType: appViewModel.usageType,
+                    closeAction: closeAction
                 )
-                .zIndex(6)
+                .zIndex(5)
             }
             
         } //: ZStack
         .background(Colors.background.color)
         .edgesIgnoringSafeArea(.all)
-        .onChange(of: appState.isDataPlanEditing) { isEditing in
-            switch appState.editDataPlanType {
-            case .dataPlan:
-                // update dates
-                appState.startDate = appState.startDateValue
-                appState.endDate = appState.endDateValue
-            case .data:
-                // update data amount only if editing is done
-                guard
-                    let amount = Double(appState.dataValue),
-                    !isEditing,
-                    appState.editDataPlanType == .data
-                else { return }
-                appState.dataAmount = amount
-            }
-            print(appState)
-        }
-        .onChange(of: appState.isDataLimitEditing) { isEditing in
-            // update data limit only if editing is done
-            guard
-                let amount = Double(appState.dataLimitValue),
-                !isEditing
-            else { return }
-            appState.dataLimit = amount
-            print(appState)
-        }
-        .onChange(of: appState.isDataLimitPerDayEditing) { isEditing in
-            // update data limit per day only if editing is done
-            guard
-                let amount = Double(appState.dataLimitPerDayValue),
-                !isEditing
-            else { return }
-            appState.dataLimitPerDay = amount
-            print(appState)
-        }
     }
     
     // MARK: - Actions
-    func didTapClose() {
+    func startPeriodAction() {
         withAnimation {
-            appState.isBlurShown = false
-            appState.isHistoryShown = false
+            appViewModel.didTapStartPeriod()
         }
     }
     
-    // Edit
-    func didTapSave() {
+    func endPeriodAction() {
         withAnimation {
-            appState.isBlurShown = false
-            appState.isDataPlanEditing = false
-            
-            appState.isStartDatePickerShown = false
-            appState.isEndDatePickerShown = false
-            
-            appState.isDataLimitEditing = false
-            appState.isDataLimitPerDayEditing = false
+            appViewModel.didTapEndPeriod()
         }
     }
-    
-    // - Edit Data
-    func didTapPlus() {
-        guard var doubleValue = Double(appState.dataValue) else {
-            return
-        }
-        doubleValue += 1
-        appState.dataValue = "\(doubleValue)"
+
+    func plusLimitAction() {
+        appViewModel.didTapPlusLimit()
     }
     
-    func didTapMinus() {
-        guard
-            var doubleValue = Double(appState.dataValue),
-            doubleValue > 0
-        else {
-            return
-        }
-        doubleValue -= 1
-        appState.dataValue = "\(doubleValue)"
+    func minusLimitAction() {
+        appViewModel.didTapMinusLimit()
     }
     
-    // - Edit Data Plan
-    func didTapStartPeriod() {
+    func plusDataAction() {
+        appViewModel.didTapPlusData()
+    }
+    
+    func minusDataAction() {
+        appViewModel.didTapMinusData()
+    }
+    
+    func saveAction() {
         withAnimation {
-            appState.isEndDatePickerShown = false
-            appState.isStartDatePickerShown = true
+            appViewModel.didTapSave()
         }
     }
     
-    func didTapEndPeriod() {
+    func closeAction() {
         withAnimation {
-            appState.isStartDatePickerShown = false
-            appState.isEndDatePickerShown = true
+            appViewModel.didTapCloseHistory()
         }
     }
-    
-    // - Edit Data Limit
-    func didTapMinusLimit() {
-        let value = Double(
-            appState.isDataLimitEditing ?
-                appState.dataLimitValue :
-                appState.dataLimitPerDayValue
-        )
-        guard
-            var doubleValue = value,
-            doubleValue > 0
-        else {
-            return
-        }
-        let newDoubleValue = doubleValue - 1
-        doubleValue = newDoubleValue >= 0 ? newDoubleValue : 0
-        
-        if appState.isDataLimitEditing {
-            appState.dataLimitValue = "\(doubleValue)"
-        } else {
-            appState.dataLimitPerDayValue = "\(doubleValue)"
-        }
-    }
-    
-    func didTapPlusLimit() {
-        let value = Double(
-            appState.isDataLimitEditing ?
-                appState.dataLimitValue :
-                appState.dataLimitPerDayValue
-        )
-        guard
-            var doubleValue = value,
-            doubleValue + 1 <= appState.dataAmount
-        else {
-            return
-        }
-        doubleValue += 1
-        
-        if appState.isDataLimitEditing {
-            appState.dataLimitValue = "\(doubleValue)"
-        } else {
-            appState.dataLimitPerDayValue = "\(doubleValue)"
-        }
-    }
+
 }
 
 // MARK: - Preview
@@ -322,6 +206,6 @@ struct AppView_Previews: PreviewProvider {
     static var previews: some View {
         AppView()
             .previewLayout(.sizeThatFits)
-            .environmentObject(AppState())
+            .environmentObject(AppViewModel())
     }
 }

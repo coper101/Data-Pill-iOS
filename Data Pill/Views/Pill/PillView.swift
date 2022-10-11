@@ -125,14 +125,14 @@ struct PillView: View {
 
 // MARK: - Preview
 struct PillView_Previews: PreviewProvider {
-    static var appState: AppState = .init()
+    static var appViewModel: AppViewModel = .init()
     
     static var previews: some View {
         
 //        ForEach(appState.days) { dayPill in
 //            let index = dayPill.day.ordinal()
-//            let data = appState.data[index]
-//            let percentage =  data.dailyUsedData.toPercentage(with: appState.dataLimitPerDay)
+//            let data = appViewModel.data[index]
+//            let percentage =  data.dailyUsedData.toPercentage(with: appViewModel.dataLimitPerDay)
 //            PillView(
 //                color: dayPill.color,
 //                percentage: percentage,

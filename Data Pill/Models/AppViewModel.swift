@@ -1,5 +1,5 @@
 //
-//  AppState.swift
+//  AppViewModel.swift
 //  Data Pill
 //
 //  Created by Wind Versi on 18/9/22.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class AppState: ObservableObject {
+final class AppViewModel: ObservableObject {
     
     var cancellables: Set<AnyCancellable> = .init()
     
@@ -101,6 +101,7 @@ final class AppState: ObservableObject {
     /// Weekday color can be customizable in the future
     @Published var days = [DayPill]()
     
+    // MARK: - Initializer
     init(
         appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
         dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(),
@@ -116,29 +117,14 @@ final class AppState: ObservableObject {
         republishNetworkData()
         
         setInputValues()
-        
-        observeUsageType()
-        observeNotification()
-        observeStartDate()
-        observeEndDate()
-        observeDataAmount()
-        observeDailyDataLimit()
-        observeTotalDataLimit()
-        observeTotalUsedData()
-    }
-    
-    func setInputValues() {
-        dataValue = "\(dataAmount)"
-        startDateValue = startDate
-        endDateValue = endDate
-        dataLimitValue = "\(dataLimit)"
-        dataLimitPerDayValue = "\(dataLimitPerDay)"
+        observePlanSettings()
+        observeEditPlan()
     }
     
 }
 
-// MARK: - Republish Data
-extension AppState {
+// MARK: - Republish
+extension AppViewModel {
     
     func republishAppData() {
         appDataRepository.usageTypePublisher
@@ -202,62 +188,65 @@ extension AppState {
     
 }
 
-// MARK: - Observe Data
-extension AppState {
+// MARK: - Observables
+extension AppViewModel {
     
-    func observeUsageType() {
+    func observePlanSettings() {
+        
         $usageType
             .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
             .store(in: &cancellables)
-    }
-    
-    func observeNotification() {
+        
         $isNotifOn
             .sink { [weak self] in self?.appDataRepository.setIsNotification($0) }
             .store(in: &cancellables)
-    }
-    
-    func observeStartDate() {
+        
         $startDate
             .sink { [weak self] in self?.appDataRepository.setStartDate($0) }
             .store(in: &cancellables)
-    }
-    
-    func observeEndDate() {
+        
         $endDate
             .sink { [weak self] in self?.appDataRepository.setEndDate($0) }
             .store(in: &cancellables)
-    }
-    
-    func observeDataAmount() {
+        
         $dataAmount
             .sink { [weak self] in self?.appDataRepository.setDataAmount($0) }
             .store(in: &cancellables)
-    }
-    
-    func observeDailyDataLimit() {
+        
         $dataLimitPerDay
             .sink { [weak self] in self?.appDataRepository.setDataLimitPerDay($0) }
             .store(in: &cancellables)
-    }
-    
-    func observeTotalDataLimit() {
+        
         $dataLimit
             .sink { [weak self] in self?.appDataRepository.setDataLimit($0) }
             .store(in: &cancellables)
-    }
-    
-    func observeTotalUsedData() {
+        
         $totalUsedData
             .sink { [weak self] in self?.refreshUsedDataToday($0) }
             .store(in: &cancellables)
+        
     }
     
+    func observeEditPlan() {
+        
+        $isDataPlanEditing
+            .sink(receiveValue: didChangeIsDataPlanEditing)
+            .store(in: &cancellables)
+        
+        $isDataLimitEditing
+            .sink(receiveValue: didChangeIsDataLimitEditing)
+            .store(in: &cancellables)
+        
+        $isDataLimitPerDayEditing
+            .sink(receiveValue: didChangeIsDataLimitPerDayEditing)
+            .store(in: &cancellables)
+    }
 }
 
-// MARK: - Mutate Data
-extension AppState {
+// MARK: - Events
+extension AppViewModel {
     
+    // MARK: - Mobile Data
     /// updates the amount used Data today
     func refreshUsedDataToday(_ totalUsedData: Double) {
         // print("- * Network Data *")
@@ -294,10 +283,176 @@ extension AppState {
 //        )
     }
     
+    // MARK: - Edit Data Plan
+    /// Initial Values
+    func setInputValues() {
+        dataValue = "\(dataAmount)"
+        startDateValue = startDate
+        endDateValue = endDate
+        dataLimitValue = "\(dataLimit)"
+        dataLimitPerDayValue = "\(dataLimitPerDay)"
+    }
+    
+    /// Period
+    func didTapPeriod() {
+        isBlurShown = true
+        isDataPlanEditing = true
+        editDataPlanType = .dataPlan
+    }
+    
+    func didTapStartPeriod() {
+        isEndDatePickerShown = false
+        isStartDatePickerShown = true
+    }
+    
+    func didTapEndPeriod() {
+        isStartDatePickerShown = false
+        isEndDatePickerShown = true
+    }
+    
+    /// Data Amount
+    func didTapAmount() {
+        isBlurShown = true
+        isDataPlanEditing = true
+        editDataPlanType = .data
+    }
+    
+    func didTapPlusData() {
+        guard var doubleValue = Double(dataValue) else {
+            return
+        }
+        doubleValue += 1
+        dataValue = "\(doubleValue)"
+    }
+    
+    func didTapMinusData() {
+        guard
+            var doubleValue = Double(dataValue),
+            doubleValue > 0
+        else {
+            return
+        }
+        doubleValue -= 1
+        dataValue = "\(doubleValue)"
+    }
+    
+    func didChangeIsDataPlanEditing(_ isEditing: Bool) {
+        switch editDataPlanType {
+        case .dataPlan:
+            /// update dates
+            startDate = startDateValue
+            endDate = endDateValue
+        case .data:
+            /// update data amount only if editing is done
+            guard
+                let amount = Double(dataValue),
+                !isEditing,
+                editDataPlanType == .data
+            else {
+                return
+            }
+            dataAmount = amount
+        }
+    }
+    
+    func didChangeIsDataLimitEditing(_ isEditing: Bool) {
+        /// update data limit only if editing is done
+        guard
+            let amount = Double(dataLimitValue),
+            !isEditing
+        else {
+            return
+        }
+        dataLimit = amount
+    }
+    
+    func didChangeIsDataLimitPerDayEditing(_ isEditing: Bool) {
+        /// update data limit per day only if editing is done
+        guard
+            let amount = Double(dataLimitPerDayValue),
+            !isEditing
+        else {
+            return
+        }
+        dataLimitPerDay = amount
+    }
+    
+    // MARK: - Edit Data Limit
+    func didTapLimit() {
+        isBlurShown = true
+        isDataLimitEditing = true
+    }
+    
+    func didTapLimitPerDay() {
+        isBlurShown = true
+        isDataLimitPerDayEditing = true
+    }
+    
+    func didTapPlusLimit() {
+        let value = (isDataLimitEditing) ?
+            dataLimitValue :
+            dataLimitPerDayValue
+        
+        let newValue = Stepper.plus(
+            value: value,
+            max: dataAmount
+        )
+        
+        if isDataLimitEditing {
+            dataLimitValue = newValue
+            return
+        }
+        dataLimitPerDayValue = newValue
+    }
+    
+    func didTapMinusLimit() {
+        let value = (isDataLimitEditing) ?
+            dataLimitValue :
+            dataLimitPerDayValue
+                
+        let newValue = Stepper.minus(value: value)
+        
+        if isDataLimitEditing {
+            dataLimitValue = newValue
+            return
+        }
+        dataLimitPerDayValue = newValue
+    }
+    
+    func didTapSave() {
+        isBlurShown = false
+        isDataPlanEditing = false
+        
+        isStartDatePickerShown = false
+        isEndDatePickerShown = false
+        
+        isDataLimitEditing = false
+        isDataLimitPerDayEditing = false
+    }
+    
+    // MARK: History
+    func didTapCloseHistory() {
+        isBlurShown = false
+        isHistoryShown = false
+    }
+    
+    func didTapOpenHistory() {
+        if usageType == .plan {
+            return
+        }
+        isBlurShown = true
+        isHistoryShown = true
+    }
+    
+    // MARK: - Data Error
+    func didChangeDataError(_ error: Error) {
+        
+    }
+    
 }
 
 // MARK: - Debug
-extension AppState: CustomDebugStringConvertible {
+extension AppViewModel: CustomDebugStringConvertible {
     
     var debugDescription: String {
         """
@@ -306,7 +461,7 @@ extension AppState: CustomDebugStringConvertible {
             * * App State * *
             
             - UI
-              selected item: \(usageType)
+              usage type: \(usageType)
               is Notification On: \(isNotifOn)
             
             - Data

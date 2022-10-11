@@ -1,5 +1,5 @@
 //
-//  Date_Test_Class.swift
+//  Date_Test_Case.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 9/10/22.
@@ -8,7 +8,7 @@
 import XCTest
 import Data_Pill
 
-final class Date_Test_Class: XCTestCase {
+final class Date_Test_Case: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()

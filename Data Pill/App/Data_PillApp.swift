@@ -9,15 +9,12 @@ import SwiftUI
 
 @main
 struct Data_PillApp: App {
-    var appState: AppState = .init()
+    var appViewModel: AppViewModel = .init()
 
     var body: some Scene {
         WindowGroup {
             AppView()
-                .environmentObject(appState)
-                .onChange(of: appState.dataError) { error in
-                    print("dataError: ", error?.id)
-                }
+                .environmentObject(appViewModel)
         }
     }
 }

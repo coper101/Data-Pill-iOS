@@ -132,13 +132,13 @@ struct DataPlanCardView: View {
 
 // MARK: - Preview
 struct DataPlanCardView_Previews: PreviewProvider {
-    static var appState: AppState = .init()
+    static var appViewModel: AppViewModel = .init()
     
     static var previews: some View {
         DataPlanCardView(
-            startDate: appState.startDate,
-            endDate: appState.endDate,
-            numberOfdays: appState.numOfDaysOfPlan,
+            startDate: appViewModel.startDate,
+            endDate: appViewModel.endDate,
+            numberOfdays: appViewModel.numOfDaysOfPlan,
             periodAction: {},
             dataAmountAction: {},
             startPeriodAction: {},
@@ -153,9 +153,9 @@ struct DataPlanCardView_Previews: PreviewProvider {
         
         DataPlanCardView(
             editType: .data,
-            startDate: appState.startDate,
-            endDate: appState.endDate,
-            numberOfdays: appState.numOfDaysOfPlan,
+            startDate: appViewModel.startDate,
+            endDate: appViewModel.endDate,
+            numberOfdays: appViewModel.numOfDaysOfPlan,
             periodAction: {},
             dataAmountAction: {},
             startPeriodAction: {},
@@ -170,9 +170,9 @@ struct DataPlanCardView_Previews: PreviewProvider {
         
         DataPlanCardView(
             editType: .dataPlan,
-            startDate: appState.startDate,
-            endDate: appState.endDate,
-            numberOfdays: appState.numOfDaysOfPlan,
+            startDate: appViewModel.startDate,
+            endDate: appViewModel.endDate,
+            numberOfdays: appViewModel.numOfDaysOfPlan,
             periodAction: {},
             dataAmountAction: {},
             startPeriodAction: {},
