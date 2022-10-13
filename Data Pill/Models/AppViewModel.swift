@@ -45,7 +45,7 @@ final class AppViewModel: ObservableObject {
     
     var todaysData: Data {
         guard let todaysData = dataUsageRepository.getTodaysData() else {
-            // create a new data if it doesn't exist
+            /// create a new data if it doesn't exist
             dataUsageRepository.addData(
                 date: Calendar.current.startOfDay(for: .init()),
                 totalUsedData: 0,
@@ -99,7 +99,7 @@ final class AppViewModel: ObservableObject {
     }
     
     /// Weekday color can be customizable in the future
-    @Published var days = [DayPill]()
+    @Published var days = dayPills
     
     // MARK: - Initializer
     init(
@@ -111,7 +111,6 @@ final class AppViewModel: ObservableObject {
         self.dataUsageRepository = dataUsageRepository
         self.networkDataRepository = networkDataRepository
         
-        days = dayPills
         republishAppData()
         republishDataUsage()
         republishNetworkData()

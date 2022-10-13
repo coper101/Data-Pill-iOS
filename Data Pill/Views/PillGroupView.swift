@@ -21,6 +21,15 @@ struct PillGroupView: View {
         (Dimensions.Screen.width * 0.45) * 2.26
     }
     
+    var todaysDate: Date {
+        appViewModel.todaysData.date ?? .init()
+    }
+    
+    var color: Colors {
+        let weekday = todaysDate.toDateComp().weekday ?? 1
+        return appViewModel.days[weekday - 1].color
+    }
+    
     // MARK: - UI
     var body: some View {
         ScrollView {
@@ -36,9 +45,9 @@ struct PillGroupView: View {
                     // Col 1: DATA PILL
                     Button(action: dataPillAction) {
                         PillView(
-                            color: .secondaryBlue,
+                            color: color,
                             percentage: appViewModel.dateUsedInPercentage,
-                            date: appViewModel.todaysData.date ?? Date(),
+                            date: todaysDate,
                             usageType: appViewModel.usageType
                         )
                     }
