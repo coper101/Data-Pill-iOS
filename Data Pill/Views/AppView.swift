@@ -25,15 +25,15 @@ struct AppView: View {
     var body: some View {
         ZStack(alignment: .top) {
             
-            // Layer 0: BASIC INFO
+            // MARK: Layer 0: Basic Info
             PillGroupView()
-                .padding(.top, insets.top)
+                .padding(.top, !appViewModel.isBlurShown ? insets.top : 0)
                 .fillMaxSize(alignment: .top)
                 .blur(radius: appViewModel.isBlurShown ? 15 : 0)
                 .allowsHitTesting(!appViewModel.isBlurShown)
                 .zIndex(0)
             
-            // Layer 1: EDIT PLAN
+            // MARK: Layer 1: Edit Plan
             // another layer of data plan card
             if appViewModel.isDataPlanEditing {
                 VStack(
@@ -65,7 +65,7 @@ struct AppView: View {
                 .padding(.top, height + 21 * 2)
             }
             
-            // Layer 2: EDIT LIMIT - Plan
+            // MARK: Layer 2: Edit Limit - Plan
             if appViewModel.isDataLimitEditing {
                 VStack(
                     alignment: .trailing,
@@ -94,7 +94,7 @@ struct AppView: View {
                 .padding(.top, height + 21 * 2)
             }
             
-            // Layer 3: EDIT LIMIT - Daily
+            // MARK: Layer 3: Edit Limit - Daily
             if appViewModel.isDataLimitPerDayEditing {
                 VStack(
                     alignment: .trailing,
@@ -123,9 +123,8 @@ struct AppView: View {
                 .padding(.top, height + 21 * 2)
             }
             
-            // Layer 4: EDIT PLAN - Period
+            // MARK: Layer 4: Edit Plan - Period
             if appViewModel.isStartDatePickerShown || appViewModel.isEndDatePickerShown {
-                    
                 Group {
                     
                     if appViewModel.isStartDatePickerShown {
@@ -147,10 +146,9 @@ struct AppView: View {
                 } //: Group
                 .zIndex(4)
                 .popBounceEffect(maxOffsetY: 100)
-                    
             }
             
-            // Layer 5: OVERVIEW OF USED DATA THIS WEEK
+            // MARK: Layer 5: OVERVIEW OF USED DATA THIS WEEK
             if appViewModel.isHistoryShown {
                 HistoryView(
                     days: appViewModel.days,
@@ -162,16 +160,18 @@ struct AppView: View {
                 .zIndex(5)
             }
             
-            // Layer 6: Status Bar Background
-            Rectangle()
-                .fill(Colors.background.color)
-                .fillMaxWidth()
-                .frame(height: insets.top)
-                .zIndex(6)
+            // MARK: Layer 6: Status Bar Background
+            if !appViewModel.isBlurShown {
+                Rectangle()
+                    .fill(Colors.background.color)
+                    .fillMaxWidth()
+                    .frame(height: insets.top)
+                    .zIndex(6)
+            }
 
         } //: ZStack
-        .edgesIgnoringSafeArea(.all)
         .background(Colors.background.color)
+        .edgesIgnoringSafeArea(.all)
     }
     
     // MARK: - Actions
