@@ -14,21 +14,29 @@ enum Unit: String {
 
 struct TextInputView: View {
     // MARK: - Props
-    @Binding var data: String
+    @Binding var value: String
     var unit: Unit = .gb
+    
+    var width: CGFloat {
+        .init(18 * value.count)
+    }
+    
+    var unitWidth: CGFloat {
+        31 + CGFloat((5 * value.count))
+    }
     
     // MARK: - UI
     var body: some View {
         HStack(spacing: 4) {
             
             // Col 1: INPUT
-            TextField("", text: $data)
+            TextField("", text: $value)
                 .multilineTextAlignment(.trailing)
-                .frame(width: 46)
+                .frame(width: width)
             
             // Col 2: UNIT
             Text(unit.rawValue)
-                .frame(width: 50, alignment: .leading)
+                .frame(width: unitWidth, alignment: .leading)
             
         } //: HStack
         .textStyle(
@@ -49,9 +57,15 @@ struct TextInputView: View {
 
 // MARK: - Preview
 struct TextInputView_Previews: PreviewProvider {
+    static var numbers = [10, 100, 1000]
+    
     static var previews: some View {
-        TextInputView(data: .constant("10"))
-            .previewLayout(.sizeThatFits)
-            .padding()
+        ForEach(numbers, id: \.self) { number in
+            let numberString = "\(number)"
+            TextInputView(value: .constant(numberString))
+                .previewLayout(.sizeThatFits)
+                .previewDisplayName("\(numberString.count) Digit")
+                .padding()
+        }
     }
 }

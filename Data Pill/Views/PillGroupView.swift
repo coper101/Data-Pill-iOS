@@ -10,15 +10,16 @@ import SwiftUI
 struct PillGroupView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
+    @Environment(\.dimensions) var dimensions: Dimensions
 
     var spaceInBetween: CGFloat = 21
     var paddingHorizontal: CGFloat = 21
     
     var width: CGFloat {
-        Dimensions.Screen.width * 0.45
+        dimensions.screen.width * 0.45
     }
     var height: CGFloat {
-        (Dimensions.Screen.width * 0.45) * 2.26
+        (dimensions.screen.width * 0.45) * 2.26
     }
     
     var todaysDate: Date {
@@ -32,7 +33,7 @@ struct PillGroupView: View {
     
     // MARK: - UI
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             
             VStack(spacing: spaceInBetween) {
                 

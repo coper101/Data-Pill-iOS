@@ -10,22 +10,24 @@ import SwiftUI
 struct AppView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
+    @Environment(\.edgeInsets) var insets: EdgeInset
+    @Environment(\.dimensions) var dimensions: Dimensions
     
     var width: CGFloat {
-        Dimensions.Screen.width * 0.45
+        dimensions.screen.width * 0.45
     }
     
     var height: CGFloat {
-        (Dimensions.Screen.width * 0.45) * 2.26
+        (dimensions.screen.width * 0.45) * 2.26
     }
-    
+
     // MARK: - UI
     var body: some View {
         ZStack(alignment: .top) {
             
             // Layer 0: BASIC INFO
             PillGroupView()
-                .padding(.top, 12)
+                .padding(.top, insets.top)
                 .fillMaxSize(alignment: .top)
                 .blur(radius: appViewModel.isBlurShown ? 15 : 0)
                 .allowsHitTesting(!appViewModel.isBlurShown)
@@ -36,7 +38,7 @@ struct AppView: View {
             if appViewModel.isDataPlanEditing {
                 VStack(
                     alignment: .trailing,
-                    spacing: 50
+                    spacing: 20
                 ) {
                     // Edit Cards
                     DataPlanCardView(
@@ -63,11 +65,11 @@ struct AppView: View {
                 .padding(.top, height + 21 * 2)
             }
             
-            // Layer 2: EDIT LIMIT - Data
+            // Layer 2: EDIT LIMIT - Plan
             if appViewModel.isDataLimitEditing {
                 VStack(
                     alignment: .trailing,
-                    spacing: 50
+                    spacing: 20
                 ) {
                     // Edit Card
                     DataPlanLimitView(
@@ -88,14 +90,15 @@ struct AppView: View {
                         .alignmentGuide(.trailing) { $0.width + 21 }
                     
                 } //: VStack
+                .padding(.horizontal, 21)
                 .padding(.top, height + 21 * 2)
             }
             
-            // Layer 3: EDIT LIMIT - Daily or Plan
+            // Layer 3: EDIT LIMIT - Daily
             if appViewModel.isDataLimitPerDayEditing {
                 VStack(
                     alignment: .trailing,
-                    spacing: 50
+                    spacing: 20
                 ) {
                     // Edit Card
                     DataPlanLimitView(
@@ -116,29 +119,35 @@ struct AppView: View {
                         .alignmentGuide(.trailing) { $0.width + 21 }
                     
                 } //: VStack
+                .padding(.horizontal, 21)
                 .padding(.top, height + 21 * 2)
             }
             
             // Layer 4: EDIT PLAN - Period
             if appViewModel.isStartDatePickerShown || appViewModel.isEndDatePickerShown {
-                DatePicker(
-                    selection: appViewModel.isStartDatePickerShown ?
-                        $appViewModel.startDateValue : $appViewModel.endDateValue,
-                    displayedComponents: .date,
-                    label: {}
-                )
-                .preferredColorScheme(.light)
-                .datePickerStyle(.graphical)
-                .transition(.move(edge: .bottom))
-                .frame(width: Dimensions.Screen.width * 0.9)
-                .scaleEffect(0.9)
-                .background(
-                    Colors.surface.color
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                )
-                .padding(.top, EdgeInsets.insets.top + 14)
-//                .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
+                Group {
+                    
+                    if appViewModel.isStartDatePickerShown {
+                        
+                        DateRangeInputView(
+                            selectionDate: $appViewModel.startDateValue,
+                            toDateRange: appViewModel.startDateValue.toDateRange()
+                        )
+                        
+                    } else {
+                        
+                        DateRangeInputView(
+                            selectionDate: $appViewModel.endDateValue,
+                            fromDateRange: appViewModel.endDateValue.fromDateRange()
+                        )
+                       
+                    } //: if-else
+                    
+                } //: Group
                 .zIndex(4)
+                .popBounceEffect(maxOffsetY: 100)
+                    
             }
             
             // Layer 5: OVERVIEW OF USED DATA THIS WEEK
@@ -153,38 +162,53 @@ struct AppView: View {
                 .zIndex(5)
             }
             
+            // Layer 6: Status Bar Background
+            Rectangle()
+                .fill(Colors.background.color)
+                .fillMaxWidth()
+                .frame(height: insets.top)
+                .zIndex(6)
+
         } //: ZStack
-        .background(Colors.background.color)
         .edgesIgnoringSafeArea(.all)
+        .background(Colors.background.color)
     }
     
     // MARK: - Actions
     func startPeriodAction() {
-        withAnimation {
+        withAnimation(.easeInOut) {
             appViewModel.didTapStartPeriod()
         }
     }
     
     func endPeriodAction() {
-        withAnimation {
+        withAnimation(.easeInOut) {
             appViewModel.didTapEndPeriod()
         }
     }
 
     func plusLimitAction() {
-        appViewModel.didTapPlusLimit()
+        withAnimation {
+            appViewModel.didTapPlusLimit()
+        }
     }
     
     func minusLimitAction() {
-        appViewModel.didTapMinusLimit()
+        withAnimation {
+            appViewModel.didTapMinusLimit()
+        }
     }
     
     func plusDataAction() {
-        appViewModel.didTapPlusData()
+        withAnimation {
+            appViewModel.didTapPlusData()
+        }
     }
     
     func minusDataAction() {
-        appViewModel.didTapMinusData()
+        withAnimation {
+            appViewModel.didTapMinusData()
+        }
     }
     
     func saveAction() {

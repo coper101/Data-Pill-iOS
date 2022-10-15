@@ -22,8 +22,8 @@ struct DataPlanLimitView: View {
         switch usageType {
         case .plan:
             return !isEditing ?
-                "Data Plan\nLimit" :
-                "Data Plan Limit"
+                "Plan\nLimit" :
+                "Plan Limit"
         case .daily:
             return !isEditing ?
                 "Daily\nLimit" :
@@ -38,24 +38,6 @@ struct DataPlanLimitView: View {
     }
     
     // MARK: - UI
-    var editingContent: some View {
-        HStack(spacing: 10) {
-            StepperButtonView(
-                operator: .minus,
-                action: minusDataAction
-            )
-            TextInputView(
-                data: $dataLimitValue,
-                unit: dataUnit
-            )
-            StepperButtonView(
-                operator: .plus,
-                action: plusDataAction
-            )
-        } //: VStack
-        .fillMaxWidth(alignment: .center)
-    }
-    
     var content: some View {
         HStack(
             alignment: .bottom,
@@ -97,7 +79,12 @@ struct DataPlanLimitView: View {
             if !isEditing {
                 content
             } else {
-                editingContent
+                StepperView(
+                    value: $dataLimitValue,
+                    unit: .gb,
+                    minusAction: minusDataAction,
+                    plusAction: plusDataAction
+                )
                     .padding(.bottom, 20)
             }
             

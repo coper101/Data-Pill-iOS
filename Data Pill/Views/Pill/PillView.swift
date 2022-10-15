@@ -25,6 +25,8 @@ struct DayPill: Identifiable {
 
 struct PillView: View {
     // MARK: - Props
+    @Environment(\.dimensions) var dimensions: Dimensions
+
     var color: Colors = .secondaryBlue
     var percentage: Int
     var date: Date
@@ -33,10 +35,10 @@ struct PillView: View {
     var widthScale: CGFloat = 0.45
     
     var width: CGFloat {
-        Dimensions.Screen.width * widthScale
+        dimensions.screen.width * widthScale
     }
     var maxHeight: CGFloat {
-        (Dimensions.Screen.width * widthScale) * 2.26
+        (dimensions.screen.width * widthScale) * 2.26
     }
     
     var paddingTop: CGFloat {

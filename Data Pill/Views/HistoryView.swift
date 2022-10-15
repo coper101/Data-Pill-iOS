@@ -10,6 +10,8 @@ import CoreData
 
 struct HistoryView: View {
     // MARK: - Props
+    @Environment(\.edgeInsets) var insets: EdgeInset
+
     var paddingHorizontal: CGFloat = 21
     var days: [DayPill]
     var weekData: [Data]
@@ -53,7 +55,7 @@ struct HistoryView: View {
             .padding(.leading, 16)
             .padding(.trailing, 20)
             .padding(.bottom, 17)
-            .padding(.top, EdgeInsets.insets.top + 4)
+            .padding(.top, insets.top + 4)
             
             // MARK: - Row 2: Days of Week
             ZStack {

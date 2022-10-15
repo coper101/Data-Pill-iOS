@@ -68,22 +68,13 @@ struct DataPlanCardView: View {
     }
     
     var data: some View {
-        HStack(spacing: 10) {
-            StepperButtonView(
-                operator: .minus,
-                action: minusDataAction
-            )
-            TextInputView(
-                data: $dataAmountValue,
-                unit: dataUnit
-            )
-            StepperButtonView(
-                operator: .plus,
-                action: plusDataAction
-            )
-        } //: VStack
+        StepperView(
+            value: $dataAmountValue,
+            unit: .gb,
+            minusAction: minusDataAction,
+            plusAction: plusDataAction
+        )
         .padding(.top, 20)
-        .fillMaxWidth(alignment: .center)
     }
     
     var body: some View {

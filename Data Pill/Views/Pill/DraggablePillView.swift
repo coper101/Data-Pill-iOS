@@ -9,8 +9,10 @@ import SwiftUI
 
 struct DraggablePillView: View {
     // MARK: - Props
+    @Environment(\.dimensions) var dimensions: Dimensions
     @State private var translation: CGSize = .zero
     @State private var cardOffset: CGSize = .zero
+    
     var date: Date = .init()
     var color: Colors
     var percentage: Int
@@ -64,7 +66,7 @@ struct DraggablePillView: View {
                 usageType: usageType,
                 widthScale: widthScale
             )
-            .padding(.horizontal, Dimensions.HorizontalPadding)
+            .padding(.horizontal, dimensions.horizontalPadding)
             .offset(cardOffset)
             .gesture(drag)
         }

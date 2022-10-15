@@ -93,24 +93,27 @@ struct ItemCardView<Content>: View where Content: View {
             alignment: .leading,
             spacing: verticalSpacing
         ) {
+            // MARK: - Wide (label top)
             if (style == .wide) {
                 
-                // Row 1: LABEL
+                // Label
                 HStack(spacing: 0) {
                     label
                     Spacer()
                     secondaryLabel
                 }
                 
-                // Row 2: CONTENT
+                // Content
                 content()
                 
-            } else {
+            }
+            // MARK: - Minis (label down)
+            else {
                 
-                // Row 1: CONTENT
+                // Content
                 content()
 
-                // Row 2: LABEL
+                // Label
                 HStack(
                     alignment: .bottom,
                     spacing: 0
@@ -121,7 +124,9 @@ struct ItemCardView<Content>: View where Content: View {
                     
                     // Col 2: ICON
                     if (style == .mini2 && hasNavigateIcon) {
+                        
                         Spacer()
+                        
                         Button(action: navigateAction) {
                             Icons.navigateIcon.image
                                 .resizable()
@@ -129,7 +134,8 @@ struct ItemCardView<Content>: View where Content: View {
                                 .foregroundColor(
                                     Colors.onSurfaceLight2.color
                                 )
-                        }
+                        } //: Button
+                        
                     } //: if
                     
                 } //: HStack

@@ -60,6 +60,18 @@ extension Date {
     public func toNumOfDays(to end: Date) -> Int {
         Calendar.current.daysBetween(start: self, end: end)
     }
+    
+    /// Creates a range from the specified Date to Any Date
+    func fromDateRange() -> PartialRangeFrom<Date> {
+        let startComponents = self.toDateComp()
+        return Calendar.current.date(from: startComponents)!...
+    }
+    
+    /// Creates a range from Any Date to specified Date
+    func toDateRange() -> PartialRangeThrough<Date> {
+        let endComponents = self.toDateComp()
+        return ...Calendar.current.date(from: endComponents)!
+    }
 }
 
 extension Calendar {

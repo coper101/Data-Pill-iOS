@@ -17,16 +17,16 @@ struct DateInputView: View {
     var body: some View {
         VStack(spacing: 10) {
             
-            // TITLE
+            // Row 1: TITLE
             Text(title)
                 .textStyle(
                     foregroundColor: .onSurfaceLight,
                     font: .semibold,
-                    size: 18,
+                    size: 17,
                     maxWidth: .infinity
                 )
             
-            // INPUT
+            // Row 2: INPUT
             Button(action: action) {
                 
                 VStack() {
@@ -35,7 +35,7 @@ struct DateInputView: View {
                         .textStyle(
                             foregroundColor: .onSurface,
                             font: .semibold,
-                            size: 18
+                            size: 17
                         )
                     
                 } //: VStack
