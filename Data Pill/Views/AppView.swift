@@ -27,7 +27,7 @@ struct AppView: View {
             
             // MARK: Layer 0: Basic Info
             PillGroupView()
-                .padding(.top, !appViewModel.isBlurShown ? insets.top : 0)
+                .padding(.top, insets.top)
                 .fillMaxSize(alignment: .top)
                 .blur(radius: appViewModel.isBlurShown ? 15 : 0)
                 .allowsHitTesting(!appViewModel.isBlurShown)
@@ -131,14 +131,14 @@ struct AppView: View {
                         
                         DateRangeInputView(
                             selectionDate: $appViewModel.startDateValue,
-                            toDateRange: appViewModel.startDateValue.toDateRange()
+                            toDateRange: appViewModel.endDateValue.toDateRange()
                         )
                         
                     } else {
                         
                         DateRangeInputView(
                             selectionDate: $appViewModel.endDateValue,
-                            fromDateRange: appViewModel.endDateValue.fromDateRange()
+                            fromDateRange: appViewModel.startDateValue.fromDateRange()
                         )
                        
                     } //: if-else
