@@ -55,7 +55,7 @@ struct AppView: View {
                 
             }
             
-            // MARK: Layer 2: Edit Limit - Plan
+            // MARK: Layer 3: Edit Limit - Plan
             if appViewModel.isDataLimitEditing {
                 
                 DataPlanLimitView(
@@ -73,7 +73,7 @@ struct AppView: View {
                 
             }
             
-            // MARK: Layer 3: Edit Limit - Daily
+            // MARK: Layer 4: Edit Limit - Daily
             if appViewModel.isDataLimitPerDayEditing {
                 
                 DataPlanLimitView(
@@ -91,7 +91,7 @@ struct AppView: View {
             }
             
             
-            // MARK: Layer 4: Date Picker
+            // MARK: Layer 5: Date Picker
             if appViewModel.isStartDatePickerShown || appViewModel.isEndDatePickerShown {
                 Group {
                     
@@ -116,7 +116,7 @@ struct AppView: View {
                 .popBounceEffect(maxOffsetY: 100)
             }
             
-            // MARK: Layer 5: Save Button when Editing
+            // MARK: Layer 6: Save Button when Editing
             if appViewModel.isDataPlanEditing || appViewModel.isDataLimitEditing || appViewModel.isDataLimitPerDayEditing {
                 
                 SaveButtonView(action: saveAction)
@@ -127,7 +127,7 @@ struct AppView: View {
                 
             }
             
-            // MARK: Layer 6: Week's History
+            // MARK: Layer 7: Week's History
             if appViewModel.isHistoryShown {
                 HistoryView(
                     days: appViewModel.days,
@@ -139,7 +139,7 @@ struct AppView: View {
                 .zIndex(6)
             }
             
-            // MARK: Layer 7: Status Bar Background
+            // MARK: Layer 8: Status Bar Background
             if !appViewModel.isBlurShown {
                 Rectangle()
                     .fill(Colors.background.color)
