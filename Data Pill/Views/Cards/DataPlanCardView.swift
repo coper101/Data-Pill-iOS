@@ -42,8 +42,8 @@ struct DataPlanCardView: View {
     var subtitle: String {
         if let editType = editType {
             switch editType {
-            case .data: return "Data"
-            case .dataPlan: return "Data Plan"
+            case .data: return "Data Amount"
+            case .dataPlan: return "Period"
             }
         }
         return "Data Plan"

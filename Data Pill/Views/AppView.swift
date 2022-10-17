@@ -23,9 +23,9 @@ struct AppView: View {
 
     // MARK: - UI
     var body: some View {
-        ZStack(alignment: .top) {
+        ZStack(alignment: .center) {
             
-            // MARK: Layer 0: Basic Info
+            // MARK: Layer 0: Today's Data Pill
             PillGroupView()
                 .padding(.top, insets.top)
                 .fillMaxSize(alignment: .top)
@@ -33,97 +33,65 @@ struct AppView: View {
                 .allowsHitTesting(!appViewModel.isBlurShown)
                 .zIndex(0)
             
-            // MARK: Layer 1: Edit Plan
-            // another layer of data plan card
+            // MARK: Layer 2: Edit Plan - Data Amount & Period
             if appViewModel.isDataPlanEditing {
-                VStack(
-                    alignment: .trailing,
-                    spacing: 20
-                ) {
-                    // Edit Cards
-                    DataPlanCardView(
-                        editType: appViewModel.editDataPlanType,
-                        startDate: appViewModel.startDateValue,
-                        endDate: appViewModel.endDateValue,
-                        numberOfdays: appViewModel.numOfDaysOfPlanValue,
-                        periodAction: {},
-                        dataAmountAction: {},
-                        startPeriodAction: startPeriodAction,
-                        endPeriodAction: endPeriodAction,
-                        dataAmountValue: $appViewModel.dataValue,
-                        plusDataAction: plusDataAction,
-                        minusDataAction: minusDataAction
-                    )
-                                        
-                    // Save Button
-                    SaveButtonView(action: saveAction)
-                        .alignmentGuide(.trailing) { $0.width + 21 }
-                    
-                } //: VStack
-                .zIndex(1)
+
+                // Edit Cards
+                DataPlanCardView(
+                    editType: appViewModel.editDataPlanType,
+                    startDate: appViewModel.startDateValue,
+                    endDate: appViewModel.endDateValue,
+                    numberOfdays: appViewModel.numOfDaysOfPlanValue,
+                    periodAction: {},
+                    dataAmountAction: {},
+                    startPeriodAction: startPeriodAction,
+                    endPeriodAction: endPeriodAction,
+                    dataAmountValue: $appViewModel.dataValue,
+                    plusDataAction: plusDataAction,
+                    minusDataAction: minusDataAction
+                )
                 .padding(.horizontal, 21)
-                .padding(.top, height + 21 * 2)
+                .zIndex(1)
+                
             }
             
             // MARK: Layer 2: Edit Limit - Plan
             if appViewModel.isDataLimitEditing {
-                VStack(
-                    alignment: .trailing,
-                    spacing: 20
-                ) {
-                    // Edit Card
-                    DataPlanLimitView(
-                        dataLimitValue: $appViewModel.dataLimitValue,
-                        dataAmount: appViewModel.dataAmount,
-                        isEditing: true,
-                        usageType: .plan,
-                        editAction: {},
-                        minusDataAction: minusLimitAction,
-                        plusDataAction: plusLimitAction
-                    )
-                    .padding(.horizontal, 21)
-                    .frame(height: 145)
-                    .zIndex(2)
-                    
-                    // Save Button
-                    SaveButtonView(action: saveAction)
-                        .alignmentGuide(.trailing) { $0.width + 21 }
-                    
-                } //: VStack
+                
+                DataPlanLimitView(
+                    dataLimitValue: $appViewModel.dataLimitValue,
+                    dataAmount: appViewModel.dataAmount,
+                    isEditing: true,
+                    usageType: .plan,
+                    editAction: {},
+                    minusDataAction: minusLimitAction,
+                    plusDataAction: plusLimitAction
+                )
+                .frame(height: 145)
                 .padding(.horizontal, 21)
-                .padding(.top, height + 21 * 2)
+                .zIndex(2)
+                
             }
             
             // MARK: Layer 3: Edit Limit - Daily
             if appViewModel.isDataLimitPerDayEditing {
-                VStack(
-                    alignment: .trailing,
-                    spacing: 20
-                ) {
-                    // Edit Card
-                    DataPlanLimitView(
-                        dataLimitValue: $appViewModel.dataLimitPerDayValue,
-                        dataAmount: appViewModel.dataLimitPerDay,
-                        isEditing: true,
-                        usageType: .daily,
-                        editAction: {},
-                        minusDataAction: minusLimitAction,
-                        plusDataAction: plusLimitAction
-                    )
-                    .padding(.horizontal, 21)
-                    .frame(height: 145)
-                    .zIndex(3)
-                    
-                    // Save Button
-                    SaveButtonView(action: saveAction)
-                        .alignmentGuide(.trailing) { $0.width + 21 }
-                    
-                } //: VStack
+                
+                DataPlanLimitView(
+                    dataLimitValue: $appViewModel.dataLimitPerDayValue,
+                    dataAmount: appViewModel.dataLimitPerDay,
+                    isEditing: true,
+                    usageType: .daily,
+                    editAction: {},
+                    minusDataAction: minusLimitAction,
+                    plusDataAction: plusLimitAction
+                )
+                .frame(height: 145)
                 .padding(.horizontal, 21)
-                .padding(.top, height + 21 * 2)
+                .zIndex(3)
             }
             
-            // MARK: Layer 4: Edit Plan - Period
+            
+            // MARK: Layer 4: Date Picker
             if appViewModel.isStartDatePickerShown || appViewModel.isEndDatePickerShown {
                 Group {
                     
@@ -148,7 +116,18 @@ struct AppView: View {
                 .popBounceEffect(maxOffsetY: 100)
             }
             
-            // MARK: Layer 5: OVERVIEW OF USED DATA THIS WEEK
+            // MARK: Layer 5: Save Button when Editing
+            if appViewModel.isDataPlanEditing || appViewModel.isDataLimitEditing || appViewModel.isDataLimitPerDayEditing {
+                
+                SaveButtonView(action: saveAction)
+                    .fillMaxWidth(alignment: .trailing)
+                    .padding(.horizontal, 38)
+                    .padding(.top, 145 + 100)
+                    .zIndex(5)
+                
+            }
+            
+            // MARK: Layer 6: Week's History
             if appViewModel.isHistoryShown {
                 HistoryView(
                     days: appViewModel.days,
@@ -157,16 +136,17 @@ struct AppView: View {
                     usageType: appViewModel.usageType,
                     closeAction: closeAction
                 )
-                .zIndex(5)
+                .zIndex(6)
             }
             
-            // MARK: Layer 6: Status Bar Background
+            // MARK: Layer 7: Status Bar Background
             if !appViewModel.isBlurShown {
                 Rectangle()
                     .fill(Colors.background.color)
                     .fillMaxWidth()
                     .frame(height: insets.top)
-                    .zIndex(6)
+                    .fillMaxSize(alignment: .top)
+                    .zIndex(7)
             }
 
         } //: ZStack
