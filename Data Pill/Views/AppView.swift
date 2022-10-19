@@ -20,6 +20,13 @@ struct AppView: View {
     var height: CGFloat {
         (dimensions.screen.width * 0.45) * 2.26
     }
+    
+    var buttonType: ButtonType {
+        (appViewModel.isEndDatePickerShown ||
+        appViewModel.isStartDatePickerShown) ?
+            .done :
+            .save
+    }
 
     // MARK: - UI
     var body: some View {
@@ -119,10 +126,13 @@ struct AppView: View {
             // MARK: Layer 6: Save Button when Editing
             if appViewModel.isDataPlanEditing || appViewModel.isDataLimitEditing || appViewModel.isDataLimitPerDayEditing {
                 
-                SaveButtonView(action: saveAction)
+                ButtonView(
+                    type: buttonType,
+                    action: buttonAction
+                )
                     .fillMaxWidth(alignment: .trailing)
                     .padding(.horizontal, 38)
-                    .padding(.top, 145 + 100)
+                    .padding(.top, 145 + 100 + (buttonType == .done ? 250 : 0))
                     .zIndex(5)
                 
             }
@@ -191,9 +201,14 @@ struct AppView: View {
         }
     }
     
-    func saveAction() {
-        withAnimation {
-            appViewModel.didTapSave()
+    func buttonAction(type: ButtonType) {
+        withAnimation(.spring()) {
+            switch type {
+            case .save:
+                appViewModel.didTapSave()
+            case .done:
+                appViewModel.didTapDone()
+            }
         }
     }
     

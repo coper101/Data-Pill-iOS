@@ -42,7 +42,7 @@
 		27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0428DA1A7A00201339 /* DraggablePillView.swift */; };
 		27801E0928E054C500201339 /* CloseIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0828E054C400201339 /* CloseIconView.swift */; };
 		27801E0D28E0C02200201339 /* DateInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0C28E0C02200201339 /* DateInputView.swift */; };
-		27801E0F28E1E7C500201339 /* SaveButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0E28E1E7C500201339 /* SaveButtonView.swift */; };
+		27801E0F28E1E7C500201339 /* ButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E0E28E1E7C500201339 /* ButtonView.swift */; };
 		27801E1528E8227500201339 /* StepperButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1428E8227500201339 /* StepperButtonView.swift */; };
 		27801E1728E82B9100201339 /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1628E82B9100201339 /* TextInputView.swift */; };
 		27801E1928E951A100201339 /* NetworkDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E1828E951A000201339 /* NetworkDataRepository.swift */; };
@@ -113,7 +113,7 @@
 		27801E0428DA1A7A00201339 /* DraggablePillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggablePillView.swift; sourceTree = "<group>"; };
 		27801E0828E054C400201339 /* CloseIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseIconView.swift; sourceTree = "<group>"; };
 		27801E0C28E0C02200201339 /* DateInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateInputView.swift; sourceTree = "<group>"; };
-		27801E0E28E1E7C500201339 /* SaveButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButtonView.swift; sourceTree = "<group>"; };
+		27801E0E28E1E7C500201339 /* ButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonView.swift; sourceTree = "<group>"; };
 		27801E1428E8227500201339 /* StepperButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperButtonView.swift; sourceTree = "<group>"; };
 		27801E1628E82B9100201339 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
 		27801E1828E951A000201339 /* NetworkDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRepository.swift; sourceTree = "<group>"; };
@@ -285,7 +285,7 @@
 				27801E0828E054C400201339 /* CloseIconView.swift */,
 				27801E0C28E0C02200201339 /* DateInputView.swift */,
 				278FB30E28FA992200BE78C2 /* DateRangeInputView.swift */,
-				27801E0E28E1E7C500201339 /* SaveButtonView.swift */,
+				27801E0E28E1E7C500201339 /* ButtonView.swift */,
 				27801E1428E8227500201339 /* StepperButtonView.swift */,
 				278FB31228FAA61500BE78C2 /* StepperView.swift */,
 				27801DF128D8BDBE00201339 /* ToggleView.swift */,
@@ -462,7 +462,7 @@
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
-				27801E0F28E1E7C500201339 /* SaveButtonView.swift in Sources */,
+				27801E0F28E1E7C500201339 /* ButtonView.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
 				27801E0928E054C500201339 /* CloseIconView.swift in Sources */,
 				27801E1E28E98F0D00201339 /* LocalStorage.swift in Sources */,

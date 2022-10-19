@@ -429,6 +429,11 @@ extension AppViewModel {
         isDataLimitPerDayEditing = false
     }
     
+    func didTapDone() {
+        isStartDatePickerShown = false
+        isEndDatePickerShown = false
+    }
+    
     // MARK: History
     func didTapCloseHistory() {
         isBlurShown = false
