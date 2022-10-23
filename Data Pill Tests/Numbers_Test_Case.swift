@@ -34,19 +34,19 @@ final class Numbers_Test_Case: XCTestCase {
     }
     
     // MARK: - toIntOrDp()
-    func test_round_4_decimal_places() throws {
-        let output = 3.2032.toIntOrDp()
-        XCTAssertEqual(output, "3.20")
+    func test_round_decimal_places_to_2() throws {
+        let output = 1.2345.toIntOrDp()
+        XCTAssertEqual(output, "1.23")
     }
     
-    func test_round_2_decimal_places() throws {
-        let output = 3.20.toIntOrDp()
-        XCTAssertEqual(output, "3.20")
+    func test_round_2_decimal_places_to_2() throws {
+        let output = 1.2045.toIntOrDp()
+        XCTAssertEqual(output, "1.2")
     }
     
-    func test_round_0_decimal_place() throws {
-        let output = 3.00.toIntOrDp()
-        XCTAssertEqual(output, "3")
+    func test_round_0_decimal_place_to_2() throws {
+        let output = 1.00.toIntOrDp()
+        XCTAssertEqual(output, "1")
     }
     
     func test_round_negative_decimal_place() throws {
@@ -104,6 +104,12 @@ final class Numbers_Test_Case: XCTestCase {
         let number = -1_400.0
         let output = number.toGB()
         XCTAssertEqual(output, 0.0)
+    }
+    
+    // MARK: - toInt64()
+    func test_unsigned_64_to_int() throws {
+        let uint64: UInt64 = 1_000_000
+        print("unsigned", uint64.toInt64().toMB())
     }
     
 }

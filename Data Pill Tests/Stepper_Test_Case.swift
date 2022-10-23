@@ -16,7 +16,7 @@ final class Stepper_Test_Case: XCTestCase {
 
     override func tearDownWithError() throws {}
 
-    // MARK: plus()
+    // MARK: - plus()
     func test_plus_in_range() {
         let output = Stepper.plus(value: "0.0", max: 5.0)
         XCTAssertEqual(output, "1.0")
@@ -32,7 +32,7 @@ final class Stepper_Test_Case: XCTestCase {
         XCTAssertEqual(output, "5.0")
     }
     
-    // MARK: minus()
+    // MARK: - minus()
     func test_minus_in_range() {
         let output = Stepper.minus(value: "5.0")
         XCTAssertEqual(output, "4.0")

@@ -104,7 +104,12 @@ final class AppViewModel: ObservableObject {
     // MARK: - Initializer
     init(
         appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
-        dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(),
+        dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(
+            database: LocalDatabase(
+                container: .dataUsage,
+                entity: .data
+            )
+        ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository()
     ) {
         self.appDataRepository = appDataRepository
@@ -248,7 +253,6 @@ extension AppViewModel {
     // MARK: - Mobile Data
     /// updates the amount used Data today
     func refreshUsedDataToday(_ totalUsedData: Double) {
-        // print("- * Network Data *")
         // ignore initial value which is exactly zero
         if totalUsedData == 0 {
             return
@@ -256,7 +260,6 @@ extension AppViewModel {
         // calculate new amount used data
         var amountUsed = 0.0
         if let recentDataWithHasTotal = dataUsageRepository.getDataWithHasTotal() {
-            // print("- recentDataWithHasTotal:\n", recentDataWithHasTotal)
             let recentTotalUsedData = recentDataWithHasTotal.totalUsedData
             amountUsed = totalUsedData - recentTotalUsedData
         }

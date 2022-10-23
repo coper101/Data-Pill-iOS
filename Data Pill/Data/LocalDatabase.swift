@@ -23,36 +23,28 @@ enum Entities: String {
 }
 
 enum StorageType {
-  case sql
-  case memory
+    case sql
+    case memory
 }
 
-class LocalDatabase<Entity: NSManagedObject> {
+// MARK: - Protocol
+protocol Database {
+    associatedtype Entity: NSManagedObject
+    var container: NSPersistentContainer { get }
+    var entityName: String { get }
+    var context: NSManagedObjectContext { get }
     
-    let container: NSPersistentContainer
-    private let entityName: String
+    init(container: Containers, entity: Entities)
     
-    var context: NSManagedObjectContext {
-        container.viewContext
-    }
-    
-    // MARK: - Initializer
-    init(
-        container: Containers,
-        entity: Entities,
-        storageType: StorageType = .sql
-    ) {
-        self.container = NSPersistentContainer(name: container.name)
-        if storageType == .memory {
-            let description = NSPersistentStoreDescription()
-            description.type = NSInMemoryStoreType
-//            description.url = URL(fileURLWithPath: "/dev/null")
-            self.container.persistentStoreDescriptions = [description]
-        }
-        entityName = entity.name
-    }
-    
-    // MARK: - Operations
+    func loadContainer(onError: @escaping (Error) -> Void, onSuccess: @escaping () -> Void) -> Void
+    func getAllItems() throws -> [Entity]
+    func getItemsWith(format: String, _ args: CVarArg..., sortDescriptors: [NSSortDescriptor]) throws -> [Entity]
+    func addItem(_ creator: @escaping (inout Entity) -> Void) throws -> Bool
+    func updateItem(_ item: Entity) throws -> Bool
+    func deleteItem(_ item: Entity) throws -> Bool
+}
+
+extension Database where Entity: NSManagedObject {
     func loadContainer(
         onError: @escaping (Error) -> Void,
         onSuccess: @escaping () -> Void
@@ -65,8 +57,8 @@ class LocalDatabase<Entity: NSManagedObject> {
         }
     }
     
-    func getAllItems() throws -> [Entity] {
-        let request = NSFetchRequest<Entity>(entityName: entityName)
+    func getAllItems() throws -> [Data] {
+        let request = NSFetchRequest<Data>(entityName: entityName)
         return try context.fetch(request)
     }
     
@@ -74,28 +66,27 @@ class LocalDatabase<Entity: NSManagedObject> {
         format: String,
         _ args: CVarArg...,
         sortDescriptors: [NSSortDescriptor] = []
-    ) throws -> [Entity] {
-        let request = NSFetchRequest<Entity>(entityName: entityName)
+    ) throws -> [Data] {
+        let request = NSFetchRequest<Data>(entityName: entityName)
         request.sortDescriptors = sortDescriptors
         request.predicate = .init(format: format, args)
         return try context.fetch(request)
     }
     
-    func addItem(_ creator: @escaping (inout Entity) -> Void) throws -> Bool {
-        var newItem = Entity.init(context: context)
+    func addItem(_ creator: @escaping (inout Data) -> Void) throws -> Bool {
+        var newItem = Data.init(context: context)
         creator(&newItem)
         return try context.saveIfNeeded()
     }
     
-    func updateItem(_ item: Entity) throws -> Bool {
+    func updateItem(_ item: Data) throws -> Bool {
         return try context.saveIfNeeded()
     }
     
-    func deleteItem(_ item: Entity) throws -> Bool {
+    func deleteItem(_ item: Data) throws -> Bool {
         context.delete(item)
         return try context.saveIfNeeded()
     }
-    
 }
 
 extension NSManagedObjectContext {
@@ -107,4 +98,46 @@ extension NSManagedObjectContext {
         try save()
         return true
     }
+}
+
+// MARK: Implementation
+class LocalDatabase: Database {
+
+    let container: NSPersistentContainer
+    let entityName: String
+    
+    var context: NSManagedObjectContext {
+        container.viewContext
+    }
+    
+    required init(
+        container: Containers,
+        entity: Entities
+    ) {
+        self.container = NSPersistentContainer(name: container.name)
+        entityName = entity.name
+    }
+    
+}
+
+class InMemoryLocalDatabase: Database {
+
+    let container: NSPersistentContainer
+    let entityName: String
+    
+    var context: NSManagedObjectContext {
+        container.viewContext
+    }
+    
+    required init(
+        container: Containers,
+        entity: Entities
+    ) {
+        entityName = entity.name
+        self.container = NSPersistentContainer(name: container.name)
+        if let storeDescription = self.container.persistentStoreDescriptions.first {
+            storeDescription.url = URL(fileURLWithPath: "/dev/null")
+        }
+    }
+    
 }

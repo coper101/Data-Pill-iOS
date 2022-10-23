@@ -9,7 +9,6 @@ import Foundation
 
 // MARK: - Protocol
 protocol AppDataRepositoryProtocol {
-    
     var usageType: ToggleItem { get set }
     var usageTypePublisher: Published<ToggleItem>.Publisher { get }
     
@@ -43,7 +42,7 @@ protocol AppDataRepositoryProtocol {
     func setDataLimitPerDay(_ amount: Double) -> Void
 }
 
-// MARK: - Implementations
+// MARK: - Implementation
 enum Keys: String {
     case usageType = "Usage_Type"
     case notification = "Notification"
@@ -62,10 +61,10 @@ class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     @Published var isNotifOn = false
     var isNotifOnPublisher: Published<Bool>.Publisher { $isNotifOn }
     
-    @Published var startDate = "2022-09-12T10:44:00+0000".toDate()
+    @Published var startDate = Date()
     var startDatePublisher: Published<Date>.Publisher { $startDate }
     
-    @Published var endDate = "2022-10-12T10:44:00+0000".toDate()
+    @Published var endDate = Date()
     var endDatePublisher: Published<Date>.Publisher { $endDate}
 
     @Published var dataAmount = 0.0
@@ -130,7 +129,7 @@ class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
 
 }
 
-class AppDataFakeRepository: ObservableObject, AppDataRepositoryProtocol {
+class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
@@ -138,10 +137,10 @@ class AppDataFakeRepository: ObservableObject, AppDataRepositoryProtocol {
     @Published var isNotifOn = false
     var isNotifOnPublisher: Published<Bool>.Publisher { $isNotifOn }
     
-    @Published var startDate = "2022-09-12T10:44:00+0000".toDate()
+    @Published var startDate = Date()
     var startDatePublisher: Published<Date>.Publisher { $startDate }
     
-    @Published var endDate = "2022-10-12T10:44:00+0000".toDate()
+    @Published var endDate = Date()
     var endDatePublisher: Published<Date>.Publisher { $endDate}
 
     @Published var dataAmount = 0.0
@@ -159,8 +158,8 @@ class AppDataFakeRepository: ObservableObject, AppDataRepositoryProtocol {
     init(
         usageType: ToggleItem = .daily,
         isNotifOn: Bool = false,
-        startDate: Date = "2022-09-12T10:44:00+0000".toDate(),
-        endDate: Date = "2022-10-12T10:44:00+0000".toDate(),
+        startDate: Date = Date(),
+        endDate: Date = Date(),
         dataAmount: Double = 0.0,
         dataLimit: Double = 0.0,
         dataLimitPerDay: Double = 0.0,
@@ -177,7 +176,7 @@ class AppDataFakeRepository: ObservableObject, AppDataRepositoryProtocol {
     }
     
     func setUsageType(_ type: String) {
-        usageType = .daily
+        usageType = ToggleItem(rawValue: type) ?? .daily
     }
     
     func setIsNotification(_ isOn: Bool) {
