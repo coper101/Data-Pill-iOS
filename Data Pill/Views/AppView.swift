@@ -57,8 +57,10 @@ struct AppView: View {
                     plusDataAction: plusDataAction,
                     minusDataAction: minusDataAction
                 )
-                .padding(.horizontal, 21)
+                .padding(.horizontal, dimensions.horizontalPadding)
                 .zIndex(1)
+                .popBounceEffect(maxOffsetY: 100)
+                .cardShadow()
                 
             }
             
@@ -75,8 +77,10 @@ struct AppView: View {
                     plusDataAction: plusLimitAction
                 )
                 .frame(height: 145)
-                .padding(.horizontal, 21)
+                .padding(.horizontal, dimensions.horizontalPadding + 30)
                 .zIndex(2)
+                .popBounceEffect(maxOffsetY: 100)
+                .cardShadow()
                 
             }
             
@@ -93,8 +97,10 @@ struct AppView: View {
                     plusDataAction: plusLimitAction
                 )
                 .frame(height: 145)
-                .padding(.horizontal, 21)
+                .padding(.horizontal, dimensions.horizontalPadding + 30)
                 .zIndex(3)
+                .popBounceEffect(maxOffsetY: 100)
+                .cardShadow()
             }
             
             
@@ -121,6 +127,7 @@ struct AppView: View {
                 } //: Group
                 .zIndex(4)
                 .popBounceEffect(maxOffsetY: 100)
+                .cardShadow()
             }
             
             // MARK: Layer 6: Save Button when Editing
@@ -131,9 +138,12 @@ struct AppView: View {
                     action: buttonAction
                 )
                     .fillMaxWidth(alignment: .trailing)
-                    .padding(.horizontal, 38)
-                    .padding(.top, 145 + 100 + (buttonType == .done ? 250 : 0))
+                    .padding(.horizontal, dimensions.horizontalPadding +
+                             ( (appViewModel.isDataLimitPerDayEditing || appViewModel.isDataLimitEditing) ? 30 : 0 )
+                    )
+                    .padding(.top, 145 + 130 + (buttonType == .done ? 250 : 0))
                     .zIndex(5)
+                    .popBounceEffect(maxOffsetY: 100)
                 
             }
             

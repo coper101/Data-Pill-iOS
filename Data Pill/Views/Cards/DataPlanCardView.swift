@@ -74,7 +74,8 @@ struct DataPlanCardView: View {
             minusAction: minusDataAction,
             plusAction: plusDataAction
         )
-        .padding(.top, 20)
+        .padding(.top, 28)
+        .padding(.bottom, 12)
     }
     
     var body: some View {
@@ -82,7 +83,7 @@ struct DataPlanCardView: View {
             style: .wide,
             subtitle: subtitle,
             caption: caption,
-            hasBackground: editType == nil,
+            backgroundColor: editType == nil ? .surface : .background,
             textColor: editType == nil ? .onSurfaceLight2 : .onBackground
         ) {
             

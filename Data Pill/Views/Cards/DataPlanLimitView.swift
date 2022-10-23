@@ -71,7 +71,9 @@ struct DataPlanLimitView: View {
             style: .mini2,
             subtitle: subtitle,
             navigateAction: editAction,
-            hasBackground: !isEditing,
+            hasBackground: true,
+            hasBlur: false,
+            backgroundColor: isEditing ? .background : .surface,
             hasNavigateIcon: !isEditing,
             textColor: textColor
         ) {
@@ -85,7 +87,8 @@ struct DataPlanLimitView: View {
                     minusAction: minusDataAction,
                     plusAction: plusDataAction
                 )
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 34)
+                    .padding(.top, 16)
             }
             
         } //: ItemCardView

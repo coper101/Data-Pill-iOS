@@ -46,7 +46,7 @@ struct DateRangeInputView: View {
         .frame(width: dimensions.screen.width * 0.9)
         .scaleEffect(0.9)
         .background(
-            Colors.surface.color
+            Colors.background.color
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         )
         .padding(.top, insets.top + 14)

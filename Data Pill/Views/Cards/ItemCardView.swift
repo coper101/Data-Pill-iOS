@@ -59,6 +59,10 @@ struct ItemCardView<Content>: View where Content: View {
     var verticalSpacing: CGFloat = 0
     var navigateAction: () -> Void = {}
     var hasBackground = true
+    var hasBlur = false
+    var backgroundColor = Colors.surface
+    var contentVertPadding: CGFloat = 14
+    var contentHorPadding: CGFloat = 20
     var hasNavigateIcon = true
     var width: CGFloat?
     var height: CGFloat?
@@ -148,12 +152,13 @@ struct ItemCardView<Content>: View where Content: View {
             height: height,
             alignment: .leading
         )
-        .padding(.vertical, 14)
-        .padding(.horizontal, 20)
+        .padding(.vertical, contentVertPadding)
+        .padding(.horizontal, contentHorPadding)
         .background(
-            Colors.surface.color.opacity(
+            backgroundColor.color.opacity(
                 hasBackground ? 1 : 0
             )
+            .blur(radius: hasBlur ? 100 : 0)
         )
         .clipShape(
             RoundedRectangle(cornerRadius: 20)

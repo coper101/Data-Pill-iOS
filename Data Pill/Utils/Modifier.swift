@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension View {
+    
     /// Applies the given transform if the given condition evaluates to `true`.
     /// - Parameters:
     ///   - condition: The condition to evaluate.
@@ -22,6 +23,14 @@ extension View {
         } else {
             self
         }
+    }
+    
+    func cardShadow() -> some View {
+        self.shadow(
+            color: .black.opacity(0.02),
+            radius: 15,
+            y: 5
+        )
     }
 }
 
