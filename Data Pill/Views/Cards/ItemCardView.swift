@@ -139,6 +139,7 @@ struct ItemCardView<Content>: View where Content: View {
                                     Colors.onSurfaceLight2.color
                                 )
                         } //: Button
+                        .buttonStyle(ScaleButtonStyle())
                         
                     } //: if
                     

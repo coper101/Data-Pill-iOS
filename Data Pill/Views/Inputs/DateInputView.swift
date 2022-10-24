@@ -47,6 +47,7 @@ struct DateInputView: View {
                 )
                 
             } //: Button
+            .buttonStyle(ScaleButtonStyle())
             
         } //: VStack
     }

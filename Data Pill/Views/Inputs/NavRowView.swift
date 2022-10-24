@@ -47,7 +47,10 @@ struct NavRowView: View {
                  
             } //: HStack
             .frame(height: 37)
+            .contentShape(Rectangle())
+            
         } //: Button
+        .buttonStyle(ScaleButtonStyle())
     }
     
     // MARK: - Actions

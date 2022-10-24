@@ -66,6 +66,7 @@
 		27B90B8928F2D43700263983 /* DataTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8828F2D43700263983 /* DataTest.swift */; };
 		27F47DDA2905330D00B3F83D /* AppDataRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */; };
 		27F47DDC29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */; };
+		27F47DDF29067C8E00B3F83D /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDE29067C8E00B3F83D /* Button.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +142,7 @@
 		27B90B8828F2D43700263983 /* DataTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTest.swift; sourceTree = "<group>"; };
 		27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRepository_Test_Case.swift; sourceTree = "<group>"; };
+		27F47DDE29067C8E00B3F83D /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +355,7 @@
 				27801DC028D6C96800201339 /* Text.swift */,
 				27801DC428D6C96800201339 /* Frame.swift */,
 				278FB31028FAA00F00BE78C2 /* Animation.swift */,
+				27F47DDE29067C8E00B3F83D /* Button.swift */,
 			);
 			path = Style;
 			sourceTree = "<group>";
@@ -480,6 +483,7 @@
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
 				27801E0F28E1E7C500201339 /* ButtonView.swift in Sources */,
+				27F47DDF29067C8E00B3F83D /* Button.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
 				27801E0928E054C500201339 /* CloseIconView.swift in Sources */,
 				27801E1E28E98F0D00201339 /* LocalStorage.swift in Sources */,

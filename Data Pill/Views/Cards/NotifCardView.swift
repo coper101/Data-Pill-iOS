@@ -34,6 +34,7 @@ struct NotifCardView: View {
                     .transition(.opacity)
                     .padding(.bottom, 10)
             }
+            .buttonStyle(ScaleButtonStyle())
             .fillMaxWidth()
         }
         .frame(height: height)

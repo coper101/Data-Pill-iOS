@@ -9,10 +9,9 @@ import SwiftUI
 
 // MARK: - Dimensions
 struct Dimensions {
-    let topBarHeight: CGFloat = 76
-    let bottomBarHeight: CGFloat = 62
     let horizontalPadding: CGFloat = 21
     let cardHeight: CGFloat = 145
+    let spaceInBetween: CGFloat = 21
     let screen: CGSize = UIScreen.main.bounds.size
     let insets: EdgeInset = theInsets
     static var theInsets: EdgeInset {

@@ -33,15 +33,41 @@ struct AppView: View {
             30 :
             0
     }
+    
+    var contentHeight: CGFloat {
+        height + 152 + dimensions.cardHeight + (dimensions.spaceInBetween * 2) + (dimensions.horizontalPadding * 2)
+    }
+    
+    var canFitContent: Bool {
+        contentHeight <= dimensions.screen.height
+    }
+    
+    var contentSpacing: CGFloat {
+        let space = (contentHeight - dimensions.screen.height) / 2
+        if space < 0 {
+            return 0
+        }
+        return space
+    }
 
     // MARK: - UI
     var body: some View {
-        ZStack(alignment: .center) {
-            
+        ZStack {
+
             // MARK: Layer 0: Today's Data Pill
             PillGroupView()
+                .fillMaxHeight(alignment: .top)
                 .padding(.top, dimensions.insets.top)
-                .fillMaxSize(alignment: .top)
+                .position(
+                    x: dimensions.screen.width * 0.5,
+                    y: (dimensions.screen.height * 0.5) + contentSpacing
+                )
+                .`if`(!canFitContent) { view in
+                    view.scrollSnap(
+                        contentHeight: contentHeight,
+                        screenHeight: dimensions.screen.height
+                    )
+                }
                 .blur(radius: appViewModel.isBlurShown ? 15 : 0)
                 .allowsHitTesting(!appViewModel.isBlurShown)
                 .zIndex(0)
@@ -68,10 +94,10 @@ struct AppView: View {
                 .popBounceEffect()
                 .cardShadow()
             }
-            
+
             // MARK: Layer 3: Edit Limit - Plan
             if appViewModel.isDataLimitEditing {
-                
+
                 DataPlanLimitView(
                     dataLimitValue: $appViewModel.dataLimitValue,
                     dataAmount: appViewModel.dataAmount,
@@ -87,10 +113,10 @@ struct AppView: View {
                 .popBounceEffect()
                 .cardShadow()
             }
-            
+
             // MARK: Layer 4: Edit Limit - Daily
             if appViewModel.isDataLimitPerDayEditing {
-                
+
                 DataPlanLimitView(
                     dataLimitValue: $appViewModel.dataLimitPerDayValue,
                     dataAmount: appViewModel.dataLimitPerDay,
@@ -106,56 +132,56 @@ struct AppView: View {
                 .popBounceEffect()
                 .cardShadow()
             }
-            
+
             // MARK: Layer 5: Date Picker
             if appViewModel.isStartDatePickerShown ||
                 appViewModel.isEndDatePickerShown {
                 Group {
-                    
+
                     if appViewModel.isStartDatePickerShown {
-                        
+
                         DateRangeInputView(
                             selectionDate: $appViewModel.startDateValue,
                             toDateRange: appViewModel.endDateValue.toDateRange()
                         )
-                        
+
                     } else {
-                        
+
                         DateRangeInputView(
                             selectionDate: $appViewModel.endDateValue,
                             fromDateRange: appViewModel.startDateValue.fromDateRange()
                         )
-                       
+
                     } //: if-else
-                    
+
                 } //: Group
                 .zIndex(4)
                 .popBounceEffect()
                 .cardShadow()
             }
-            
+
             // MARK: Layer 6: Save Button when Editing
             if appViewModel.isDataPlanEditing ||
                 appViewModel.isDataLimitEditing ||
                 appViewModel.isDataLimitPerDayEditing {
-                
+
                 ButtonView(
                     type: buttonType,
                     action: buttonAction
                 )
-                    .fillMaxWidth(alignment: .trailing)
-                    .padding(
-                        .horizontal,
-                        dimensions.horizontalPadding + additionalPadding
-                    )
-                    .padding(
-                        .top,
-                        dimensions.cardHeight + 130 + (buttonType == .done ? 250 : 0)
-                    )
-                    .zIndex(5)
-                    .popBounceEffect()
+                .fillMaxWidth(alignment: .trailing)
+                .padding(
+                    .horizontal,
+                    dimensions.horizontalPadding + additionalPadding
+                )
+                .padding(
+                    .top,
+                    dimensions.cardHeight + 130 + (buttonType == .done ? 250 : 0)
+                )
+                .zIndex(5)
+                .popBounceEffect()
             }
-            
+
             // MARK: Layer 7: Week's History
             if appViewModel.isHistoryShown {
                 HistoryView(
@@ -165,7 +191,9 @@ struct AppView: View {
                     usageType: appViewModel.usageType,
                     closeAction: closeAction
                 )
+                .padding(.top, 4)
                 .zIndex(6)
+                .popBounceEffect()
             }
             
             // MARK: Layer 8: Status Bar Background
@@ -179,8 +207,9 @@ struct AppView: View {
             }
 
         } //: ZStack
+        .edgesIgnoringSafeArea(.vertical)
+        .fillMaxSize(alignment: .center)
         .background(Colors.background.color)
-        .edgesIgnoringSafeArea(.all)
     }
     
     // MARK: - Actions

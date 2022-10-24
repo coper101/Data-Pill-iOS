@@ -39,6 +39,7 @@ struct StepperButtonView: View {
                     RoundedRectangle(cornerRadius: 15)
                 )
         } //: Button
+        .buttonStyle(ScaleButtonStyle())
     }
     
     // MARK: - Actions

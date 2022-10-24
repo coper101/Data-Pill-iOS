@@ -34,6 +34,7 @@ struct ToggleItemView: View {
                 .fillMaxWidth()
                 .opacity(opacity)
         } //: Button
+        .buttonStyle(ScaleButtonStyle())
     }
 }
 

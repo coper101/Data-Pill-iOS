@@ -11,9 +11,6 @@ struct PillGroupView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
-
-    var spaceInBetween: CGFloat = 21
-    var paddingHorizontal: CGFloat = 21
     
     var width: CGFloat {
         dimensions.screen.width * 0.45
@@ -33,12 +30,12 @@ struct PillGroupView: View {
     
     // MARK: - UI
     var body: some View {
-        VStack(spacing: spaceInBetween) {
+        VStack(spacing: dimensions.spaceInBetween) {
             
-            // MARK: - Row 1:
+            // MARK: - Row 1: Pill Group
             HStack(
                 alignment: .top,
-                spacing: spaceInBetween
+                spacing: dimensions.spaceInBetween
             ) {
                 
                 // Col 1: DATA PILL
@@ -57,7 +54,7 @@ struct PillGroupView: View {
                 // Col 2: INFO & CONTROLS
                 GeometryReader { reader in
                     
-                    let cardWidth = reader.size.width - paddingHorizontal - spaceInBetween
+                    let cardWidth = reader.size.width - dimensions.horizontalPadding - dimensions.spaceInBetween
                     let cardHeight = reader.size.height
                     
                     VStack(spacing: 0) {
@@ -93,7 +90,7 @@ struct PillGroupView: View {
             } //: HStack
             .frame(height: height)
             
-            // DATA PLAN
+            // MARK: - Row 2: Data Plan
             DataPlanCardView(
                 startDate: appViewModel.startDate,
                 endDate: appViewModel.endDate,
@@ -107,8 +104,8 @@ struct PillGroupView: View {
                 minusDataAction: {}
             )
             
-            // DATA LIMIT
-            HStack(spacing: 21) {
+            // MARK: - Row 3: Data Limit
+            HStack(spacing: dimensions.spaceInBetween) {
                 
                 DataPlanLimitView(
                     dataLimitValue: $appViewModel.dataLimitValue,
@@ -131,16 +128,11 @@ struct PillGroupView: View {
                 )
                 
             } //: HStack
-            .frame(height: 145)
+            .frame(height: dimensions.cardHeight)
             
         } //: VStack
-        .padding(.top, dimensions.topBarHeight)
-        .scrollSnap(
-            contentHeight: dimensions.topBarHeight + height + 152 + 145 + (spaceInBetween * 2),
-            screenHeight: dimensions.screen.height
-        )
-        .padding(.horizontal, paddingHorizontal)
-        .padding(.vertical, paddingHorizontal)
+        .padding(.horizontal, dimensions.horizontalPadding)
+        .padding(.vertical, dimensions.horizontalPadding)
     }
     
     // MARK: - Actions
