@@ -33,113 +33,114 @@ struct PillGroupView: View {
     
     // MARK: - UI
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        VStack(spacing: spaceInBetween) {
             
-            VStack(spacing: spaceInBetween) {
+            // MARK: - Row 1:
+            HStack(
+                alignment: .top,
+                spacing: spaceInBetween
+            ) {
                 
-                // MARK: - Row 1:
-                HStack(
-                    alignment: .top,
-                    spacing: spaceInBetween
-                ) {
-                    
-                    // Col 1: DATA PILL
-                    Button(action: dataPillAction) {
-                        PillView(
-                            color: color,
-                            percentage: appViewModel.dateUsedInPercentage,
-                            date: todaysDate,
-                            usageType: appViewModel.usageType
-                        )
-                    }
-                    .buttonStyle(
-                        ScaleButtonStyle(minScale: 0.9)
+                // Col 1: DATA PILL
+                Button(action: dataPillAction) {
+                    PillView(
+                        color: color,
+                        percentage: appViewModel.dateUsedInPercentage,
+                        date: todaysDate,
+                        usageType: appViewModel.usageType
                     )
-                    
-                    // Col 2: INFO & CONTROLS
-                    GeometryReader { reader in
-                        
-                        let cardWidth = reader.size.width - paddingHorizontal - spaceInBetween
-                        let cardHeight = reader.size.height
-                        
-                        VStack(spacing: 0) {
-                            
-                            // USED
-                            UsedCardView(
-                                usedData: appViewModel.usedData,
-                                maxData: appViewModel.maxData,
-                                dataUnit: appViewModel.unit,
-                                width: cardWidth,
-                                height: 0.34 * cardHeight
-                            )
-                            
-                            // USAGE TOGGLE
-                            UsageCardView(
-                                selectedItem: $appViewModel.usageType,
-                                width: cardWidth,
-                                height: 0.4 * cardHeight
-                            )
-                            
-                            // NOTIF TOGGLE
-                            NotifCardView(
-                                isTurnedOn: $appViewModel.isNotifOn,
-                                width: cardWidth,
-                                height: 0.25 * cardHeight
-                            )
-                            
-                        } //: VStack
-                        .fillMaxSize()
-                        
-                    } //: GeometryReader
-
-                } //: HStack
-                .frame(height: height)
-                
-                // DATA PLAN
-                DataPlanCardView(
-                    startDate: appViewModel.startDate,
-                    endDate: appViewModel.endDate,
-                    numberOfdays: appViewModel.numOfDaysOfPlan,
-                    periodAction: planPeriodAction,
-                    dataAmountAction: planAmountAction,
-                    startPeriodAction: {},
-                    endPeriodAction: {},
-                    dataAmountValue: $appViewModel.dataValue,
-                    plusDataAction: {},
-                    minusDataAction: {}
+                }
+                .buttonStyle(
+                    ScaleButtonStyle(minScale: 0.9)
                 )
                 
-                // DATA LIMIT
-                HStack(spacing: 21) {
+                // Col 2: INFO & CONTROLS
+                GeometryReader { reader in
                     
-                    DataPlanLimitView(
-                        dataLimitValue: $appViewModel.dataLimitValue,
-                        dataAmount: appViewModel.dataLimit,
-                        isEditing: false,
-                        usageType: .plan,
-                        editAction: planLimitAction,
-                        minusDataAction: {},
-                        plusDataAction: {}
-                    )
+                    let cardWidth = reader.size.width - paddingHorizontal - spaceInBetween
+                    let cardHeight = reader.size.height
                     
-                    DataPlanLimitView(
-                        dataLimitValue: $appViewModel.dataLimitPerDayValue,
-                        dataAmount: appViewModel.dataLimitPerDay,
-                        isEditing: false,
-                        usageType: .daily,
-                        editAction: planLimitPerDayAction,
-                        minusDataAction: {},
-                        plusDataAction: {}
-                    )
+                    VStack(spacing: 0) {
+                        
+                        // USED
+                        UsedCardView(
+                            usedData: appViewModel.usedData,
+                            maxData: appViewModel.maxData,
+                            dataUnit: appViewModel.unit,
+                            width: cardWidth,
+                            height: 0.34 * cardHeight
+                        )
+                        
+                        // USAGE TOGGLE
+                        UsageCardView(
+                            selectedItem: $appViewModel.usageType,
+                            width: cardWidth,
+                            height: 0.4 * cardHeight
+                        )
+                        
+                        // NOTIF TOGGLE
+                        NotifCardView(
+                            isTurnedOn: $appViewModel.isNotifOn,
+                            width: cardWidth,
+                            height: 0.25 * cardHeight
+                        )
+                        
+                    } //: VStack
+                    .fillMaxSize()
                     
-                } //: HStack
-                .frame(height: 145)
+                } //: GeometryReader
+
+            } //: HStack
+            .frame(height: height)
+            
+            // DATA PLAN
+            DataPlanCardView(
+                startDate: appViewModel.startDate,
+                endDate: appViewModel.endDate,
+                numberOfdays: appViewModel.numOfDaysOfPlan,
+                periodAction: planPeriodAction,
+                dataAmountAction: planAmountAction,
+                startPeriodAction: {},
+                endPeriodAction: {},
+                dataAmountValue: $appViewModel.dataValue,
+                plusDataAction: {},
+                minusDataAction: {}
+            )
+            
+            // DATA LIMIT
+            HStack(spacing: 21) {
                 
-            } //: VStack
-            .padding(.horizontal, paddingHorizontal)
-            .padding(.vertical, paddingHorizontal)
-             
-        } //: ScrollView
+                DataPlanLimitView(
+                    dataLimitValue: $appViewModel.dataLimitValue,
+                    dataAmount: appViewModel.dataLimit,
+                    isEditing: false,
+                    usageType: .plan,
+                    editAction: planLimitAction,
+                    minusDataAction: {},
+                    plusDataAction: {}
+                )
+                
+                DataPlanLimitView(
+                    dataLimitValue: $appViewModel.dataLimitPerDayValue,
+                    dataAmount: appViewModel.dataLimitPerDay,
+                    isEditing: false,
+                    usageType: .daily,
+                    editAction: planLimitPerDayAction,
+                    minusDataAction: {},
+                    plusDataAction: {}
+                )
+                
+            } //: HStack
+            .frame(height: 145)
+            
+        } //: VStack
+        .padding(.top, dimensions.topBarHeight)
+        .scrollSnap(
+            contentHeight: dimensions.topBarHeight + height + 152 + 145 + (spaceInBetween * 2),
+            screenHeight: dimensions.screen.height
+        )
+        .padding(.horizontal, paddingHorizontal)
+        .padding(.vertical, paddingHorizontal)
     }
     
     // MARK: - Actions
@@ -178,9 +179,9 @@ struct PillGroupView: View {
 // MARK: - Preview
 struct PillGroupView_Previews: PreviewProvider {
     static var appViewModel: AppViewModel {
-        let networkDataRepo = MockNetworkDataRepository(totalUsedData: 1_000)
+        let _ = MockNetworkDataRepository(totalUsedData: 1_000)
         let dataUsageRepo = DataUsageFakeRepository(thisWeeksData: weeksDataSample)
-        let appDataRepo = MockAppDataRepository()
+        let _ = MockAppDataRepository()
         return AppViewModel.init(
 //            appDataRepository: appDataRepo,
             dataUsageRepository: dataUsageRepo
