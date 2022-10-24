@@ -10,7 +10,6 @@ import SwiftUI
 struct DateRangeInputView: View {
     // MARK: - Props
     @Environment(\.dimensions) var dimensions: Dimensions
-    @Environment(\.edgeInsets) var insets: EdgeInset
     @Binding var selectionDate: Date
     
     var fromDateRange: PartialRangeFrom<Date>?
@@ -49,7 +48,7 @@ struct DateRangeInputView: View {
             Colors.background.color
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         )
-        .padding(.top, insets.top + 14)
+        .padding(.top, dimensions.insets.top + 14)
     }
     
     // MARK: - Actions

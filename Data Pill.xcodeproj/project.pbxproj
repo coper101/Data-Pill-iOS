@@ -189,6 +189,7 @@
 				27801E1C28E98E6300201339 /* Data */,
 				27801DB528D6C96800201339 /* Models */,
 				27801DB828D6C96800201339 /* Utils */,
+				27F47DDD290660B400B3F83D /* Style */,
 				27801DBB28D6C96800201339 /* Theme */,
 				27801DD728D6C9FB00201339 /* Assets */,
 				27801DCE28D6C96B00201339 /* Preview Content */,
@@ -225,14 +226,10 @@
 			isa = PBXGroup;
 			children = (
 				27801DB928D6C96800201339 /* Dimensions.swift */,
-				27801DC028D6C96800201339 /* Text.swift */,
-				27801DC428D6C96800201339 /* Frame.swift */,
-				27801DE328D6F01900201339 /* Modifier.swift */,
 				27801DE728D7215D00201339 /* Enums.swift */,
 				27801DE928D72A6600201339 /* Date.swift */,
 				27801DED28D8B7FA00201339 /* Numbers.swift */,
 				278FB2D428F53DCA00BE78C2 /* Stepper.swift */,
-				278FB31028FAA00F00BE78C2 /* Animation.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -347,6 +344,17 @@
 				27801E0428DA1A7A00201339 /* DraggablePillView.swift */,
 			);
 			path = Pill;
+			sourceTree = "<group>";
+		};
+		27F47DDD290660B400B3F83D /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				27801DE328D6F01900201339 /* Modifier.swift */,
+				27801DC028D6C96800201339 /* Text.swift */,
+				27801DC428D6C96800201339 /* Frame.swift */,
+				278FB31028FAA00F00BE78C2 /* Animation.swift */,
+			);
+			path = Style;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

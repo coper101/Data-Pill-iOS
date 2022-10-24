@@ -25,13 +25,17 @@ extension View {
         }
     }
     
+    /// Applies a light shadow to a view
+    /// Mainly used for a `Item Card View`
+    /// - Returns: The `View` with applied shadow
     func cardShadow() -> some View {
         self.shadow(
-            color: .black.opacity(0.02),
+            color: .black.opacity(0.03),
             radius: 15,
             y: 5
         )
     }
+    
 }
 
 

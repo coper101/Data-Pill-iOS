@@ -10,7 +10,6 @@ import SwiftUI
 struct AppView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
-    @Environment(\.edgeInsets) var insets: EdgeInset
     @Environment(\.dimensions) var dimensions: Dimensions
     
     var width: CGFloat {
@@ -27,6 +26,13 @@ struct AppView: View {
             .done :
             .save
     }
+    
+    var additionalPadding: CGFloat {
+        (appViewModel.isDataLimitPerDayEditing
+         || appViewModel.isDataLimitEditing) ?
+            30 :
+            0
+    }
 
     // MARK: - UI
     var body: some View {
@@ -34,7 +40,7 @@ struct AppView: View {
             
             // MARK: Layer 0: Today's Data Pill
             PillGroupView()
-                .padding(.top, insets.top)
+                .padding(.top, dimensions.insets.top)
                 .fillMaxSize(alignment: .top)
                 .blur(radius: appViewModel.isBlurShown ? 15 : 0)
                 .allowsHitTesting(!appViewModel.isBlurShown)
@@ -59,9 +65,8 @@ struct AppView: View {
                 )
                 .padding(.horizontal, dimensions.horizontalPadding)
                 .zIndex(1)
-                .popBounceEffect(maxOffsetY: 100)
+                .popBounceEffect()
                 .cardShadow()
-                
             }
             
             // MARK: Layer 3: Edit Limit - Plan
@@ -76,12 +81,11 @@ struct AppView: View {
                     minusDataAction: minusLimitAction,
                     plusDataAction: plusLimitAction
                 )
-                .frame(height: 145)
+                .frame(height: dimensions.cardHeight)
                 .padding(.horizontal, dimensions.horizontalPadding + 30)
                 .zIndex(2)
-                .popBounceEffect(maxOffsetY: 100)
+                .popBounceEffect()
                 .cardShadow()
-                
             }
             
             // MARK: Layer 4: Edit Limit - Daily
@@ -96,16 +100,16 @@ struct AppView: View {
                     minusDataAction: minusLimitAction,
                     plusDataAction: plusLimitAction
                 )
-                .frame(height: 145)
+                .frame(height: dimensions.cardHeight)
                 .padding(.horizontal, dimensions.horizontalPadding + 30)
                 .zIndex(3)
-                .popBounceEffect(maxOffsetY: 100)
+                .popBounceEffect()
                 .cardShadow()
             }
             
-            
             // MARK: Layer 5: Date Picker
-            if appViewModel.isStartDatePickerShown || appViewModel.isEndDatePickerShown {
+            if appViewModel.isStartDatePickerShown ||
+                appViewModel.isEndDatePickerShown {
                 Group {
                     
                     if appViewModel.isStartDatePickerShown {
@@ -126,25 +130,30 @@ struct AppView: View {
                     
                 } //: Group
                 .zIndex(4)
-                .popBounceEffect(maxOffsetY: 100)
+                .popBounceEffect()
                 .cardShadow()
             }
             
             // MARK: Layer 6: Save Button when Editing
-            if appViewModel.isDataPlanEditing || appViewModel.isDataLimitEditing || appViewModel.isDataLimitPerDayEditing {
+            if appViewModel.isDataPlanEditing ||
+                appViewModel.isDataLimitEditing ||
+                appViewModel.isDataLimitPerDayEditing {
                 
                 ButtonView(
                     type: buttonType,
                     action: buttonAction
                 )
                     .fillMaxWidth(alignment: .trailing)
-                    .padding(.horizontal, dimensions.horizontalPadding +
-                             ( (appViewModel.isDataLimitPerDayEditing || appViewModel.isDataLimitEditing) ? 30 : 0 )
+                    .padding(
+                        .horizontal,
+                        dimensions.horizontalPadding + additionalPadding
                     )
-                    .padding(.top, 145 + 130 + (buttonType == .done ? 250 : 0))
+                    .padding(
+                        .top,
+                        dimensions.cardHeight + 130 + (buttonType == .done ? 250 : 0)
+                    )
                     .zIndex(5)
-                    .popBounceEffect(maxOffsetY: 100)
-                
+                    .popBounceEffect()
             }
             
             // MARK: Layer 7: Week's History
@@ -164,7 +173,7 @@ struct AppView: View {
                 Rectangle()
                     .fill(Colors.background.color)
                     .fillMaxWidth()
-                    .frame(height: insets.top)
+                    .frame(height: dimensions.insets.top)
                     .fillMaxSize(alignment: .top)
                     .zIndex(7)
             }
@@ -212,7 +221,7 @@ struct AppView: View {
     }
     
     func buttonAction(type: ButtonType) {
-        withAnimation(.spring()) {
+        withAnimation {
             switch type {
             case .save:
                 appViewModel.didTapSave()

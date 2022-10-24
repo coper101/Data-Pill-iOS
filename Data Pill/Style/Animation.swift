@@ -7,6 +7,18 @@
 
 import SwiftUI
 
+extension Animation {
+    
+    static func popBounce() -> Animation {
+       .spring(
+            response: 0.4,
+            dampingFraction: 0.7
+       )
+    }
+    
+}
+
+
 struct PopBounce: ViewModifier {
     // MARK: - Props
     let maxOffsetY: CGFloat
@@ -23,20 +35,19 @@ struct PopBounce: ViewModifier {
             .offset(y: offsetY)
             .scaleEffect(offsetY == 100 ? 0.8 : 1)
             .onAppear {
-                withAnimation(
-                    .spring(
-                        response: 0.45,
-                        dampingFraction: 0.7
-                    )
-                ) {
+                withAnimation(.popBounce()) {
                     offsetY = 0
                 }
             } //: onAppear
-            .onDisappear {
-                withAnimation(.spring()) {
-                    offsetY = maxOffsetY
-                }
-            } //: onDisappear
+            .transition(
+                .asymmetric(
+                    insertion: .opacity,
+                    removal: .offset(y: 50)
+                        .combined(
+                            with: .opacity.animation(.easeOut(duration: 0.15))
+                        )
+                )
+            )
     }
 }
 
@@ -44,7 +55,7 @@ extension View {
     
     /// Applies a bounce animatio when the View becomes visible
     /// - Parameter maxOffsetY : the initial offset in y axis before it animates to the original position
-    func popBounceEffect(maxOffsetY: CGFloat) -> some View {
+    func popBounceEffect(maxOffsetY: CGFloat = 100) -> some View {
         modifier(PopBounce(maxOffsetY: maxOffsetY))
     }
     
