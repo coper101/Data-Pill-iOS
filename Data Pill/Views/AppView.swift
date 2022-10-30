@@ -197,14 +197,12 @@ struct AppView: View {
             }
             
             // MARK: Layer 8: Status Bar Background
-            if !appViewModel.isBlurShown {
-                Rectangle()
-                    .fill(Colors.background.color)
-                    .fillMaxWidth()
-                    .frame(height: dimensions.insets.top)
-                    .fillMaxSize(alignment: .top)
-                    .zIndex(7)
-            }
+            Rectangle()
+                .fill(Colors.background.color)
+                .fillMaxWidth()
+                .frame(height: dimensions.insets.top)
+                .fillMaxSize(alignment: .top)
+                .zIndex(7)
 
         } //: ZStack
         .edgesIgnoringSafeArea(.vertical)
