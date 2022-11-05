@@ -108,7 +108,7 @@ struct AppView: View {
                     plusDataAction: plusLimitAction
                 )
                 .frame(height: dimensions.cardHeight)
-                .padding(.horizontal, dimensions.horizontalPadding + 30)
+                .padding(.horizontal, dimensions.horizontalPadding + 20)
                 .zIndex(2)
                 .popBounceEffect()
                 .cardShadow()
@@ -127,7 +127,7 @@ struct AppView: View {
                     plusDataAction: plusLimitAction
                 )
                 .frame(height: dimensions.cardHeight)
-                .padding(.horizontal, dimensions.horizontalPadding + 30)
+                .padding(.horizontal, dimensions.horizontalPadding + 20)
                 .zIndex(3)
                 .popBounceEffect()
                 .cardShadow()
