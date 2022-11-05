@@ -33,6 +33,7 @@ struct PillView: View {
     var hasBackground = true
     var usageType: ToggleItem
     var widthScale: CGFloat = 0.45
+    var isContentShown = true
     
     var width: CGFloat {
         dimensions.screen.width * widthScale
@@ -96,26 +97,28 @@ struct PillView: View {
             )
             
             // Layer 2:
-            RoundedRectangle(cornerRadius: 5)
-                .fill(color.color)
-                .frame(
-                    height: (CGFloat(percentage) / 100) * maxHeight
-                )
-                .overlay(
-                    label
-                        .fillMaxHeight(alignment: .top)
-                        .padding(.top, paddingTop)
-                )
-                .overlay(
-                    LinearGradient(
-                        colors: [
-                            .white.opacity(0.25),
-                            .white.opacity(0)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
+            if isContentShown {
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(color.color)
+                    .frame(
+                        height: (CGFloat(percentage) / 100) * maxHeight
                     )
-                )
+                    .overlay(
+                        label
+                            .fillMaxHeight(alignment: .top)
+                            .padding(.top, paddingTop)
+                    )
+                    .overlay(
+                        LinearGradient(
+                            colors: [
+                                .white.opacity(0.25),
+                                .white.opacity(0)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+            } //: if
             
         } //: ZStack
         .frame(width: width, height: maxHeight)
@@ -130,27 +133,35 @@ struct PillView_Previews: PreviewProvider {
     static var appViewModel: AppViewModel = .init()
     
     static var previews: some View {
-        
-//        ForEach(appState.days) { dayPill in
-//            let index = dayPill.day.ordinal()
-//            let data = appViewModel.data[index]
-//            let percentage =  data.dailyUsedData.toPercentage(with: appViewModel.dataLimitPerDay)
-//            PillView(
-//                color: dayPill.color,
-//                percentage: percentage,
-//                date: data.date ?? Date(),
-//                usageType: .daily
-//            )
-//            .previewLayout(.sizeThatFits)
-//            .padding()
-//            .previewDisplayName(
-//                displayName(
-//                    dayPill.day.rawValue.firstCap(),
-//                    "\(Int(percentage))%"
-//                )
-//            )
-//        }
-        Text("Test")
+        Group {
             
+            PillView(
+                color: appViewModel.days[0].color,
+                percentage: 20,
+                date: Date(),
+                usageType: .daily
+            )
+            .previewDisplayName(
+                displayName(
+                    "Content Shown"
+                )
+            )
+            
+            PillView(
+                color: appViewModel.days[0].color,
+                percentage: 20,
+                date: Date(),
+                usageType: .daily,
+                isContentShown: false
+            )
+            .previewDisplayName(
+                displayName(
+                    "Content Hidden"
+                )
+            )
+            
+        }
+        .previewLayout(.sizeThatFits)
+        .padding()
     }
 }

@@ -44,7 +44,8 @@ struct PillGroupView: View {
                         color: color,
                         percentage: appViewModel.dateUsedInPercentage,
                         date: todaysDate,
-                        usageType: appViewModel.usageType
+                        usageType: appViewModel.usageType,
+                        isContentShown: !appViewModel.isHistoryShown
                     )
                 }
                 .buttonStyle(
