@@ -8,6 +8,11 @@
 		<string>SFProText-Medium.ttf</string>
 		<string>SFProText-Semibold.ttf</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>Launch Screen Background</string>
+	</dict>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
