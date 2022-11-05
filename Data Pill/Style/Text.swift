@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CustomText: ViewModifier {
+    // MARK: - Properties
     var foregroundColor: Color
     var font: String
     var size: Int
@@ -15,7 +16,9 @@ struct CustomText: ViewModifier {
     var alignment: Alignment
     var lineLimit: Int?
     var lineSpacing: CGFloat
+    var textAlignment: TextAlignment
     
+    // MARK: - UI
     func body(content: Content) -> some View {
         content
             .foregroundColor(foregroundColor)
@@ -31,6 +34,7 @@ struct CustomText: ViewModifier {
             )
             .lineLimit(lineLimit)
             .lineSpacing(lineSpacing)
+            .multilineTextAlignment(textAlignment)
     }
 }
 
@@ -46,6 +50,7 @@ extension View {
     ///   - alignment: The alignment of the text relative to its width
     ///   - linelimit: Limit the text per line. Overflowing text in single line will be truncated with ...
     ///   - lineSpacing: The space between lines of text
+    ///   - textAlignment: The alignment of multiline text
     ///
     /// - Returns: A Text View with new Style
     func textStyle(
@@ -55,7 +60,8 @@ extension View {
         maxWidth: CGFloat? = nil,
         alignment: Alignment = .leading,
         lineLimit: Int? = 1,
-        lineSpacing: CGFloat = 0
+        lineSpacing: CGFloat = 0,
+        textAlignment: TextAlignment = .leading
     ) -> some View {
         self.modifier(
             CustomText(
@@ -65,7 +71,8 @@ extension View {
                 maxWidth: maxWidth,
                 alignment: alignment,
                 lineLimit: lineLimit,
-                lineSpacing: lineSpacing
+                lineSpacing: lineSpacing,
+                textAlignment: textAlignment
             )
         )
     }

@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 enum DatabaseError: Error, Equatable {
-    case loadingContainer(String)
+    case loadingContainer(String = "Sorry, the data can’t be loaded from the Storage.\n\nTry reinstalling the app")
     case loadingAll(String)
     case adding(String)
     case gettingAll(String)
@@ -105,7 +105,7 @@ class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
     init(database: any Database) {
         self.database = database
         database.loadContainer { [weak self] error in
-            self?.dataError = DatabaseError.loadingContainer(error.localizedDescription)
+            self?.dataError = DatabaseError.loadingContainer()
             print("database error", error.localizedDescription)
         } onSuccess: { [weak self] in
             guard let self = self else {
@@ -322,7 +322,7 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         self.dataError = dataError
         
         database.loadContainer { [weak self] error in
-            self?.dataError = DatabaseError.loadingContainer(error.localizedDescription)
+            self?.dataError = DatabaseError.loadingContainer()
             print(error.localizedDescription)
         } onSuccess: { [weak self] in
             guard let self = self else {
@@ -410,7 +410,7 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
     init(database: any Database) {
         self.database = database
         database.loadContainer { [weak self] error in
-            self?.dataError = DatabaseError.loadingContainer(error.localizedDescription)
+            self?.dataError = DatabaseError.loadingContainer()
             print("database error: ", error.localizedDescription)
         } onSuccess: { [weak self] in
             guard let _ = self else {

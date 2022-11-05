@@ -123,6 +123,7 @@ final class AppViewModel: ObservableObject {
         setInputValues()
         observePlanSettings()
         observeEditPlan()
+        observeDataErrors()
     }
     
 }
@@ -243,6 +244,13 @@ extension AppViewModel {
         
         $isDataLimitPerDayEditing
             .sink(receiveValue: didChangeIsDataLimitPerDayEditing)
+            .store(in: &cancellables)
+    }
+    
+    func observeDataErrors() {
+        
+        $dataError
+            .sink(receiveValue: didChangeDataError)
             .store(in: &cancellables)
     }
 }
@@ -452,8 +460,11 @@ extension AppViewModel {
     }
     
     // MARK: - Data Error
-    func didChangeDataError(_ error: Error) {
-        
+    func didChangeDataError(_ error: DatabaseError?) {
+        guard let error = error, error == .loadingContainer() else {
+            return
+        }
+        isBlurShown = true
     }
     
 }

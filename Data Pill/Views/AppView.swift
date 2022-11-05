@@ -134,8 +134,10 @@ struct AppView: View {
             }
 
             // MARK: Layer 5: Date Picker
-            if appViewModel.isStartDatePickerShown ||
-                appViewModel.isEndDatePickerShown {
+            if
+                appViewModel.isStartDatePickerShown ||
+                appViewModel.isEndDatePickerShown
+            {
                 Group {
 
                     if appViewModel.isStartDatePickerShown {
@@ -161,10 +163,11 @@ struct AppView: View {
             }
 
             // MARK: Layer 6: Save Button when Editing
-            if appViewModel.isDataPlanEditing ||
+            if
+                appViewModel.isDataPlanEditing ||
                 appViewModel.isDataLimitEditing ||
-                appViewModel.isDataLimitPerDayEditing {
-
+                appViewModel.isDataLimitPerDayEditing
+            {
                 ButtonView(
                     type: buttonType,
                     action: buttonAction
@@ -196,13 +199,33 @@ struct AppView: View {
                 .popBounceEffect()
             }
             
+            // MARK: Layer 8: Error
+            if
+                let error = appViewModel.dataError,
+                error == .loadingContainer(),
+                case .loadingContainer(let message) = error
+            {
+                Text(message)
+                    .textStyle(
+                        foregroundColor: .onSurface,
+                        font: .semibold,
+                        size: 18,
+                        lineLimit: 5,
+                        lineSpacing: 2,
+                        textAlignment: .center
+                    )
+                    .opacity(0.28)
+                    .padding(.horizontal, 35)
+                    .fillMaxSize(alignment: .center)
+            }
+            
             // MARK: Layer 8: Status Bar Background
             Rectangle()
                 .fill(Colors.background.color)
                 .fillMaxWidth()
                 .frame(height: dimensions.insets.top)
                 .fillMaxSize(alignment: .top)
-                .zIndex(7)
+                .zIndex(8)
 
         } //: ZStack
         .edgesIgnoringSafeArea(.vertical)
