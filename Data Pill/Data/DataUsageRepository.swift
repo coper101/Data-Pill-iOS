@@ -92,7 +92,7 @@ extension DataUsageRepositoryProtocol {
 
 
 // MARK: - App Implementation
-class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
+final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
     
     let database: any Database
     
@@ -272,6 +272,7 @@ extension DataUsageRepository {
         }
     }
     
+    /// gets the total used Data from start date period to end date period
     func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double {
         do {
             let dateAttribute = DataAttribute.date.rawValue
@@ -446,4 +447,3 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
     }
 
 }
-

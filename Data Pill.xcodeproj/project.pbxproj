@@ -60,6 +60,7 @@
 		278FB30F28FA992200BE78C2 /* DateRangeInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB30E28FA992200BE78C2 /* DateRangeInputView.swift */; };
 		278FB31128FAA00F00BE78C2 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB31028FAA00F00BE78C2 /* Animation.swift */; };
 		278FB31328FAA61500BE78C2 /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB31228FAA61500BE78C2 /* StepperView.swift */; };
+		27AECC8E2916E5E700AB963E /* AppViewModel_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AECC8D2916E5E600AB963E /* AppViewModel_Test_Case.swift */; };
 		27B90B8528F2D28100263983 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8428F2D28100263983 /* Constants.swift */; };
 		27B90B8728F2D31600263983 /* DataUsagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8628F2D31600263983 /* DataUsagePreview.swift */; };
 		27B90B8928F2D43700263983 /* DataTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8828F2D43700263983 /* DataTest.swift */; };
@@ -135,6 +136,7 @@
 		278FB30E28FA992200BE78C2 /* DateRangeInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateRangeInputView.swift; sourceTree = "<group>"; };
 		278FB31028FAA00F00BE78C2 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		278FB31228FAA61500BE78C2 /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
+		27AECC8D2916E5E600AB963E /* AppViewModel_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel_Test_Case.swift; sourceTree = "<group>"; };
 		27B90B8428F2D28100263983 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		27B90B8628F2D31600263983 /* DataUsagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsagePreview.swift; sourceTree = "<group>"; };
 		27B90B8828F2D43700263983 /* DataTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTest.swift; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 		278FB2CA28F2E55900BE78C2 /* Data Pill Tests */ = {
 			isa = PBXGroup;
 			children = (
+				27AECC8D2916E5E600AB963E /* AppViewModel_Test_Case.swift */,
 				27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */,
 				27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */,
 				271D8FEA29004B2800965FC3 /* DataUsageRepository_Test_Case.swift */,
@@ -520,6 +523,7 @@
 				278FB2D328F321EE00BE78C2 /* Date_Test_Case.swift in Sources */,
 				27F47DDA2905330D00B3F83D /* AppDataRepository_Test_Case.swift in Sources */,
 				271D8FEB29004B2800965FC3 /* DataUsageRepository_Test_Case.swift in Sources */,
+				27AECC8E2916E5E700AB963E /* AppViewModel_Test_Case.swift in Sources */,
 				278FB2CC28F2E55900BE78C2 /* Numbers_Test_Case.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

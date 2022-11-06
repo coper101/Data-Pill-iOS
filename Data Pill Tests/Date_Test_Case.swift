@@ -6,13 +6,11 @@
 //
 
 import XCTest
-import Data_Pill
+@testable import Data_Pill
 
 final class Date_Test_Case: XCTestCase {
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-    }
+    override func setUpWithError() throws {}
 
     override func tearDownWithError() throws {}
     
@@ -69,19 +67,99 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertFalse(output)
     }
     
+    // MARK: - fromDateRange()
+    func test_from_date_range_in() throws {
+        let startDate = "2022-10-01T00:00:00+00:00".toDate()
+        let range = startDate.fromDateRange()
+        let output = range.contains("2022-10-02T00:00:00+00:00".toDate())
+        XCTAssertTrue(output)
+    }
+    
+    func test_from_date_range_out() throws {
+        let startDate = "2022-10-01T00:00:00+00:00".toDate()
+        let range = startDate.fromDateRange()
+        let output = range.contains("2022-09-30T00:00:00+00:00".toDate())
+        XCTAssertFalse(output)
+    }
+    
+    
+    // MARK: - toDateRange()
+    func test_to_date_range_in() throws {
+        let endDate = "2022-10-30T00:00:00+00:00".toDate()
+        let range = endDate.toDateRange()
+        let output = range.contains("2022-10-01T00:00:00+00:00".toDate())
+        XCTAssertTrue(output)
+    }
+    
+    func test_to_date_range_out() throws {
+        let endDate = "2022-10-30T00:00:00+00:00".toDate()
+        let range = endDate.toDateRange()
+        let output = range.contains("2022-11-01T00:00:00+00:00".toDate())
+        XCTAssertFalse(output)
+    }
+    
+    // MARK: - isDateInRange()
+    func test_date_in_range_in() throws {
+        let date = "2022-10-02T00:00:00+00:00".toDate()
+        let output = date.isDateInRange(
+            from: "2022-10-01T00:00:00+00:00".toDate(),
+            to: "2022-10-30T00:00:00+00:00".toDate()
+        )
+        XCTAssertTrue(output)
+    }
+    
+    func test_date_not_in_range_out_same() throws {
+        let date = "2022-10-01T00:00:00+00:00".toDate()
+        let output = date.isDateInRange(
+            from: "2022-10-01T00:00:00+00:00".toDate(),
+            to: "2022-10-01T00:00:00+00:00".toDate()
+        )
+        XCTAssertFalse(output)
+    }
+    
+    func test_date_not_in_range_out_lower() throws {
+        let date = "2022-09-30T00:00:00+00:00".toDate()
+        let output = date.isDateInRange(
+            from: "2022-10-01T00:00:00+00:00".toDate(),
+            to: "2022-10-30T00:00:00+00:00".toDate()
+        )
+        XCTAssertFalse(output)
+    }
+    
+    func test_date_not_in_range_out_higher() throws {
+        let date = "2022-11-01T00:00:00+00:00".toDate()
+        let output = date.isDateInRange(
+            from: "2022-10-01T00:00:00+00:00".toDate(),
+            to: "2022-10-30T00:00:00+00:00".toDate()
+        )
+        XCTAssertFalse(output)
+    }
+    
+    // MARK: - addDay()
+    func test_add_a_day() throws {
+        let date = "2022-10-01T00:00:00+00:00".toDate()
+        let output = date.addDay(value: 1)
+        XCTAssertEqual(output, "2022-10-02T00:00:00+00:00".toDate())
+    }
+    
+    func test_add_2_days() throws {
+        let date = "2022-10-01T00:00:00+00:00".toDate()
+        let output = date.addDay(value: 2)
+        XCTAssertEqual(output, "2022-10-03T00:00:00+00:00".toDate())
+    }
+    
+    func test_add_30_days() throws {
+        let date = "2022-10-05T00:00:00+00:00".toDate()
+        let output = date.addDay(value: 30)
+        XCTAssertEqual(output, "2022-11-04T00:00:00+00:00".toDate())
+    }
+    
     // MARK: - toNumOfDays()
     func test_to_num_of_days() throws {
         let start = "2022-10-01T00:00:00+00:00".toDate()
-        let end = "2022-10-11T00:00:00+00:00".toDate()
+        let end = "2022-10-10T00:00:00+00:00".toDate()
         let output = start.toNumOfDays(to: end)
         XCTAssertEqual(output, 10)
-    }
-    
-    func test_to_num_of_days_negative() throws {
-        let start = "2022-10-11T00:00:00+00:00".toDate()
-        let end = "2022-10-01T00:00:00+00:00".toDate()
-        let output = start.toNumOfDays(to: end)
-        XCTAssertEqual(output, -10)
     }
     
 }

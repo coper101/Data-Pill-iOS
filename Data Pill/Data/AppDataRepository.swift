@@ -53,7 +53,7 @@ enum Keys: String {
     case totalDataLimit = "Total_Data_Limit"
 }
 
-class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
+final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }

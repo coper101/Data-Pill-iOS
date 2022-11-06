@@ -84,8 +84,8 @@ final class AppViewModel: ObservableObject {
     @Published var isEndDatePickerShown = false
     
     @Published var dataValue = "0.0"
-    @Published var startDateValue: Date = .init()
-    @Published var endDateValue: Date = .init()
+    @Published var startDateValue = Date()
+    @Published var endDateValue = Date()
     
     /// Edit Data Limit
     @Published var isDataLimitEditing = false
@@ -102,6 +102,11 @@ final class AppViewModel: ObservableObject {
     @Published var days = dayPills
     
     // MARK: - Initializer
+    /// - parameters:
+    ///   - appDataRepository: The data source for app settings
+    ///   - dataUsageRepository: The data source for data usage persistence
+    ///   - networkDataRepository: The data source for ceullular data usage
+    ///   - setupValues: Execute events (useful for testing)
     init(
         appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
         dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(
@@ -110,12 +115,16 @@ final class AppViewModel: ObservableObject {
                 entity: .data
             )
         ),
-        networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository()
+        networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
+        setupValues: Bool = true
     ) {
         self.appDataRepository = appDataRepository
         self.dataUsageRepository = dataUsageRepository
         self.networkDataRepository = networkDataRepository
         
+        guard setupValues else {
+            return
+        }
         republishAppData()
         republishDataUsage()
         republishNetworkData()
@@ -124,11 +133,13 @@ final class AppViewModel: ObservableObject {
         observePlanSettings()
         observeEditPlan()
         observeDataErrors()
+    
+        updatePlanPeriod()
     }
     
 }
 
-// MARK: - Republish
+// MARK: Republication
 extension AppViewModel {
     
     func republishAppData() {
@@ -190,10 +201,9 @@ extension AppViewModel {
             .sink { [weak self] in self?.totalUsedData = $0 }
             .store(in: &cancellables)
     }
-    
 }
 
-// MARK: - Observables
+// MARK: Observation
 extension AppViewModel {
     
     func observePlanSettings() {
@@ -255,23 +265,23 @@ extension AppViewModel {
     }
 }
 
-// MARK: - Events
+// MARK: Events
 extension AppViewModel {
     
     // MARK: - Mobile Data
     /// updates the amount used Data today
     func refreshUsedDataToday(_ totalUsedData: Double) {
-        // ignore initial value which is exactly zero
+        /// ignore initial value which is exactly zero
         if totalUsedData == 0 {
             return
         }
-        // calculate new amount used data
+        /// calculate new amount used data
         var amountUsed = 0.0
         if let recentDataWithHasTotal = dataUsageRepository.getDataWithHasTotal() {
             let recentTotalUsedData = recentDataWithHasTotal.totalUsedData
             amountUsed = totalUsedData - recentTotalUsedData
         }
-        // new amount can't be calculated since device was restarted
+        /// new amount can't be calculated since device was restarted
         if amountUsed < 0 {
             amountUsed = 0
         }
@@ -281,16 +291,6 @@ extension AppViewModel {
         todaysData.hasLastTotal = true
         
         dataUsageRepository.updateData(item: todaysData)
-
-//        print(
-//            """
-//                  Total Data Used: \(totalUsedData) MB
-//                  Amount Used: \(amountUsed) MB
-//
-//                - Updated Today's Data:
-//                \(todaysData)
-//                """
-//        )
     }
     
     // MARK: - Edit Data Plan
@@ -318,6 +318,19 @@ extension AppViewModel {
     func didTapEndPeriod() {
         isStartDatePickerShown = false
         isEndDatePickerShown = true
+    }
+    
+    func updatePlanPeriod() {
+        guard
+            let todaysDate = todaysData.date,
+            !todaysDate.isDateInRange(from: startDate, to: endDate),
+            let newStartDate = startDate.addDay(value: numOfDaysOfPlan),
+            let newEndDate = newStartDate.addDay(value: numOfDaysOfPlan)
+        else {
+            return
+        }
+        startDate = newStartDate
+        endDate = newEndDate
     }
     
     /// Data Amount
@@ -452,7 +465,7 @@ extension AppViewModel {
     }
     
     func didTapOpenHistory() {
-        if usageType == .plan {
+        guard usageType == .daily else {
             return
         }
         isBlurShown = true
@@ -466,10 +479,9 @@ extension AppViewModel {
         }
         isBlurShown = true
     }
-    
 }
 
-// MARK: - Debug
+// MARK: Debugging
 extension AppViewModel: CustomDebugStringConvertible {
     
     var debugDescription: String {
@@ -497,5 +509,4 @@ extension AppViewModel: CustomDebugStringConvertible {
                         
             """
     }
-    
 }

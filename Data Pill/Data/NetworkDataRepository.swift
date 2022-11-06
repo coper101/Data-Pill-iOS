@@ -21,7 +21,7 @@ protocol NetworkDataRepositoryProtocol {
 
 // MARK: - Implementation
 // Source: https://stackoverflow.com/questions/25888272/track-cellular-data-usage-using-swift
-class NetworkDataRepository:
+final class NetworkDataRepository:
     ObservableObject, CustomStringConvertible,
     NetworkDataRepositoryProtocol {
     
