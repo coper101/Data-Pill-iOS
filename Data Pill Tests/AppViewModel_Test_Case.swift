@@ -78,7 +78,6 @@ final class AppViewModel_Test_Case: XCTestCase {
     }
         
     // MARK: UI - Edit Plan
-    
     /// Period
     func test_did_tap_period() throws {
         // (1) Given
@@ -160,9 +159,9 @@ final class AppViewModel_Test_Case: XCTestCase {
         appViewModel.updatePlanPeriod()
         // (3) Then
         XCTAssertEqual(appViewModel.startDate, "2022-10-31T00:00:00+00:00".toDate())
-        XCTAssertEqual(appViewModel.endDate, "2022-11-30T00:00:00+00:00".toDate())
+        XCTAssertEqual(appViewModel.endDate, "2022-11-29T00:00:00+00:00".toDate())
     }
-    
+        
     /// Data Amount
     func test_did_tap_amount() throws {
         // (1) Given

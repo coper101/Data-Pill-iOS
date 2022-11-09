@@ -321,11 +321,12 @@ extension AppViewModel {
     }
     
     func updatePlanPeriod() {
+        print(#function)
         guard
             let todaysDate = todaysData.date,
             !todaysDate.isDateInRange(from: startDate, to: endDate),
             let newStartDate = startDate.addDay(value: numOfDaysOfPlan),
-            let newEndDate = newStartDate.addDay(value: numOfDaysOfPlan)
+            let newEndDate = newStartDate.addDay(value: numOfDaysOfPlan - 1)
         else {
             return
         }
@@ -479,6 +480,7 @@ extension AppViewModel {
         }
         isBlurShown = true
     }
+    
 }
 
 // MARK: Debugging

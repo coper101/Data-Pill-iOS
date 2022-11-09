@@ -11,6 +11,7 @@ struct AppView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
+    @Environment(\.scenePhase) var scenePhase
     
     var width: CGFloat {
         dimensions.screen.width * 0.45
@@ -231,6 +232,10 @@ struct AppView: View {
         .edgesIgnoringSafeArea(.vertical)
         .fillMaxSize(alignment: .center)
         .background(Colors.background.color)
+        .onChange(
+            of: scenePhase,
+            perform: didChangeScenePhase
+        )
     }
     
     // MARK: - Actions
@@ -285,6 +290,13 @@ struct AppView: View {
         withAnimation {
             appViewModel.didTapCloseHistory()
         }
+    }
+    
+    func didChangeScenePhase(phase: ScenePhase) {
+        guard phase == .active else {
+            return
+        }
+        appViewModel.updatePlanPeriod()
     }
 
 }
