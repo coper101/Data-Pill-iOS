@@ -154,12 +154,27 @@ final class AppViewModel_Test_Case: XCTestCase {
         let startDate = "2022-10-01T00:00:00+00:00".toDate()
         let endDate = "2022-10-30T00:00:00+00:00".toDate()
         // (2) When
+        appViewModel.isPeriodAuto = true
         appViewModel.startDate = startDate
         appViewModel.endDate = endDate
         appViewModel.updatePlanPeriod()
         // (3) Then
         XCTAssertEqual(appViewModel.startDate, "2022-10-31T00:00:00+00:00".toDate())
         XCTAssertEqual(appViewModel.endDate, "2022-11-29T00:00:00+00:00".toDate())
+    }
+    
+    func test_update_plan_period_is_off() throws {
+        // (1) Given
+        let startDate = "2022-10-01T00:00:00+00:00".toDate()
+        let endDate = "2022-10-30T00:00:00+00:00".toDate()
+        // (2) When
+        appViewModel.isPeriodAuto = false
+        appViewModel.startDate = startDate
+        appViewModel.endDate = endDate
+        appViewModel.updatePlanPeriod()
+        // (3) Then
+        XCTAssertEqual(appViewModel.startDate, "2022-10-01T00:00:00+00:00".toDate())
+        XCTAssertEqual(appViewModel.endDate, "2022-10-30T00:00:00+00:00".toDate())
     }
         
     /// Data Amount

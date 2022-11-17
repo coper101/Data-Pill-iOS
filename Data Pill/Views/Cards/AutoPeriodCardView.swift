@@ -1,5 +1,5 @@
 //
-//  NotifCardView.swift
+//  AutoPeriodCardView.swift
 //  Data Pill
 //
 //  Created by Wind Versi on 19/9/22.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct NotifCardView: View {
+struct AutoPeriodCardView: View {
     // MARK: - Props
-    @Binding var isTurnedOn: Bool
+    @Binding var isAuto: Bool
     var width: CGFloat
     var height: CGFloat?
     
@@ -17,20 +17,20 @@ struct NotifCardView: View {
     var body: some View {
         ItemCardView(
             style: .mini,
-            subtitle: "NOTIF",
+            subtitle: "PERIOD",
             verticalSpacing: 5,
             width: width
         ) {
             Button(action: didTapToggle) {
-                Text(isTurnedOn ? "ON" : "OFF")
+                Text(isAuto ? "Auto" : "Manual")
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .bold,
                         size: 20,
                         maxWidth: .infinity
                     )
-                    .opacity(isTurnedOn ? 1 : 0.5)
-                    .id(isTurnedOn ? "ON" : "OFF")
+                    .opacity(isAuto ? 1 : 0.5)
+                    .id(isAuto ? "Auto" : "Manual")
                     .transition(.opacity)
                     .padding(.bottom, 10)
             }
@@ -43,18 +43,24 @@ struct NotifCardView: View {
     // MARK: - Actions
     func didTapToggle() {
         withAnimation(.easeIn(duration: 0.2)) {
-            isTurnedOn.toggle()
+            isAuto.toggle()
         }
     }
 }
 
 // MARK: - Preview
-struct NotifCardView_Previews: PreviewProvider {
+struct AutoPeriodCardView_Previews: PreviewProvider {
     static var previews: some View {
-        NotifCardView(
-            isTurnedOn: .constant(false),
-            width: 150
-        )
+        Group {
+            AutoPeriodCardView(
+                isAuto: .constant(true),
+                width: 150
+            )
+            AutoPeriodCardView(
+                isAuto: .constant(false),
+                width: 150
+            )
+        }
             .previewLayout(.sizeThatFits)
             .padding()
     }

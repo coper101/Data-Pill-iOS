@@ -37,9 +37,9 @@ final class AppDataRepository_Test_Case: XCTestCase {
         // (1) Given
         let input = false
         // (2) When
-        repository.setIsNotification(input)
+        repository.setIsPeriodAuto(input)
         // (3) Then
-        let output = repository.isNotifOn
+        let output = repository.isPeriodAuto
         XCTAssertEqual(output, false)
     }
     
