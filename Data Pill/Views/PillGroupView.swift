@@ -76,9 +76,9 @@ struct PillGroupView: View {
                             height: 0.4 * cardHeight
                         )
                         
-                        // NOTIF TOGGLE
-                        NotifCardView(
-                            isTurnedOn: $appViewModel.isNotifOn,
+                        // AUTO DATA PERIOD TOGGLE
+                        AutoPeriodCardView(
+                            isAuto: $appViewModel.isPeriodAuto,
                             width: cardWidth,
                             height: 0.25 * cardHeight
                         )

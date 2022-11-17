@@ -73,7 +73,7 @@ final class AppViewModel: ObservableObject {
     @Published var usageType: ToggleItem = .daily
     
     /// Notification
-    @Published var isNotifOn = false
+    @Published var isPeriodAuto = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
     
@@ -147,8 +147,8 @@ extension AppViewModel {
             .sink { [weak self] in self?.usageType = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.isNotifOnPublisher
-            .sink { [weak self] in self?.isNotifOn = $0 }
+        appDataRepository.isPeriodAutoPublisher
+            .sink { [weak self] in self?.isPeriodAuto = $0 }
             .store(in: &cancellables)
         
         appDataRepository.startDatePublisher
@@ -212,8 +212,8 @@ extension AppViewModel {
             .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
             .store(in: &cancellables)
         
-        $isNotifOn
-            .sink { [weak self] in self?.appDataRepository.setIsNotification($0) }
+        $isPeriodAuto
+            .sink { [weak self] in self?.appDataRepository.setIsPeriodAuto($0) }
             .store(in: &cancellables)
         
         $startDate
@@ -321,8 +321,8 @@ extension AppViewModel {
     }
     
     func updatePlanPeriod() {
-        print(#function)
         guard
+            isPeriodAuto,
             let todaysDate = todaysData.date,
             !todaysDate.isDateInRange(from: startDate, to: endDate),
             let newStartDate = startDate.addDay(value: numOfDaysOfPlan),
@@ -494,7 +494,7 @@ extension AppViewModel: CustomDebugStringConvertible {
             
             - UI
               usage type: \(usageType)
-              is Notification On: \(isNotifOn)
+              is Notification On: \(isPeriodAuto)
             
             - Data
               plan data amount: \(dataAmount)

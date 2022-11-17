@@ -12,8 +12,8 @@ protocol AppDataRepositoryProtocol {
     var usageType: ToggleItem { get set }
     var usageTypePublisher: Published<ToggleItem>.Publisher { get }
     
-    var isNotifOn: Bool { get set }
-    var isNotifOnPublisher: Published<Bool>.Publisher { get }
+    var isPeriodAuto: Bool { get set }
+    var isPeriodAutoPublisher: Published<Bool>.Publisher { get }
     
     var startDate: Date { get set }
     var startDatePublisher: Published<Date>.Publisher { get }
@@ -34,7 +34,7 @@ protocol AppDataRepositoryProtocol {
     var unitPublisher: Published<Unit>.Publisher { get }
     
     func setUsageType(_ type: String) -> Void
-    func setIsNotification(_ isOn: Bool) -> Void
+    func setIsPeriodAuto(_ isOn: Bool) -> Void
     func setDataAmount(_ amount: Double) -> Void
     func setStartDate(_ date: Date) -> Void
     func setEndDate(_ date: Date) -> Void
@@ -45,7 +45,7 @@ protocol AppDataRepositoryProtocol {
 // MARK: - Implementation
 enum Keys: String {
     case usageType = "Usage_Type"
-    case notification = "Notification"
+    case autoPeriod = "Auto_Period"
     case startDatePlan = "Start_Data_Plan"
     case endDatePlan = "End_Data_Plan"
     case dataAmount = "Data_Amount"
@@ -58,8 +58,8 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
 
-    @Published var isNotifOn = false
-    var isNotifOnPublisher: Published<Bool>.Publisher { $isNotifOn }
+    @Published var isPeriodAuto = false
+    var isPeriodAutoPublisher: Published<Bool>.Publisher { $isPeriodAuto }
     
     @Published var startDate = Date()
     var startDatePublisher: Published<Date>.Publisher { $startDate }
@@ -88,8 +88,8 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
         usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
         
-        /// - Notification
-        isNotifOn = LocalStorage.getBoolItem(forKey: .notification) ?? false
+        /// - Data Period Automation
+        isPeriodAuto = LocalStorage.getBoolItem(forKey: .autoPeriod) ?? false
         
         /// - Data Plan
         dataAmount = LocalStorage.getDoubleItem(forKey: .dataAmount) ?? 0
@@ -103,8 +103,8 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         LocalStorage.setItem(type, forKey: .usageType)
     }
     
-    func setIsNotification(_ isOn: Bool) {
-        LocalStorage.setItem(isOn, forKey: .notification)
+    func setIsPeriodAuto(_ isOn: Bool) {
+        LocalStorage.setItem(isOn, forKey: .autoPeriod)
     }
     
     func setDataAmount(_ amount: Double) {
@@ -134,8 +134,8 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
 
-    @Published var isNotifOn = false
-    var isNotifOnPublisher: Published<Bool>.Publisher { $isNotifOn }
+    @Published var isPeriodAuto = false
+    var isPeriodAutoPublisher: Published<Bool>.Publisher { $isPeriodAuto }
     
     @Published var startDate = Date()
     var startDatePublisher: Published<Date>.Publisher { $startDate }
@@ -166,7 +166,7 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         unit: Unit = .gb
     ) {
         self.usageType = usageType
-        self.isNotifOn = isNotifOn
+        self.isPeriodAuto = isNotifOn
         self.startDate = startDate
         self.endDate = endDate
         self.dataAmount = dataAmount
@@ -179,8 +179,8 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         usageType = ToggleItem(rawValue: type) ?? .daily
     }
     
-    func setIsNotification(_ isOn: Bool) {
-        self.isNotifOn = isOn
+    func setIsPeriodAuto(_ isOn: Bool) {
+        self.isPeriodAuto = isOn
     }
     
     func setDataAmount(_ amount: Double) {
