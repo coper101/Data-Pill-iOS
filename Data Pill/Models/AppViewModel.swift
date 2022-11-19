@@ -133,8 +133,6 @@ final class AppViewModel: ObservableObject {
         observePlanSettings()
         observeEditPlan()
         observeDataErrors()
-    
-        updatePlanPeriod()
     }
     
 }
@@ -321,6 +319,7 @@ extension AppViewModel {
     }
     
     func updatePlanPeriod() {
+        print(#function)
         guard
             isPeriodAuto,
             let todaysDate = todaysData.date,
