@@ -8,6 +8,12 @@
 import Foundation
 import Combine
 
+enum StepperValueType {
+    case planLimit
+    case dailyLimit
+    case data
+}
+
 final class AppViewModel: ObservableObject {
     
     var cancellables: Set<AnyCancellable> = .init()
@@ -87,12 +93,21 @@ final class AppViewModel: ObservableObject {
     @Published var startDateValue = Date()
     @Published var endDateValue = Date()
     
+    @Published var dataPlusStepperValue = 1.0
+    @Published var dataMinusStepperValue = 1.0
+    
     /// Edit Data Limit
     @Published var isDataLimitEditing = false
     @Published var isDataLimitPerDayEditing = false
     
     @Published var dataLimitValue = "0.0"
     @Published var dataLimitPerDayValue = "0.0"
+    
+    @Published var dataLimitPerDayPlusStepperValue = 1.0
+    @Published var dataLimitPerDayMinusStepperValue = 1.0
+    
+    @Published var dataLimitPlusStepperValue = 1.0
+    @Published var dataLimitMinusStepperValue = 1.0
     
     var numOfDaysOfPlanValue: Int {
         startDateValue.toNumOfDays(to: endDateValue)
@@ -319,7 +334,6 @@ extension AppViewModel {
     }
     
     func updatePlanPeriod() {
-        print(#function)
         guard
             isPeriodAuto,
             let todaysDate = todaysData.date,
@@ -333,7 +347,7 @@ extension AppViewModel {
         endDate = newEndDate
     }
     
-    /// Data Amount
+    /// Data
     func didTapAmount() {
         isBlurShown = true
         isDataPlanEditing = true
@@ -341,22 +355,51 @@ extension AppViewModel {
     }
     
     func didTapPlusData() {
-        guard var doubleValue = Double(dataValue) else {
-            return
-        }
-        doubleValue += 1
-        dataValue = "\(doubleValue)"
+        print("data value 1: ", dataValue)
+        dataValue = Stepper.plus(
+            value: dataValue,
+            max: 100,
+            by: dataPlusStepperValue
+        )
+        print("data value 2: ", dataValue)
     }
     
     func didTapMinusData() {
-        guard
-            var doubleValue = Double(dataValue),
-            doubleValue > 0
-        else {
-            return
+        dataValue = Stepper.minus(
+            value: dataValue,
+            by: dataMinusStepperValue
+        )
+    }
+    
+    func didChangePlusStepperValue(value: Double, type: StepperValueType) {
+        print("value changed type: ", type)
+        print("value changed: ", value)
+        switch type {
+        case .planLimit:
+            dataLimitPlusStepperValue = value
+            didTapPlusLimit()
+        case .dailyLimit:
+            dataLimitPerDayPlusStepperValue = value
+            didTapPlusLimit()
+        case .data:
+            dataPlusStepperValue = value
+            didTapPlusData()
         }
-        doubleValue -= 1
-        dataValue = "\(doubleValue)"
+        print("value changed after: ", value)
+    }
+    
+    func didChangeMinusStepperValue(value: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            dataMinusStepperValue = value
+            didTapMinusLimit()
+        case .dailyLimit:
+            dataLimitPerDayMinusStepperValue = value
+            didTapMinusLimit()
+        case .data:
+            dataLimitMinusStepperValue = value
+            didTapMinusData()
+        }
     }
     
     func didChangeIsDataPlanEditing(_ isEditing: Bool) {
@@ -416,9 +459,14 @@ extension AppViewModel {
             dataLimitValue :
             dataLimitPerDayValue
         
+        let plusValue = (isDataLimitEditing) ?
+            dataLimitPlusStepperValue :
+            dataLimitPerDayPlusStepperValue
+        
         let newValue = Stepper.plus(
             value: value,
-            max: dataAmount
+            max: dataAmount,
+            by: plusValue
         )
         
         if isDataLimitEditing {
@@ -432,8 +480,15 @@ extension AppViewModel {
         let value = (isDataLimitEditing) ?
             dataLimitValue :
             dataLimitPerDayValue
+        
+        let minusValue = (isDataLimitEditing) ?
+            dataLimitPlusStepperValue :
+            dataLimitMinusStepperValue
                 
-        let newValue = Stepper.minus(value: value)
+        let newValue = Stepper.minus(
+            value: value,
+            by: minusValue
+        )
         
         if isDataLimitEditing {
             dataLimitValue = newValue

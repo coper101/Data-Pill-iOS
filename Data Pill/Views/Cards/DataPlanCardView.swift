@@ -19,15 +19,18 @@ struct DataPlanCardView: View {
     var endDate: Date
     var numberOfdays: Int
     
-    var periodAction: () -> Void
-    var dataAmountAction: () -> Void
-    var startPeriodAction: () -> Void
-    var endPeriodAction: () -> Void
+    var periodAction: Action
+    var dataAmountAction: Action
+    var startPeriodAction: Action
+    var endPeriodAction: Action
     
     @Binding var dataAmountValue: String
     var dataUnit: Unit = .gb
-    var plusDataAction: () -> Void
-    var minusDataAction: () -> Void
+    
+    var plusDataAction: Action
+    var minusDataAction: Action
+    var didChangePlusStepperValue: StepperValueAction
+    var didChangeMinusStepperValue: StepperValueAction
         
     var periodTitle: String {
         "\(startDate.toDayMonthFormat()) - \(endDate.toDayMonthFormat())".uppercased()
@@ -72,7 +75,9 @@ struct DataPlanCardView: View {
             value: $dataAmountValue,
             unit: .gb,
             minusAction: minusDataAction,
-            plusAction: plusDataAction
+            plusAction: plusDataAction,
+            plusStepperValueAction: didChangePlusStepperValue,
+            minusStepperValueAction: didChangeMinusStepperValue
         )
         .padding(.top, 28)
         .padding(.bottom, 12)
@@ -137,7 +142,9 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endPeriodAction: {},
             dataAmountValue: .constant("10"),
             plusDataAction: {},
-            minusDataAction: {}
+            minusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Information")
@@ -154,7 +161,9 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endPeriodAction: {},
             dataAmountValue: .constant("10"),
             plusDataAction: {},
-            minusDataAction: {}
+            minusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit Data")
@@ -171,7 +180,9 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endPeriodAction: {},
             dataAmountValue: .constant("10"),
             plusDataAction: {},
-            minusDataAction: {}
+            minusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit Data Plan")

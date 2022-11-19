@@ -17,8 +17,10 @@ enum Operator: String, Identifiable, CaseIterable {
 
 struct StepperButtonView: View {
     // MARK: - Props
+    var showStepperValue: Bool
+    var onChangeStepperValue: (Double) -> Void
     var `operator`: Operator
-    var action: () -> Void
+    var action: Action
     
     var icon: Icons {
         `operator` == .plus ?
@@ -26,9 +28,30 @@ struct StepperButtonView: View {
             Icons.minusIcon
     }
     
+    var stepperValues: [StepperValue] {
+        [
+            .init(
+                title: "1",
+                value: 1.0,
+                action: {
+                    self.onChangeStepperValue(1.0)
+                }
+            ),
+            .init(
+                title: "0.1",
+                value: 0.1,
+                action: {
+                    self.onChangeStepperValue(0.1)
+                }
+            )
+        ]
+    }
+    
     // MARK: - UI
     var body: some View {
-        Button(action: action) {
+        ZStack {
+            
+            // Layer 1:
             icon.image
                 .resizable()
                 .padding(15)
@@ -38,8 +61,20 @@ struct StepperButtonView: View {
                 .clipShape(
                     RoundedRectangle(cornerRadius: 15)
                 )
-        } //: Button
-        .buttonStyle(ScaleButtonStyle())
+                .onTapGesture {
+                    if !showStepperValue {
+                        action()
+                    }
+                }
+            
+            // Layer 2:
+            if showStepperValue {
+                StepperValueView(stepperValues: stepperValues)
+                    .offset(y: -90)
+                    .popBounceEffect()
+            }
+            
+        } //: VStack
     }
     
     // MARK: - Actions
@@ -48,9 +83,10 @@ struct StepperButtonView: View {
 // MARK: - Preview
 struct StepperButtonView_Previews: PreviewProvider {
     static var previews: some View {
-        
         ForEach(Operator.allCases) { `operator` in
             StepperButtonView(
+                showStepperValue: true,
+                onChangeStepperValue: { _ in },
                 operator: `operator`,
                 action: {}
             )

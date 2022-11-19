@@ -88,7 +88,9 @@ struct AppView: View {
                     endPeriodAction: endPeriodAction,
                     dataAmountValue: $appViewModel.dataValue,
                     plusDataAction: plusDataAction,
-                    minusDataAction: minusDataAction
+                    minusDataAction: minusDataAction,
+                    didChangePlusStepperValue: changeStepperPlusDataAction,
+                    didChangeMinusStepperValue: changeStepperMinusDatatAction
                 )
                 .padding(.horizontal, dimensions.horizontalPadding)
                 .zIndex(1)
@@ -106,7 +108,9 @@ struct AppView: View {
                     usageType: .plan,
                     editAction: {},
                     minusDataAction: minusLimitAction,
-                    plusDataAction: plusLimitAction
+                    plusDataAction: plusLimitAction,
+                    didChangePlusStepperValue: changeStepperMinusLimitAction,
+                    didChangeMinusStepperValue: changeStepperPlusLimitAction
                 )
                 .frame(height: dimensions.cardHeight)
                 .padding(.horizontal, dimensions.horizontalPadding + 16)
@@ -125,7 +129,9 @@ struct AppView: View {
                     usageType: .daily,
                     editAction: {},
                     minusDataAction: minusLimitAction,
-                    plusDataAction: plusLimitAction
+                    plusDataAction: plusLimitAction,
+                    didChangePlusStepperValue: changeStepperPlusDailyLimitAction,
+                    didChangeMinusStepperValue: changeStepperMinusDailyLimitAction
                 )
                 .frame(height: dimensions.cardHeight)
                 .padding(.horizontal, dimensions.horizontalPadding + 16)
@@ -239,6 +245,7 @@ struct AppView: View {
     }
     
     // MARK: - Actions
+    /// Period
     func startPeriodAction() {
         withAnimation(.easeInOut) {
             appViewModel.didTapStartPeriod()
@@ -251,6 +258,7 @@ struct AppView: View {
         }
     }
 
+    /// Limit
     func plusLimitAction() {
         withAnimation {
             appViewModel.didTapPlusLimit()
@@ -263,6 +271,38 @@ struct AppView: View {
         }
     }
     
+    /// Limit Plan
+    func changeStepperPlusLimitAction(value: Double) {
+        appViewModel.didChangePlusStepperValue(
+            value: value,
+            type: .planLimit
+        )
+    }
+    
+    func changeStepperMinusLimitAction(value: Double) {
+        appViewModel.didChangeMinusStepperValue(
+            value: value,
+            type: .planLimit
+        )
+    }
+    
+    /// Limit Daily
+    func changeStepperPlusDailyLimitAction(value: Double) {
+        appViewModel.didChangePlusStepperValue(
+            value: value,
+            type: .dailyLimit
+        )
+    }
+    
+    func changeStepperMinusDailyLimitAction(value: Double) {
+        appViewModel.didChangeMinusStepperValue(
+            value: value,
+            type: .dailyLimit
+        )
+    }
+    
+    
+    /// Data
     func plusDataAction() {
         withAnimation {
             appViewModel.didTapPlusData()
@@ -275,6 +315,21 @@ struct AppView: View {
         }
     }
     
+    func changeStepperPlusDataAction(value: Double) {
+        appViewModel.didChangePlusStepperValue(
+            value: value,
+            type: .data
+        )
+    }
+    
+    func changeStepperMinusDatatAction(value: Double) {
+        appViewModel.didChangeMinusStepperValue(
+            value: value,
+            type: .data
+        )
+    }
+    
+    /// UI
     func buttonAction(type: ButtonType) {
         withAnimation {
             switch type {
