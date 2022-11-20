@@ -8,6 +8,12 @@
 import Foundation
 import Combine
 
+enum StepperValueType {
+    case planLimit
+    case dailyLimit
+    case data
+}
+
 final class AppViewModel: ObservableObject {
     
     var cancellables: Set<AnyCancellable> = .init()
@@ -69,10 +75,7 @@ final class AppViewModel: ObservableObject {
     }
     
     // MARK: - UI
-    /// Usage Type - Plan or Daily
     @Published var usageType: ToggleItem = .daily
-    
-    /// Notification
     @Published var isPeriodAuto = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
@@ -87,12 +90,21 @@ final class AppViewModel: ObservableObject {
     @Published var startDateValue = Date()
     @Published var endDateValue = Date()
     
+    @Published var dataPlusStepperValue = 1.0
+    @Published var dataMinusStepperValue = 1.0
+    
     /// Edit Data Limit
     @Published var isDataLimitEditing = false
     @Published var isDataLimitPerDayEditing = false
     
     @Published var dataLimitValue = "0.0"
     @Published var dataLimitPerDayValue = "0.0"
+    
+    @Published var dataLimitPerDayPlusStepperValue = 1.0
+    @Published var dataLimitPerDayMinusStepperValue = 1.0
+    
+    @Published var dataLimitPlusStepperValue = 1.0
+    @Published var dataLimitMinusStepperValue = 1.0
     
     var numOfDaysOfPlanValue: Int {
         startDateValue.toNumOfDays(to: endDateValue)
@@ -141,6 +153,7 @@ final class AppViewModel: ObservableObject {
 extension AppViewModel {
     
     func republishAppData() {
+        /// UI
         appDataRepository.usageTypePublisher
             .sink { [weak self] in self?.usageType = $0 }
             .store(in: &cancellables)
@@ -149,6 +162,7 @@ extension AppViewModel {
             .sink { [weak self] in self?.isPeriodAuto = $0 }
             .store(in: &cancellables)
         
+        /// Plan
         appDataRepository.startDatePublisher
             .sink { [weak self] in self?.startDate = $0 }
             .store(in: &cancellables)
@@ -171,6 +185,31 @@ extension AppViewModel {
         
         appDataRepository.unitPublisher
             .sink { [weak self] in self?.unit = $0 }
+            .store(in: &cancellables)
+        
+        /// Stepper Values
+        appDataRepository.dataPlusStepperValuePublisher
+            .sink { [weak self] in self?.dataPlusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataMinusStepperValuePublisher
+            .sink { [weak self] in self?.dataMinusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataLimitPlusStepperValuePublisher
+            .sink { [weak self] in self?.dataLimitPlusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataLimitMinusStepperValuePublisher
+            .sink { [weak self] in self?.dataLimitMinusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataLimitPerDayPlusStepperValuePublisher
+            .sink { [weak self] in self?.dataLimitPerDayPlusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataLimitPerDayMinusStepperValuePublisher
+            .sink { [weak self] in self?.dataLimitPerDayMinusStepperValue = $0 }
             .store(in: &cancellables)
     }
     
@@ -205,7 +244,7 @@ extension AppViewModel {
 extension AppViewModel {
     
     func observePlanSettings() {
-        
+        /// UI
         $usageType
             .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
             .store(in: &cancellables)
@@ -214,6 +253,7 @@ extension AppViewModel {
             .sink { [weak self] in self?.appDataRepository.setIsPeriodAuto($0) }
             .store(in: &cancellables)
         
+        /// Plan
         $startDate
             .sink { [weak self] in self?.appDataRepository.setStartDate($0) }
             .store(in: &cancellables)
@@ -236,6 +276,31 @@ extension AppViewModel {
         
         $totalUsedData
             .sink { [weak self] in self?.refreshUsedDataToday($0) }
+            .store(in: &cancellables)
+        
+        /// Stepper Values
+        $dataPlusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .data) }
+            .store(in: &cancellables)
+        
+        $dataLimitPerDayPlusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .data) }
+            .store(in: &cancellables)
+        
+        $dataLimitPerDayPlusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .dailyLimit) }
+            .store(in: &cancellables)
+        
+        $dataLimitPerDayMinusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .dailyLimit) }
+            .store(in: &cancellables)
+        
+        $dataLimitPlusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .planLimit) }
+            .store(in: &cancellables)
+        
+        $dataLimitMinusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .planLimit) }
             .store(in: &cancellables)
         
     }
@@ -319,7 +384,6 @@ extension AppViewModel {
     }
     
     func updatePlanPeriod() {
-        print(#function)
         guard
             isPeriodAuto,
             let todaysDate = todaysData.date,
@@ -341,22 +405,46 @@ extension AppViewModel {
     }
     
     func didTapPlusData() {
-        guard var doubleValue = Double(dataValue) else {
-            return
-        }
-        doubleValue += 1
-        dataValue = "\(doubleValue)"
+        dataValue = Stepper.plus(
+            value: dataValue,
+            max: 100,
+            by: dataPlusStepperValue
+        )
     }
     
     func didTapMinusData() {
-        guard
-            var doubleValue = Double(dataValue),
-            doubleValue > 0
-        else {
-            return
+        dataValue = Stepper.minus(
+            value: dataValue,
+            by: dataMinusStepperValue
+        )
+    }
+    
+    func didChangePlusStepperValue(value: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            dataLimitPlusStepperValue = value
+            didTapPlusLimit()
+        case .dailyLimit:
+            dataLimitPerDayPlusStepperValue = value
+            didTapPlusLimit()
+        case .data:
+            dataPlusStepperValue = value
+            didTapPlusData()
         }
-        doubleValue -= 1
-        dataValue = "\(doubleValue)"
+    }
+    
+    func didChangeMinusStepperValue(value: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            dataLimitMinusStepperValue = value
+            didTapMinusLimit()
+        case .dailyLimit:
+            dataLimitPerDayMinusStepperValue = value
+            didTapMinusLimit()
+        case .data:
+            dataMinusStepperValue = value
+            didTapMinusData()
+        }
     }
     
     func didChangeIsDataPlanEditing(_ isEditing: Bool) {
@@ -416,9 +504,14 @@ extension AppViewModel {
             dataLimitValue :
             dataLimitPerDayValue
         
+        let plusValue = (isDataLimitEditing) ?
+            dataLimitPlusStepperValue :
+            dataLimitPerDayPlusStepperValue
+        
         let newValue = Stepper.plus(
             value: value,
-            max: dataAmount
+            max: dataAmount,
+            by: plusValue
         )
         
         if isDataLimitEditing {
@@ -432,8 +525,15 @@ extension AppViewModel {
         let value = (isDataLimitEditing) ?
             dataLimitValue :
             dataLimitPerDayValue
+        
+        let minusValue = (isDataLimitEditing) ?
+            dataLimitMinusStepperValue :
+            dataLimitPerDayMinusStepperValue
                 
-        let newValue = Stepper.minus(value: value)
+        let newValue = Stepper.minus(
+            value: value,
+            by: minusValue
+        )
         
         if isDataLimitEditing {
             dataLimitValue = newValue
@@ -458,7 +558,7 @@ extension AppViewModel {
         isEndDatePickerShown = false
     }
     
-    // MARK: History
+    // MARK: - History
     func didTapCloseHistory() {
         isBlurShown = false
         isHistoryShown = false
@@ -489,11 +589,20 @@ extension AppViewModel: CustomDebugStringConvertible {
         """
             
             
-            * * App State * *
+            * * * * * *  App State  * * * * * *
             
             - UI
               usage type: \(usageType)
-              is Notification On: \(isPeriodAuto)
+              is Period Auto: \(isPeriodAuto)
+            
+              data plus val: \(dataPlusStepperValue)
+              data minus val: \(dataMinusStepperValue)
+            
+              data limit per day plus val: \(dataLimitPerDayPlusStepperValue)
+              data limit per day minus val: \(dataLimitPerDayMinusStepperValue)
+            
+              data limit plus val: \(dataLimitPlusStepperValue)
+              data limit minus val: \(dataLimitMinusStepperValue)
             
             - Data
               plan data amount: \(dataAmount)

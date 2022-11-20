@@ -97,5 +97,67 @@ final class AppDataRepository_Test_Case: XCTestCase {
         let output = repository.dataLimitPerDay
         XCTAssertEqual(output, 1.0)
     }
+    
+    // MARK: - setPlusStepperValue()
+    func test_set_plus_stepper_value_is_data_correct() throws {
+        // (1) Given
+        let input = 0.1
+        // (2) When
+        repository.setPlusStepperValue(input, type: .data)
+        // (3) Then
+        let output = repository.dataPlusStepperValue
+        XCTAssertEqual(output, 0.1)
+    }
+    
+    func test_set_plus_stepper_value_is_daily_limit_correct() throws {
+        // (1) Given
+        let input = 0.1
+        // (2) When
+        repository.setPlusStepperValue(input, type: .dailyLimit)
+        // (3) Then
+        let output = repository.dataLimitPerDayPlusStepperValue
+        XCTAssertEqual(output, 0.1)
+    }
+    
+    func test_set_plus_stepper_value_is_total_limit_correct() throws {
+        // (1) Given
+        let input = 0.1
+        // (2) When
+        repository.setPlusStepperValue(input, type: .planLimit)
+        // (3) Then
+        let output = repository.dataLimitPlusStepperValue
+        XCTAssertEqual(output, 0.1)
+    }
+    
+    // MARK: - setMinusStepperValue()
+    func test_set_minus_stepper_value_is_data_correct() throws {
+        // (1) Given
+        let input = 0.1
+        // (2) When
+        repository.setMinusStepperValue(input, type: .data)
+        // (3) Then
+        let output = repository.dataMinusStepperValue
+        XCTAssertEqual(output, 0.1)
+    }
+    
+    func test_set_minus_stepper_value_is_daily_limit_correct() throws {
+        // (1) Given
+        let input = 0.1
+        // (2) When
+        repository.setMinusStepperValue(input, type: .dailyLimit)
+        // (3) Then
+        let output = repository.dataLimitPerDayMinusStepperValue
+        XCTAssertEqual(output, 0.1)
+    }
+    
+    func test_set_minus_stepper_value_is_total_limit_correct() throws {
+        // (1) Given
+        let input = 0.1
+        // (2) When
+        repository.setMinusStepperValue(input, type: .planLimit)
+        // (3) Then
+        let output = repository.dataLimitMinusStepperValue
+        XCTAssertEqual(output, 0.1)
+    }
 
 }

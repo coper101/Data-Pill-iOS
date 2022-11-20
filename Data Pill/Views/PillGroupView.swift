@@ -102,7 +102,9 @@ struct PillGroupView: View {
                 endPeriodAction: {},
                 dataAmountValue: $appViewModel.dataValue,
                 plusDataAction: {},
-                minusDataAction: {}
+                minusDataAction: {},
+                didChangePlusStepperValue: { _ in },
+                didChangeMinusStepperValue: { _ in }
             )
             
             // MARK: - Row 3: Data Limit
@@ -115,7 +117,9 @@ struct PillGroupView: View {
                     usageType: .plan,
                     editAction: planLimitAction,
                     minusDataAction: {},
-                    plusDataAction: {}
+                    plusDataAction: {},
+                    didChangePlusStepperValue: { _ in },
+                    didChangeMinusStepperValue: { _ in }
                 )
                 
                 DataPlanLimitView(
@@ -125,7 +129,9 @@ struct PillGroupView: View {
                     usageType: .daily,
                     editAction: planLimitPerDayAction,
                     minusDataAction: {},
-                    plusDataAction: {}
+                    plusDataAction: {},
+                    didChangePlusStepperValue: { _ in },
+                    didChangeMinusStepperValue: { _ in }
                 )
                 
             } //: HStack

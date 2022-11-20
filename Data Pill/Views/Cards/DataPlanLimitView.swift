@@ -14,9 +14,12 @@ struct DataPlanLimitView: View {
     var dataUnit: Unit = .gb
     var isEditing: Bool
     var usageType: ToggleItem
-    var editAction: () -> Void
-    var minusDataAction: () -> Void
-    var plusDataAction: () -> Void
+    var editAction: Action
+    
+    var minusDataAction: Action
+    var plusDataAction: Action
+    var didChangePlusStepperValue: StepperValueAction
+    var didChangeMinusStepperValue: StepperValueAction
     
     var subtitle: String {
         switch usageType {
@@ -85,7 +88,9 @@ struct DataPlanLimitView: View {
                     value: $dataLimitValue,
                     unit: .gb,
                     minusAction: minusDataAction,
-                    plusAction: plusDataAction
+                    plusAction: plusDataAction,
+                    plusStepperValueAction: didChangePlusStepperValue,
+                    minusStepperValueAction: didChangeMinusStepperValue
                 )
                     .padding(.bottom, 34)
                     .padding(.top, 16)
@@ -107,7 +112,9 @@ struct DataPlanLimitView_Previews: PreviewProvider {
             usageType: .daily,
             editAction: {},
             minusDataAction: {},
-            plusDataAction: {}
+            plusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .frame(width: 175, height: 145)
             .previewLayout(.sizeThatFits)
@@ -121,7 +128,9 @@ struct DataPlanLimitView_Previews: PreviewProvider {
             usageType: .daily,
             editAction: {},
             minusDataAction: {},
-            plusDataAction: {}
+            plusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .fillMaxWidth()
             .frame(height: 145)

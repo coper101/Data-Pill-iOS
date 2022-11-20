@@ -36,7 +36,10 @@ struct TextInputView: View {
             
             // Col 2: UNIT
             Text(unit.rawValue)
-                .frame(width: unitWidth, alignment: .leading)
+                .frame(
+                    width: unitWidth,
+                    alignment: .leading
+                )
             
         } //: HStack
         .textStyle(
@@ -45,6 +48,7 @@ struct TextInputView: View {
             size: 22
         )
         .frame(height: 53)
+        .frame(maxWidth: 120)
         .foregroundColor(Colors.onSurface.color)
         .background(Colors.onSurfaceDark.color)
         .clipShape(
