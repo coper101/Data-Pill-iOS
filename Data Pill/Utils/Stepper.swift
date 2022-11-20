@@ -9,7 +9,7 @@ import Foundation
 
 class Stepper {
     
-    /// increases the value of stepper
+    /// Returns the new value of stepper after incrementing
     /// - Parameters:
     ///   - value: A value to  increment by one
     ///   - max    : A value to limit the value from increasing
@@ -24,10 +24,10 @@ class Stepper {
             /// no change
             return value
         }
-        return .init(format: "%.2f", doubleValue)
+        return .init(format: "%.1f", doubleValue)
     }
     
-    /// increases the value of stepper
+    /// Returns the new value of stepper after decrementing
     /// - Parameters:
     ///   - value : A value to  decrement by one
     ///   - minus : A value to limit the value from decreasing
@@ -42,7 +42,7 @@ class Stepper {
             /// no change
             return value
         }
-        return .init(format: "%.2f", doubleValue)
+        return .init(format: "%.1f", doubleValue)
     }
     
 }

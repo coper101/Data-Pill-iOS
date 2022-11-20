@@ -9,13 +9,14 @@ import SwiftUI
 
 struct DividerView: View {
     // MARK: - Props
+    var color: Colors = .onSurfaceDark2
     
     // MARK: - UI
     var body: some View {
         Rectangle()
             .fillMaxWidth()
             .frame(height: 1)
-            .foregroundColor(Colors.onSurfaceDark2.color)
+            .foregroundColor(color.color)
     }
     
     // MARK: - Actions

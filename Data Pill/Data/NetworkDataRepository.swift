@@ -133,7 +133,7 @@ final class NetworkDataRepository:
           """
             
             
-            * * Network Data Repository * *
+            * * * * * *  Network Data Repository  * * * * * *
             
             - Data
               data received: \(usedDataInfo.wirelessWanDataReceived.toInt64().toMB())

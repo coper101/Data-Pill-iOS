@@ -51,23 +51,21 @@ struct StepperButtonView: View {
     var body: some View {
         ZStack {
             
-            // Layer 1:
-            icon.image
-                .resizable()
-                .padding(15)
-                .frame(width: 57, height: 53)
-                .foregroundColor(Colors.onSurface.color)
-                .background(Colors.onSurfaceDark.color)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 15)
-                )
-                .onTapGesture {
-                    if !showStepperValue {
-                        action()
-                    }
-                }
+            // Layer 1: OPERATOR +, -
+            Button(action: didTapOperator) {
+                icon.image
+                    .resizable()
+                    .padding(15)
+                    .frame(width: 57, height: 53)
+                    .foregroundColor(Colors.onSurface.color)
+                    .background(Colors.onSurfaceDark.color)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 15)
+                    )
+            }
+            .buttonStyle(ScaleButtonStyle())
             
-            // Layer 2:
+            // Layer 2: CUSTOM VALUES +/- 0.1, +/- 1
             if showStepperValue {
                 StepperValueView(stepperValues: stepperValues)
                     .offset(y: -90)
@@ -78,6 +76,12 @@ struct StepperButtonView: View {
     }
     
     // MARK: - Actions
+    func didTapOperator() {
+        guard !showStepperValue else {
+            return
+        }
+        action()
+    }
 }
 
 // MARK: - Preview

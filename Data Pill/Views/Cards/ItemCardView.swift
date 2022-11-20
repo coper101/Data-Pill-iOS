@@ -52,7 +52,7 @@ enum ItemCardStyle: String, Identifiable, CaseIterable {
 }
 
 struct ItemCardView<Content>: View where Content: View {
-    // MARK: - Props
+    // MARK: - Props    
     var style: ItemCardStyle
     var subtitle: String
     var caption: String = ""
@@ -156,13 +156,9 @@ struct ItemCardView<Content>: View where Content: View {
         .padding(.vertical, contentVertPadding)
         .padding(.horizontal, contentHorPadding)
         .background(
-            backgroundColor.color.opacity(
-                hasBackground ? 1 : 0
-            )
-            .blur(radius: hasBlur ? 100 : 0)
-        )
-        .clipShape(
             RoundedRectangle(cornerRadius: 20)
+                .fill(backgroundColor.color)
+                .blur(radius: hasBlur ? 100 : 0)
         )
     }
     
@@ -190,6 +186,8 @@ struct ItemCardView_Previews: PreviewProvider {
                 "Editing"
             )
         )
+        .padding()
+        .background(Color.green)
         
         ForEach(ItemCardStyle.allCases) { style in
             ItemCardView(
@@ -207,6 +205,7 @@ struct ItemCardView_Previews: PreviewProvider {
                 )
             )
             .padding()
+            .background(Color.green)
         }
     }
 }

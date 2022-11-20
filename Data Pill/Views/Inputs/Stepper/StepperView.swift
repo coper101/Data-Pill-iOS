@@ -24,7 +24,7 @@ struct StepperView: View {
     var body: some View {
         HStack(spacing: 10) {
             
-            // Col 1: Minus
+            // Col 1: MINUS
             StepperButtonView(
                 showStepperValue: hasLongPressedMinus,
                 onChangeStepperValue: onChangeMinusStepperValue,
@@ -36,13 +36,13 @@ struct StepperView: View {
                     .onEnded(longPressedMinusAction)
             )
             
-            // Col 2: Value
+            // Col 2: VALUE
             TextInputView(
                 value: $value,
                 unit: unit
             )
             
-            // Col 3: Plus
+            // Col 3: PLUS
             StepperButtonView(
                 showStepperValue: hasLongPressedPlus,
                 onChangeStepperValue: onChangeAddStepperValue,
@@ -56,6 +56,7 @@ struct StepperView: View {
             
         } //: HStack
         .fillMaxWidth(alignment: .center)
+        .frame(height: 53)
     }
     
     // MARK: - Actions
@@ -67,6 +68,9 @@ struct StepperView: View {
     }
     
     func longPressedMinusAction(value: Bool) {
+        if hasLongPressedPlus {
+            hasLongPressedPlus = false
+        }
         hasLongPressedMinus = true
     }
     
@@ -77,6 +81,9 @@ struct StepperView: View {
     }
     
     func longPressedPlusAction(value: Bool) {
+        if hasLongPressedMinus {
+            hasLongPressedMinus = false
+        }
         hasLongPressedPlus = true
     }
 }

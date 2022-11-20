@@ -27,12 +27,12 @@ class LocalStorage {
         return defaults.object(forKey: key.rawValue) as? Date
     }
 
-    static func getBoolItem(forKey key: Keys) -> Bool? {
+    static func getBoolItem(forKey key: Keys) -> Bool {
         let defaults = UserDefaults.standard
         return defaults.bool(forKey: key.rawValue)
     }
 
-    static func getDoubleItem(forKey key: Keys) -> Double? {
+    static func getDoubleItem(forKey key: Keys) -> Double {
         let defaults = UserDefaults.standard
         return defaults.double(forKey: key.rawValue)
     }

@@ -42,7 +42,7 @@ final class AppViewModel_Test_Case: XCTestCase {
         )
     }
     
-    // MARK: Mobile Data
+    // MARK: - Mobile Data
     func test_refresh_used_data_today_no_total_used_data() throws {
         // (1) Given
         let totalUsedData = 100.0
@@ -77,7 +77,7 @@ final class AppViewModel_Test_Case: XCTestCase {
         XCTAssertEqual(totalUsedDataToday, 200.0)
     }
         
-    // MARK: UI - Edit Plan
+    // MARK: - Edit Data Plan
     /// Period
     func test_did_tap_period() throws {
         // (1) Given
@@ -203,6 +203,24 @@ final class AppViewModel_Test_Case: XCTestCase {
         XCTAssertEqual(appViewModel.dataAmount, 20.0)
     }
     
+    func test_did_tap_plus_for_data_amount() throws {
+        // (1) Given
+        let value = 0.1
+        // (2) When
+        appViewModel.didChangePlusStepperValue(value: value, type: .data)
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataPlusStepperValue, 0.1)
+    }
+    
+    func test_did_tap_minus_for_data_amount() throws {
+        // (1) Given
+        let value = 0.1
+        // (2) When
+        appViewModel.didChangeMinusStepperValue(value: value, type: .data)
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataMinusStepperValue, 0.1)
+    }
+    
     // MARK: - Edit Data Limit
     func test_did_tap_limit_plan() throws {
         // (1) Given
@@ -250,7 +268,43 @@ final class AppViewModel_Test_Case: XCTestCase {
         XCTAssertEqual(appViewModel.dataLimitPerDay, 0.5)
     }
         
-    // MARK: History
+    func test_did_tap_plus_for_daily_limit() throws {
+        // (1) Given
+        let value = 0.1
+        // (2) When
+        appViewModel.didChangePlusStepperValue(value: value, type: .dailyLimit)
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataLimitPerDayPlusStepperValue, 0.1)
+    }
+    
+    func test_did_tap_minus_for_daily_limit() throws {
+        // (1) Given
+        let value = 0.1
+        // (2) When
+        appViewModel.didChangeMinusStepperValue(value: value, type: .dailyLimit)
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataLimitPerDayMinusStepperValue, 0.1)
+    }
+    
+    func test_did_tap_plus_for_total_limit() throws {
+        // (1) Given
+        let value = 0.1
+        // (2) When
+        appViewModel.didChangePlusStepperValue(value: value, type: .planLimit)
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataLimitPlusStepperValue, 0.1)
+    }
+    
+    func test_did_tap_minus_for_total_limit() throws {
+        // (1) Given
+        let value = 0.1
+        // (2) When
+        appViewModel.didChangeMinusStepperValue(value: value, type: .planLimit)
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataLimitMinusStepperValue, 0.1)
+    }
+    
+    // MARK: - History
     func test_tap_history_daily_selected() throws {
         // (1) Given
         appViewModel.usageType = .daily

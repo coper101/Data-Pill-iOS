@@ -32,7 +32,7 @@ struct StepperValueView: View {
                         
                         // Row 1: DIVIDER
                         if index > 0  {
-                            DividerView()
+                            DividerView(color: .onSurfaceLight2)
                                 .padding(.horizontal, 8)
                         }
                         
@@ -41,7 +41,7 @@ struct StepperValueView: View {
                             .textStyle(
                                 foregroundColor: .onSurface,
                                 font: .semibold,
-                                size: 18
+                                size: 17
                             )
                             .padding(15)
                         
@@ -57,6 +57,12 @@ struct StepperValueView: View {
         .background(Colors.onSurfaceDark.color)
         .clipShape(
             RoundedRectangle(cornerRadius: 15)
+        )
+        .shadow(
+            color: .black.opacity(0.12),
+            radius: 7,
+            x: 0,
+            y: 0
         )
     }
     
@@ -82,6 +88,5 @@ struct StepperValueView_Previews: PreviewProvider {
         StepperValueView(stepperValues: stepperValues)
             .previewLayout(.sizeThatFits)
             .padding()
-            // .background(Colors.Background)
     }
 }

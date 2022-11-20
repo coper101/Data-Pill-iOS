@@ -149,6 +149,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Information")
             .padding()
+            .background(Color.green)
         
         DataPlanCardView(
             editType: .data,
@@ -168,6 +169,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit Data")
             .padding()
+            .background(Color.green)
         
         DataPlanCardView(
             editType: .dataPlan,
@@ -187,6 +189,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit Data Plan")
             .padding()
+            .background(Color.green)
     }
 }
 

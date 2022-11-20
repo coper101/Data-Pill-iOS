@@ -109,8 +109,8 @@ struct AppView: View {
                     editAction: {},
                     minusDataAction: minusLimitAction,
                     plusDataAction: plusLimitAction,
-                    didChangePlusStepperValue: changeStepperMinusLimitAction,
-                    didChangeMinusStepperValue: changeStepperPlusLimitAction
+                    didChangePlusStepperValue: changeStepperPlusLimitAction,
+                    didChangeMinusStepperValue: changeStepperMinusLimitAction
                 )
                 .frame(height: dimensions.cardHeight)
                 .padding(.horizontal, dimensions.horizontalPadding + 16)
@@ -226,7 +226,7 @@ struct AppView: View {
                     .fillMaxSize(alignment: .center)
             }
             
-            // MARK: Layer 8: Status Bar Background
+            // MARK: Layer 9: Status Bar Background
             Rectangle()
                 .fill(Colors.background.color)
                 .fillMaxWidth()
