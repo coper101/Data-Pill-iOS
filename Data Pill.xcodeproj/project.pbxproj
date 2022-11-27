@@ -66,6 +66,30 @@
 		27B90B8928F2D43700263983 /* DataTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8828F2D43700263983 /* DataTest.swift */; };
 		27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE08292928BD6C00E0781C /* StepperValueView.swift */; };
 		27BE082C2928D7BE00E0781C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE082B2928D7BE00E0781C /* Types.swift */; };
+		27E776FD293365410031456D /* WidgetPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E776FC293365410031456D /* WidgetPillView.swift */; };
+		27E776FF293365730031456D /* BasePillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E776FE293365730031456D /* BasePillView.swift */; };
+		27E77707293367450031456D /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E77706293367450031456D /* WidgetKit.framework */; };
+		27E77709293367450031456D /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E77708293367450031456D /* SwiftUI.framework */; };
+		27E7770C293367450031456D /* Data_Pill_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7770B293367450031456D /* Data_Pill_Widget.swift */; };
+		27E7770E293367470031456D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27E7770D293367470031456D /* Assets.xcassets */; };
+		27E77712293367470031456D /* Data Pill WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27E77704293367450031456D /* Data Pill WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		27E77717293367540031456D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27801DCC28D6C96B00201339 /* Assets.xcassets */; };
+		27E77718293367570031456D /* SFProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27801DD928D6CF3900201339 /* SFProText-Bold.ttf */; };
+		27E77719293367590031456D /* SFProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27801DDA28D6CF3900201339 /* SFProText-Medium.ttf */; };
+		27E7771A2933675B0031456D /* SFProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27801DDB28D6CF3900201339 /* SFProText-Semibold.ttf */; };
+		27E7771B293367610031456D /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DC628D6C96800201339 /* Color.swift */; };
+		27E7771C293367630031456D /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DC228D6C96800201339 /* Type.swift */; };
+		27E7771E29336A420031456D /* WidgetPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E776FC293365410031456D /* WidgetPillView.swift */; };
+		27E7772029336AA10031456D /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7771F29336AA10031456D /* Unit.swift */; };
+		27E7772129336B370031456D /* Numbers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DED28D8B7FA00201339 /* Numbers.swift */; };
+		27E7772229336C8A0031456D /* BasePillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E776FE293365730031456D /* BasePillView.swift */; };
+		27E7772329336CAC0031456D /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DC028D6C96800201339 /* Text.swift */; };
+		27E7772429336CC10031456D /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DC428D6C96800201339 /* Frame.swift */; };
+		27E7772529336CF70031456D /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7771F29336AA10031456D /* Unit.swift */; };
+		27E7772A2933780D0031456D /* UsageType.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 27E777292933780D0031456D /* UsageType.intentdefinition */; };
+		27E7772B2933780D0031456D /* UsageType.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 27E777292933780D0031456D /* UsageType.intentdefinition */; };
+		27E7772D2933844A0031456D /* ToggleItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7772C2933844A0031456D /* ToggleItem.swift */; };
+		27E7772E2933844A0031456D /* ToggleItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7772C2933844A0031456D /* ToggleItem.swift */; };
 		27F47DDA2905330D00B3F83D /* AppDataRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */; };
 		27F47DDC29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */; };
 		27F47DDF29067C8E00B3F83D /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDE29067C8E00B3F83D /* Button.swift */; };
@@ -79,7 +103,28 @@
 			remoteGlobalIDString = 27801DAB28D6C96800201339;
 			remoteInfo = "Data Pill";
 		};
+		27E77710293367470031456D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27801DA428D6C96800201339 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27E77703293367450031456D;
+			remoteInfo = "Data Pill WidgetExtension";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		27E77716293367470031456D /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				27E77712293367470031456D /* Data Pill WidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		271D8FEA29004B2800965FC3 /* DataUsageRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsageRepository_Test_Case.swift; sourceTree = "<group>"; };
@@ -144,6 +189,17 @@
 		27B90B8828F2D43700263983 /* DataTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTest.swift; sourceTree = "<group>"; };
 		27BE08292928BD6C00E0781C /* StepperValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperValueView.swift; sourceTree = "<group>"; };
 		27BE082B2928D7BE00E0781C /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		27E776FC293365410031456D /* WidgetPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPillView.swift; sourceTree = "<group>"; };
+		27E776FE293365730031456D /* BasePillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePillView.swift; sourceTree = "<group>"; };
+		27E77704293367450031456D /* Data Pill WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Data Pill WidgetExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27E77706293367450031456D /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		27E77708293367450031456D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		27E7770B293367450031456D /* Data_Pill_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Pill_Widget.swift; sourceTree = "<group>"; };
+		27E7770D293367470031456D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27E7770F293367470031456D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27E7771F29336AA10031456D /* Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
+		27E777292933780D0031456D /* UsageType.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = UsageType.intentdefinition; sourceTree = "<group>"; };
+		27E7772C2933844A0031456D /* ToggleItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleItem.swift; sourceTree = "<group>"; };
 		27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRepository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDE29067C8E00B3F83D /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
@@ -164,6 +220,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		27E77701293367450031456D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E77709293367450031456D /* SwiftUI.framework in Frameworks */,
+				27E77707293367450031456D /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -172,6 +237,8 @@
 			children = (
 				27801DAE28D6C96800201339 /* Data Pill */,
 				278FB2CA28F2E55900BE78C2 /* Data Pill Tests */,
+				27E7770A293367450031456D /* Data Pill Widget */,
+				27E77705293367450031456D /* Frameworks */,
 				27801DAD28D6C96800201339 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -181,6 +248,7 @@
 			children = (
 				27801DAC28D6C96800201339 /* Data Pill.app */,
 				278FB2C928F2E55900BE78C2 /* Data Pill Tests.xctest */,
+				27E77704293367450031456D /* Data Pill WidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -208,6 +276,7 @@
 				27801DB028D6C96800201339 /* AppView.swift */,
 				27801DB328D6C96800201339 /* PillGroupView.swift */,
 				27801E0228DA196E00201339 /* HistoryView.swift */,
+				27E776FC293365410031456D /* WidgetPillView.swift */,
 				278FB2D828F5B20400BE78C2 /* Pill */,
 				27801DF728DA0A6B00201339 /* Cards */,
 				27801DE028D6D12C00201339 /* Inputs */,
@@ -223,6 +292,8 @@
 				278D6B6828F17065006931DA /* DataInfo.swift */,
 				27B90B8828F2D43700263983 /* DataTest.swift */,
 				27BE082B2928D7BE00E0781C /* Types.swift */,
+				27E7771F29336AA10031456D /* Unit.swift */,
+				27E7772C2933844A0031456D /* ToggleItem.swift */,
 				27801E1F28E9B16E00201339 /* DataUsage.xcdatamodeld */,
 			);
 			path = Models;
@@ -346,6 +417,7 @@
 		278FB2D828F5B20400BE78C2 /* Pill */ = {
 			isa = PBXGroup;
 			children = (
+				27E776FE293365730031456D /* BasePillView.swift */,
 				27801DE528D6F59700201339 /* PillView.swift */,
 				27801E0428DA1A7A00201339 /* DraggablePillView.swift */,
 			);
@@ -360,6 +432,26 @@
 				27BE08292928BD6C00E0781C /* StepperValueView.swift */,
 			);
 			path = Stepper;
+			sourceTree = "<group>";
+		};
+		27E77705293367450031456D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				27E77706293367450031456D /* WidgetKit.framework */,
+				27E77708293367450031456D /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		27E7770A293367450031456D /* Data Pill Widget */ = {
+			isa = PBXGroup;
+			children = (
+				27E7770B293367450031456D /* Data_Pill_Widget.swift */,
+				27E777292933780D0031456D /* UsageType.intentdefinition */,
+				27E7770D293367470031456D /* Assets.xcassets */,
+				27E7770F293367470031456D /* Info.plist */,
+			);
+			path = "Data Pill Widget";
 			sourceTree = "<group>";
 		};
 		27F47DDD290660B400B3F83D /* Style */ = {
@@ -384,10 +476,12 @@
 				27801DA828D6C96800201339 /* Sources */,
 				27801DA928D6C96800201339 /* Frameworks */,
 				27801DAA28D6C96800201339 /* Resources */,
+				27E77716293367470031456D /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				27E77711293367470031456D /* PBXTargetDependency */,
 			);
 			name = "Data Pill";
 			productName = "Data Pill";
@@ -412,6 +506,23 @@
 			productReference = 278FB2C928F2E55900BE78C2 /* Data Pill Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		27E77703293367450031456D /* Data Pill WidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27E77713293367470031456D /* Build configuration list for PBXNativeTarget "Data Pill WidgetExtension" */;
+			buildPhases = (
+				27E77700293367450031456D /* Sources */,
+				27E77701293367450031456D /* Frameworks */,
+				27E77702293367450031456D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Data Pill WidgetExtension";
+			productName = "Data Pill WidgetExtension";
+			productReference = 27E77704293367450031456D /* Data Pill WidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -428,6 +539,9 @@
 					278FB2C828F2E55900BE78C2 = {
 						CreatedOnToolsVersion = 14.0.1;
 						TestTargetID = 27801DAB28D6C96800201339;
+					};
+					27E77703293367450031456D = {
+						CreatedOnToolsVersion = 14.0.1;
 					};
 				};
 			};
@@ -446,6 +560,7 @@
 			targets = (
 				27801DAB28D6C96800201339 /* Data Pill */,
 				278FB2C828F2E55900BE78C2 /* Data Pill Tests */,
+				27E77703293367450031456D /* Data Pill WidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -470,6 +585,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		27E77702293367450031456D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E77717293367540031456D /* Assets.xcassets in Resources */,
+				27E77719293367590031456D /* SFProText-Medium.ttf in Resources */,
+				27E77718293367570031456D /* SFProText-Bold.ttf in Resources */,
+				27E7771A2933675B0031456D /* SFProText-Semibold.ttf in Resources */,
+				27E7770E293367470031456D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -489,7 +616,11 @@
 				27801DF428D8C71C00201339 /* AutoPeriodCardView.swift in Sources */,
 				27801E0128DA15C600201339 /* DailyLimitView.swift in Sources */,
 				27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */,
+				27E776FF293365730031456D /* BasePillView.swift in Sources */,
 				27B90B8728F2D31600263983 /* DataUsagePreview.swift in Sources */,
+				27E7772D2933844A0031456D /* ToggleItem.swift in Sources */,
+				27E7772A2933780D0031456D /* UsageType.intentdefinition in Sources */,
+				27E776FD293365410031456D /* WidgetPillView.swift in Sources */,
 				27801E0328DA196E00201339 /* HistoryView.swift in Sources */,
 				278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
@@ -504,6 +635,7 @@
 				27801E1928E951A100201339 /* NetworkDataRepository.swift in Sources */,
 				27801E0D28E0C02200201339 /* DateInputView.swift in Sources */,
 				278FB30F28FA992200BE78C2 /* DateRangeInputView.swift in Sources */,
+				27E7772029336AA10031456D /* Unit.swift in Sources */,
 				27801E2328E9B29D00201339 /* LocalDatabase.swift in Sources */,
 				27801DF028D8BA2400201339 /* UsageCardView.swift in Sources */,
 				27B90B8528F2D28100263983 /* Constants.swift in Sources */,
@@ -544,6 +676,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		27E77700293367450031456D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E7772229336C8A0031456D /* BasePillView.swift in Sources */,
+				27E7772429336CC10031456D /* Frame.swift in Sources */,
+				27E7770C293367450031456D /* Data_Pill_Widget.swift in Sources */,
+				27E7772E2933844A0031456D /* ToggleItem.swift in Sources */,
+				27E7772529336CF70031456D /* Unit.swift in Sources */,
+				27E7772B2933780D0031456D /* UsageType.intentdefinition in Sources */,
+				27E7771B293367610031456D /* Color.swift in Sources */,
+				27E7772329336CAC0031456D /* Text.swift in Sources */,
+				27E7772129336B370031456D /* Numbers.swift in Sources */,
+				27E7771C293367630031456D /* Type.swift in Sources */,
+				27E7771E29336A420031456D /* WidgetPillView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -551,6 +701,11 @@
 			isa = PBXTargetDependency;
 			target = 27801DAB28D6C96800201339 /* Data Pill */;
 			targetProxy = 278FB2CD28F2E55900BE78C2 /* PBXContainerItemProxy */;
+		};
+		27E77711293367470031456D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27E77703293367450031456D /* Data Pill WidgetExtension */;
+			targetProxy = 27E77710293367470031456D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -672,6 +827,7 @@
 		27801DD428D6C96B00201339 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -705,6 +861,7 @@
 		27801DD528D6C96B00201339 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -775,6 +932,64 @@
 			};
 			name = Release;
 		};
+		27E77714293367470031456D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KB9D3Y7M29;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Data Pill Widget/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Data Pill Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.penguinworks.Data-Pill.Data-Pill-Widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		27E77715293367470031456D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KB9D3Y7M29;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Data Pill Widget/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Data Pill Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.penguinworks.Data-Pill.Data-Pill-Widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -801,6 +1016,15 @@
 			buildConfigurations = (
 				278FB2CF28F2E55900BE78C2 /* Debug */,
 				278FB2D028F2E55900BE78C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27E77713293367470031456D /* Build configuration list for PBXNativeTarget "Data Pill WidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27E77714293367470031456D /* Debug */,
+				27E77715293367470031456D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

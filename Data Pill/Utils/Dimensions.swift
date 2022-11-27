@@ -13,7 +13,10 @@ struct Dimensions {
     let cardHeight: CGFloat = 145
     let spaceInBetween: CGFloat = 21
     let screen: CGSize = UIScreen.main.bounds.size
+    
+    @available(iOSApplicationExtension, unavailable)
     let insets: EdgeInset = theInsets
+    
     static var theInsets: EdgeInset {
         let insets = UIApplication.shared.windows.first?.safeAreaInsets
         return (

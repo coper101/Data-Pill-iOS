@@ -242,6 +242,7 @@ struct AppView: View {
             of: scenePhase,
             perform: didChangeScenePhase
         )
+        .onOpenURL(perform: appViewModel.didOpenURL)
     }
     
     // MARK: - Actions

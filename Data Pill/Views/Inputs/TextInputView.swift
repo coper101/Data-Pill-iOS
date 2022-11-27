@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-enum Unit: String {
-    case gb = "GB"
-    case mb = "MB"
-}
-
 struct TextInputView: View {
     // MARK: - Props
     @Binding var value: String
