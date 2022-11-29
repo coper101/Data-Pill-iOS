@@ -8,12 +8,6 @@
 import Foundation
 import Combine
 
-enum StepperValueType {
-    case planLimit
-    case dailyLimit
-    case data
-}
-
 final class AppViewModel: ObservableObject {
     
     var cancellables: Set<AnyCancellable> = .init()
@@ -124,7 +118,8 @@ final class AppViewModel: ObservableObject {
         dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(
             database: LocalDatabase(
                 container: .dataUsage,
-                entity: .data
+                entity: .data,
+                appGroup: .dataPill
             )
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),

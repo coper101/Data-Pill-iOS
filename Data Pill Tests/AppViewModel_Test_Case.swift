@@ -31,7 +31,8 @@ final class AppViewModel_Test_Case: XCTestCase {
         let defaultDataUsageRepository = DataUsageRepository(
             database: InMemoryLocalDatabase(
                 container: .dataUsage,
-                entity: .data
+                entity: .data,
+                appGroup: nil
             )
         )
         return .init(

@@ -8,6 +8,27 @@
 import Foundation
 import CoreData
 
+enum AppGroup: String {
+    case dataPill = "group.com.penguinworks.Data-Pill"
+    var name: String {
+        self.rawValue
+    }
+}
+
+extension URL {
+    
+    static func storeURL(for appGroup: AppGroup, of container: Containers) -> URL? {
+        guard let fileContainer = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: appGroup.name
+        ) else {
+            print("Identifier: ", Bundle.main.bundleIdentifier!.lowercased())
+            print("Failed to get file container")
+            return nil
+        }
+        return fileContainer.appendingPathComponent("\(container.name).sqlite")
+    }
+}
+
 enum Containers: String {
     case dataUsage = "DataUsage"
     var name: String {
@@ -34,7 +55,11 @@ protocol Database {
     var entityName: String { get }
     var context: NSManagedObjectContext { get }
     
-    init(container: Containers, entity: Entities)
+    init(
+        container: Containers,
+        entity: Entities,
+        appGroup: AppGroup?
+    )
     
     func loadContainer(onError: @escaping (Error) -> Void, onSuccess: @escaping () -> Void) -> Void
     func getAllItems() throws -> [Entity]
@@ -112,9 +137,17 @@ class LocalDatabase: Database {
     
     required init(
         container: Containers,
-        entity: Entities
+        entity: Entities,
+        appGroup: AppGroup?
     ) {
         self.container = NSPersistentContainer(name: container.name)
+        if
+            let appGroup = appGroup,
+            let storeURL = URL.storeURL(for: appGroup, of: container)
+        {
+            let description = NSPersistentStoreDescription(url: storeURL)
+            self.container.persistentStoreDescriptions.append(description)
+        }
         entityName = entity.name
     }
     
@@ -131,7 +164,8 @@ class InMemoryLocalDatabase: Database {
     
     required init(
         container: Containers,
-        entity: Entities
+        entity: Entities,
+        appGroup: AppGroup?
     ) {
         entityName = entity.name
         self.container = NSPersistentContainer(name: container.name)

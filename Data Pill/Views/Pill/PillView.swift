@@ -7,22 +7,6 @@
 
 import SwiftUI
 
-enum Day: String, CaseIterable {
-    case sunday
-    case monday
-    case tuesday
-    case wednesday
-    case thursday
-    case friday
-    case saturday
-}
-
-struct DayPill: Identifiable {
-    let color: Colors
-    let day: Day
-    var id: String { self.day.rawValue }
-}
-
 struct PillView: View {
     // MARK: - Props
     @Environment(\.dimensions) var dimensions: Dimensions
