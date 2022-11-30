@@ -12,7 +12,6 @@ struct Provider: IntentTimelineProvider {
     
     typealias Entry = SimpleEntry
     typealias Intent = UsageTypeIntent
-    var widgetViewModel: WidgetViewModel
     
     /// Show placeholder data before transitioning to show the actual data
     func placeholder(in context: Context) -> Entry {
@@ -69,6 +68,7 @@ struct Provider: IntentTimelineProvider {
     }
     
     func getNewEntry(for configuration: Intent, date: Date) -> SimpleEntry {
+        let widgetViewModel = WidgetViewModel()
         let usageType = usageType(for: configuration)
         let todaysDate = widgetViewModel.todaysData.date ?? .init()
         var color: Colors {
@@ -79,7 +79,7 @@ struct Provider: IntentTimelineProvider {
         return .init(
             date: date,
             usedData: widgetViewModel.usedData(for: usageType),
-            maxData: widgetViewModel.maxData(for: usageType),
+            maxData: widgetViewModel.appDataRepository.dataLimitPerDay, // widgetViewModel.maxData(for: usageType),
             dataUnit: widgetViewModel.unit,
             subtitle: subtitle,
             color: color,

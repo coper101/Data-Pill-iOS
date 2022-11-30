@@ -20,7 +20,7 @@ struct WidgetPillView: View {
     }
     
     var data: String {
-        "\(usedData.toDp(n: 2)) / \(maxData.toDp(n: 2)) \(dataUnit.rawValue)"
+        "\(usedData.toDp(n: 2)) / \(maxData.toDp(n: 2))"
     }
     
     // MARK: - UI
@@ -41,7 +41,7 @@ struct WidgetPillView: View {
                     color: color,
                     widthScale: 0,
                     customSize: .init(
-                        width: 60,
+                        width: 56,
                         height: height * 0.9
                     ),
                     label: {}
@@ -56,7 +56,7 @@ struct WidgetPillView: View {
                 ) {
                     
                     // Row 1: DATA USED IN PERCENTAGE
-                    Text("\(percentageUsed) %")
+                    Text("\(percentageUsed)%")
                         .textStyle(
                             foregroundColor: .onSurface,
                             font: .semibold,

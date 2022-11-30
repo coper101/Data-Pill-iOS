@@ -146,7 +146,8 @@ class LocalDatabase: Database {
             let storeURL = URL.storeURL(for: appGroup, of: container)
         {
             let description = NSPersistentStoreDescription(url: storeURL)
-            self.container.persistentStoreDescriptions.append(description)
+            self.container.persistentStoreDescriptions = [description]
+            print("persistent desc: ", self.container.persistentStoreDescriptions)
         }
         entityName = entity.name
     }

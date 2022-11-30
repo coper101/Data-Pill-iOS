@@ -65,7 +65,7 @@ final class AppViewModel: ObservableObject {
     
     
     var dateUsedInPercentage: Int {
-        return usedData.toPercentage(with: maxData)
+        usedData.toPercentage(with: maxData)
     }
     
     // MARK: - UI

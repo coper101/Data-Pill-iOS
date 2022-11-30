@@ -352,7 +352,8 @@ struct AppView: View {
     func didChangeScenePhase(phase: ScenePhase) {
         if phase == .active {
             appViewModel.updatePlanPeriod()
-            WidgetCenter.shared.reloadAllTimelines()
+        } else if phase == .background {
+            WidgetCenter.shared.reloadTimelines(ofKind: "Data_Pill_Widget")
         }
     }
 
