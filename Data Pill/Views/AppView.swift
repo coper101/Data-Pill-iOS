@@ -74,6 +74,14 @@ struct AppView: View {
                 .allowsHitTesting(!appViewModel.isBlurShown)
                 .zIndex(0)
             
+            if appViewModel.isBlurShown {
+                VStack {}
+                    .fillMaxSize()
+                    .contentShape(Rectangle())
+                    .zIndex(1)
+                    .onTapGesture(perform: blurTappedAction)
+            }
+            
             // MARK: Layer 2: Edit Plan - Data Amount & Period
             if appViewModel.isDataPlanEditing {
 
@@ -94,7 +102,7 @@ struct AppView: View {
                     didChangeMinusStepperValue: changeStepperMinusDatatAction
                 )
                 .padding(.horizontal, dimensions.horizontalPadding)
-                .zIndex(1)
+                .zIndex(2)
                 .popBounceEffect()
                 .cardShadow()
             }
@@ -115,7 +123,7 @@ struct AppView: View {
                 )
                 .frame(height: dimensions.cardHeight)
                 .padding(.horizontal, dimensions.horizontalPadding + 16)
-                .zIndex(2)
+                .zIndex(3)
                 .popBounceEffect()
                 .cardShadow()
             }
@@ -136,7 +144,7 @@ struct AppView: View {
                 )
                 .frame(height: dimensions.cardHeight)
                 .padding(.horizontal, dimensions.horizontalPadding + 16)
-                .zIndex(3)
+                .zIndex(4)
                 .popBounceEffect()
                 .cardShadow()
             }
@@ -165,7 +173,7 @@ struct AppView: View {
                     } //: if-else
 
                 } //: Group
-                .zIndex(4)
+                .zIndex(5)
                 .popBounceEffect()
                 .cardShadow()
             }
@@ -189,7 +197,7 @@ struct AppView: View {
                     .top,
                     dimensions.cardHeight + 130 + (buttonType == .done ? 250 : 0)
                 )
-                .zIndex(5)
+                .zIndex(6)
                 .popBounceEffect()
             }
 
@@ -203,7 +211,7 @@ struct AppView: View {
                     closeAction: closeAction
                 )
                 .padding(.top, 4)
-                .zIndex(6)
+                .zIndex(7)
                 .popBounceEffect()
             }
             
@@ -349,11 +357,17 @@ struct AppView: View {
         }
     }
     
+    func blurTappedAction() {
+        withAnimation {
+            appViewModel.didTapOutside()
+        }
+    }
+    
     func didChangeScenePhase(phase: ScenePhase) {
         if phase == .active {
             appViewModel.updatePlanPeriod()
         } else if phase == .background {
-            WidgetCenter.shared.reloadTimelines(ofKind: "Data_Pill_Widget")
+            WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.main.rawValue)
         }
     }
 

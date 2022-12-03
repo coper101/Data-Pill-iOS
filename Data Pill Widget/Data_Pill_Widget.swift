@@ -10,11 +10,9 @@ import SwiftUI
 
 @main
 struct Data_Pill_Widget: Widget {
-    let kind: String = "Data_Pill_Widget"
-
     var body: some WidgetConfiguration {
         IntentConfiguration(
-            kind: kind,
+            kind: WidgetKind.main.name,
             intent: UsageTypeIntent.self,
             provider: Provider(widgetViewModel: .init())
         ) { entry in

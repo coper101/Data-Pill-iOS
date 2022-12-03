@@ -109,6 +109,8 @@
 		27E777462934D20F0031456D /* DataInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D6B6828F17065006931DA /* DataInfo.swift */; };
 		27E7774D293500BB0031456D /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7774B293500BB0031456D /* Provider.swift */; };
 		27E7774F2935010D0031456D /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7774E2935010D0031456D /* Entry.swift */; };
+		27E77751293B68D10031456D /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E77750293B68D00031456D /* Widget.swift */; };
+		27E77752293B68D10031456D /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E77750293B68D00031456D /* Widget.swift */; };
 		27F47DDA2905330D00B3F83D /* AppDataRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */; };
 		27F47DDC29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */; };
 		27F47DDF29067C8E00B3F83D /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDE29067C8E00B3F83D /* Button.swift */; };
@@ -226,6 +228,7 @@
 		27E7774A2934D86B0031456D /* Data PillRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Data PillRelease.entitlements"; sourceTree = "<group>"; };
 		27E7774B293500BB0031456D /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 		27E7774E2935010D0031456D /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
+		27E77750293B68D00031456D /* Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget.swift; sourceTree = "<group>"; };
 		27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRepository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDE29067C8E00B3F83D /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
@@ -324,6 +327,7 @@
 				27E7771F29336AA10031456D /* Unit.swift */,
 				27E7772C2933844A0031456D /* ToggleItem.swift */,
 				27E7773D2934B3CB0031456D /* StepperValueTypes.swift */,
+				27E77750293B68D00031456D /* Widget.swift */,
 				27801E1F28E9B16E00201339 /* DataUsage.xcdatamodeld */,
 			);
 			path = Models;
@@ -658,6 +662,7 @@
 				27801E0328DA196E00201339 /* HistoryView.swift in Sources */,
 				278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
+				27E77751293B68D10031456D /* Widget.swift in Sources */,
 				27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
@@ -736,6 +741,7 @@
 				27E7773F2934B3CB0031456D /* StepperValueTypes.swift in Sources */,
 				27E7773A2934B3400031456D /* AppDataRepository.swift in Sources */,
 				27E7772129336B370031456D /* Numbers.swift in Sources */,
+				27E77752293B68D10031456D /* Widget.swift in Sources */,
 				27E7773C2934B3490031456D /* Constants.swift in Sources */,
 				27E7771C293367630031456D /* Type.swift in Sources */,
 				27E777442934D1DB0031456D /* DataTest.swift in Sources */,

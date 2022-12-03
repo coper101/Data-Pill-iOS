@@ -73,6 +73,7 @@ final class AppViewModel: ObservableObject {
     @Published var isPeriodAuto = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
+    @Published var isTappedOutside = false
     
     /// Edit Data Plan
     @Published var isDataPlanEditing = false
@@ -443,6 +444,23 @@ extension AppViewModel {
     }
     
     func didChangeIsDataPlanEditing(_ isEditing: Bool) {
+        guard !isTappedOutside else {
+            /// revert to previous values
+
+            /// data plan
+            dataValue = "\(dataAmount)"
+            dataValue = "\(dataValue)"
+            startDateValue = startDate
+            endDateValue = endDate
+            
+            /// edit data limit
+            dataLimitValue = "\(dataLimit)"
+            dataLimitPerDayValue = "\(dataLimitPerDay)"
+            
+            isTappedOutside = false
+            return
+        }
+        
         switch editDataPlanType {
         case .dataPlan:
             /// update dates
@@ -555,6 +573,19 @@ extension AppViewModel {
     func didTapDone() {
         isStartDatePickerShown = false
         isEndDatePickerShown = false
+    }
+    
+    func didTapOutside() {
+        isTappedOutside = true
+        
+        isBlurShown = false
+        isDataPlanEditing = false
+        
+        isStartDatePickerShown = false
+        isEndDatePickerShown = false
+        
+        isDataLimitEditing = false
+        isDataLimitPerDayEditing = false
     }
     
     // MARK: - History
