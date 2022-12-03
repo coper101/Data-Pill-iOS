@@ -236,7 +236,7 @@ struct AppView: View {
                 .zIndex(8)
 
         } //: ZStack
-        .edgesIgnoringSafeArea(.vertical)
+        .ignoresSafeArea(.container, edges: .vertical)
         .fillMaxSize(alignment: .center)
         .background(Colors.background.color)
         .onChange(

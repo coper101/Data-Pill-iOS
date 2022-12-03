@@ -15,6 +15,8 @@ struct Data_PillApp: App {
         WindowGroup {
             AppView()
                 .environmentObject(appViewModel)
+                .background(Colors.background.color)
+                .preferredColorScheme(.light)
         }
     }
 }

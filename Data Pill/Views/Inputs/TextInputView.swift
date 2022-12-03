@@ -26,6 +26,7 @@ struct TextInputView: View {
             
             // Col 1: INPUT
             TextField("", text: $value)
+                .keyboardType(.decimalPad)
                 .multilineTextAlignment(.trailing)
                 .frame(width: width)
             

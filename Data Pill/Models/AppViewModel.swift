@@ -455,9 +455,13 @@ extension AppViewModel {
                 !isEditing,
                 editDataPlanType == .data
             else {
+                /// invalid input, revert to previous value
+                dataValue = "\(dataAmount)"
                 return
             }
             dataAmount = amount
+            /// show proper format  e.g. 0.1 instead of .1
+            dataValue = "\(dataAmount)"
         }
     }
     
