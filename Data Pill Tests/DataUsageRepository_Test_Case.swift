@@ -18,7 +18,8 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         try super.setUpWithError()
         let database = InMemoryLocalDatabase(
             container: .dataUsage,
-            entity: .data
+            entity: .data,
+            appGroup: nil
         )
         repository = DataUsageRepository(database: database)
         mockErrorRepository = MockErrorDataUsageRepository(database: database)

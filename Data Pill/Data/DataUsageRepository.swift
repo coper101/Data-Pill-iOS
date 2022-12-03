@@ -307,7 +307,8 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
 
     let database: any Database = LocalDatabase(
         container: .dataUsage,
-        entity: .data
+        entity: .data,
+        appGroup: nil
     )
     
     @Published var thisWeeksData: [Data] = []

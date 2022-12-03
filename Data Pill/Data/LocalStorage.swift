@@ -9,31 +9,35 @@ import Foundation
 
 class LocalStorage {
     
+    static func getUserDefaults() -> UserDefaults? {
+        .init(suiteName: AppGroup.dataPill.name)
+    }
+    
     static func setItem(
         _ value: Any?,
         forKey key: Keys
     ) {
-        let defaults = UserDefaults.standard
+        guard let defaults = getUserDefaults() else { return }
         defaults.set(value, forKey: key.rawValue)
     }
     
     static func getItem(forKey key: Keys) -> String? {
-        let defaults = UserDefaults.standard
+        guard let defaults = getUserDefaults() else { return nil }
         return defaults.string(forKey: key.rawValue)
     }
     
     static func getDateItem(forKey key: Keys) -> Date? {
-        let defaults = UserDefaults.standard
+        guard let defaults = getUserDefaults() else { return nil }
         return defaults.object(forKey: key.rawValue) as? Date
     }
 
     static func getBoolItem(forKey key: Keys) -> Bool {
-        let defaults = UserDefaults.standard
+        guard let defaults = getUserDefaults() else { return false }
         return defaults.bool(forKey: key.rawValue)
     }
 
     static func getDoubleItem(forKey key: Keys) -> Double {
-        let defaults = UserDefaults.standard
+        guard let defaults = getUserDefaults() else { return 0 }
         return defaults.double(forKey: key.rawValue)
     }
 

@@ -29,7 +29,7 @@ extension View {
         alignment: Alignment = .center
     ) -> some View {
         self.frame(
-            height: fraction * Dimensions().screen.height,
+            height: fraction * UIScreen.main.bounds.size.height,
             alignment: alignment
         )
     }

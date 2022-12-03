@@ -38,11 +38,6 @@ struct ToggleItemView: View {
     }
 }
 
-enum ToggleItem: String {
-    case plan = "Plan"
-    case daily = "Daily"
-}
-
 struct ToggleView: View {
     // MARK: - Props
     @Binding var selectedItem: ToggleItem

@@ -109,7 +109,6 @@ final class Numbers_Test_Case: XCTestCase {
     // MARK: - toInt64()
     func test_unsigned_64_to_int() throws {
         let uint64: UInt64 = 1_000_000
-        print("unsigned", uint64.toInt64().toMB())
     }
     
 }

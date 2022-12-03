@@ -43,6 +43,14 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    /// Formats the Date to `E`
+    /// e.g. 1 Jan  2022 =  Sat
+    func toWeekdayFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E"
+        return dateFormatter.string(from: self)
+    }
+    
     func toDateComp() -> DateComponents {
         Calendar.current.dateComponents(
             [.day, .month, .year, .weekday],

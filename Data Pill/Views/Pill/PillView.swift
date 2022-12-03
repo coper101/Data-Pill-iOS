@@ -7,45 +7,18 @@
 
 import SwiftUI
 
-enum Day: String, CaseIterable {
-    case sunday
-    case monday
-    case tuesday
-    case wednesday
-    case thursday
-    case friday
-    case saturday
-}
-
-struct DayPill: Identifiable {
-    let color: Colors
-    let day: Day
-    var id: String { self.day.rawValue }
-}
-
 struct PillView: View {
     // MARK: - Props
     @Environment(\.dimensions) var dimensions: Dimensions
 
-    var color: Colors = .secondaryBlue
+    var color: Colors
     var percentage: Int
     var date: Date
     var hasBackground = true
     var usageType: ToggleItem
     var widthScale: CGFloat = 0.45
     var isContentShown = true
-    
-    var width: CGFloat {
-        dimensions.screen.width * widthScale
-    }
-    var maxHeight: CGFloat {
-        (dimensions.screen.width * widthScale) * 2.26
-    }
-    
-    var paddingTop: CGFloat {
-        percentage > 90 ?
-            50 : 10
-    }
+
     var displayedDate: String {
         switch usageType {
         case .plan:
@@ -90,39 +63,14 @@ struct PillView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // Layer 1:
-            Colors.surface.color.opacity(
-                hasBackground ? 1 : 0
-            )
-            
-            // Layer 2:
-            if isContentShown {
-                RoundedRectangle(cornerRadius: 5)
-                    .fill(color.color)
-                    .frame(
-                        height: (CGFloat(percentage) / 100) * maxHeight
-                    )
-                    .overlay(
-                        label
-                            .fillMaxHeight(alignment: .top)
-                            .padding(.top, paddingTop)
-                    )
-                    .overlay(
-                        LinearGradient(
-                            colors: [
-                                .white.opacity(0.25),
-                                .white.opacity(0)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-            } //: if
-            
-        } //: ZStack
-        .frame(width: width, height: maxHeight)
-        .clipShape(Capsule(style: .circular))
+        BasePillView(
+            percentage: percentage,
+            isContentShown: isContentShown,
+            hasBackground: hasBackground,
+            color: color,
+            widthScale: widthScale,
+            label: { label }
+        )
     }
     
     // MARK: - Actions

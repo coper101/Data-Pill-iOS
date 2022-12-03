@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct AppView: View {
     // MARK: - Props
@@ -242,6 +243,7 @@ struct AppView: View {
             of: scenePhase,
             perform: didChangeScenePhase
         )
+        .onOpenURL(perform: appViewModel.didOpenURL)
     }
     
     // MARK: - Actions
@@ -348,10 +350,11 @@ struct AppView: View {
     }
     
     func didChangeScenePhase(phase: ScenePhase) {
-        guard phase == .active else {
-            return
+        if phase == .active {
+            appViewModel.updatePlanPeriod()
+        } else if phase == .background {
+            WidgetCenter.shared.reloadTimelines(ofKind: "Data_Pill_Widget")
         }
-        appViewModel.updatePlanPeriod()
     }
 
 }

@@ -8,12 +8,6 @@
 import Foundation
 import Combine
 
-enum StepperValueType {
-    case planLimit
-    case dailyLimit
-    case data
-}
-
 final class AppViewModel: ObservableObject {
     
     var cancellables: Set<AnyCancellable> = .init()
@@ -71,7 +65,7 @@ final class AppViewModel: ObservableObject {
     
     
     var dateUsedInPercentage: Int {
-        return usedData.toPercentage(with: maxData)
+        usedData.toPercentage(with: maxData)
     }
     
     // MARK: - UI
@@ -124,7 +118,8 @@ final class AppViewModel: ObservableObject {
         dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(
             database: LocalDatabase(
                 container: .dataUsage,
-                entity: .data
+                entity: .data,
+                appGroup: .dataPill
             )
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
@@ -578,6 +573,15 @@ extension AppViewModel {
             return
         }
         isBlurShown = true
+    }
+    
+    // MARK: - Deep Link
+    func didOpenURL(url: URL) {
+        if url == ToggleItem.plan.url {
+            usageType = .plan
+        } else if url == ToggleItem.daily.url {
+            usageType = .daily
+        }
     }
     
 }
