@@ -40,6 +40,7 @@ struct UsedCardView: View {
                     size: 32,
                     lineLimit: 1
                 )
+                .id(percentageUsed)
             
             // Row 2: DATA
             Text(data)
@@ -51,6 +52,7 @@ struct UsedCardView: View {
                 )
                 .opacity(0.5)
                 .padding(.bottom, 10)
+                .id(data)
             
         } //: ItemCardView
         .frame(height: height)
