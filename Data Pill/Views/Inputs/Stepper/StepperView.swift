@@ -29,7 +29,8 @@ struct StepperView: View {
                 showStepperValue: hasLongPressedMinus,
                 onChangeStepperValue: onChangeMinusStepperValue,
                 operator: .minus,
-                action: minusAction
+                action: minusAction,
+                closeAction: closeAction
             )
             .simultaneousGesture(
                 LongPressGesture(minimumDuration: 0.3)
@@ -47,7 +48,8 @@ struct StepperView: View {
                 showStepperValue: hasLongPressedPlus,
                 onChangeStepperValue: onChangeAddStepperValue,
                 operator: .plus,
-                action: plusAction
+                action: plusAction,
+                closeAction: closeAction
             )
             .simultaneousGesture(
                 LongPressGesture(minimumDuration: 0.3)
@@ -60,6 +62,11 @@ struct StepperView: View {
     }
     
     // MARK: - Actions
+    
+    func closeAction() {
+        hasLongPressedPlus = false
+        hasLongPressedMinus = false
+    }
     
     // MARK: Minus
     func onChangeMinusStepperValue(value: Double) {

@@ -21,6 +21,7 @@ struct StepperButtonView: View {
     var onChangeStepperValue: (Double) -> Void
     var `operator`: Operator
     var action: Action
+    var closeAction: Action
     
     var icon: Icons {
         `operator` == .plus ?
@@ -52,17 +53,37 @@ struct StepperButtonView: View {
         ZStack {
             
             // Layer 1: OPERATOR +, -
-            Button(action: didTapOperator) {
-                icon.image
-                    .resizable()
-                    .padding(15)
-                    .frame(width: 57, height: 53)
-                    .foregroundColor(Colors.onSurface.color)
-                    .background(Colors.onSurfaceDark.color)
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: 15)
-                    )
-            }
+            Group {
+                
+                if showStepperValue {
+                    
+                    Button(action: closeAction) {
+                        
+                        Icons.plusIcon.image
+                            .resizable()
+                            .rotationEffect(.init(degrees: showStepperValue ? 45 : 0))
+                        
+                    } //: Button
+                    
+                } else {
+                    
+                    Button(action: didTapOperator) {
+                        
+                        icon.image
+                            .resizable()
+                        
+                    } //: Button
+                    
+                } //: if-else
+                
+            } //: Group
+            .padding(15)
+            .frame(width: 57, height: 57)
+            .foregroundColor(Colors.onSurface.color)
+            .background(Colors.onSurfaceDark.color)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 15)
+            )
             .buttonStyle(ScaleButtonStyle())
             
             // Layer 2: CUSTOM VALUES +/- 0.1, +/- 1
@@ -92,7 +113,8 @@ struct StepperButtonView_Previews: PreviewProvider {
                 showStepperValue: true,
                 onChangeStepperValue: { _ in },
                 operator: `operator`,
-                action: {}
+                action: {},
+                closeAction: {}
             )
                 .previewLayout(.sizeThatFits)
                 .padding()
