@@ -66,10 +66,7 @@ final class NetworkDataRepository:
         $usedDataInfo
             .map { $0.wirelessWanDataReceived + $0.wirelessWanDataSent }
             .map { $0.toInt64().toMB() }
-            .sink { [weak self] in
-                self?.totalUsedData = $0
-                print("myLog: sink")
-            }
+            .sink { [weak self] in self?.totalUsedData = $0 }
             .store(in: &cancellables)
     }
     

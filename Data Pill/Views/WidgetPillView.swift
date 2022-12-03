@@ -7,6 +7,20 @@
 
 import SwiftUI
 
+enum WidgetSize: Int, Identifiable, CaseIterable {
+    case xxs = 141
+    case xs = 148
+    case s = 151
+    case m = 155
+    case r = 158
+    case l = 159
+    case xl = 169
+    case xxl = 170
+    var id: String {
+        "\(self.rawValue)"
+    }
+}
+
 struct WidgetPillView: View {
     // MARK: - Props
     var usedData: Double
@@ -27,6 +41,8 @@ struct WidgetPillView: View {
     var body: some View {
         GeometryReader { reader in
             let height = reader.size.height
+            let width = reader.size.width
+            let showUnit = showUnit(width)
             
             HStack(
                 alignment: .center,
@@ -41,7 +57,7 @@ struct WidgetPillView: View {
                     color: color,
                     widthScale: 0,
                     customSize: .init(
-                        width: 56,
+                        width: pillWidth(width),
                         height: height * 0.9
                     ),
                     label: {}
@@ -66,7 +82,7 @@ struct WidgetPillView: View {
                         .padding(.top, 7)
                                     
                     // Row 2: DATA USED
-                    Text(data)
+                    Text("\(data) \(showUnit ? dataUnit.rawValue : "")")
                         .textStyle(
                             foregroundColor: .onSurface,
                             font: .semibold,
@@ -99,20 +115,51 @@ struct WidgetPillView: View {
         } //: GeometryReader
     }
     
-    // MARK: - Actions
+    // MARK: - Functions
+    func pillWidth(_ width: CGFloat) -> CGFloat {
+        let widgetSize = WidgetSize(rawValue: Int(width))
+        switch widgetSize {
+        case .xxs:
+            return 51
+        case .xs, .s:
+            return 54
+        case .m, .r, .l:
+            return 58
+        default:
+            return 64
+        }
+    }
+    
+    func showUnit(_ width: CGFloat) -> Bool {
+        let widgetSize = WidgetSize(rawValue: Int(width))
+        switch widgetSize {
+        case .s, .xs, .xxs:
+            return false
+        default:
+            return true
+        }
+    }
 }
 
 // MARK: - Preview
 struct WidgetPillView_Previews: PreviewProvider {
+    // iPhone SE 2020 (375x667) : 148
+    // iPhone 11 (414x896)      : 169
+    static var sizes: [CGFloat] = [141, 155, 148, 155, 158, 169, 170]
+    
     static var previews: some View {
-        WidgetPillView(
-            usedData: 0.1,
-            maxData: 1,
-            dataUnit: .gb,
-            subtitle: "Mon",
-            color: .secondaryBlue
-        )
+        ForEach(WidgetSize.allCases) { size in
+            let theSize = CGFloat(size.rawValue)
+            WidgetPillView(
+                usedData: 0.9,
+                maxData: 0.9,
+                dataUnit: .gb,
+                subtitle: "Mon",
+                color: .secondaryBlue
+            )
             .previewLayout(.sizeThatFits)
-            .frame(width: 148, height: 148)
+            .previewDisplayName("\(size.rawValue)")
+            .frame(width: theSize, height: theSize)
+        }
     }
 }

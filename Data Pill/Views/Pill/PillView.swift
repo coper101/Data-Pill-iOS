@@ -11,7 +11,7 @@ struct PillView: View {
     // MARK: - Props
     @Environment(\.dimensions) var dimensions: Dimensions
 
-    var color: Colors = .secondaryBlue
+    var color: Colors
     var percentage: Int
     var date: Date
     var hasBackground = true
