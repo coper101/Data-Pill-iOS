@@ -21,7 +21,6 @@ extension URL {
         guard let fileContainer = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: appGroup.name
         ) else {
-            print("Identifier: ", Bundle.main.bundleIdentifier!.lowercased())
             print("Failed to get file container")
             return nil
         }
@@ -147,9 +146,10 @@ class LocalDatabase: Database {
         {
             let description = NSPersistentStoreDescription(url: storeURL)
             self.container.persistentStoreDescriptions = [description]
-            print("persistent desc: ", self.container.persistentStoreDescriptions)
+            print("persistent descriptions: ", self.container.persistentStoreDescriptions)
         }
         entityName = entity.name
+        self.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
 }

@@ -577,7 +577,6 @@ extension AppViewModel {
     
     // MARK: - Deep Link
     func didOpenURL(url: URL) {
-        print("onOpenURL - url: ", "\(url)")
         if url == ToggleItem.plan.url {
             usageType = .plan
         } else if url == ToggleItem.daily.url {

@@ -17,6 +17,8 @@ protocol NetworkDataRepositoryProtocol {
     var usedDataInfoPublisher: Published<UsedDataInfo>.Publisher { get }
     
     func getTotalUsedData() -> UsedDataInfo
+    func receiveDataInfo() -> Void
+    func receiveTotalUsedData() -> Void
 }
 
 // MARK: - Implementation
@@ -34,21 +36,27 @@ final class NetworkDataRepository:
     private var timer: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = .init()
 
-    init() {
-        receiveUpdatedDataInfo()
-        receiveTotalUsedData()
+    init(automaticUpdates: Bool = true) {
+        if automaticUpdates {
+            receiveUpdatedDataInfo()
+            receiveTotalUsedData()
+        }
     }
-        
-    /// receive Data Usage Info every 2 seconds
-    func receiveUpdatedDataInfo() {
+    
+    func receiveDataInfo() {
+        usedDataInfo = getTotalUsedData()
+    }
+    
+    /// receive Data Usage Info every n seconds
+    func receiveUpdatedDataInfo(every n: TimeInterval = 2) {
         timer = Timer
-            .publish(every: 2, on: .main, in: .default)
+            .publish(every: n, on: .main, in: .default)
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self = self else {
                     return
                 }
-                self.usedDataInfo = self.getTotalUsedData()
+                self.receiveDataInfo()
             }
     }
     
@@ -60,6 +68,7 @@ final class NetworkDataRepository:
             .map { $0.toInt64().toMB() }
             .sink { [weak self] in
                 self?.totalUsedData = $0
+                print("myLog: sink")
             }
             .store(in: &cancellables)
     }
@@ -158,6 +167,10 @@ class MockNetworkDataRepository: ObservableObject, NetworkDataRepositoryProtocol
     init(totalUsedData: Double = 0.0) {
         self.totalUsedData = totalUsedData
         receiveTotalUsedData()
+    }
+    
+    func receiveDataInfo() {
+        
     }
     
     func receiveTotalUsedData() {

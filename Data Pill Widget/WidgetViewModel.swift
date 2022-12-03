@@ -8,37 +8,38 @@
 import Foundation
 import Combine
 
-final class WidgetViewModel: ObservableObject {
+final class WidgetViewModel {
     
     var cancellables: Set<AnyCancellable> = .init()
     
     // MARK: - Data
-    let appDataRepository: AppDataRepositoryProtocol
-    let dataUsageRepository: DataUsageRepositoryProtocol
-    let networkDataRepository: NetworkDataRepositoryProtocol
+    private let appDataRepository: AppDataRepositoryProtocol
+    private let dataUsageRepository: DataUsageRepositoryProtocol
+    private let networkDataRepository: NetworkDataRepositoryProtocol
     
-    /// App Data
+    /// [A] App Data
     @Published var startDate = Date()
     @Published var endDate = Date()
     @Published var unit = Unit.gb
     @Published var dataAmount = 0.0
     @Published var dataLimit = 0.0
     @Published var dataLimitPerDay = 0.0
+    @Published var usageType = ToggleItem.daily
     
-    /// Data Usage
+    /// [B] Data Usage
     @Published var totalUsedDataPlan = 0.0
     @Published var dataError: DatabaseError?
     
-    /// Network Data
+    /// [C] Network Data
     @Published var totalUsedData = 0.0
     
-    func usedData(for usageType: ToggleItem) -> Double {
+    var usedData: Double {
         usageType == .daily ?
             todaysData.dailyUsedData.toGB() :
             dataUsageRepository.getTotalUsedData(from: startDate, to: endDate).toGB()
     }
     
-    func maxData(for usageType: ToggleItem) -> Double {
+    var maxData: Double {
         usageType == .daily ?
             dataLimitPerDay :
             dataLimit
@@ -56,10 +57,6 @@ final class WidgetViewModel: ObservableObject {
             return dataUsageRepository.getTodaysData()!
         }
         return todaysData
-    }
-    
-    func dateUsedInPercentage(for usageType: ToggleItem) -> Int {
-        usedData(for: usageType).toPercentage(with: maxData(for: usageType))
     }
     
     /// Weekday color can be customizable in the future
@@ -86,14 +83,24 @@ final class WidgetViewModel: ObservableObject {
         self.appDataRepository = appDataRepository
         self.dataUsageRepository = dataUsageRepository
         self.networkDataRepository = networkDataRepository
-        
+        republishAndObserveData()
+    }
+    
+    func republishAndObserveData() {
+        /// [A]
         republishAppData()
-        republishDataUsage()
-        republishNetworkData()
         
+        /// [B]
+        republishDataUsage()
+        
+        /// [C]
+        republishNetworkData()
         observePlanSettings()
     }
     
+    func stopRepublishingAndObservingData() {
+        cancellables.removeAll()
+    }
 }
 
 // MARK: Republication
@@ -175,5 +182,14 @@ extension WidgetViewModel {
         todaysData.hasLastTotal = true
         
         dataUsageRepository.updateData(item: todaysData)
+    }
+    
+    func getTotalUsedData() {
+        networkDataRepository.receiveDataInfo()
+        networkDataRepository.receiveTotalUsedData()
+    }
+    
+    func setUsageType(_ usageType: ToggleItem) {
+        self.usageType = usageType
     }
 }
