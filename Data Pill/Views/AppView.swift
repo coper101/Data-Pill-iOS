@@ -74,7 +74,10 @@ struct AppView: View {
                 .allowsHitTesting(!appViewModel.isBlurShown)
                 .zIndex(0)
             
-            if appViewModel.isBlurShown {
+            if
+                appViewModel.isBlurShown &&
+                !appViewModel.isHistoryShown
+            {
                 VStack {}
                     .fillMaxSize()
                     .contentShape(Rectangle())
