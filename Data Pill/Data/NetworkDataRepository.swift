@@ -39,8 +39,8 @@ final class NetworkDataRepository:
     init(automaticUpdates: Bool = true) {
         if automaticUpdates {
             receiveUpdatedDataInfo()
-            receiveTotalUsedData()
         }
+        receiveTotalUsedData()
     }
     
     func receiveDataInfo() {
@@ -167,7 +167,7 @@ class MockNetworkDataRepository: ObservableObject, NetworkDataRepositoryProtocol
     }
     
     func receiveDataInfo() {
-        
+        usedDataInfo = getTotalUsedData()
     }
     
     func receiveTotalUsedData() {
