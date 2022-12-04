@@ -54,6 +54,16 @@ protocol AppDataRepositoryProtocol {
     var dataLimitMinusStepperValue: Double { get set }
     var dataLimitMinusStepperValuePublisher: Published<Double>.Publisher { get }
     
+    func loadAllData(
+        startDate: Date?,
+        endDate: Date?,
+        dataAmount: Double?,
+        dataLimit: Double?,
+        dataLimitPerDay: Double?,
+        unit: Unit?,
+        usageType: ToggleItem?
+    ) -> Void
+    
     /// Setters
     func setUsageType(_ type: String) -> Void
     func setIsPeriodAuto(_ isOn: Bool) -> Void
@@ -138,18 +148,30 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         loadAllData()
     }
     
-    func loadAllData() {
+    func loadAllData(
+        startDate: Date? = nil,
+        endDate: Date? = nil,
+        dataAmount: Double? = nil,
+        dataLimit: Double? = nil,
+        dataLimitPerDay: Double? = nil,
+        unit: Unit? = nil,
+        usageType: ToggleItem? = nil
+    ) {
+        if startDate != nil || endDate != nil || dataAmount != nil || dataLimit != nil ||
+            dataLimitPerDay != nil || unit != nil || usageType != nil {
+            return
+        }
         /// UI
         let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
-        usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
+        self.usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
         isPeriodAuto = LocalStorage.getBoolItem(forKey: .autoPeriod)
         
         /// Plan
-        dataAmount = LocalStorage.getDoubleItem(forKey: .dataAmount)
-        startDate = LocalStorage.getDateItem(forKey: .startDatePlan) ?? Date()
-        endDate = LocalStorage.getDateItem(forKey: .endDatePlan) ?? Date()
-        dataLimit = LocalStorage.getDoubleItem(forKey: .totalDataLimit)
-        dataLimitPerDay = LocalStorage.getDoubleItem(forKey: .dailyDataLimit)
+        self.dataAmount = LocalStorage.getDoubleItem(forKey: .dataAmount)
+        self.startDate = LocalStorage.getDateItem(forKey: .startDatePlan) ?? Date()
+        self.endDate = LocalStorage.getDateItem(forKey: .endDatePlan) ?? Date()
+        self.dataLimit = LocalStorage.getDoubleItem(forKey: .totalDataLimit)
+        self.dataLimitPerDay = LocalStorage.getDoubleItem(forKey: .dailyDataLimit)
         
         /// Stepper Values
         dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
@@ -322,6 +344,24 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         self.dataLimitPerDayMinusStepperValue = dataLimitPerDayMinusStepperValue
         self.dataLimitPlusStepperValue = dataLimitPlusStepperValue
         self.dataLimitMinusStepperValue = dataLimitMinusStepperValue
+    }
+    
+    func loadAllData(
+        startDate: Date?,
+        endDate: Date?,
+        dataAmount: Double?,
+        dataLimit: Double?,
+        dataLimitPerDay: Double?,
+        unit: Unit?,
+        usageType: ToggleItem?
+    ) {
+        self.startDate = startDate ?? Date()
+        self.endDate = endDate ?? Date()
+        self.dataAmount = dataAmount ?? 0.0
+        self.dataLimit = dataLimit ?? 0.0
+        self.dataLimitPerDay = dataLimitPerDay ?? 0.0
+        self.unit = unit ?? .gb
+        self.usageType = usageType ?? .daily
     }
     
     /// Setters

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		271D8FEB29004B2800965FC3 /* DataUsageRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271D8FEA29004B2800965FC3 /* DataUsageRepository_Test_Case.swift */; };
+		2761528D293CAF7F00AEA000 /* WidgetViewModel_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528C293CAF7F00AEA000 /* WidgetViewModel_Test_Case.swift */; };
+		2761528E293CB5CE00AEA000 /* WidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E777372934AF060031456D /* WidgetViewModel.swift */; };
 		27801DB128D6C96800201339 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB028D6C96800201339 /* AppView.swift */; };
 		27801DB428D6C96800201339 /* PillGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB328D6C96800201339 /* PillGroupView.swift */; };
 		27801DB728D6C96800201339 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB628D6C96800201339 /* AppViewModel.swift */; };
@@ -154,6 +156,7 @@
 
 /* Begin PBXFileReference section */
 		271D8FEA29004B2800965FC3 /* DataUsageRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsageRepository_Test_Case.swift; sourceTree = "<group>"; };
+		2761528C293CAF7F00AEA000 /* WidgetViewModel_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetViewModel_Test_Case.swift; sourceTree = "<group>"; };
 		27801DAC28D6C96800201339 /* Data Pill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Data Pill.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27801DB028D6C96800201339 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		27801DB328D6C96800201339 /* PillGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillGroupView.swift; sourceTree = "<group>"; };
@@ -326,6 +329,7 @@
 			isa = PBXGroup;
 			children = (
 				27801DB628D6C96800201339 /* AppViewModel.swift */,
+				27E777372934AF060031456D /* WidgetViewModel.swift */,
 				27801E3628E9E3D100201339 /* DataUsage.swift */,
 				278D6B6828F17065006931DA /* DataInfo.swift */,
 				27B90B8828F2D43700263983 /* DataTest.swift */,
@@ -445,6 +449,7 @@
 		278FB2CA28F2E55900BE78C2 /* Data Pill Tests */ = {
 			isa = PBXGroup;
 			children = (
+				2761528C293CAF7F00AEA000 /* WidgetViewModel_Test_Case.swift */,
 				27AECC8D2916E5E600AB963E /* AppViewModel_Test_Case.swift */,
 				27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */,
 				27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */,
@@ -492,7 +497,6 @@
 				27E7770B293367450031456D /* Data_Pill_Widget.swift */,
 				27E7774E2935010D0031456D /* Entry.swift */,
 				27E7774B293500BB0031456D /* Provider.swift */,
-				27E777372934AF060031456D /* WidgetViewModel.swift */,
 				27E777292933780D0031456D /* UsageType.intentdefinition */,
 				27E7770D293367470031456D /* Assets.xcassets */,
 				27E7770F293367470031456D /* Info.plist */,
@@ -652,6 +656,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2761528E293CB5CE00AEA000 /* WidgetViewModel.swift in Sources */,
 				27801DBA28D6C96800201339 /* Dimensions.swift in Sources */,
 				278FB31328FAA61500BE78C2 /* StepperView.swift in Sources */,
 				27801E1528E8227500201339 /* StepperButtonView.swift in Sources */,
@@ -722,6 +727,7 @@
 				278FB2D728F544C100BE78C2 /* Stepper_Test_Case.swift in Sources */,
 				278FB2D328F321EE00BE78C2 /* Date_Test_Case.swift in Sources */,
 				27F47DDA2905330D00B3F83D /* AppDataRepository_Test_Case.swift in Sources */,
+				2761528D293CAF7F00AEA000 /* WidgetViewModel_Test_Case.swift in Sources */,
 				271D8FEB29004B2800965FC3 /* DataUsageRepository_Test_Case.swift in Sources */,
 				27AECC8E2916E5E700AB963E /* AppViewModel_Test_Case.swift in Sources */,
 				278FB2CC28F2E55900BE78C2 /* Numbers_Test_Case.swift in Sources */,

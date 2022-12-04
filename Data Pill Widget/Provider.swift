@@ -64,9 +64,8 @@ struct Provider: IntentTimelineProvider {
     func getNewEntry(for configuration: Intent, date: Date) -> SimpleEntry {
         let usageType = usageType(for: configuration)
         
-        // widgetViewModel.republishAndObserveData()
         widgetViewModel.setUsageType(usageType)
-        widgetViewModel.getTotalUsedData()
+        widgetViewModel.getLatestData()
         
         let todaysDate = widgetViewModel.todaysData.date ?? .init()
         var color: Colors {
@@ -85,7 +84,6 @@ struct Provider: IntentTimelineProvider {
             usageType: usageType
         )
         
-        // widgetViewModel.stopRepublishingAndObservingData()
         return newEntry
     }
 }

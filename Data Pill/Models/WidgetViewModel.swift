@@ -78,12 +78,15 @@ final class WidgetViewModel {
             )
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
-        setupValues: Bool = true
+        republishAndObserveData: Bool = true
     ) {
         self.appDataRepository = appDataRepository
         self.dataUsageRepository = dataUsageRepository
         self.networkDataRepository = networkDataRepository
-        republishAndObserveData()
+        
+        if republishAndObserveData {
+            self.republishAndObserveData()
+        }
     }
     
     func republishAndObserveData() {
@@ -98,9 +101,22 @@ final class WidgetViewModel {
         observePlanSettings()
     }
     
-    func stopRepublishingAndObservingData() {
-        cancellables.removeAll()
+    func getLatestData() {
+        /// [A]
+        appDataRepository.loadAllData(
+            startDate: nil,
+            endDate: nil,
+            dataAmount: nil,
+            dataLimit: nil,
+            dataLimitPerDay: nil,
+            unit: nil,
+            usageType: nil
+        )
+        
+        /// [C]
+        networkDataRepository.receiveDataInfo()
     }
+    
 }
 
 // MARK: Republication
@@ -182,11 +198,6 @@ extension WidgetViewModel {
         todaysData.hasLastTotal = true
         
         dataUsageRepository.updateData(item: todaysData)
-    }
-    
-    func getTotalUsedData() {
-        networkDataRepository.receiveDataInfo()
-        networkDataRepository.receiveTotalUsedData()
     }
     
     func setUsageType(_ usageType: ToggleItem) {
