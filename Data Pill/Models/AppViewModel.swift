@@ -560,6 +560,7 @@ extension AppViewModel {
         dataLimitPerDayValue = newValue
     }
     
+    // MARK: - Operations
     func didTapSave() {
         isBlurShown = false
         isDataPlanEditing = false

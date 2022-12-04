@@ -193,9 +193,9 @@ final class AppViewModel_Test_Case: XCTestCase {
         // (1) Given
         let dataAmount = "20.0"
         // (2) When
+        appViewModel.observeEditPlan()
         appViewModel.didTapAmount()
         appViewModel.dataValue = "\(dataAmount)"
-        appViewModel.observeEditPlan()
         appViewModel.didTapSave()
         // (3) Then
         XCTAssertFalse(appViewModel.isBlurShown)
@@ -305,6 +305,39 @@ final class AppViewModel_Test_Case: XCTestCase {
         XCTAssertEqual(appViewModel.dataLimitMinusStepperValue, 0.1)
     }
     
+    // MARK: - Operations
+    func test_did_tap_outside_on_edit_data_amount() throws {
+        // (1) Given
+        let dataAmount = "20.0"
+        // (2) When
+        appViewModel.observeEditPlan()
+        appViewModel.didTapAmount()
+        appViewModel.dataValue = "\(dataAmount)"
+        appViewModel.didTapOutside()
+        // (3) Then
+        XCTAssertFalse(appViewModel.isBlurShown)
+        XCTAssertFalse(appViewModel.isDataPlanEditing)
+        XCTAssertEqual(appViewModel.editDataPlanType, .data)
+        XCTAssertEqual(appViewModel.dataAmount, 0)
+        XCTAssertEqual(appViewModel.isTappedOutside, false)
+    }
+    
+    func test_did_long_pressed_outside() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.didLongPressedOutside()
+        // (3) Then
+        XCTAssertEqual(appViewModel.isLongPressedOutside, true)
+    }
+    
+    func test_did_released_long_pressed() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.didReleasedLongPressed()
+        // (3) Then
+        XCTAssertEqual(appViewModel.isLongPressedOutside, false)
+    }
+        
     // MARK: - History
     func test_tap_history_daily_selected() throws {
         // (1) Given
@@ -344,6 +377,25 @@ final class AppViewModel_Test_Case: XCTestCase {
         appViewModel.dataError = error
         // (3) Then
         XCTAssertEqual(appViewModel.dataError, .loadingContainer())
+    }
+    
+    // MARK: - Deep Link
+    func test_did_open_daily_url() throws {
+        // (1) Given
+        let url = URL(string: "datapill:///daily")!
+        // (2) When
+        appViewModel.didOpenURL(url: url)
+        // (3) Then
+        XCTAssertEqual(appViewModel.usageType, ToggleItem.daily)
+    }
+    
+    func test_did_open_plan_url() throws {
+        // (1) Given
+        let url = URL(string: "datapill:///plan")!
+        // (2) When
+        appViewModel.didOpenURL(url: url)
+        // (3) Then
+        XCTAssertEqual(appViewModel.usageType, ToggleItem.plan)
     }
 }
 
