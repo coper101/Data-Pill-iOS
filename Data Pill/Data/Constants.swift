@@ -8,10 +8,10 @@
 import Foundation
 
 let dayPills: [DayPill] = [
-    .init(color: .secondaryBlue, day: .sunday),
-    .init(color: .secondaryPurple, day: .monday),
+    .init(color: .secondaryBrown, day: .sunday),
+    .init(color: .secondaryRed, day: .monday),
     .init(color: .secondaryGreen, day: .tuesday),
-    .init(color: .secondaryRed, day: .wednesday),
+    .init(color: .secondaryPink, day: .wednesday),
     .init(color: .secondaryOrange, day: .thursday),
     .init(color: .secondaryPurple, day: .friday),
     .init(color: .secondaryBlue, day: .saturday)
