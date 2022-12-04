@@ -17,16 +17,23 @@ struct PillView: View {
     var hasBackground = true
     var usageType: ToggleItem
     var widthScale: CGFloat = 0.45
+    
     var isContentShown = true
+    var showFillLine = false
+    var showPercentage = false
+    
+    var dailyDisplayedDate: String {
+        date.isToday() ?
+            "TODAY" :
+            date.toWeekdayFormat().uppercased()
+    }
 
     var displayedDate: String {
         switch usageType {
         case .plan:
             return "TOTAL"
         case .daily:
-            return date.isToday() ?
-                "TODAY" :
-                date.toDayMonthFormat().uppercased()
+            return dailyDisplayedDate
         }
     }
     
@@ -35,13 +42,17 @@ struct PillView: View {
         HStack(spacing: 0) {
             
             // Col 1: PERCENTAGE
-            Text("\(percentage)%")
-                .textStyle(
-                    foregroundColor: .onSecondary,
-                    font: .semibold,
-                    size: 20
-                )
-                .opacity(0.5)
+            if showPercentage {
+                
+                Text("\(percentage)%")
+                    .textStyle(
+                        foregroundColor: .onSecondary,
+                        font: .semibold,
+                        size: 20
+                    )
+                    .opacity(0.5)
+                
+            }
             
             // Col 2: TODAY or DATE
             Spacer()
@@ -66,6 +77,7 @@ struct PillView: View {
         BasePillView(
             percentage: percentage,
             isContentShown: isContentShown,
+            fillLine: showFillLine ? .init(title: dailyDisplayedDate) : nil,
             hasBackground: hasBackground,
             color: color,
             widthScale: widthScale,
@@ -91,7 +103,7 @@ struct PillView_Previews: PreviewProvider {
             )
             .previewDisplayName(
                 displayName(
-                    "Content Shown"
+                    "Filled"
                 )
             )
             
@@ -100,11 +112,12 @@ struct PillView_Previews: PreviewProvider {
                 percentage: 20,
                 date: Date(),
                 usageType: .daily,
-                isContentShown: false
+                isContentShown: false,
+                showFillLine: true
             )
             .previewDisplayName(
                 displayName(
-                    "Content Hidden"
+                    "Fill Line"
                 )
             )
             

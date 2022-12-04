@@ -64,7 +64,7 @@ struct Provider: IntentTimelineProvider {
     func getNewEntry(for configuration: Intent, date: Date) -> SimpleEntry {
         let usageType = usageType(for: configuration)
         
-        widgetViewModel.republishAndObserveData()
+        // widgetViewModel.republishAndObserveData()
         widgetViewModel.setUsageType(usageType)
         widgetViewModel.getTotalUsedData()
         
@@ -85,7 +85,7 @@ struct Provider: IntentTimelineProvider {
             usageType: usageType
         )
         
-        widgetViewModel.stopRepublishingAndObservingData()
+        // widgetViewModel.stopRepublishingAndObservingData()
         return newEntry
     }
 }

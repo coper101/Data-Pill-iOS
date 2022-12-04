@@ -74,15 +74,23 @@ struct AppView: View {
                 .allowsHitTesting(!appViewModel.isBlurShown)
                 .zIndex(0)
             
-            if
-                appViewModel.isBlurShown &&
-                !appViewModel.isHistoryShown
-            {
+            if appViewModel.isBlurShown {
                 VStack {}
                     .fillMaxSize()
                     .contentShape(Rectangle())
                     .zIndex(1)
-                    .onTapGesture(perform: blurTappedAction)
+                    .`if`(!appViewModel.isHistoryShown) { view in
+                        view
+                            .onTapGesture(perform: blurTappedAction)
+                    }
+                    .`if`(appViewModel.isHistoryShown) { view in
+                        view
+                            .onLongPressGesture(
+                                minimumDuration: 100,
+                                pressing: longPressedAction,
+                                perform: {}
+                            )
+                    }
             }
             
             // MARK: Layer 2: Edit Plan - Data Amount & Period
@@ -211,6 +219,7 @@ struct AppView: View {
                     weekData: appViewModel.thisWeeksData,
                     dataLimitPerDay: appViewModel.dataLimitPerDay,
                     usageType: appViewModel.usageType,
+                    showFilledLines: appViewModel.isLongPressedOutside,
                     closeAction: closeAction
                 )
                 .padding(.top, 4)
@@ -366,11 +375,21 @@ struct AppView: View {
         }
     }
     
+    func longPressedAction(pressed: Bool) {
+        withAnimation {
+            if pressed {
+                appViewModel.didLongPressedOutside()
+                return
+            }
+            appViewModel.didReleasedLongPressed()
+        }
+    }
+    
     func didChangeScenePhase(phase: ScenePhase) {
         if phase == .active {
             appViewModel.updatePlanPeriod()
         } else if phase == .background {
-            WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.main.rawValue)
+            WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.main.name)
         }
     }
 

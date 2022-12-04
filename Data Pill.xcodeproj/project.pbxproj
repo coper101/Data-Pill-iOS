@@ -111,6 +111,11 @@
 		27E7774F2935010D0031456D /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7774E2935010D0031456D /* Entry.swift */; };
 		27E77751293B68D10031456D /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E77750293B68D00031456D /* Widget.swift */; };
 		27E77752293B68D10031456D /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E77750293B68D00031456D /* Widget.swift */; };
+		27E77754293C44080031456D /* FillLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E77753293C44070031456D /* FillLineView.swift */; };
+		27E77755293C44080031456D /* FillLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E77753293C44070031456D /* FillLineView.swift */; };
+		27E77757293C4AAC0031456D /* SFProText-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */; };
+		27E77758293C4AAC0031456D /* SFProText-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */; };
+		27E77759293C50780031456D /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE328D6F01900201339 /* Modifier.swift */; };
 		27F47DDA2905330D00B3F83D /* AppDataRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */; };
 		27F47DDC29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */; };
 		27F47DDF29067C8E00B3F83D /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDE29067C8E00B3F83D /* Button.swift */; };
@@ -229,6 +234,8 @@
 		27E7774B293500BB0031456D /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 		27E7774E2935010D0031456D /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		27E77750293B68D00031456D /* Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget.swift; sourceTree = "<group>"; };
+		27E77753293C44070031456D /* FillLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillLineView.swift; sourceTree = "<group>"; };
+		27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Heavy.ttf"; sourceTree = "<group>"; };
 		27F47DD92905330D00B3F83D /* AppDataRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDB29053AE400B3F83D /* NetworkDataRepository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRepository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDE29067C8E00B3F83D /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
@@ -384,6 +391,7 @@
 		27801DD828D6CF2D00201339 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */,
 				27801DD928D6CF3900201339 /* SFProText-Bold.ttf */,
 				27801DDA28D6CF3900201339 /* SFProText-Medium.ttf */,
 				27801DDB28D6CF3900201339 /* SFProText-Semibold.ttf */,
@@ -454,6 +462,7 @@
 				27E776FE293365730031456D /* BasePillView.swift */,
 				27801DE528D6F59700201339 /* PillView.swift */,
 				27801E0428DA1A7A00201339 /* DraggablePillView.swift */,
+				27E77753293C44070031456D /* FillLineView.swift */,
 			);
 			path = Pill;
 			sourceTree = "<group>";
@@ -611,6 +620,7 @@
 				27801DD028D6C96B00201339 /* Preview Assets.xcassets in Resources */,
 				27801DDC28D6CF3900201339 /* SFProText-Bold.ttf in Resources */,
 				27801DDD28D6CF3900201339 /* SFProText-Medium.ttf in Resources */,
+				27E77757293C4AAC0031456D /* SFProText-Heavy.ttf in Resources */,
 				27801DDE28D6CF3900201339 /* SFProText-Semibold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -630,6 +640,7 @@
 				27E77719293367590031456D /* SFProText-Medium.ttf in Resources */,
 				27E77718293367570031456D /* SFProText-Bold.ttf in Resources */,
 				27E7771A2933675B0031456D /* SFProText-Semibold.ttf in Resources */,
+				27E77758293C4AAC0031456D /* SFProText-Heavy.ttf in Resources */,
 				27E7770E293367470031456D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -651,6 +662,7 @@
 				27801DC528D6C96800201339 /* Frame.swift in Sources */,
 				27801DB728D6C96800201339 /* AppViewModel.swift in Sources */,
 				27801DF428D8C71C00201339 /* AutoPeriodCardView.swift in Sources */,
+				27E77754293C44080031456D /* FillLineView.swift in Sources */,
 				27801E0128DA15C600201339 /* DailyLimitView.swift in Sources */,
 				27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */,
 				27E776FF293365730031456D /* BasePillView.swift in Sources */,
@@ -727,6 +739,7 @@
 				27E7772429336CC10031456D /* Frame.swift in Sources */,
 				27E7770C293367450031456D /* Data_Pill_Widget.swift in Sources */,
 				27E777342933CB380031456D /* DataUsageRepository.swift in Sources */,
+				27E77755293C44080031456D /* FillLineView.swift in Sources */,
 				27E7772E2933844A0031456D /* ToggleItem.swift in Sources */,
 				27E777352933CD850031456D /* DataUsage.swift in Sources */,
 				27E777462934D20F0031456D /* DataInfo.swift in Sources */,
@@ -742,6 +755,7 @@
 				27E7773A2934B3400031456D /* AppDataRepository.swift in Sources */,
 				27E7772129336B370031456D /* Numbers.swift in Sources */,
 				27E77752293B68D10031456D /* Widget.swift in Sources */,
+				27E77759293C50780031456D /* Modifier.swift in Sources */,
 				27E7773C2934B3490031456D /* Constants.swift in Sources */,
 				27E7771C293367630031456D /* Type.swift in Sources */,
 				27E777442934D1DB0031456D /* DataTest.swift in Sources */,

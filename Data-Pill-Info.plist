@@ -11,6 +11,7 @@
 		<string>SFProText-Bold.ttf</string>
 		<string>SFProText-Medium.ttf</string>
 		<string>SFProText-Semibold.ttf</string>
+		<string>SFProText-Heavy.ttf</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict>

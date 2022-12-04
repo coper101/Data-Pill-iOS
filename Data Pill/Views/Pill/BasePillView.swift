@@ -7,12 +7,20 @@
 
 import SwiftUI
 
+struct FillLine {
+    let title: String
+}
+
 struct BasePillView<Label>: View where Label: View {
     // MARK: - Props
     var percentage: Int
-    var isContentShown: Bool
+    
+    var isContentShown: Bool = true
+    var fillLine: FillLine? = nil
+    
     var hasBackground: Bool
     var color: Colors
+    
     var widthScale: CGFloat = 0.45
     var customSize: CGSize? = nil
     @ViewBuilder var label: Label
@@ -48,7 +56,7 @@ struct BasePillView<Label>: View where Label: View {
             )
             
             // Layer 2: PERCENTAGE FILL
-            if isContentShown {
+            if isContentShown && fillLine == nil {
                 RoundedRectangle(cornerRadius: 5)
                     .fill(color.color)
                     .frame(
@@ -71,9 +79,25 @@ struct BasePillView<Label>: View where Label: View {
                     )
             } //: if
             
+            if let fillLine = fillLine {
+                FillLineView(title: fillLine.title)
+                    .offset(y: maxHeight - ( (CGFloat(percentage) / 100) * maxHeight) )
+            }
+            
         } //: ZStack
-        .frame(width: width, height: maxHeight)
-        .clipShape(Capsule(style: .circular))
+        .frame(
+            width: width,
+            height: maxHeight
+        )
+        .clipShape(
+            Capsule(style: .circular)
+        )
+        .`if`(fillLine != nil) { view in
+            view.background(
+                Capsule(style: .circular)
+                    .stroke(Colors.onSurfaceLight2.color, lineWidth: 1)
+            )
+        }
     }
     
     // MARK: - Actions
@@ -82,14 +106,28 @@ struct BasePillView<Label>: View where Label: View {
 // MARK: - Preview
 struct BasePillView_Previews: PreviewProvider {
     static var previews: some View {
-        BasePillView(
-            percentage: 20,
-            isContentShown: true,
-            hasBackground: true,
-            color: .secondaryBlue,
-            label: {}
-        )
-            .previewLayout(.sizeThatFits)
-            .padding()
+        Group {
+            
+            BasePillView(
+                percentage: 20,
+                isContentShown: true,
+                hasBackground: true,
+                color: .secondaryBlue,
+                label: {}
+            )
+            .previewDisplayName("Widget")
+            
+            BasePillView(
+                percentage: 20,
+                fillLine: .init(title: "Today"),
+                hasBackground: true,
+                color: .secondaryBlue,
+                label: {}
+            )
+            .previewDisplayName("History Lines")
+            
+        }
+        .previewLayout(.sizeThatFits)
+        .padding()
     }
 }

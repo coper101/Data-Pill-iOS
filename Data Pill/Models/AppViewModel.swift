@@ -74,6 +74,7 @@ final class AppViewModel: ObservableObject {
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
     @Published var isTappedOutside = false
+    @Published var isLongPressedOutside = false
     
     /// Edit Data Plan
     @Published var isDataPlanEditing = false
@@ -586,6 +587,14 @@ extension AppViewModel {
         
         isDataLimitEditing = false
         isDataLimitPerDayEditing = false
+    }
+    
+    func didLongPressedOutside() {
+        isLongPressedOutside = true
+    }
+    
+    func didReleasedLongPressed() {
+        isLongPressedOutside = false
     }
     
     // MARK: - History

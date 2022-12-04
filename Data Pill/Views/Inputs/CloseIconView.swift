@@ -9,11 +9,12 @@ import SwiftUI
 
 struct CloseIconView: View {
     // MARK: - Props
-    var action: () -> Void
+    var action: Action
     
     // MARK: - UI
     var body: some View {
-        Button(action: action) {
+        Button(action: {}) {
+            
             Circle()
                 .fill(Colors.onBackgroundLight.color)
                 .frame(width: 30, height: 30)
@@ -22,8 +23,15 @@ struct CloseIconView: View {
                         .foregroundColor(Colors.background.color)
                         .frame(width: 20, height: 20)
                 )
-        }
+                .frame(width: 60, height: 48)
+                .contentShape(Rectangle())
+            
+        } //: Button
         .buttonStyle(ScaleButtonStyle())
+        .highPriorityGesture(
+            TapGesture()
+                .onEnded(action)
+        )
     }
     
     // MARK: - Actions
@@ -33,7 +41,8 @@ struct CloseIconView: View {
 struct CloseIconView_Previews: PreviewProvider {
     static var previews: some View {
         CloseIconView(action: {})
+            .background(Color.green)
             .previewLayout(.sizeThatFits)
-            .padding()
+//            .padding()
     }
 }
