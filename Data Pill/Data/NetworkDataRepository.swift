@@ -52,6 +52,7 @@ final class NetworkDataRepository:
         timer = Timer
             .publish(every: n, on: .main, in: .default)
             .autoconnect()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else {
                     return

@@ -220,7 +220,7 @@ extension AppViewModel {
                 self.thisWeeksData = $0
                 self.totalUsedDataPlan = self.dataUsageRepository
                     .getTotalUsedData(from: self.startDate, to: self.endDate)
-                print(self.networkDataRepository, self, separator: "\n")
+                // print(self.networkDataRepository, self, separator: "\n")
             }
             .store(in: &cancellables)
         
@@ -232,6 +232,7 @@ extension AppViewModel {
     
     func republishNetworkData() {
         networkDataRepository.totalUsedDataPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.totalUsedData = $0 }
             .store(in: &cancellables)
     }
