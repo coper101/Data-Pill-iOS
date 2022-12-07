@@ -71,11 +71,7 @@ final class WidgetViewModel {
     init(
         appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
         dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(
-            database: LocalDatabase(
-                container: .dataUsage,
-                entity: .data,
-                appGroup: .dataPill
-            )
+            database: LocalDatabase(container: .dataUsage, appGroup: .dataPill)
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
         republishAndObserveData: Bool = true
@@ -197,7 +193,7 @@ extension WidgetViewModel {
         todaysData.totalUsedData = totalUsedData
         todaysData.hasLastTotal = true
         
-        dataUsageRepository.updateData(item: todaysData)
+        dataUsageRepository.updateData(todaysData)
     }
     
     func setUsageType(_ usageType: ToggleItem) {

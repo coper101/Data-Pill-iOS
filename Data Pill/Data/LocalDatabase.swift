@@ -37,6 +37,7 @@ enum Containers: String {
 
 enum Entities: String {
     case data = "Data"
+    case plan = "Plan"
     var name: String {
         return self.rawValue
     }
@@ -49,26 +50,18 @@ enum StorageType {
 
 // MARK: - Protocol
 protocol Database {
-    associatedtype Entity: NSManagedObject
     var container: NSPersistentContainer { get }
-    var entityName: String { get }
     var context: NSManagedObjectContext { get }
     
-    init(
-        container: Containers,
-        entity: Entities,
-        appGroup: AppGroup?
-    )
+    init(container: Containers, appGroup: AppGroup?)
     
-    func loadContainer(onError: @escaping (Error) -> Void, onSuccess: @escaping () -> Void) -> Void
-    func getAllItems() throws -> [Entity]
-    func getItemsWith(format: String, _ args: CVarArg..., sortDescriptors: [NSSortDescriptor]) throws -> [Entity]
-    func addItem(_ creator: @escaping (inout Entity) -> Void) throws -> Bool
-    func updateItem(_ item: Entity) throws -> Bool
-    func deleteItem(_ item: Entity) throws -> Bool
+    func loadContainer(
+        onError: @escaping (Error) -> Void,
+        onSuccess: @escaping () -> Void
+    ) -> Void
 }
 
-extension Database where Entity: NSManagedObject {
+extension Database {
     func loadContainer(
         onError: @escaping (Error) -> Void,
         onSuccess: @escaping () -> Void
@@ -79,37 +72,6 @@ extension Database where Entity: NSManagedObject {
             }
             onSuccess(); return
         }
-    }
-    
-    func getAllItems() throws -> [Data] {
-        let request = NSFetchRequest<Data>(entityName: entityName)
-        return try context.fetch(request)
-    }
-    
-    func getItemsWith(
-        format: String,
-        _ args: CVarArg...,
-        sortDescriptors: [NSSortDescriptor] = []
-    ) throws -> [Data] {
-        let request = NSFetchRequest<Data>(entityName: entityName)
-        request.sortDescriptors = sortDescriptors
-        request.predicate = .init(format: format, args)
-        return try context.fetch(request)
-    }
-    
-    func addItem(_ creator: @escaping (inout Data) -> Void) throws -> Bool {
-        var newItem = Data.init(context: context)
-        creator(&newItem)
-        return try context.saveIfNeeded()
-    }
-    
-    func updateItem(_ item: Data) throws -> Bool {
-        return try context.saveIfNeeded()
-    }
-    
-    func deleteItem(_ item: Data) throws -> Bool {
-        context.delete(item)
-        return try context.saveIfNeeded()
     }
 }
 
@@ -128,17 +90,11 @@ extension NSManagedObjectContext {
 class LocalDatabase: Database {
 
     let container: NSPersistentContainer
-    let entityName: String
-    
     var context: NSManagedObjectContext {
         container.viewContext
     }
     
-    required init(
-        container: Containers,
-        entity: Entities,
-        appGroup: AppGroup?
-    ) {
+    required init(container: Containers, appGroup: AppGroup?) {
         self.container = NSPersistentContainer(name: container.name)
         if
             let appGroup = appGroup,
@@ -148,7 +104,6 @@ class LocalDatabase: Database {
             self.container.persistentStoreDescriptions = [description]
             print("persistent descriptions: ", self.container.persistentStoreDescriptions)
         }
-        entityName = entity.name
         self.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
@@ -157,22 +112,16 @@ class LocalDatabase: Database {
 class InMemoryLocalDatabase: Database {
 
     let container: NSPersistentContainer
-    let entityName: String
-    
     var context: NSManagedObjectContext {
         container.viewContext
     }
     
-    required init(
-        container: Containers,
-        entity: Entities,
-        appGroup: AppGroup?
-    ) {
-        entityName = entity.name
+    required init(container: Containers, appGroup: AppGroup?) {
         self.container = NSPersistentContainer(name: container.name)
         if let storeDescription = self.container.persistentStoreDescriptions.first {
             storeDescription.url = URL(fileURLWithPath: "/dev/null")
         }
+        print("persistent descriptions: ", self.container.persistentStoreDescriptions)
     }
     
 }

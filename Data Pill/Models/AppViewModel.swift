@@ -18,16 +18,30 @@ final class AppViewModel: ObservableObject {
     let networkDataRepository: NetworkDataRepositoryProtocol
     
     /// App Data
+    @Published var unit = Unit.gb
+    @Published var usageType: ToggleItem = .daily
+    @Published var isPeriodAuto = false
+    
+    @Published var dataPlusStepperValue = 1.0
+    @Published var dataMinusStepperValue = 1.0
+    
+    @Published var dataLimitPerDayPlusStepperValue = 1.0
+    @Published var dataLimitPerDayMinusStepperValue = 1.0
+    
+    @Published var dataLimitPlusStepperValue = 1.0
+    @Published var dataLimitMinusStepperValue = 1.0
+    
+    /// Data Usage
     @Published var startDate = Date()
     @Published var endDate = Date()
     @Published var dataAmount = 0.0
     @Published var dataLimit = 0.0
     @Published var dataLimitPerDay = 0.0
-    @Published var unit = Unit.gb
     
-    /// Data Usage
     @Published var thisWeeksData = [Data]()
+    
     @Published var totalUsedDataPlan = 0.0
+    
     @Published var dataError: DatabaseError?
     
     /// Network Data
@@ -69,8 +83,6 @@ final class AppViewModel: ObservableObject {
     }
     
     // MARK: - UI
-    @Published var usageType: ToggleItem = .daily
-    @Published var isPeriodAuto = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
     @Published var isTappedOutside = false
@@ -86,21 +98,12 @@ final class AppViewModel: ObservableObject {
     @Published var startDateValue = Date()
     @Published var endDateValue = Date()
     
-    @Published var dataPlusStepperValue = 1.0
-    @Published var dataMinusStepperValue = 1.0
-    
     /// Edit Data Limit
     @Published var isDataLimitEditing = false
     @Published var isDataLimitPerDayEditing = false
     
     @Published var dataLimitValue = "0.0"
     @Published var dataLimitPerDayValue = "0.0"
-    
-    @Published var dataLimitPerDayPlusStepperValue = 1.0
-    @Published var dataLimitPerDayMinusStepperValue = 1.0
-    
-    @Published var dataLimitPlusStepperValue = 1.0
-    @Published var dataLimitMinusStepperValue = 1.0
     
     var numOfDaysOfPlanValue: Int {
         startDateValue.toNumOfDays(to: endDateValue)
@@ -118,11 +121,7 @@ final class AppViewModel: ObservableObject {
     init(
         appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
         dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(
-            database: LocalDatabase(
-                container: .dataUsage,
-                entity: .data,
-                appGroup: .dataPill
-            )
+            database: LocalDatabase(container: .dataUsage, appGroup: .dataPill)
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
         setupValues: Bool = true
@@ -150,7 +149,6 @@ final class AppViewModel: ObservableObject {
 extension AppViewModel {
     
     func republishAppData() {
-        /// UI
         appDataRepository.usageTypePublisher
             .sink { [weak self] in self?.usageType = $0 }
             .store(in: &cancellables)
@@ -159,32 +157,10 @@ extension AppViewModel {
             .sink { [weak self] in self?.isPeriodAuto = $0 }
             .store(in: &cancellables)
         
-        /// Plan
-        appDataRepository.startDatePublisher
-            .sink { [weak self] in self?.startDate = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.endDatePublisher
-            .sink { [weak self] in self?.endDate = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataAmountPublisher
-            .sink { [weak self] in self?.dataAmount = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataLimitPublisher
-            .sink { [weak self] in self?.dataLimit = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataLimitPerDayPublisher
-            .sink { [weak self] in self?.dataLimitPerDay = $0 }
-            .store(in: &cancellables)
-        
         appDataRepository.unitPublisher
             .sink { [weak self] in self?.unit = $0 }
             .store(in: &cancellables)
         
-        /// Stepper Values
         appDataRepository.dataPlusStepperValuePublisher
             .sink { [weak self] in self?.dataPlusStepperValue = $0 }
             .store(in: &cancellables)
@@ -211,6 +187,19 @@ extension AppViewModel {
     }
     
     func republishDataUsage() {
+        dataUsageRepository.planPublisher
+            .sink { [weak self] plan in
+                guard let plan, let self else {
+                    return
+                }
+                self.startDate = plan.startDate ?? .init()
+                self.endDate = plan.endDate ?? .init()
+                self.dataAmount = plan.dataAmount
+                self.dataLimit = plan.planLimit
+                self.dataLimitPerDay = plan.dailyLimit
+            }
+            .store(in: &cancellables)
+        
         dataUsageRepository.thisWeeksDataPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
@@ -251,32 +240,6 @@ extension AppViewModel {
             .sink { [weak self] in self?.appDataRepository.setIsPeriodAuto($0) }
             .store(in: &cancellables)
         
-        /// Plan
-        $startDate
-            .sink { [weak self] in self?.appDataRepository.setStartDate($0) }
-            .store(in: &cancellables)
-        
-        $endDate
-            .sink { [weak self] in self?.appDataRepository.setEndDate($0) }
-            .store(in: &cancellables)
-        
-        $dataAmount
-            .sink { [weak self] in self?.appDataRepository.setDataAmount($0) }
-            .store(in: &cancellables)
-        
-        $dataLimitPerDay
-            .sink { [weak self] in self?.appDataRepository.setDataLimitPerDay($0) }
-            .store(in: &cancellables)
-        
-        $dataLimit
-            .sink { [weak self] in self?.appDataRepository.setDataLimit($0) }
-            .store(in: &cancellables)
-        
-        $totalUsedData
-            .sink { [weak self] in self?.refreshUsedDataToday($0) }
-            .store(in: &cancellables)
-        
-        /// Stepper Values
         $dataPlusStepperValue
             .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .data) }
             .store(in: &cancellables)
@@ -299,6 +262,31 @@ extension AppViewModel {
         
         $dataLimitMinusStepperValue
             .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .planLimit) }
+            .store(in: &cancellables)
+        
+        /// Plan
+        $startDate
+            .sink { [weak self] in self?.updatePlan(startDate: $0) }
+            .store(in: &cancellables)
+        
+        $endDate
+            .sink { [weak self] in self?.updatePlan(endDate: $0) }
+            .store(in: &cancellables)
+        
+        $dataAmount
+            .sink { [weak self] in self?.updatePlan(dataAmount: $0) }
+            .store(in: &cancellables)
+        
+        $dataLimitPerDay
+            .sink { [weak self] in self?.updatePlan(dailyLimit: $0) }
+            .store(in: &cancellables)
+        
+        $dataLimit
+            .sink { [weak self] in self?.updatePlan(planLimit: $0) }
+            .store(in: &cancellables)
+        
+        $totalUsedData
+            .sink { [weak self] in self?.refreshUsedDataToday($0) }
             .store(in: &cancellables)
         
     }
@@ -351,7 +339,7 @@ extension AppViewModel {
         todaysData.totalUsedData = totalUsedData
         todaysData.hasLastTotal = true
         
-        dataUsageRepository.updateData(item: todaysData)
+        dataUsageRepository.updateData(todaysData)
     }
     
     // MARK: - Edit Data Plan
@@ -393,6 +381,22 @@ extension AppViewModel {
         }
         startDate = newStartDate
         endDate = newEndDate
+    }
+    
+    func updatePlan(
+        startDate: Date? = nil,
+        endDate: Date? = nil,
+        dataAmount: Double? = nil,
+        dailyLimit: Double? = nil,
+        planLimit: Double? = nil
+    ) {
+        dataUsageRepository.updatePlan(
+            startDate: startDate,
+            endDate: endDate,
+            dataAmount: dataAmount,
+            dailyLimit: dailyLimit,
+            planLimit: planLimit
+        )
     }
     
     /// Data Amount

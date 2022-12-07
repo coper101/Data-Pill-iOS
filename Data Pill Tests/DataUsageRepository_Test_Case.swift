@@ -16,11 +16,7 @@ final class DataUsageRepository_Test_Case: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        let database = InMemoryLocalDatabase(
-            container: .dataUsage,
-            entity: .data,
-            appGroup: nil
-        )
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         repository = DataUsageRepository(database: database)
         mockErrorRepository = MockErrorDataUsageRepository(database: database)
     }
@@ -28,6 +24,20 @@ final class DataUsageRepository_Test_Case: XCTestCase {
     override func tearDownWithError() throws {
         repository = nil
         mockErrorRepository = nil
+    }
+    
+    // MARK: getPlan()
+    func test_get_plan() throws {
+        // (1) Given
+        // (2) When
+        let plan = repository.getPlan()
+        // (3) Then
+        XCTAssertNotNil(plan)
+        XCTAssertEqual(plan!.startDate, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(plan!.endDate, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(plan!.dataAmount, 0.0)
+        XCTAssertEqual(plan!.dailyLimit, 0.0)
+        XCTAssertEqual(plan!.planLimit, 0.0)
     }
     
     // MARK: - todaysData()
@@ -42,10 +52,11 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         // (2) When
         let todaysData = repository.getTodaysData()
         // (3) Then
-        XCTAssertEqual(todaysData?.date, Calendar.current.startOfDay(for: .init()))
-        XCTAssertEqual(todaysData?.totalUsedData, 0)
-        XCTAssertEqual(todaysData?.dailyUsedData, 0)
-        XCTAssertEqual(todaysData?.hasLastTotal, false)
+        XCTAssertNotNil(todaysData)
+        XCTAssertEqual(todaysData!.date, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(todaysData!.totalUsedData, 0)
+        XCTAssertEqual(todaysData!.dailyUsedData, 0)
+        XCTAssertEqual(todaysData!.hasLastTotal, false)
     }
     
     // MARK: - getDataWithHasTotal()
@@ -243,7 +254,7 @@ final class DataUsageRepository_Test_Case: XCTestCase {
     }
     
     // MARK: - getTotalUsedData()
-    func test_total_used_date() throws {
+    func test_total_used_data() throws {
         // (1) Given
         /// Sunday
         repository.addData(
@@ -277,7 +288,7 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         XCTAssertEqual(totalUsedData, 900.6, accuracy: 0.1)
     }
     
-    func test_total_used_date_zero() throws {
+    func test_total_used_data_zero() throws {
         // (1) Given
         /// Sunday
         repository.addData(
@@ -346,26 +357,12 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         // (1) Given
         // (2) When
         mockErrorRepository.updateData(
-            item: Data(context: mockErrorRepository.database.context)
+            Data(context: mockErrorRepository.database.context)
         )
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
             DatabaseError.updating("Update Error")
-        )
-        try test_data_error_is_empty()
-    }
-    
-    func test_get_remove_data_has_error() throws {
-        // (1) Given
-        // (2) When
-        mockErrorRepository.removeData(
-            item: Data(context: mockErrorRepository.database.context)
-        )
-        // (3) Then
-        XCTAssertEqual(
-            mockErrorRepository.dataError,
-            DatabaseError.removing("Remove Error")
         )
         try test_data_error_is_empty()
     }

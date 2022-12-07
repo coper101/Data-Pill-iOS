@@ -29,11 +29,7 @@ final class AppViewModel_Test_Case: XCTestCase {
         setupValues: Bool = false
     ) -> AppViewModel {
         let defaultDataUsageRepository = DataUsageRepository(
-            database: InMemoryLocalDatabase(
-                container: .dataUsage,
-                entity: .data,
-                appGroup: nil
-            )
+            database: InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         )
         return .init(
             appDataRepository: appDataRepository ?? MockAppDataRepository(),
@@ -66,7 +62,7 @@ final class AppViewModel_Test_Case: XCTestCase {
         todaysData.totalUsedData = 100.0
         todaysData.hasLastTotal = true
         // (2) When
-        appViewModel.dataUsageRepository.updateData(item: todaysData)
+        appViewModel.dataUsageRepository.updateData(todaysData)
         appViewModel.refreshUsedDataToday(totalUsedData)
         // (3) Then
         let dateToday = appViewModel.todaysData.date

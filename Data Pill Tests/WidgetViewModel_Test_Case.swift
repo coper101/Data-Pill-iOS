@@ -27,11 +27,7 @@ final class WidgetViewModel_Test_Case: XCTestCase {
     func createWidgetViewModel() -> WidgetViewModel {
         appDataRepository = MockAppDataRepository()
         dataUsageRepository = DataUsageRepository(
-            database: InMemoryLocalDatabase(
-                container: .dataUsage,
-                entity: .data,
-                appGroup: nil
-            )
+            database: InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         )
         networkDataRepository = MockNetworkDataRepository()
         
