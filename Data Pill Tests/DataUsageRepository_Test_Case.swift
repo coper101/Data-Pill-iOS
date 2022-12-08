@@ -16,7 +16,10 @@ final class DataUsageRepository_Test_Case: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
+        let database = InMemoryLocalDatabase(
+            container: .dataUsage,
+            appGroup: nil
+        )
         repository = DataUsageRepository(database: database)
         mockErrorRepository = MockErrorDataUsageRepository(database: database)
     }
@@ -26,21 +29,9 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         mockErrorRepository = nil
     }
     
-    // MARK: getPlan()
-    func test_get_plan() throws {
-        // (1) Given
-        // (2) When
-        let plan = repository.getPlan()
-        // (3) Then
-        XCTAssertNotNil(plan)
-        XCTAssertEqual(plan!.startDate, Calendar.current.startOfDay(for: .init()))
-        XCTAssertEqual(plan!.endDate, Calendar.current.startOfDay(for: .init()))
-        XCTAssertEqual(plan!.dataAmount, 0.0)
-        XCTAssertEqual(plan!.dailyLimit, 0.0)
-        XCTAssertEqual(plan!.planLimit, 0.0)
-    }
+    // MARK: - Operations
     
-    // MARK: - todaysData()
+    // MARK: [1] Data
     func test_get_todays_data_exists() throws {
         // (1) Given
         repository.addData(
@@ -59,7 +50,6 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         XCTAssertEqual(todaysData!.hasLastTotal, false)
     }
     
-    // MARK: - getDataWithHasTotal()
     func test_data_with_has_total() throws {
         // (1) Given
         /// Sunday
@@ -81,9 +71,10 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         let dataWithHasTotal = repository.getDataWithHasTotal()
 
         // (3) Then
-        XCTAssertEqual(dataWithHasTotal?.hasLastTotal, true)
+        XCTAssertNotNil(dataWithHasTotal)
+        XCTAssertEqual(dataWithHasTotal!.hasLastTotal, true)
         XCTAssertEqual(
-            dataWithHasTotal?.date,
+            dataWithHasTotal!.date,
             "2022-10-02T00:00:00+00:00".toDate()
         )
     }
@@ -105,7 +96,6 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         XCTAssertNil(dataWithHasTotal)
     }
     
-    // MARK: - getThisWeeksData()
     func test_this_weeks_data_empty() throws {
         // (1) Given
         /// Saturday
@@ -253,7 +243,6 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         XCTAssertEqual(thisWeeksData.count, 7)
     }
     
-    // MARK: - getTotalUsedData()
     func test_total_used_data() throws {
         // (1) Given
         /// Sunday
@@ -322,7 +311,73 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         XCTAssertEqual(totalUsedData, 0)
     }
     
+    // MARK: [2] Plan
+    func test_add_plan() throws {
+        // (1) Given
+        let plan = createFakePlan(
+            startDate: "2022-10-02T00:00:00+00:00".toDate(),
+            endDate: "2022-10-02T00:00:00+00:00".toDate(),
+            dataAmount: 10,
+            dailyLimit: 1,
+            planLimit: 9
+        )
+        // (2) When
+        repository.addPlan(
+            startDate: plan.startDate!,
+            endDate: plan.endDate!,
+            dataAmount: plan.dataAmount,
+            dailyLimit: plan.dailyLimit,
+            planLimit: plan.planLimit
+        )
+        // (3) Then
+        let thePlan = repository.getPlan()
+        XCTAssertNotNil(thePlan)
+        XCTAssertEqual(thePlan!.startDate, "2022-10-02T00:00:00+00:00".toDate())
+        XCTAssertEqual(thePlan!.endDate, "2022-10-02T00:00:00+00:00".toDate())
+        XCTAssertEqual(thePlan!.dataAmount, 10.0)
+        XCTAssertEqual(thePlan!.dailyLimit, 1.0)
+        XCTAssertEqual(thePlan!.planLimit, 9.0)
+    }
+    
+    func test_update_plan() throws {
+        // (1) Given
+        let dataAmount = 10.0
+        let dailyLimit = 1.0
+        let planLimit = 9.0
+        // (2) When
+        repository.updatePlan(
+            startDate: nil,
+            endDate: nil,
+            dataAmount: dataAmount,
+            dailyLimit: dailyLimit,
+            planLimit: planLimit
+        )
+        // (3) Then
+        let thePlan = repository.getPlan()
+        XCTAssertNotNil(thePlan)
+        XCTAssertEqual(thePlan!.startDate, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(thePlan!.endDate, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(thePlan!.dataAmount, 10.0)
+        XCTAssertEqual(thePlan!.dailyLimit, 1.0)
+        XCTAssertEqual(thePlan!.planLimit, 9.0)
+    }
+    
+    func test_get_plan() throws {
+        // (1) Given
+        // (2) When
+        let plan = repository.getPlan()
+        // (3) Then
+        XCTAssertNotNil(plan)
+        XCTAssertEqual(plan!.startDate, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(plan!.endDate, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(plan!.dataAmount, 0.0)
+        XCTAssertEqual(plan!.dailyLimit, 0.0)
+        XCTAssertEqual(plan!.planLimit, 0.0)
+    }
+        
     // MARK: - Operation Errors
+    
+    // MARK: [1] Data
     func test_add_data_has_error() throws {
         // (1) Given
         // (2) When
@@ -335,21 +390,8 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
-            DatabaseError.adding("Adding Error")
+            DatabaseError.adding("Adding Data Error")
         )
-        try test_data_error_is_empty()
-    }
-    
-    func test_get_all_data_has_error() throws {
-        // (1) Given
-        // (2) When
-        let allData = mockErrorRepository.getAllData()
-        XCTAssertEqual(
-            mockErrorRepository.dataError,
-            DatabaseError.gettingAll("Get All Error")
-        )
-        // (3) Then
-        XCTAssertEqual(allData, [])
         try test_data_error_is_empty()
     }
     
@@ -362,11 +404,127 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
-            DatabaseError.updating("Update Error")
+            DatabaseError.updatingData("Updating Data Error")
         )
         try test_data_error_is_empty()
     }
-
+    
+    func test_get_all_data_has_error() throws {
+        // (1) Given
+        // (2) When
+        let allData = mockErrorRepository.getAllData()
+        // (3) Then
+        XCTAssertEqual(
+            mockErrorRepository.dataError,
+            DatabaseError.gettingAll("Getting All Data Error")
+        )
+        XCTAssertEqual(allData, [])
+        try test_data_error_is_empty()
+    }
+    
+    func test_get_todays_data_has_error() throws {
+        // (1) Given
+        // (2) When
+        let data = mockErrorRepository.getTodaysData()
+        // (3) Then
+        XCTAssertEqual(
+            mockErrorRepository.dataError,
+            DatabaseError.gettingTodaysData("Get Today's Date Error")
+        )
+        XCTAssertNil(data)
+        try test_data_error_is_empty()
+    }
+    
+    func test_get_data_with_has_total_has_error() throws {
+        // (1) Given
+        // (2) When
+        let data = mockErrorRepository.getDataWithHasTotal()
+        // (3) Then
+        XCTAssertEqual(
+            mockErrorRepository.dataError,
+            DatabaseError.filteringData("Filtering Data Error")
+        )
+        XCTAssertNil(data)
+        try test_data_error_is_empty()
+    }
+    
+    func test_get_total_used_data_has_error() throws {
+        // (1) Given
+        // (2) When
+        let totalUsedData = mockErrorRepository.getTotalUsedData(from: .init(), to: .init())
+        // (3) Then
+        XCTAssertEqual(
+            mockErrorRepository.dataError,
+            DatabaseError.filteringData("Filtering Data Error")
+        )
+        XCTAssertEqual(totalUsedData, 0)
+        try test_data_error_is_empty()
+    }
+    
+    func test_get_this_weeks_data_has_error() throws {
+        // (1) Given
+        // (2) When
+        let data = mockErrorRepository.getThisWeeksData(from: .init())
+        // (3) Then
+        XCTAssertEqual(
+            mockErrorRepository.dataError,
+            DatabaseError.filteringData("Filtering Data Error")
+        )
+        XCTAssertEqual(data, [])
+        try test_data_error_is_empty()
+    }
+    
+    // MARK: [2] Plan
+    func test_get_plan_has_error() throws {
+        // (1) Given
+        // (2) When
+        let plan = mockErrorRepository.getPlan()
+        // (3) Then
+        XCTAssertEqual(
+            mockErrorRepository.dataError,
+            DatabaseError.gettingPlan("Getting Plan Error")
+        )
+        XCTAssertNil(plan)
+        try test_data_error_is_empty()
+    }
+    
+    func test_add_plan_has_error() throws {
+        // (1) Given
+        // (2) When
+        mockErrorRepository.addPlan(
+            startDate: .init(),
+            endDate: .init(),
+            dataAmount: 0,
+            dailyLimit: 0,
+            planLimit: 0
+        )
+        // (3) Then
+        XCTAssertEqual(
+            mockErrorRepository.dataError,
+            DatabaseError.addingPlan("Adding Plan Error")
+        )
+        try test_data_error_is_empty()
+    }
+    
+    func test_update_plan_has_error() throws {
+        // (1) Given
+        // (2) When
+        mockErrorRepository.updatePlan(
+            startDate: .init(),
+            endDate: .init(),
+            dataAmount: 0,
+            dailyLimit: 0,
+            planLimit: 0
+        )
+        // (3) Then
+        XCTAssertEqual(
+            mockErrorRepository.dataError,
+            DatabaseError.updatingPlan("Updating Plan Error")
+        )
+        try test_data_error_is_empty()
+    }
+    
+    // MARK: [3] Error
     func test_data_error_is_empty() throws {
         mockErrorRepository.clearDataError()
         XCTAssertNil(mockErrorRepository.dataError)

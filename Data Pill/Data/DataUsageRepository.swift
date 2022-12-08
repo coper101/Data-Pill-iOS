@@ -9,14 +9,22 @@ import Foundation
 import CoreData
 
 enum DatabaseError: Error, Equatable {
+    
+    /// Database
     case loadingContainer(String = "Sorry, the data can’t be loaded from the Storage.\n\nTry reinstalling the app")
+    
+    /// Data
     case loadingAll(String)
     case adding(String)
+    case updatingData(String)
     case gettingAll(String)
-    case updating(String)
-    case removing(String)
     case gettingTodaysData(String)
     case filteringData(String)
+    
+    /// Plan
+    case gettingPlan(String)
+    case addingPlan(String)
+    case updatingPlan(String)
     
     var id: String {
         switch self {
@@ -26,23 +34,28 @@ enum DatabaseError: Error, Equatable {
             return "LoadingAll"
         case .adding(_):
             return "Adding"
+        case .updatingData(_):
+            return "UpdatingData"
         case .gettingAll(_):
             return "GettingAll"
-        case .updating(_):
-            return "Updating"
-        case .removing(_):
-            return "Removing"
         case .gettingTodaysData(_):
             return "GettingTodaysData"
         case .filteringData(_):
             return "FilteringData"
+        case .gettingPlan(_):
+            return "GettingPlan"
+        case .addingPlan(_):
+            return "AddingPlan"
+        case .updatingPlan(_):
+            return "UpdatingPlan"
         }
     }
+    
     static func == (lhs: DatabaseError, rhs: DatabaseError) -> Bool {
         lhs.id == rhs.id
     }
 }
-
+    
 private enum DataAttribute: String {
     case date
     case hasLastTotal
@@ -52,20 +65,29 @@ private enum DataAttribute: String {
 protocol DataUsageRepositoryProtocol {
     var database: any Database { get }
     
-    /// Data
+    /// [1] Data
     var thisWeeksData: [Data] { get set }
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { get }
     
-    func addData(date: Date, totalUsedData: Double, dailyUsedData: Double, hasLastTotal: Bool) -> Void
+    func addData(
+        date: Date,
+        totalUsedData: Double,
+        dailyUsedData: Double,
+        hasLastTotal: Bool
+    ) -> Void
     func updateData(_ data: Data) -> Void
     func getAllData() -> [Data]
-    func getDataWith(format: String, _ args: CVarArg..., sortDescriptors: [NSSortDescriptor]) throws -> [Data]
+    func getDataWith(
+        format: String,
+        _ args: CVarArg...,
+        sortDescriptors: [NSSortDescriptor]
+    ) throws -> [Data]
     func getTodaysData() -> Data?
     func getDataWithHasTotal() -> Data?
     func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double
     func getThisWeeksData(from todaysData: Data?) -> [Data]
     
-    /// Plan
+    /// [2] Plan
     var plan: Plan? { get set }
     var planPublisher: Published<Plan?>.Publisher { get }
     
@@ -80,7 +102,7 @@ protocol DataUsageRepositoryProtocol {
         planLimit: Double?
     ) -> Void
     
-    /// Error
+    /// [3] Error
     var dataError: DatabaseError? { get set }
     var dataErrorPublisher: Published<DatabaseError?>.Publisher { get }
     func clearDataError()
@@ -88,46 +110,35 @@ protocol DataUsageRepositoryProtocol {
 
 extension DataUsageRepositoryProtocol {
     
-    func updateData(_ data: Data) {
-        
-    }
+    func updateData(_ data: Data) {}
     
     func addPlan(
         startDate: Date,
         endDate: Date, dataAmount: Double,
         dailyLimit: Double,
         planLimit: Double
-    ) {
-        
-    }
+    ) {}
     
     func getDataWith(
         format: String,
         _ args: CVarArg...,
         sortDescriptors: [NSSortDescriptor]
-    ) throws -> [Data] {
-        []
-    }
+    ) throws -> [Data] { [] }
     
     func getTodaysData() -> Data? { nil }
 
     func getDataWithHasTotal() -> Data? { nil }
 
-    func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double {
-        0
-    }
+    func getTotalUsedData(
+        from startDate: Date,
+        to endDate: Date
+    ) -> Double { 0 }
 
-    func getThisWeeksData(from todaysData: Data?) -> [Data] {
-        []
-    }
+    func getThisWeeksData(from todaysData: Data?) -> [Data] { [] }
     
-    func getAllPlan() throws -> [Plan] {
-        []
-    }
+    func getAllPlan() throws -> [Plan] { [] }
     
-    func getPlan() -> Plan? {
-        nil
-    }
+    func getPlan() -> Plan? { nil }
     
     func updatePlan(
         startDate: Date?,
@@ -135,8 +146,7 @@ extension DataUsageRepositoryProtocol {
         dataAmount: Double?,
         dailyLimit: Double?,
         planLimit: Double?
-    ) {
-    }
+    ) {}
 
     func clearDataError() {}
     
@@ -148,15 +158,15 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
 
     let database: Database
     
-    /// Data
+    /// [1A] Data
     @Published var thisWeeksData: [Data] = .init()
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { $thisWeeksData }
     
-    /// Plan
+    /// [2A] Plan
     @Published var plan: Plan?
     var planPublisher: Published<Plan?>.Publisher { $plan }
     
-    /// Error
+    /// [3A] Error
     @Published var dataError: DatabaseError?
     var dataErrorPublisher: Published<DatabaseError?>.Publisher { $dataError }
     
@@ -173,7 +183,12 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
             self.updateToLatestPlan()
         }
     }
+
+}
+
+extension DataUsageRepository {
     
+    // MARK: [1B] Data
     /// add a new Data Usage record into Database
     func addData(
         date: Date,
@@ -206,7 +221,7 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
                 updateToLatestData()
             }
         } catch let error {
-            dataError = DatabaseError.updating(error.localizedDescription)
+            dataError = DatabaseError.updatingData(error.localizedDescription)
             print("update data error: ", error.localizedDescription)
         }
     }
@@ -234,73 +249,6 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
         request.predicate = .init(format: format, args)
         return try database.context.fetch(request)
     }
-    
-    /// add a new Data Plan record into Database
-    func addPlan(
-        startDate: Date,
-        endDate: Date,
-        dataAmount: Double,
-        dailyLimit: Double,
-        planLimit: Double
-    ) {
-        do {
-            let plan = Plan(context: database.context)
-            plan.startDate = startDate
-            plan.endDate = endDate
-            plan.dataAmount = dataAmount
-            plan.dailyLimit = dailyLimit
-            plan.planLimit = planLimit
-            try database.context.saveIfNeeded()
-        } catch let error {
-            dataError = DatabaseError.adding(error.localizedDescription)
-            print("add plan error: ", error.localizedDescription)
-        }
-    }
-    
-    /// fetch all Data Plan records from Database
-    func getAllPlan() throws -> [Plan] {
-        let request = NSFetchRequest<Plan>(entityName: Entities.plan.name)
-        return try database.context.fetch(request)
-    }
-    
-    /// update the Data Plan from Database
-    func updatePlan(
-        startDate: Date?,
-        endDate: Date?,
-        dataAmount: Double?,
-        dailyLimit: Double?,
-        planLimit: Double?
-    ) {
-        do {
-            guard let plan = getPlan() else {
-                print("no plan found despite creating one")
-                return
-            }
-            if let startDate {
-                plan.startDate = startDate
-            }
-            if let endDate {
-                plan.endDate = endDate
-            }
-            if let dataAmount {
-                plan.dataAmount = dataAmount
-            }
-            if let dailyLimit {
-                plan.dailyLimit = dailyLimit
-            }
-            if let planLimit {
-                plan.planLimit = planLimit
-            }
-            try database.context.saveIfNeeded()
-        } catch let error {
-            dataError = DatabaseError.updating(error.localizedDescription)
-            print("update plan error: ", error.localizedDescription)
-        }
-    }
-
-}
-
-extension DataUsageRepository {
     
     /// gets Data with todays Date from Database
     func getTodaysData() -> Data? {
@@ -444,20 +392,89 @@ extension DataUsageRepository {
 
 }
 
+extension DataUsageRepository {
+    
+    // MARK: [2B] Plan
+    /// add a new Data Plan record into Database
+    func addPlan(
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
+    ) {
+        do {
+            let plan = Plan(context: database.context)
+            plan.startDate = startDate
+            plan.endDate = endDate
+            plan.dataAmount = dataAmount
+            plan.dailyLimit = dailyLimit
+            plan.planLimit = planLimit
+            try database.context.saveIfNeeded()
+        } catch let error {
+            dataError = DatabaseError.addingPlan(error.localizedDescription)
+            print("add plan error: ", error.localizedDescription)
+        }
+    }
+    
+    /// update the Data Plan from Database
+    func updatePlan(
+        startDate: Date?,
+        endDate: Date?,
+        dataAmount: Double?,
+        dailyLimit: Double?,
+        planLimit: Double?
+    ) {
+        do {
+            guard let plan = getPlan() else {
+                print("no plan found despite creating one")
+                return
+            }
+            if let startDate {
+                plan.startDate = startDate
+            }
+            if let endDate {
+                plan.endDate = endDate
+            }
+            if let dataAmount {
+                plan.dataAmount = dataAmount
+            }
+            if let dailyLimit {
+                plan.dailyLimit = dailyLimit
+            }
+            if let planLimit {
+                plan.planLimit = planLimit
+            }
+            try database.context.saveIfNeeded()
+        } catch let error {
+            dataError = DatabaseError.updatingPlan(error.localizedDescription)
+            print("update plan error: ", error.localizedDescription)
+        }
+    }
+    
+    /// fetch all Data Plan records from Database
+    func getAllPlan() throws -> [Plan] {
+        let request = NSFetchRequest<Plan>(entityName: Entities.plan.name)
+        return try database.context.fetch(request)
+    }
+    
+}
+
 // MARK: - Test Implementation
+// Used for Swift UI Preview
 class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
 
     let database: Database = LocalDatabase(container: .dataUsage, appGroup: nil)
     
-    /// Data
+    /// [1A] Data
     @Published var thisWeeksData: [Data] = []
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { $thisWeeksData }
     
-    /// Plan
+    /// [2A] Plan
     @Published var plan: Plan? = .init()
     var planPublisher: Published<Plan?>.Publisher { $plan }
     
-    /// Error
+    /// [3A] Error
     @Published var dataError: DatabaseError?
     var dataErrorPublisher: Published<DatabaseError?>.Publisher { $dataError }
         
@@ -478,17 +495,7 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         }
     }
     
-    func loadThisWeeksData(_ dataTests: [DataTest]) {
-        dataTests.forEach { data in
-            addData(
-                date: data.date,
-                totalUsedData: data.totalUsedData,
-                dailyUsedData: data.dailyUsedData,
-                hasLastTotal: data.hasLastTotal
-            )
-        }
-    }
-    
+    /// [1A] Data
     func addData(
         date: Date,
         totalUsedData: Double,
@@ -508,15 +515,11 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
     }
     
     func updateData(item: Data) {
-        
+        // TODO:
     }
     
     func getAllData() -> [Data] {
         []
-    }
-    
-    func removeData(item: Data)  {
-        
     }
     
     func getTodaysData() -> Data? {
@@ -536,8 +539,22 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         getTodaysData()
     }
     
-    func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double {
+    func getTotalUsedData(
+        from startDate: Date,
+        to endDate: Date
+    ) -> Double {
         100
+    }
+    
+    func loadThisWeeksData(_ dataTests: [DataTest]) {
+        dataTests.forEach { data in
+            addData(
+                date: data.date,
+                totalUsedData: data.totalUsedData,
+                dailyUsedData: data.dailyUsedData,
+                hasLastTotal: data.hasLastTotal
+            )
+        }
     }
     
 }
@@ -546,15 +563,15 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
 
     let database: Database
     
-    /// Data
+    /// [1A] Data
     @Published var thisWeeksData: [Data] = []
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { $thisWeeksData }
     
-    /// Plan
+    /// [2A] Plan
     @Published var plan: Plan? = .init()
     var planPublisher: Published<Plan?>.Publisher { $plan }
     
-    /// Error
+    /// [3A] Error
     @Published var dataError: DatabaseError?
     var dataErrorPublisher: Published<DatabaseError?>.Publisher { $dataError }
     
@@ -570,24 +587,60 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         }
     }
     
+    /// [1B] Data
     func addData(
         date: Date,
         totalUsedData: Double,
         dailyUsedData: Double,
         hasLastTotal: Bool
     ) {
-        dataError = DatabaseError.adding("Adding Error")
+        dataError = DatabaseError.adding("Adding Data Error")
+    }
+        
+    func updateData(_ data: Data) {
+        dataError = DatabaseError.updatingData("Updating Data Error")
     }
     
     func getAllData() -> [Data] {
-        dataError = DatabaseError.gettingAll("Get All Error")
+        dataError = DatabaseError.gettingAll("Getting All Data Error")
         return []
     }
     
-    func updateData(_ data: Data) {
-        dataError = DatabaseError.updating("Update Error")
+    func getTodaysData() -> Data? {
+        dataError = DatabaseError.gettingTodaysData("Get Today's Date Error")
+        return nil
     }
     
+    func getDataWithHasTotal() -> Data? {
+        dataError = DatabaseError.filteringData("Filtering Data Error")
+        return nil
+    }
+    
+    func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double {
+        dataError = DatabaseError.filteringData("Filtering Data Error")
+        return 0
+    }
+    
+    func getThisWeeksData(from todaysData: Data?) -> [Data] {
+        dataError = DatabaseError.filteringData("Filtering Data Error")
+        return []
+    }
+    
+    /// [2B] Plan
+    func getPlan() -> Plan? {
+        dataError = DatabaseError.gettingPlan("Getting Plan Error")
+        return nil
+    }
+    
+    func addPlan(startDate: Date, endDate: Date, dataAmount: Double, dailyLimit: Double, planLimit: Double) {
+        dataError = DatabaseError.addingPlan("Adding Plan Error")
+    }
+    
+    func updatePlan(startDate: Date?, endDate: Date?, dataAmount: Double?, dailyLimit: Double?, planLimit: Double?) {
+        dataError = DatabaseError.updatingPlan("Updating Plan Error")
+    }
+    
+    /// [3B] Error
     func clearDataError() {
         dataError = nil
     }

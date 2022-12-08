@@ -119,6 +119,7 @@ class InMemoryLocalDatabase: Database {
     required init(container: Containers, appGroup: AppGroup?) {
         self.container = NSPersistentContainer(name: container.name)
         if let storeDescription = self.container.persistentStoreDescriptions.first {
+            storeDescription.type = NSInMemoryStoreType
             storeDescription.url = URL(fileURLWithPath: "/dev/null")
         }
         print("persistent descriptions: ", self.container.persistentStoreDescriptions)
