@@ -1,5 +1,5 @@
 //
-//  WidgetViewModel.swift
+//  WidgetModel.swift
 //  Data Pill WidgetExtension
 //
 //  Created by Wind Versi on 28/11/22.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class WidgetViewModel {
+final class WidgetModel {
     
     var cancellables: Set<AnyCancellable> = .init()
     
@@ -18,16 +18,18 @@ final class WidgetViewModel {
     private let networkDataRepository: NetworkDataRepositoryProtocol
     
     /// [A] App Data
-    @Published var startDate = Date()
-    @Published var endDate = Date()
     @Published var unit = Unit.gb
-    @Published var dataAmount = 0.0
-    @Published var dataLimit = 0.0
-    @Published var dataLimitPerDay = 0.0
     @Published var usageType = ToggleItem.daily
     
     /// [B] Data Usage
+    @Published var startDate = Date()
+    @Published var endDate = Date()
+    @Published var dataAmount = 0.0
+    @Published var dataLimit = 0.0
+    @Published var dataLimitPerDay = 0.0
+    
     @Published var totalUsedDataPlan = 0.0
+    
     @Published var dataError: DatabaseError?
     
     /// [C] Network Data
@@ -59,6 +61,7 @@ final class WidgetViewModel {
         return todaysData
     }
     
+    // MARK: - UI
     /// Weekday color can be customizable in the future
     @Published var days = dayPills
     
@@ -100,14 +103,12 @@ final class WidgetViewModel {
     func getLatestData() {
         /// [A]
         appDataRepository.loadAllData(
-            startDate: nil,
-            endDate: nil,
-            dataAmount: nil,
-            dataLimit: nil,
-            dataLimitPerDay: nil,
             unit: nil,
             usageType: nil
         )
+        
+        /// [B]
+        /// Data Usage will be refreshed when network data is received
         
         /// [C]
         networkDataRepository.receiveDataInfo()
@@ -116,35 +117,28 @@ final class WidgetViewModel {
 }
 
 // MARK: Republication
-extension WidgetViewModel {
+extension WidgetModel {
     
     func republishAppData() {
-        appDataRepository.startDatePublisher
-            .sink { [weak self] in self?.startDate = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.endDatePublisher
-            .sink { [weak self] in self?.endDate = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataAmountPublisher
-            .sink { [weak self] in self?.dataAmount = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataLimitPublisher
-            .sink { [weak self] in self?.dataLimit = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataLimitPerDayPublisher
-            .sink { [weak self] in self?.dataLimitPerDay = $0 }
-            .store(in: &cancellables)
-        
         appDataRepository.unitPublisher
             .sink { [weak self] in self?.unit = $0 }
             .store(in: &cancellables)
     }
     
     func republishDataUsage() {
+        dataUsageRepository.planPublisher
+            .sink { [weak self] plan in
+                guard let plan, let self else {
+                    return
+                }
+                self.startDate = plan.startDate ?? .init()
+                self.endDate = plan.endDate ?? .init()
+                self.dataAmount = plan.dataAmount
+                self.dataLimit = plan.planLimit
+                self.dataLimitPerDay = plan.dailyLimit
+            }
+            .store(in: &cancellables)
+        
         dataUsageRepository.dataErrorPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.dataError = $0 }
@@ -159,7 +153,7 @@ extension WidgetViewModel {
 }
 
 // MARK: Observation
-extension WidgetViewModel {
+extension WidgetModel {
     
     func observePlanSettings() {
         $totalUsedData
@@ -169,7 +163,7 @@ extension WidgetViewModel {
 }
 
 // MARK: Events
-extension WidgetViewModel {
+extension WidgetModel {
     
     // MARK: - Mobile Data
     /// updates the amount used Data today

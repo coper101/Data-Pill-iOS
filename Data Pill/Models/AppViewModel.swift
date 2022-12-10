@@ -17,7 +17,7 @@ final class AppViewModel: ObservableObject {
     let dataUsageRepository: DataUsageRepositoryProtocol
     let networkDataRepository: NetworkDataRepositoryProtocol
     
-    /// App Data
+    /// [A] App Data
     @Published var unit = Unit.gb
     @Published var usageType: ToggleItem = .daily
     @Published var isPeriodAuto = false
@@ -31,7 +31,7 @@ final class AppViewModel: ObservableObject {
     @Published var dataLimitPlusStepperValue = 1.0
     @Published var dataLimitMinusStepperValue = 1.0
     
-    /// Data Usage
+    /// [B] Data Usage
     @Published var startDate = Date()
     @Published var endDate = Date()
     @Published var dataAmount = 0.0

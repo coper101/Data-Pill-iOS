@@ -21,7 +21,6 @@ final class Network_Data_Repository_Test_Case: XCTestCase {
         repository = nil
     }
     
-    // MARK: - getTotalUsedData()
     func test_get_total_used_data() throws {
         // (1) Given
         // (2) When

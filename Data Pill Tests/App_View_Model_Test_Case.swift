@@ -40,7 +40,7 @@ final class App_View_Model_Test_Case: XCTestCase {
     }
     
     // MARK: - Mobile Data
-    func test_refresh_used_data_today_no_total_used_data() throws {
+    func test_refresh_used_data_today_with_empty_total_used_data() throws {
         // (1) Given
         let totalUsedData = 100.0
         // (2) When
@@ -52,26 +52,49 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertNotNil(dateToday)
         XCTAssertTrue(dateToday!.isToday())
         XCTAssertEqual(dailyUsedDataToday, 0)
-        XCTAssertEqual(totalUsedDataToday, 100.0)
+        XCTAssertEqual(totalUsedDataToday, 100)
     }
     
-    func test_refresh_used_data_today_has_total_used_data() throws {
+    func test_refresh_used_data_today_with_has_total_used_data() throws {
         // (1) Given
-        let totalUsedData = 200.0
+        let newTotalUsedData = 200.0
+        let totalUsedData = 100.0
+        
         let todaysData = appViewModel.todaysData
-        todaysData.totalUsedData = 100.0
+        todaysData.totalUsedData = totalUsedData
         todaysData.hasLastTotal = true
         // (2) When
         appViewModel.dataUsageRepository.updateData(todaysData)
-        appViewModel.refreshUsedDataToday(totalUsedData)
+        appViewModel.refreshUsedDataToday(newTotalUsedData)
         // (3) Then
         let dateToday = appViewModel.todaysData.date
         let dailyUsedDataToday = appViewModel.todaysData.dailyUsedData
         let totalUsedDataToday = appViewModel.todaysData.totalUsedData
         XCTAssertNotNil(dateToday)
         XCTAssertTrue(dateToday!.isToday())
-        XCTAssertEqual(dailyUsedDataToday, 100.0)
-        XCTAssertEqual(totalUsedDataToday, 200.0)
+        XCTAssertEqual(dailyUsedDataToday, 100)
+        XCTAssertEqual(totalUsedDataToday, 200)
+    }
+    
+    func test_refresh_used_data_today_with_has_total_used_data_same() throws {
+        // (1) Given
+        let newTotalUsedData = 100.0
+        let totalUsedData = 100.0
+
+        let todaysData = appViewModel.todaysData
+        todaysData.totalUsedData = totalUsedData
+        todaysData.hasLastTotal = true
+        // (2) When
+        appViewModel.dataUsageRepository.updateData(todaysData)
+        appViewModel.refreshUsedDataToday(newTotalUsedData)
+        // (3) Then
+        let dateToday = appViewModel.todaysData.date
+        let dailyUsedDataToday = appViewModel.todaysData.dailyUsedData
+        let totalUsedDataToday = appViewModel.todaysData.totalUsedData
+        XCTAssertNotNil(dateToday)
+        XCTAssertTrue(dateToday!.isToday())
+        XCTAssertEqual(dailyUsedDataToday, 0)
+        XCTAssertEqual(totalUsedDataToday, 100)
     }
         
     // MARK: - Edit Data Plan
@@ -197,7 +220,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertFalse(appViewModel.isBlurShown)
         XCTAssertFalse(appViewModel.isDataPlanEditing)
         XCTAssertEqual(appViewModel.editDataPlanType, .data)
-        XCTAssertEqual(appViewModel.dataAmount, 20.0)
+        XCTAssertEqual(appViewModel.dataAmount, 20)
     }
     
     func test_did_tap_plus_for_data_amount() throws {
@@ -239,7 +262,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (3) Then
         XCTAssertFalse(appViewModel.isBlurShown)
         XCTAssertFalse(appViewModel.isDataLimitEditing)
-        XCTAssertEqual(appViewModel.dataLimit, 18.0)
+        XCTAssertEqual(appViewModel.dataLimit, 18)
     }
     
     func test_did_tap_limit_daily() throws {

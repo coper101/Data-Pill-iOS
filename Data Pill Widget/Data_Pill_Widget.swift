@@ -14,7 +14,7 @@ struct Data_Pill_Widget: Widget {
         IntentConfiguration(
             kind: WidgetKind.main.name,
             intent: UsageTypeIntent.self,
-            provider: Provider(widgetViewModel: .init())
+            provider: Provider(widgetModel: .init())
         ) { entry in
             WidgetPillView(
                 usedData: entry.usedData,

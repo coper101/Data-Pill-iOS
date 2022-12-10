@@ -10,7 +10,7 @@ import CoreData
 
 struct Provider: IntentTimelineProvider {
     
-    let widgetViewModel: WidgetViewModel
+    let widgetModel: WidgetModel
     typealias Entry = SimpleEntry
     typealias Intent = UsageTypeIntent
     
@@ -64,21 +64,21 @@ struct Provider: IntentTimelineProvider {
     func getNewEntry(for configuration: Intent, date: Date) -> SimpleEntry {
         let usageType = usageType(for: configuration)
         
-        widgetViewModel.setUsageType(usageType)
-        widgetViewModel.getLatestData()
+        widgetModel.setUsageType(usageType)
+        widgetModel.getLatestData()
         
-        let todaysDate = widgetViewModel.todaysData.date ?? .init()
+        let todaysDate = widgetModel.todaysData.date ?? .init()
         var color: Colors {
             let weekday = todaysDate.toDateComp().weekday ?? 1
-            return widgetViewModel.days[weekday - 1].color
+            return widgetModel.days[weekday - 1].color
         }
         let subtitle = (usageType == .plan) ? "Plan" : todaysDate.toWeekdayFormat()
         
         let newEntry = Entry(
             date: date,
-            usedData: widgetViewModel.usedData,
-            maxData: widgetViewModel.maxData,
-            dataUnit: widgetViewModel.unit,
+            usedData: widgetModel.usedData,
+            maxData: widgetModel.maxData,
+            dataUnit: widgetModel.unit,
             subtitle: subtitle,
             color: color,
             usageType: usageType
