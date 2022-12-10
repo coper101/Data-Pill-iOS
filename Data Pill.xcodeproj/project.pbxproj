@@ -498,12 +498,12 @@
 		27E7770A293367450031456D /* Data Pill Widget */ = {
 			isa = PBXGroup;
 			children = (
+				27E777292933780D0031456D /* UsageType.intentdefinition */,
+				27E7770F293367470031456D /* Info.plist */,
 				27E7770B293367450031456D /* Data_Pill_Widget.swift */,
 				27E7774E2935010D0031456D /* Entry.swift */,
 				27E7774B293500BB0031456D /* Provider.swift */,
-				27E777292933780D0031456D /* UsageType.intentdefinition */,
 				27E7770D293367470031456D /* Assets.xcassets */,
-				27E7770F293367470031456D /* Info.plist */,
 			);
 			path = "Data Pill Widget";
 			sourceTree = "<group>";

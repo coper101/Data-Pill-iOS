@@ -210,7 +210,7 @@ final class App_View_Model_Test_Case: XCTestCase {
     
     func test_did_tap_amount_then_save() throws {
         // (1) Given
-        let dataAmount = "20.0"
+        let dataAmount = 20.0
         // (2) When
         appViewModel.observeEditPlan()
         appViewModel.didTapAmount()
@@ -221,6 +221,46 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertFalse(appViewModel.isDataPlanEditing)
         XCTAssertEqual(appViewModel.editDataPlanType, .data)
         XCTAssertEqual(appViewModel.dataAmount, 20)
+    }
+    
+    func test_did_tap_amount_then_save_expects_adjusted_limits() throws {
+        // (1) Given
+        let initialDataAmount = 20.0
+        let dataAmount = 0.5
+        let dailyLimit = 1.0
+        let planLimit = 19
+        
+        // (2) When
+        appViewModel.observeEditPlan()
+        
+        appViewModel.didTapAmount()
+        appViewModel.dataValue = "\(initialDataAmount)"
+        appViewModel.didTapSave()
+        
+        appViewModel.didTapLimitPerDay()
+        appViewModel.dataLimitPerDayValue = "\(dailyLimit)"
+        appViewModel.didTapSave()
+
+        appViewModel.didTapLimit()
+        appViewModel.dataLimitValue = "\(planLimit)"
+        appViewModel.didTapSave()
+        
+        appViewModel.didTapAmount()
+        appViewModel.dataValue = "\(dataAmount)"
+        appViewModel.didTapSave()
+        
+        // (3) Then
+        XCTAssertFalse(appViewModel.isBlurShown)
+        XCTAssertFalse(appViewModel.isDataPlanEditing)
+        XCTAssertFalse(appViewModel.isDataLimitPerDayEditing)
+        XCTAssertFalse(appViewModel.isDataLimitPerDayEditing)
+        XCTAssertEqual(appViewModel.editDataPlanType, .data)
+        XCTAssertEqual(appViewModel.dataAmount, 0.5)
+        XCTAssertEqual(appViewModel.dataValue, "0.5")
+        XCTAssertEqual(appViewModel.dataLimitPerDay, 0.5)
+        XCTAssertEqual(appViewModel.dataLimitPerDayValue, "0.5")
+        XCTAssertEqual(appViewModel.dataLimit, 0.5)
+        XCTAssertEqual(appViewModel.dataLimitValue, "0.5")
     }
     
     func test_did_tap_plus_for_data_amount() throws {
@@ -253,7 +293,7 @@ final class App_View_Model_Test_Case: XCTestCase {
     
     func test_did_tap_limit_plan_then_save() throws {
         // (1) Given
-        let dataPlanLimit = "18.0"
+        let dataPlanLimit = 18.0
         // (2) When
         appViewModel.didTapLimit()
         appViewModel.dataLimitValue = "\(dataPlanLimit)"
@@ -276,7 +316,7 @@ final class App_View_Model_Test_Case: XCTestCase {
     
     func test_did_tap_limit_daily_then_save() throws {
         // (1) Given
-        let dataDailyLimit = "0.5"
+        let dataDailyLimit = 0.5
         // (2) When
         appViewModel.didTapLimitPerDay()
         appViewModel.dataLimitPerDayValue = "\(dataDailyLimit)"
@@ -327,7 +367,7 @@ final class App_View_Model_Test_Case: XCTestCase {
     // MARK: - Operations
     func test_did_tap_outside_on_edit_data_amount() throws {
         // (1) Given
-        let dataAmount = "20.0"
+        let dataAmount = 20.0
         // (2) When
         appViewModel.observeEditPlan()
         appViewModel.didTapAmount()

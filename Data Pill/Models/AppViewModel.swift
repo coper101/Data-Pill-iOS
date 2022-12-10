@@ -44,7 +44,7 @@ final class AppViewModel: ObservableObject {
     
     @Published var dataError: DatabaseError?
     
-    /// Network Data
+    /// [3] Network Data
     @Published var totalUsedData = 0.0
 
     var numOfDaysOfPlan: Int {
@@ -264,7 +264,7 @@ extension AppViewModel {
             .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .planLimit) }
             .store(in: &cancellables)
         
-        /// Plan
+        /// Data Usage
         $startDate
             .sink { [weak self] in self?.updatePlan(startDate: $0) }
             .store(in: &cancellables)
@@ -486,6 +486,18 @@ extension AppViewModel {
             dataAmount = amount
             /// show proper format  e.g. 0.1 instead of .1
             dataValue = "\(dataAmount)"
+            
+            /// adjust daily limit
+            if dataLimitPerDay > dataAmount {
+                dataLimitPerDay = dataAmount
+                dataLimitPerDayValue = "\(dataAmount)"
+            }
+            
+            /// adjust plan limit
+            if dataLimit > dataAmount {
+                dataLimit = dataAmount
+                dataLimitValue = "\(dataAmount)"
+            }
         }
     }
     
