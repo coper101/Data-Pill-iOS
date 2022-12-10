@@ -1,5 +1,5 @@
 //
-//  DataUsageRepository_Test_Case.swift
+//  Data_Usage_Repository_Test_Case.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 19/10/22.
@@ -9,7 +9,7 @@ import XCTest
 @testable import Data_Pill
 import CoreData
 
-final class DataUsageRepository_Test_Case: XCTestCase {
+final class Data_Usage_Repository_Test_Case: XCTestCase {
     
     var repository: DataUsageRepositoryProtocol!
     var mockErrorRepository: DataUsageRepositoryProtocol!
@@ -32,6 +32,89 @@ final class DataUsageRepository_Test_Case: XCTestCase {
     // MARK: - Operations
     
     // MARK: [1] Data
+    func test_add_data() throws {
+        // (1) Given
+        let date = "2022-10-01T00:00:00+00:00".toDate()
+        let totalUsedData = 0.0
+        let dailyUsedData = 0.0
+        let hasLastTotal = false
+        // (2) When
+        repository.addData(
+            date: date,
+            totalUsedData: totalUsedData,
+            dailyUsedData: dailyUsedData,
+            hasLastTotal: hasLastTotal
+        )
+        // (3) Then
+        let allData = repository.getAllData()
+        let theData = allData.first
+        XCTAssertNotNil(theData)
+        XCTAssertEqual(theData!.date, "2022-10-01T00:00:00+00:00".toDate())
+        XCTAssertEqual(theData!.totalUsedData, 0)
+        XCTAssertEqual(theData!.dailyUsedData, 0)
+        XCTAssertEqual(theData!.hasLastTotal, false)
+    }
+    
+    func test_update_data() throws {
+        // (1) Given
+        let date = "2022-10-02T00:00:00+00:00".toDate()
+        let totalUsedData = 50.0
+        let dailyUsedData = 2.0
+        let hasLastTotal = true
+        
+        repository.addData(
+            date: "2022-10-01T00:00:00+00:00".toDate(),
+            totalUsedData: 0.0,
+            dailyUsedData: 0.0,
+            hasLastTotal: false
+        )
+        let data = repository.getAllData().first
+        XCTAssertNotNil(data)
+        data!.date = date
+        data!.totalUsedData = totalUsedData
+        data!.dailyUsedData = dailyUsedData
+        data!.hasLastTotal = hasLastTotal
+        
+        // (2) When
+        repository.updateData(data!)
+        
+        // (3) Then
+        let updatedData = repository.getAllData().first
+        XCTAssertNotNil(updatedData)
+        XCTAssertEqual(updatedData!.date, "2022-10-02T00:00:00+00:00".toDate())
+        XCTAssertEqual(updatedData!.totalUsedData, 50)
+        XCTAssertEqual(updatedData!.dailyUsedData, 2)
+        XCTAssertEqual(updatedData!.hasLastTotal, true)
+    }
+    
+    func test_get_all_data_with_data() throws {
+        // (1) Given
+        repository.addData(
+            date:  "2022-10-01T00:00:00+00:00".toDate(),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: false
+        )
+        // (2) When
+        let allData = repository.getAllData()
+        let data = allData.first
+        // (3) Then
+        XCTAssertNotEqual(allData, [])
+        XCTAssertNotNil(data)
+        XCTAssertEqual(data!.date, "2022-10-01T00:00:00+00:00".toDate())
+        XCTAssertEqual(data!.totalUsedData, 0)
+        XCTAssertEqual(data!.dailyUsedData, 0)
+        XCTAssertEqual(data!.hasLastTotal, false)
+    }
+    
+    func test_get_all_data_empty() throws {
+        // (1) Given
+        // (2) When
+        let allData = repository.getAllData()
+        // (3) Then
+        XCTAssertEqual(allData, [])
+    }
+    
     func test_get_todays_data_exists() throws {
         // (1) Given
         repository.addData(
@@ -48,6 +131,14 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         XCTAssertEqual(todaysData!.totalUsedData, 0)
         XCTAssertEqual(todaysData!.dailyUsedData, 0)
         XCTAssertEqual(todaysData!.hasLastTotal, false)
+    }
+    
+    func test_get_todays_data_empty() throws {
+        // (1) Given
+        // (2) When
+        let todaysData = repository.getTodaysData()
+        // (3) Then
+        XCTAssertNil(todaysData)
     }
     
     func test_data_with_has_total() throws {
@@ -72,14 +163,13 @@ final class DataUsageRepository_Test_Case: XCTestCase {
 
         // (3) Then
         XCTAssertNotNil(dataWithHasTotal)
+        XCTAssertEqual(dataWithHasTotal!.date, "2022-10-02T00:00:00+00:00".toDate())
+        XCTAssertEqual(dataWithHasTotal!.totalUsedData, 100)
+        XCTAssertEqual(dataWithHasTotal!.dailyUsedData, 100)
         XCTAssertEqual(dataWithHasTotal!.hasLastTotal, true)
-        XCTAssertEqual(
-            dataWithHasTotal!.date,
-            "2022-10-02T00:00:00+00:00".toDate()
-        )
     }
     
-    func test_data_with_has_total_none() throws {
+    func test_data_with_has_total_empty() throws {
         // (1) Given
         /// Sunday
         repository.addData(
@@ -312,6 +402,19 @@ final class DataUsageRepository_Test_Case: XCTestCase {
     }
     
     // MARK: [2] Plan
+    func test_get_plan() throws {
+        // (1) Given
+        // (2) When
+        let plan = repository.getPlan()
+        // (3) Then
+        XCTAssertNotNil(plan)
+        XCTAssertEqual(plan!.startDate, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(plan!.endDate, Calendar.current.startOfDay(for: .init()))
+        XCTAssertEqual(plan!.dataAmount, 0.0)
+        XCTAssertEqual(plan!.dailyLimit, 0.0)
+        XCTAssertEqual(plan!.planLimit, 0.0)
+    }
+    
     func test_add_plan() throws {
         // (1) Given
         let plan = createFakePlan(
@@ -361,31 +464,22 @@ final class DataUsageRepository_Test_Case: XCTestCase {
         XCTAssertEqual(thePlan!.dailyLimit, 1.0)
         XCTAssertEqual(thePlan!.planLimit, 9.0)
     }
-    
-    func test_get_plan() throws {
-        // (1) Given
-        // (2) When
-        let plan = repository.getPlan()
-        // (3) Then
-        XCTAssertNotNil(plan)
-        XCTAssertEqual(plan!.startDate, Calendar.current.startOfDay(for: .init()))
-        XCTAssertEqual(plan!.endDate, Calendar.current.startOfDay(for: .init()))
-        XCTAssertEqual(plan!.dataAmount, 0.0)
-        XCTAssertEqual(plan!.dailyLimit, 0.0)
-        XCTAssertEqual(plan!.planLimit, 0.0)
-    }
         
     // MARK: - Operation Errors
     
     // MARK: [1] Data
     func test_add_data_has_error() throws {
         // (1) Given
+        let date = Date()
+        let totalUsedData = 0.0
+        let dailUsedData = 0.0
+        let hasLastTotal = false
         // (2) When
         mockErrorRepository.addData(
-            date: .init(),
-            totalUsedData: 0,
-            dailyUsedData: 0,
-            hasLastTotal: false
+            date: date,
+            totalUsedData: totalUsedData,
+            dailyUsedData: dailUsedData,
+            hasLastTotal: hasLastTotal
         )
         // (3) Then
         XCTAssertEqual(

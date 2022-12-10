@@ -49,7 +49,7 @@ func createFakeData(
     dailyUsedData: Double = 0,
     hasLastTotal: Bool = false
 ) -> Data {
-    Data(
+    .init(
         date: date,
         totalUsedData: totalUsedData,
         dailyUsedData: dailyUsedData,

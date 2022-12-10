@@ -1,5 +1,5 @@
 //
-//  AppViewModel_Test_Case.swift
+//  App_View_Model_Test_Case.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 6/11/22.
@@ -9,7 +9,7 @@ import XCTest
 @testable import Data_Pill
 import CoreData
 
-final class AppViewModel_Test_Case: XCTestCase {
+final class App_View_Model_Test_Case: XCTestCase {
     
     var appViewModel: AppViewModel!
     

@@ -13,7 +13,7 @@ enum DatabaseError: Error, Equatable {
     /// Database
     case loadingContainer(String = "Sorry, the data can’t be loaded from the Storage.\n\nTry reinstalling the app")
     
-    /// Data
+    /// [1] Data
     case loadingAll(String)
     case adding(String)
     case updatingData(String)
@@ -21,7 +21,7 @@ enum DatabaseError: Error, Equatable {
     case gettingTodaysData(String)
     case filteringData(String)
     
-    /// Plan
+    /// [2] Plan
     case gettingPlan(String)
     case addingPlan(String)
     case updatingPlan(String)
@@ -61,6 +61,8 @@ private enum DataAttribute: String {
     case hasLastTotal
 }
 
+
+
 // MARK: - Protocol
 protocol DataUsageRepositoryProtocol {
     var database: any Database { get }
@@ -92,8 +94,6 @@ protocol DataUsageRepositoryProtocol {
     var planPublisher: Published<Plan?>.Publisher { get }
     
     func addPlan(startDate: Date, endDate: Date, dataAmount: Double, dailyLimit: Double, planLimit: Double) -> Void
-    func getAllPlan() throws -> [Plan]
-    func getPlan() -> Plan?
     func updatePlan(
         startDate: Date?,
         endDate: Date?,
@@ -101,6 +101,8 @@ protocol DataUsageRepositoryProtocol {
         dailyLimit: Double?,
         planLimit: Double?
     ) -> Void
+    func getAllPlan() throws -> [Plan]
+    func getPlan() -> Plan?
     
     /// [3] Error
     var dataError: DatabaseError? { get set }
@@ -108,49 +110,6 @@ protocol DataUsageRepositoryProtocol {
     func clearDataError()
 }
 
-extension DataUsageRepositoryProtocol {
-    
-    func updateData(_ data: Data) {}
-    
-    func addPlan(
-        startDate: Date,
-        endDate: Date, dataAmount: Double,
-        dailyLimit: Double,
-        planLimit: Double
-    ) {}
-    
-    func getDataWith(
-        format: String,
-        _ args: CVarArg...,
-        sortDescriptors: [NSSortDescriptor]
-    ) throws -> [Data] { [] }
-    
-    func getTodaysData() -> Data? { nil }
-
-    func getDataWithHasTotal() -> Data? { nil }
-
-    func getTotalUsedData(
-        from startDate: Date,
-        to endDate: Date
-    ) -> Double { 0 }
-
-    func getThisWeeksData(from todaysData: Data?) -> [Data] { [] }
-    
-    func getAllPlan() throws -> [Plan] { [] }
-    
-    func getPlan() -> Plan? { nil }
-    
-    func updatePlan(
-        startDate: Date?,
-        endDate: Date?,
-        dataAmount: Double?,
-        dailyLimit: Double?,
-        planLimit: Double?
-    ) {}
-
-    func clearDataError() {}
-    
-}
 
 
 // MARK: - App Implementation
@@ -186,9 +145,9 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
 
 }
 
+// MARK: [1B] Data
 extension DataUsageRepository {
     
-    // MARK: [1B] Data
     /// add a new Data Usage record into Database
     func addData(
         date: Date,
@@ -356,45 +315,15 @@ extension DataUsageRepository {
         }
     }
     
-    /// gets the Plan record from the database
-    /// creates a new one if none
-    func getPlan() -> Plan? {
-        do {
-            guard let plan = try getAllPlan().first else {
-                addPlan(
-                    startDate: Calendar.current.startOfDay(for: .init()),
-                    endDate: Calendar.current.startOfDay(for: .init()),
-                    dataAmount: 0,
-                    dailyLimit: 0,
-                    planLimit: 0
-                )
-                return try getAllPlan().first!
-            }
-            return plan
-        } catch let error {
-            dataError = DatabaseError.gettingAll(error.localizedDescription)
-            print("getting all plan error: ", error.localizedDescription)
-            return nil
-        }
-    }
-    
     func updateToLatestData() {
         thisWeeksData = getThisWeeksData(from: getTodaysData())
-    }
-    
-    func updateToLatestPlan() {
-        plan = getPlan()
-    }
-    
-    func clearDataError() {
-        dataError = nil
     }
 
 }
 
+// MARK: [2B] Plan
 extension DataUsageRepository {
     
-    // MARK: [2B] Plan
     /// add a new Data Plan record into Database
     func addPlan(
         startDate: Date,
@@ -458,7 +387,43 @@ extension DataUsageRepository {
         return try database.context.fetch(request)
     }
     
+    /// gets the Plan record from the database
+    /// creates a new one if none
+    func getPlan() -> Plan? {
+        do {
+            guard let plan = try getAllPlan().first else {
+                addPlan(
+                    startDate: Calendar.current.startOfDay(for: .init()),
+                    endDate: Calendar.current.startOfDay(for: .init()),
+                    dataAmount: 0,
+                    dailyLimit: 0,
+                    planLimit: 0
+                )
+                return try getAllPlan().first!
+            }
+            return plan
+        } catch let error {
+            dataError = DatabaseError.gettingAll(error.localizedDescription)
+            print("getting all plan error: ", error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func updateToLatestPlan() {
+        plan = getPlan()
+    }
+    
 }
+
+// MARK: [3B] Error
+extension DataUsageRepository {
+    
+    func clearDataError() {
+        dataError = nil
+    }
+}
+
+
 
 // MARK: - Test Implementation
 // Used for Swift UI Preview
@@ -514,11 +479,18 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         thisWeeksData.append(uninsertedData)
     }
     
-    func updateData(item: Data) {
+    func updateData(_ item: Data) {
         // TODO:
     }
     
     func getAllData() -> [Data] {
+        []
+    }
+    
+    func getDataWith(
+        format: String, _ args: CVarArg...,
+        sortDescriptors: [NSSortDescriptor]
+    ) throws -> [Data] {
         []
     }
     
@@ -546,6 +518,10 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         100
     }
     
+    func getThisWeeksData(from todaysData: Data?) -> [Data] {
+        []
+    }
+    
     func loadThisWeeksData(_ dataTests: [DataTest]) {
         dataTests.forEach { data in
             addData(
@@ -556,6 +532,34 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
             )
         }
     }
+        
+    /// [2B] Plan
+    func addPlan(
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
+    ) {}
+    
+    func updatePlan(
+        startDate: Date?,
+        endDate: Date?,
+        dataAmount: Double?,
+        dailyLimit: Double?,
+        planLimit: Double?
+    ) {}
+    
+    func getAllPlan() throws -> [Plan] {
+        []
+    }
+    
+    func getPlan() -> Plan? {
+        nil
+    }
+    
+    /// [3B] Error
+    func clearDataError() {}
     
 }
 
@@ -606,6 +610,13 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         return []
     }
     
+    func getDataWith(
+        format: String, _ args: CVarArg...,
+        sortDescriptors: [NSSortDescriptor]
+    ) throws -> [Data] {
+        []
+    }
+    
     func getTodaysData() -> Data? {
         dataError = DatabaseError.gettingTodaysData("Get Today's Date Error")
         return nil
@@ -638,6 +649,10 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
     
     func updatePlan(startDate: Date?, endDate: Date?, dataAmount: Double?, dailyLimit: Double?, planLimit: Double?) {
         dataError = DatabaseError.updatingPlan("Updating Plan Error")
+    }
+    
+    func getAllPlan() throws -> [Plan] {
+        []
     }
     
     /// [3B] Error
