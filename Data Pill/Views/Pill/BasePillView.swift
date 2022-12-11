@@ -110,8 +110,9 @@ struct BasePillView<Label>: View where Label: View {
             } //: if
             
             if let fillLine = fillLine {
+                let titleTopPadding: CGFloat = 5
                 FillLineView(title: fillLine.title)
-                    .offset(y: height - ( (CGFloat(percentage) / 100) * height) )
+                    .offset(y: height - ( (CGFloat(percentage) / 100) * height) - titleTopPadding)
             }
             
         } //: ZStack

@@ -178,14 +178,15 @@ struct PillGroupView: View {
 // MARK: - Preview
 struct PillGroupView_Previews: PreviewProvider {
     static var appViewModel: AppViewModel {
-        let _ = MockNetworkDataRepository(totalUsedData: 1_000)
-        let dataUsageRepo = DataUsageFakeRepository(thisWeeksData: weeksDataSample)
-        let _ = MockAppDataRepository()
-        return AppViewModel.init(
+//        let appDataRepo = MockAppDataRepository()
+//        let dataUsageRepo = DataUsageFakeRepository(thisWeeksData: weeksDataSample)
+//        let networkDataRepo = MockNetworkDataRepository(totalUsedData: 1_000)
+//        return AppViewModel.init(
 //            appDataRepository: appDataRepo,
-            dataUsageRepository: dataUsageRepo
+//            dataUsageRepository: dataUsageRepo,
 //            networkDataRepository: networkDataRepo
-        )
+//        )
+        return AppViewModel()
     }
     
     static var previews: some View {

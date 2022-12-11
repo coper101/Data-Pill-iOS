@@ -430,7 +430,7 @@ extension DataUsageRepository {
 // Used for Swift UI Preview
 class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
 
-    let database: Database = LocalDatabase(container: .dataUsage, appGroup: nil)
+    let database: Database = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
     
     /// [1A] Data
     @Published var thisWeeksData: [Data] = []

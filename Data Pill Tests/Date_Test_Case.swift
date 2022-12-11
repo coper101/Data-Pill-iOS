@@ -81,15 +81,6 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertEqual(output, "Mon")
     }
     
-    func test_to_weekday_format_invalid() throws {
-        // (1) Given
-        let date = "2022-10-32T00:00:00+00:00".toDate()
-        // (2) When
-        let output = date.toWeekdayFormat()
-        // (3) Then
-        XCTAssertEqual(output, "Sat")
-    }
-
     /// isToday
     func test_date_is_today() throws {
         // (1) Given

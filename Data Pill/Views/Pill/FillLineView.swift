@@ -20,6 +20,7 @@ struct FillLineView: View {
         Rectangle()
             .fill(Colors.onBackgroundLight.color)
             .frame(height: 1)
+            .padding(.top, 5)
     }
     
     var text: some View {
@@ -38,7 +39,7 @@ struct FillLineView: View {
             
             let width = reader.size.width
             
-            HStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 0) {
                 
                 // Col 1: LINE
                 line
@@ -53,7 +54,6 @@ struct FillLineView: View {
                     
                 } //: ZStack
                 .frame(width: width * (isLongTitle ? 0.5 : 0.4))
-                
                 
                 // Col 3: LINE
                 line
