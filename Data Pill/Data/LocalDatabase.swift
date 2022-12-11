@@ -104,7 +104,6 @@ class LocalDatabase: Database {
             self.container.persistentStoreDescriptions = [description]
             print("persistent descriptions: ", self.container.persistentStoreDescriptions)
         }
-        self.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
 }

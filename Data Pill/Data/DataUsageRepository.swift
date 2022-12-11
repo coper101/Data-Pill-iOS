@@ -138,6 +138,7 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
             guard let self = self else {
                 return
             }
+            self.database.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             self.updateToLatestData()
             self.updateToLatestPlan()
         }
@@ -456,6 +457,7 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
             guard let self = self else {
                 return
             }
+            self.database.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             self.loadThisWeeksData(thisWeeksData)
         }
     }

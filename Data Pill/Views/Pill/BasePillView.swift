@@ -11,18 +11,30 @@ struct FillLine {
     let title: String
 }
 
+enum PillOrientation: String, CaseIterable, Identifiable {
+    case horizontal = "Horizontal"
+    case vertical = "Vertical"
+    var id: String {
+        self.rawValue
+    }
+}
+
 struct BasePillView<Label>: View where Label: View {
     // MARK: - Props
     var percentage: Int
     
     var isContentShown: Bool = true
     var fillLine: FillLine? = nil
+    var orientation: PillOrientation = .vertical
     
     var hasBackground: Bool
+    var backgroundColor: Colors = .surface
+    var backgroundOpacity: Double = 1
     var color: Colors
     
     var widthScale: CGFloat = 0.45
     var customSize: CGSize? = nil
+    
     @ViewBuilder var label: Label
     
     let screenWidth = UIScreen.main.bounds.size.width
@@ -34,7 +46,7 @@ struct BasePillView<Label>: View where Label: View {
         return screenWidth * widthScale
     }
     
-    var maxHeight: CGFloat {
+    var height: CGFloat {
         if let customSize = customSize {
             return customSize.height
         }
@@ -42,52 +54,70 @@ struct BasePillView<Label>: View where Label: View {
     }
     
     var paddingTop: CGFloat {
-        percentage > 90 ?
-            50 : 10
+        (percentage > 90) ? 50 : 10
+    }
+    
+    var cornerRadius: CGFloat {
+        (width < 200) ? 2 : 5
+    }
+        
+    var verticalPill: some View {
+        RoundedRectangle(cornerRadius: cornerRadius)
+            .fill(color.color)
+            .frame(
+                height: (CGFloat(percentage) / 100) * height
+            )
+            .overlay(
+                label
+                    .fillMaxHeight(alignment: .top)
+                    .padding(.top, paddingTop)
+            )
+            .overlay(
+                LinearGradient(
+                    colors: [
+                        .white.opacity(0.25),
+                        .white.opacity(0)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+    }
+    
+    var horizontalPill: some View {
+        RoundedRectangle(cornerRadius: cornerRadius)
+            .fill(color.color)
+            .frame(
+                width: (CGFloat(percentage) / 100) * width
+            )
     }
     
     // MARK: - UI
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: orientation == .vertical ? .bottom : .leading) {
             
             // Layer 1: PILL SHAPE BACKGROUND
-            Colors.surface.color.opacity(
-                hasBackground ? 1 : 0
-            )
+            backgroundColor.color.opacity(hasBackground ? backgroundOpacity : 0)
             
             // Layer 2: PERCENTAGE FILL
             if isContentShown && fillLine == nil {
-                RoundedRectangle(cornerRadius: 5)
-                    .fill(color.color)
-                    .frame(
-                        height: (CGFloat(percentage) / 100) * maxHeight
-                    )
-                    .overlay(
-                        label
-                            .fillMaxHeight(alignment: .top)
-                            .padding(.top, paddingTop)
-                    )
-                    .overlay(
-                        LinearGradient(
-                            colors: [
-                                .white.opacity(0.25),
-                                .white.opacity(0)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
+                switch orientation {
+                case .horizontal:
+                    horizontalPill
+                case .vertical:
+                    verticalPill
+                }
             } //: if
             
             if let fillLine = fillLine {
                 FillLineView(title: fillLine.title)
-                    .offset(y: maxHeight - ( (CGFloat(percentage) / 100) * maxHeight) )
+                    .offset(y: height - ( (CGFloat(percentage) / 100) * height) )
             }
             
         } //: ZStack
         .frame(
             width: width,
-            height: maxHeight
+            height: height
         )
         .clipShape(
             Capsule(style: .circular)
@@ -108,23 +138,34 @@ struct BasePillView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             
-            BasePillView(
-                percentage: 20,
-                isContentShown: true,
-                hasBackground: true,
-                color: .secondaryBlue,
-                label: {}
-            )
-            .previewDisplayName("Widget")
-            
-            BasePillView(
-                percentage: 20,
-                fillLine: .init(title: "Today"),
-                hasBackground: true,
-                color: .secondaryBlue,
-                label: {}
-            )
-            .previewDisplayName("History Lines")
+            ForEach(PillOrientation.allCases) { orientation in
+                
+                BasePillView(
+                    percentage: 50,
+                    isContentShown: true,
+                    orientation: orientation,
+                    hasBackground: true,
+                    color: .secondaryBlue,
+                    customSize: (orientation == .vertical) ?
+                        .init(width: 230, height: 500) :
+                        .init(width: 100, height: 30),
+                    label: {}
+                )
+                .previewDisplayName("\(orientation.id)")
+                
+                if orientation == .vertical {
+                    BasePillView(
+                        percentage: 20,
+                        fillLine: .init(title: "Today"),
+                        orientation: orientation,
+                        hasBackground: true,
+                        color: .secondaryBlue,
+                        label: {}
+                    )
+                    .previewDisplayName("History Lines")
+                }
+                
+            } //: ForEach
             
         }
         .previewLayout(.sizeThatFits)

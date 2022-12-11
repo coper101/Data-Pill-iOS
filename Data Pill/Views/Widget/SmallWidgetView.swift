@@ -1,13 +1,13 @@
 //
-//  WidgetPillView.swift
+//  SmallWidgetView.swift
 //  Data Pill
 //
-//  Created by Wind Versi on 27/11/22.
+//  Created by Wind Versi on 11/12/22.
 //
 
 import SwiftUI
 
-enum WidgetSize: Int, Identifiable, CaseIterable {
+enum SmallWidgetSize: Int, Identifiable, CaseIterable {
     case xxs = 141
     case xs = 148
     case s = 151
@@ -21,7 +21,7 @@ enum WidgetSize: Int, Identifiable, CaseIterable {
     }
 }
 
-struct WidgetPillView: View {
+struct SmallWidgetView: View {
     // MARK: - Props
     var usedData: Double
     var maxData: Double
@@ -49,7 +49,7 @@ struct WidgetPillView: View {
                 spacing: 0
             ) {
                 
-                // Col 1: PILL
+                // MARK: - Col 1: PILL
                 BasePillView(
                     percentage: percentageUsed,
                     isContentShown: true,
@@ -65,29 +65,45 @@ struct WidgetPillView: View {
                 
                 Spacer()
                 
-                // Col 2: INFO
+                // MARK: - Col 2: INFO
                 VStack(
                     alignment: .trailing,
                     spacing: 0
                 ) {
                     
                     // Row 1: DATA USED IN PERCENTAGE
-                    Text("\(percentageUsed)%")
-                        .textStyle(
-                            foregroundColor: .onSurface,
-                            font: .semibold,
-                            size: 23,
-                            lineLimit: 1
-                        )
-                        .padding(.top, 7)
+                    HStack(
+                        alignment: .bottom,
+                        spacing: 0.5
+                    ) {
+                        
+                        Text("\(percentageUsed)")
+                            .textStyle(
+                                foregroundColor: .onSurface,
+                                font: .semibold,
+                                size: 23,
+                                lineLimit: 1
+                            )
+                        
+                        Text("%")
+                            .textStyle(
+                                foregroundColor: .onSurface,
+                                font: .semibold,
+                                size: 21,
+                                lineLimit: 1
+                            )
+                         
+                    } //: HStack
+                    .padding(.top, 7)
                                     
                     // Row 2: DATA USED
                     Text("\(data) \(showUnit ? dataUnit.rawValue : "")")
+                        .multilineTextAlignment(.trailing)
                         .textStyle(
                             foregroundColor: .onSurface,
                             font: .semibold,
                             size: 12,
-                            lineLimit: 1
+                            lineLimit: 2
                         )
                         .opacity(0.5)
                         .padding(.top, 8)
@@ -117,7 +133,7 @@ struct WidgetPillView: View {
     
     // MARK: - Functions
     func pillWidth(_ width: CGFloat) -> CGFloat {
-        let widgetSize = WidgetSize(rawValue: Int(width))
+        let widgetSize = SmallWidgetSize(rawValue: Int(width))
         switch widgetSize {
         case .xxs:
             return 51
@@ -131,7 +147,7 @@ struct WidgetPillView: View {
     }
     
     func showUnit(_ width: CGFloat) -> Bool {
-        let widgetSize = WidgetSize(rawValue: Int(width))
+        let widgetSize = SmallWidgetSize(rawValue: Int(width))
         switch widgetSize {
         case .s, .xs, .xxs:
             return false
@@ -139,19 +155,16 @@ struct WidgetPillView: View {
             return true
         }
     }
+    
 }
 
 // MARK: - Preview
-struct WidgetPillView_Previews: PreviewProvider {
-    // iPhone SE 2020 (375x667) : 148
-    // iPhone 11 (414x896)      : 169
-    static var sizes: [CGFloat] = [141, 155, 148, 155, 158, 169, 170]
-    
+struct SmallWidgetView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(WidgetSize.allCases) { size in
+        ForEach(SmallWidgetSize.allCases) { size in
             let theSize = CGFloat(size.rawValue)
-            WidgetPillView(
-                usedData: 0.9,
+            SmallWidgetView(
+                usedData: 0.09,
                 maxData: 0.9,
                 dataUnit: .gb,
                 subtitle: "Mon",

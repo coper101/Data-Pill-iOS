@@ -72,7 +72,7 @@ struct Provider: IntentTimelineProvider {
             let weekday = todaysDate.toDateComp().weekday ?? 1
             return widgetModel.days[weekday - 1].color
         }
-        let subtitle = (usageType == .plan) ? "Plan" : todaysDate.toWeekdayFormat()
+        let subtitle = (usageType == .plan) ? "Plan" : "Today" // todaysDate.toWeekdayFormat()
         
         let newEntry = Entry(
             date: date,

@@ -10,6 +10,15 @@ import SwiftUI
 
 @main
 struct Data_Pill_Widget: Widget {
+        
+    private let supportedFamilies: [WidgetFamily] = {
+        if #available(iOSApplicationExtension 16.0, *) {
+            return [.systemSmall, .accessoryRectangular]
+        } else {
+            return [.systemSmall]
+        }
+    }()
+    
     var body: some WidgetConfiguration {
         IntentConfiguration(
             kind: WidgetKind.main.name,
@@ -27,6 +36,32 @@ struct Data_Pill_Widget: Widget {
         }
         .configurationDisplayName("Data Pill")
         .description("Monitor data usage.")
-        .supportedFamilies([.systemSmall])
+        .supportedFamilies(supportedFamilies)
+    }
+}
+
+struct Widget_Previews: PreviewProvider {
+    static var previews: some View {
+        WidgetPillView(
+            usedData: 0.5,
+            maxData: 1,
+            dataUnit: .gb,
+            subtitle: "TODAY",
+            color: .secondaryBlue
+        )
+        .previewContext(WidgetPreviewContext(family: .systemSmall))
+        .previewDisplayName("System Small")
+        
+        if #available(iOSApplicationExtension 16.0, *) {
+            WidgetPillView(
+                usedData: 0.5,
+                maxData: 1,
+                dataUnit: .gb,
+                subtitle: "USED",
+                color: .secondaryBlue
+            )
+            .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
+            .previewDisplayName("Accessory Rectangular")
+        }
     }
 }
