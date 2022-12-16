@@ -265,27 +265,8 @@ extension AppViewModel {
             .store(in: &cancellables)
         
         /// Data Usage
-        $startDate
-            .sink { [weak self] in self?.updatePlan(startDate: $0) }
-            .store(in: &cancellables)
-        
-        $endDate
-            .sink { [weak self] in self?.updatePlan(endDate: $0) }
-            .store(in: &cancellables)
-        
-        $dataAmount
-            .sink { [weak self] in self?.updatePlan(dataAmount: $0) }
-            .store(in: &cancellables)
-        
-        $dataLimitPerDay
-            .sink { [weak self] in self?.updatePlan(dailyLimit: $0) }
-            .store(in: &cancellables)
-        
-        $dataLimit
-            .sink { [weak self] in self?.updatePlan(planLimit: $0) }
-            .store(in: &cancellables)
-        
         $totalUsedData
+            .removeDuplicates()
             .sink { [weak self] in self?.refreshUsedDataToday($0) }
             .store(in: &cancellables)
         
@@ -379,8 +360,7 @@ extension AppViewModel {
         else {
             return
         }
-        startDate = newStartDate
-        endDate = newEndDate
+        updatePlan(startDate: newStartDate, endDate: newEndDate)
     }
     
     func updatePlan(
@@ -470,8 +450,7 @@ extension AppViewModel {
         switch editDataPlanType {
         case .dataPlan:
             /// update dates
-            startDate = startDateValue
-            endDate = endDateValue
+            updatePlan(startDate: startDateValue, endDate: endDateValue)
         case .data:
             /// update data amount only if editing is done
             guard
@@ -483,20 +462,20 @@ extension AppViewModel {
                 dataValue = "\(dataAmount)"
                 return
             }
-            dataAmount = amount
+            updatePlan(dataAmount: amount)
             /// show proper format  e.g. 0.1 instead of .1
             dataValue = "\(dataAmount)"
             
             /// adjust daily limit
             if dataLimitPerDay > dataAmount {
-                dataLimitPerDay = dataAmount
-                dataLimitPerDayValue = "\(dataAmount)"
+                updatePlan(dailyLimit: dataAmount)
+                dataLimitPerDayValue = "\(dataLimitPerDay)"
             }
             
             /// adjust plan limit
             if dataLimit > dataAmount {
-                dataLimit = dataAmount
-                dataLimitValue = "\(dataAmount)"
+                updatePlan(planLimit: dataAmount)
+                dataLimitValue = "\(dataLimit)"
             }
         }
     }
@@ -509,7 +488,7 @@ extension AppViewModel {
         else {
             return
         }
-        dataLimit = amount
+        updatePlan(planLimit: amount)
     }
     
     func didChangeIsDataLimitPerDayEditing(_ isEditing: Bool) {
@@ -520,7 +499,7 @@ extension AppViewModel {
         else {
             return
         }
-        dataLimitPerDay = amount
+        updatePlan(dailyLimit: amount)
     }
     
     // MARK: - Edit Data Limit

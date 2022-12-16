@@ -88,6 +88,7 @@ protocol DataUsageRepositoryProtocol {
     func getDataWithHasTotal() -> Data?
     func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double
     func getThisWeeksData(from todaysData: Data?) -> [Data]
+    func updateToLatestData() -> Void
     
     /// [2] Plan
     var plan: Plan? { get set }
@@ -103,6 +104,7 @@ protocol DataUsageRepositoryProtocol {
     ) -> Void
     func getAllPlan() throws -> [Plan]
     func getPlan() -> Plan?
+    func updateToLatestPlan() -> Void
     
     /// [3] Error
     var dataError: DatabaseError? { get set }
@@ -375,7 +377,10 @@ extension DataUsageRepository {
             if let planLimit {
                 plan.planLimit = planLimit
             }
-            try database.context.saveIfNeeded()
+            let isUpdated = try database.context.saveIfNeeded()
+            if isUpdated {
+                updateToLatestPlan()
+            }
         } catch let error {
             dataError = DatabaseError.updatingPlan(error.localizedDescription)
             print("update plan error: ", error.localizedDescription)
@@ -384,6 +389,7 @@ extension DataUsageRepository {
     
     /// fetch all Data Plan records from Database
     func getAllPlan() throws -> [Plan] {
+        database.context.refreshAllObjects()
         let request = NSFetchRequest<Plan>(entityName: Entities.plan.name)
         return try database.context.fetch(request)
     }
@@ -534,6 +540,8 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
             )
         }
     }
+    
+    func updateToLatestData() {}
         
     /// [2B] Plan
     func addPlan(
@@ -559,6 +567,8 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
     func getPlan() -> Plan? {
         nil
     }
+    
+    func updateToLatestPlan() {}
     
     /// [3B] Error
     func clearDataError() {}
@@ -639,6 +649,8 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         return []
     }
     
+    func updateToLatestData() {}
+    
     /// [2B] Plan
     func getPlan() -> Plan? {
         dataError = DatabaseError.gettingPlan("Getting Plan Error")
@@ -656,6 +668,8 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
     func getAllPlan() throws -> [Plan] {
         []
     }
+    
+    func updateToLatestPlan() {}
     
     /// [3B] Error
     func clearDataError() {

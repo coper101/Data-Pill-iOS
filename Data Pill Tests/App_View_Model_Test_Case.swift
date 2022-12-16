@@ -117,6 +117,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         appViewModel.didTapPeriod()
         appViewModel.startDateValue = startDate
         appViewModel.endDateValue = endDate
+        appViewModel.republishDataUsage()
         appViewModel.observeEditPlan()
         appViewModel.didTapSave()
         // (3) Then
@@ -174,6 +175,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         let startDate = "2022-10-01T00:00:00+00:00".toDate()
         let endDate = "2022-10-30T00:00:00+00:00".toDate()
         // (2) When
+        appViewModel.republishDataUsage()
         appViewModel.isPeriodAuto = true
         appViewModel.startDate = startDate
         appViewModel.endDate = endDate
@@ -212,6 +214,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let dataAmount = 20.0
         // (2) When
+        appViewModel.republishDataUsage()
         appViewModel.observeEditPlan()
         appViewModel.didTapAmount()
         appViewModel.dataValue = "\(dataAmount)"
@@ -231,6 +234,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         let planLimit = 19
         
         // (2) When
+        appViewModel.republishDataUsage()
         appViewModel.observeEditPlan()
         
         appViewModel.didTapAmount()
@@ -297,6 +301,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (2) When
         appViewModel.didTapLimit()
         appViewModel.dataLimitValue = "\(dataPlanLimit)"
+        appViewModel.republishDataUsage()
         appViewModel.observeEditPlan()
         appViewModel.didTapSave()
         // (3) Then
@@ -320,6 +325,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (2) When
         appViewModel.didTapLimitPerDay()
         appViewModel.dataLimitPerDayValue = "\(dataDailyLimit)"
+        appViewModel.republishDataUsage()
         appViewModel.observeEditPlan()
         appViewModel.didTapSave()
         // (3) Then

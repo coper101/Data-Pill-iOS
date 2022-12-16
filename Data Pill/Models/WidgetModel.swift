@@ -109,6 +109,7 @@ final class WidgetModel {
         
         /// [B]
         /// Data Usage will be refreshed when network data is received
+        dataUsageRepository.updateToLatestPlan()
         
         /// [C]
         networkDataRepository.receiveDataInfo()

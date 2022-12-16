@@ -46,7 +46,7 @@ struct Provider: IntentTimelineProvider {
         let currentDate = Date()
         let entry = getNewEntry(for: configuration, date: currentDate)
         let timeline = Timeline(entries: [entry], policy: .atEnd)
-        print("timeline: ", timeline)
+        // print("timeline: ", timeline)
         completion(timeline)
     }
     
@@ -72,7 +72,7 @@ struct Provider: IntentTimelineProvider {
             let weekday = todaysDate.toDateComp().weekday ?? 1
             return widgetModel.days[weekday - 1].color
         }
-        let subtitle = (usageType == .plan) ? "Plan" : "Today" // todaysDate.toWeekdayFormat()
+        let subtitle = (usageType == .plan) ? "Plan" : "Today"
         
         let newEntry = Entry(
             date: date,
