@@ -72,6 +72,7 @@ struct HistoryView: View {
                         percentage: element.dailyUsedData.toGB()
                             .toPercentage(with: dataLimitPerDay),
                         usageType: usageType,
+                        hasBackground: index == 0 && showFilledLines,
                         showFillLine: showFilledLines,
                         widthScale: 0.65
                     )

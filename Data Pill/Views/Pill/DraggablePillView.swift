@@ -18,6 +18,7 @@ struct DraggablePillView: View {
     var percentage: Int
     var usageType: ToggleItem
     
+    var hasBackground = false
     var showFillLine = false
     
     var widthScale: CGFloat = 0.45
@@ -65,7 +66,7 @@ struct DraggablePillView: View {
                 color: color,
                 percentage: percentage,
                 date: date,
-                hasBackground: false,
+                hasBackground: hasBackground,
                 usageType: usageType,
                 widthScale: widthScale,
                 showFillLine: showFillLine,
