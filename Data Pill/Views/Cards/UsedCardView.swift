@@ -33,14 +33,28 @@ struct UsedCardView: View {
         ) {
             
             // Row 1: PERCENTAGE USED
-            Text("\(percentageUsed) %")
-                .textStyle(
-                    foregroundColor: .onSurface,
-                    font: .semibold,
-                    size: 32,
-                    lineLimit: 1
-                )
-                .id(percentageUsed)
+            HStack(
+                alignment: .firstTextBaseline,
+                spacing: 0
+            ) {
+                
+                Text("\(percentageUsed)")
+                    .textStyle(
+                        foregroundColor: .onSurface,
+                        font: .semibold,
+                        size: 32,
+                        lineLimit: 1
+                    )
+                    .id(percentageUsed)
+                
+                Text("%")
+                    .textStyle(
+                        foregroundColor: .onSurface,
+                        font: .semibold,
+                        size: 28,
+                        lineLimit: 1
+                    )
+            } //: HStack
             
             // Row 2: DATA
             Text(data)
