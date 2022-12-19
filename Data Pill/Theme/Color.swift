@@ -9,26 +9,32 @@ import SwiftUI
 
 enum Colors: String {
     // App
-    case background = "White"
-    case onBackground = "Black"
-    case onBackgroundLight = "Gray300"
-    case surface = "Gray50"
-    case onSurface = "Gray"
-    case onSurfaceDark = "Gray10"
-    case onSurfaceDark2 = "Gray20"
-    case onSurfaceLight = "Gray200"
-    case onSurfaceLight2 = "Gray100"
+    case background = "Background"
+    case onBackground = "On Background"
+    case onBackgroundLight = "On Background Light"
+    
+    case surface = "Surface"
+    case onSurface = "On Surface"
+    case onSurfaceLight = "On Surface Light"
+    case onSurfaceLight2 = "On Surface Light 2"
+    case onSurfaceDark = "On Surface Dark"
+    case onSurfaceDark2 = "On Surface Dark 2"
+        
+    case tertiary = "Tertiary"
+    case onTertiary = "On Tertiary"
+    
+    case widgetBackground = "Widget Background"
+    
     // Day Pill
-    case secondaryBlue = "Blue"
-    case secondaryBrown = "Brown"
-    case secondaryGreen = "Green"
-    case secondaryOrange = "Orange"
-    case secondaryPink = "Pink"
-    case secondaryPurple = "Purple"
-    case secondaryRed = "Red"
-    static let onSecondary = Self.background
-    static let tertiary = Self.onSurface
-    static let onTertiary = Self.background
+    case secondaryBlue = "Secondary Blue"
+    case secondaryBrown = "Secondary Brown"
+    case secondaryGreen = "Secondary Green"
+    case secondaryOrange = "Secondary Orange"
+    case secondaryPink = "Secondary Pink"
+    case secondaryPurple = "Secondary Purple"
+    case secondaryRed = "Secondary Red"
+    case onSecondary = "On Secondary"
+    
     var color: Color {
         Color(self.rawValue)
     }
