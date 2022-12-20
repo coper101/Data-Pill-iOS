@@ -31,7 +31,7 @@ struct FillLineView: View {
                 font: .bold,
                 size: 18
             )
-            .shadow(color: .white, radius: 0.5)
+            .shadow(color: Colors.surface.color, radius: 0.5)
     }
     
     var body: some View {
