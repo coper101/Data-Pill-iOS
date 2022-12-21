@@ -11,6 +11,7 @@ import WidgetKit
 struct AppView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.dimensions) var dimensions: Dimensions
     @Environment(\.scenePhase) var scenePhase
     
@@ -115,7 +116,7 @@ struct AppView: View {
                 .padding(.horizontal, dimensions.horizontalPadding)
                 .zIndex(2)
                 .popBounceEffect()
-                .cardShadow()
+                .cardShadow(scheme: colorScheme)
             }
 
             // MARK: Layer 3: Edit Limit - Plan
@@ -136,7 +137,7 @@ struct AppView: View {
                 .padding(.horizontal, dimensions.horizontalPadding + 16)
                 .zIndex(3)
                 .popBounceEffect()
-                .cardShadow()
+                .cardShadow(scheme: colorScheme)
             }
 
             // MARK: Layer 4: Edit Limit - Daily
@@ -157,7 +158,7 @@ struct AppView: View {
                 .padding(.horizontal, dimensions.horizontalPadding + 16)
                 .zIndex(4)
                 .popBounceEffect()
-                .cardShadow()
+                .cardShadow(scheme: colorScheme)
             }
 
             // MARK: Layer 5: Date Picker
@@ -186,7 +187,7 @@ struct AppView: View {
                 } //: Group
                 .zIndex(5)
                 .popBounceEffect()
-                .cardShadow()
+                .cardShadow(scheme: colorScheme)
             }
 
             // MARK: Layer 6: Save Button when Editing
@@ -235,7 +236,7 @@ struct AppView: View {
             {
                 Text(message)
                     .textStyle(
-                        foregroundColor: .onSurface,
+                        foregroundColor: .onBackground,
                         font: .semibold,
                         size: 18,
                         lineLimit: 5,

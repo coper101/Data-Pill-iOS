@@ -11,7 +11,7 @@ import CoreData
 enum DatabaseError: Error, Equatable {
     
     /// Database
-    case loadingContainer(String = "Sorry, the data can’t be loaded from the Storage.\n\nTry reinstalling the app")
+    case loadingContainer(String = "Sorry, the data can’t be loaded from the Storage.")
     
     /// [1] Data
     case loadingAll(String)

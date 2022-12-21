@@ -89,7 +89,7 @@ struct StepperButtonView: View {
             // Layer 2: CUSTOM VALUES +/- 0.1, +/- 1
             if showStepperValue {
                 StepperValueView(stepperValues: stepperValues)
-                    .offset(y: -90)
+                    .offset(y: -95)
                     .popBounceEffect()
             }
             
