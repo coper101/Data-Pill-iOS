@@ -16,7 +16,6 @@ struct Data_PillApp: App {
             AppView()
                 .environmentObject(appViewModel)
                 .background(Colors.background.color)
-                .preferredColorScheme(.light)
         }
     }
 }

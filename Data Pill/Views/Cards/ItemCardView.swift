@@ -85,7 +85,7 @@ struct ItemCardView<Content>: View where Content: View {
         Text(caption)
             .kerning(style.letterSpacing)
             .textStyle(
-                foregroundColor: Colors.onSurfaceLight,
+                foregroundColor: Colors.onSurfaceLight2,
                 font: style.type,
                 size: 18,
                 lineLimit: style.lineLimit
@@ -160,6 +160,7 @@ struct ItemCardView<Content>: View where Content: View {
                 .fill(backgroundColor.color)
                 .blur(radius: hasBlur ? 100 : 0)
         )
+        .shadow(color: Color.clear, radius: 0, x: 0, y: 0)
     }
     
     // MARK: - Actions

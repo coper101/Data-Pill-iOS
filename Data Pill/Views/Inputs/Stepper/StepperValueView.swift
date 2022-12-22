@@ -18,6 +18,7 @@ struct StepperValue: Identifiable {
 
 struct StepperValueView: View {
     // MARK: - Props
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     var stepperValues: [StepperValue]
     
     // MARK: - UI
@@ -58,11 +59,11 @@ struct StepperValueView: View {
         .clipShape(
             RoundedRectangle(cornerRadius: 15)
         )
-        .shadow(
-            color: .black.opacity(0.12),
-            radius: 7,
-            x: 0,
-            y: 0
+        .cardShadow(
+            radius: 4,
+            y: 0,
+            opacity: 0.12,
+            scheme: colorScheme
         )
     }
     

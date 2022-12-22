@@ -71,9 +71,9 @@ struct RectangularWidgetView: View {
                         isContentShown: true,
                         orientation: .horizontal,
                         hasBackground: true,
-                        backgroundColor: .background,
+                        backgroundColor: .onBackground,
                         backgroundOpacity: 0.5,
-                        color: .background,
+                        color: .onBackground,
                         widthScale: 0,
                         customSize: .init(
                             width: width * 0.6,
@@ -85,7 +85,7 @@ struct RectangularWidgetView: View {
                     // Layer 2: Percentage
                     Text("\(percentageUsed)")
                         .textStyle(
-                            foregroundColor: .onBackground,
+                            foregroundColor: .background,
                             font: .bold,
                             size: 24,
                             lineLimit: 1
@@ -102,7 +102,7 @@ struct RectangularWidgetView: View {
                     // Row 1: DATA USED
                     Text("\(data)")
                         .textStyle(
-                            foregroundColor: .background,
+                            foregroundColor: .onBackground,
                             font: .bold,
                             size: 12,
                             lineLimit: 1
@@ -112,7 +112,7 @@ struct RectangularWidgetView: View {
                     Text(subtitle(width))
                         .kerning(1.0)
                         .textStyle(
-                            foregroundColor: .background,
+                            foregroundColor: .onBackground,
                             font: .bold,
                             size: 12
                         )

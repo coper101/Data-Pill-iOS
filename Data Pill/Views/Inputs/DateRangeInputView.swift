@@ -40,7 +40,6 @@ struct DateRangeInputView: View {
             } //: if-else
             
         } //: Group
-        .preferredColorScheme(.light)
         .datePickerStyle(.graphical)
         .frame(width: dimensions.screen.width * 0.9)
         .scaleEffect(0.9)
