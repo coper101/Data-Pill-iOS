@@ -15,16 +15,9 @@ struct AppView: View {
     @Environment(\.dimensions) var dimensions: Dimensions
     @Environment(\.scenePhase) var scenePhase
     
-    var isDatePickerShown: Bool {
-        appViewModel.isEndDatePickerShown || appViewModel.isStartDatePickerShown
-    }
-    
-    var buttonType: ButtonType {
-        isDatePickerShown ? .done : .save
-    }
-    
     var spaceBetweenCardButton: CGFloat {
-        30 + (isDatePickerShown ? 300 : 0)
+        /// graphical: 130
+        30 + (appViewModel.isDatePickerShown ? 60 : 0)
     }
 
     var contentHeight: CGFloat {
@@ -89,10 +82,11 @@ struct AppView: View {
             if appViewModel.isDataPlanEditing {
                 
                 EditItemCardView(
-                    buttonType: buttonType,
+                    buttonType: appViewModel.buttonType,
                     buttonAction: buttonAction,
+                    buttonDisabled: appViewModel.buttonDisabled,
                     spaceBetween: spaceBetweenCardButton,
-                    isCardShown: !isDatePickerShown
+                    isCardShown: !appViewModel.isDatePickerShown
                 ) {
                     DataPlanCardView(
                         editType: appViewModel.editDataPlanType,
@@ -120,7 +114,7 @@ struct AppView: View {
             if appViewModel.isDataLimitEditing {
 
                 EditItemCardView(
-                    buttonType: buttonType,
+                    buttonType: appViewModel.buttonType,
                     buttonAction: buttonAction,
                     spaceBetween: spaceBetweenCardButton
                 ) {
@@ -146,7 +140,7 @@ struct AppView: View {
             if appViewModel.isDataLimitPerDayEditing {
 
                 EditItemCardView(
-                    buttonType: buttonType,
+                    buttonType: appViewModel.buttonType,
                     buttonAction: buttonAction,
                     spaceBetween: spaceBetweenCardButton
                 ) {
@@ -169,31 +163,27 @@ struct AppView: View {
             }
 
             // MARK: Layer 5: Date Picker
-            if isDatePickerShown {
-                Group {
-
-                    if appViewModel.isStartDatePickerShown {
-
-                        DateRangeInputView(
-                            selectionDate: $appViewModel.startDateValue,
-                            toDateRange: appViewModel.endDateValue.toDateRange()
-                        )
-
-                    } else {
-
-                        DateRangeInputView(
-                            selectionDate: $appViewModel.endDateValue,
-                            fromDateRange: appViewModel.startDateValue.fromDateRange()
-                        )
-
-                    } //: if-else
-
-                } //: Group
+            if appViewModel.isDatePickerShown {
+                /// NOTE:
+                /// `.graphical` Date Picker Style Immediatelly Scrolls to Original Month
+                /// When Scrolling to Next or Previous Month
+                DatePicker(
+                    "",
+                    selection: appViewModel.isStartDatePickerShown ?
+                        $appViewModel.startDateValue : $appViewModel.endDateValue,
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.wheel)
+                .frame(width: dimensions.calendarWidth)
+                .scaleEffect(0.9)
+                .background(
+                    Colors.background.color
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                )
                 .zIndex(5)
                 .popBounceEffect()
                 .cardShadow(scheme: colorScheme)
             }
-
 
             // MARK: Layer 6: Week's History
             if appViewModel.isHistoryShown {

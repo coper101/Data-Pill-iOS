@@ -109,6 +109,84 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertEqual(appViewModel.editDataPlanType, .dataPlan)
     }
     
+    func test_did_tap_start_period() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.didTapStartPeriod()
+        // (3) Then
+        XCTAssertFalse(appViewModel.isEndDatePickerShown)
+        XCTAssertTrue(appViewModel.isStartDatePickerShown)
+        XCTAssertEqual(appViewModel.buttonType, .done)
+    }
+    
+    func test_did_tap_end_period() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.didTapEndPeriod()
+        // (3) Then
+        XCTAssertFalse(appViewModel.isStartDatePickerShown)
+        XCTAssertTrue(appViewModel.isEndDatePickerShown)
+        XCTAssertEqual(appViewModel.buttonType, .done)
+    }
+    
+    func test_did_tap_done_selecting_start_date() throws {
+        // (1) Given
+        let startDate = "2022-10-01T00:00:00+00:00".toDate()
+        // (2) When
+        appViewModel.didTapStartPeriod()
+        appViewModel.startDateValue = startDate
+        appViewModel.didTapDone()
+        // (3) Then
+        XCTAssertFalse(appViewModel.isStartDatePickerShown)
+        XCTAssertFalse(appViewModel.isBlurShown)
+        XCTAssertEqual(appViewModel.buttonType, .save)
+        XCTAssertEqual(appViewModel.startDateValue, "2022-10-01T00:00:00+00:00".toDate())
+    }
+    
+    func test_did_tap_done_selecting_end_date() throws {
+        // (1) Given
+        let endDate = "2022-10-30T00:00:00+00:00".toDate()
+        // (2) When
+        appViewModel.didTapEndPeriod()
+        appViewModel.endDateValue = endDate
+        appViewModel.didTapDone()
+        // (3) Then
+        XCTAssertFalse(appViewModel.isEndDatePickerShown)
+        XCTAssertFalse(appViewModel.isBlurShown)
+        XCTAssertEqual(appViewModel.buttonType, .save)
+        XCTAssertEqual(appViewModel.endDateValue, "2022-10-30T00:00:00+00:00".toDate())
+    }
+    
+    func test_did_tap_save_plan_period_is_tappable() throws {
+        // (1) Given
+        let startDate = "2022-10-01T00:00:00+00:00".toDate()
+        let endDate = "2022-10-30T00:00:00+00:00".toDate()
+        // (2) When
+        appViewModel.startDateValue = startDate
+        appViewModel.endDateValue = endDate
+        // (3) Then
+        XCTAssertEqual(appViewModel.startDateValue, "2022-10-01T00:00:00+00:00".toDate())
+        XCTAssertEqual(appViewModel.endDateValue, "2022-10-30T00:00:00+00:00".toDate())
+        XCTAssertFalse(appViewModel.isBlurShown)
+        XCTAssertEqual(appViewModel.buttonType, .save)
+        XCTAssertFalse(appViewModel.buttonDisabled)
+    }
+    
+    func test_did_tap_save_plan_period_is_disabled() throws {
+        // (1) Given
+        let startDate = "2022-10-30T00:00:00+00:00".toDate()
+        let endDate = "2022-10-01T00:00:00+00:00".toDate()
+        // (2) When
+        appViewModel.startDateValue = startDate
+        appViewModel.endDateValue = endDate
+        // (3) Then
+        XCTAssertEqual(appViewModel.startDateValue, "2022-10-30T00:00:00+00:00".toDate())
+        XCTAssertEqual(appViewModel.endDateValue, "2022-10-01T00:00:00+00:00".toDate())
+        XCTAssertFalse(appViewModel.isBlurShown)
+        XCTAssertEqual(appViewModel.buttonType, .save)
+        XCTAssertTrue(appViewModel.buttonDisabled)
+    }
+    
     func test_did_tap_period_then_save() throws {
         // (1) Given
         let startDate = "2022-10-01T00:00:00+00:00".toDate()
@@ -126,48 +204,6 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertEqual(appViewModel.editDataPlanType, .dataPlan)
         XCTAssertEqual(appViewModel.startDate, "2022-10-01T00:00:00+00:00".toDate())
         XCTAssertEqual(appViewModel.endDate, "2022-10-30T00:00:00+00:00".toDate())
-    }
-    
-    func test_did_tap_start_period() throws {
-        // (1) Given
-        // (2) When
-        appViewModel.didTapStartPeriod()
-        // (3) Then
-        XCTAssertFalse(appViewModel.isEndDatePickerShown)
-        XCTAssertTrue(appViewModel.isStartDatePickerShown)
-    }
-    
-    func test_did_tap_end_period() throws {
-        // (1) Given
-        // (2) When
-        appViewModel.didTapEndPeriod()
-        // (3) Then
-        XCTAssertFalse(appViewModel.isStartDatePickerShown)
-        XCTAssertTrue(appViewModel.isEndDatePickerShown)
-    }
-    
-    func test_did_tap_done_selecting_start_date() throws {
-        // (1) Given
-        let startDate = "2022-10-01T00:00:00+00:00".toDate()
-        // (2) When
-        appViewModel.didTapStartPeriod()
-        appViewModel.startDateValue = startDate
-        appViewModel.didTapDone()
-        // (3) Then
-        XCTAssertFalse(appViewModel.isStartDatePickerShown)
-        XCTAssertEqual(appViewModel.startDateValue, "2022-10-01T00:00:00+00:00".toDate())
-    }
-    
-    func test_did_tap_done_selecting_end_date() throws {
-        // (1) Given
-        let endDate = "2022-10-30T00:00:00+00:00".toDate()
-        // (2) When
-        appViewModel.didTapEndPeriod()
-        appViewModel.endDateValue = endDate
-        appViewModel.didTapDone()
-        // (3) Then
-        XCTAssertFalse(appViewModel.isEndDatePickerShown)
-        XCTAssertEqual(appViewModel.endDateValue, "2022-10-30T00:00:00+00:00".toDate())
     }
     
     func test_update_plan_period() throws {

@@ -9,6 +9,10 @@ import SwiftUI
 
 // MARK: - Dimensions
 struct Dimensions {
+    var isSmallDevice: Bool {
+        screen.width <= 320
+    }
+    
     /// Padding
     let horizontalPadding: CGFloat = 21
     let spaceInBetween: CGFloat = 21
@@ -18,16 +22,21 @@ struct Dimensions {
     let planLimitCardsHeight: CGFloat = 145
     let limitCardWidth: CGFloat = 286
     var planCardWidth: CGFloat {
-        (screen.width <= 320) ? 280 : 331
+        isSmallDevice ? 280 : 331
     }
     let maxPillHeight: CGFloat = 390
     
+    /// Calendar
+    var calendarWidth: CGFloat {
+        isSmallDevice ? 295 : 320
+    }
+    
     /// Pill
     var pillWidth: CGFloat {
-        (screen.width <= 320) ? 134 : 171
+        isSmallDevice ? 134 : 171
     }
     var pillHeight: CGFloat {
-        (screen.width <= 320) ? 340 : 390
+        isSmallDevice ? 340 : 390
     }
     
     /// Button

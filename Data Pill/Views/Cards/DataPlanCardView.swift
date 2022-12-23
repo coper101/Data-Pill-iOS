@@ -37,16 +37,17 @@ struct DataPlanCardView: View {
     }
     
     var caption: String {
-        editType == nil || editType == .data ?
-            "" :
-            "\(numberOfdays) Days"
+        (editType == nil || editType == .data) ?
+            "" : numberOfdays.prefixDay()
     }
     
     var subtitle: String {
         if let editType = editType {
             switch editType {
-            case .data: return "Data Amount"
-            case .dataPlan: return "Period"
+            case .data:
+                return "Data Amount"
+            case .dataPlan:
+                return "Period"
             }
         }
         return "Data Plan"
@@ -107,7 +108,7 @@ struct DataPlanCardView: View {
                 // Row 1: PERIOD
                 NavRowView(
                     title: periodTitle,
-                    subtitle: "\(numberOfdays) Days",
+                    subtitle: numberOfdays.prefixDay(),
                     action: periodAction
                 )
                 .padding(.top, 10)

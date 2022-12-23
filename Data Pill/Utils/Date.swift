@@ -19,11 +19,14 @@ extension String {
 
 extension Date {
     
-    /// Format the Date to `dd mm yyyy`
+    /// Format the Date to `dd mm yyyy` or `dd mm yy`
     /// e.g. 1 Jan 2022
-    func toDayMonthYearFormat() -> String {
+    func toDayMonthYearFormat(isLongYear: Bool = true) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "d MMM yyyy"
+        let longYear = "yyyy"
+        let shortYear = "yy"
+        let year = isLongYear ? longYear : shortYear
+        dateFormatter.dateFormat = "d MMM \(year)"
         return dateFormatter.string(from: self)
     }
    
@@ -96,7 +99,7 @@ extension Date {
     }
     
     /// Returns a new Date after adding number of days
-    /// - Parameter value: The number of day to add
+    /// - Parameter value: The number of days to add
     func addDay(value: Int) -> Date? {
         Calendar.current.date(byAdding: .day, value: value, to: self)
     }

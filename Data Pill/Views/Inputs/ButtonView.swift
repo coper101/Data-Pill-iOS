@@ -19,7 +19,16 @@ struct ButtonView: View {
     // MARK: - Props
     @Environment(\.dimensions) var dimensions: Dimensions
     var type: ButtonType
+    var disabled = false
     var action: (ButtonType) -> Void
+    
+    var backgroundColor: Colors {
+        !disabled ? Colors.tertiary : Colors.tertiaryDisabled
+    }
+    
+    var color: Colors {
+        !disabled ? Colors.onTertiary : Colors.onTertiaryDisabled
+    }
     
     // MARK: - UI
     var body: some View {
@@ -28,7 +37,7 @@ struct ButtonView: View {
                 
                 Text(type.rawValue)
                     .textStyle(
-                        foregroundColor: .onTertiary,
+                        foregroundColor: color,
                         font: .semibold,
                         size: 20
                     )
@@ -38,12 +47,13 @@ struct ButtonView: View {
             } //: ZStack
             .frame(height: dimensions.buttonHeight)
             .padding(.horizontal, 38)
-            .background(Colors.tertiary.color)
+            .background(backgroundColor.color)
             .clipShape(
                 RoundedRectangle(cornerRadius: 15)
             )
         } //: Button
         .buttonStyle(ScaleButtonStyle())
+        .disabled(disabled)
     }
     
     // MARK: - Actions
@@ -54,7 +64,11 @@ struct ButtonView_Previews: PreviewProvider {
     static var previews: some View {
         
         ForEach(ButtonType.allCases) { type in
-            ButtonView(type: type, action: { _ in })
+            ButtonView(
+                type: type,
+                disabled: true,
+                action: { _ in }
+            )
                 .previewLayout(.sizeThatFits)
                 .previewDisplayName(type.rawValue)
                 .padding()

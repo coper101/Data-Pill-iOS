@@ -9,9 +9,15 @@ import SwiftUI
 
 struct DateInputView: View {
     // MARK: - Props
+    @Environment(\.dimensions) var dimensions: Dimensions
     var date: Date
     var title: String
     var action: () -> Void
+    
+    var displayedDate: String {
+        let isLongYear = !dimensions.isSmallDevice
+        return date.toDayMonthYearFormat(isLongYear: isLongYear).uppercased()
+    }
     
     // MARK: - UI
     var body: some View {
@@ -29,9 +35,9 @@ struct DateInputView: View {
             // Row 2: INPUT
             Button(action: action) {
                 
-                VStack() {
+                VStack {
                     
-                    Text("\(date.toDayMonthYearFormat())".uppercased())
+                    Text(displayedDate)
                         .textStyle(
                             foregroundColor: .onSurface,
                             font: .semibold,

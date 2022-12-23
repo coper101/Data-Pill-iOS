@@ -97,6 +97,7 @@ final class AppViewModel: ObservableObject {
     @Published var dataValue = "0.0"
     @Published var startDateValue = Date()
     @Published var endDateValue = Date()
+    @Published var date = Date()
     
     /// Edit Data Limit
     @Published var isDataLimitEditing = false
@@ -107,6 +108,18 @@ final class AppViewModel: ObservableObject {
     
     var numOfDaysOfPlanValue: Int {
         startDateValue.toNumOfDays(to: endDateValue)
+    }
+    
+    var isDatePickerShown: Bool {
+        isEndDatePickerShown || isStartDatePickerShown
+    }
+    
+    var buttonType: ButtonType {
+        isDatePickerShown ? .done : .save
+    }
+    
+    var buttonDisabled: Bool {
+        (numOfDaysOfPlanValue <= 0) && (buttonType == .save)
     }
     
     /// Weekday color can be customizable in the future

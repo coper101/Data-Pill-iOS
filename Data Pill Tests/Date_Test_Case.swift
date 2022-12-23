@@ -43,6 +43,15 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertEqual(output, "9 Oct 2022")
     }
     
+    func test_to_day_month_year_format_has_short_year() throws {
+        // (1) Given
+        let date = "2022-10-09T00:00:00+00:00".toDate()
+        // (2) When
+        let output = date.toDayMonthYearFormat(isLongYear: false)
+        // (3) Then
+        XCTAssertEqual(output, "9 Oct 22")
+    }
+    
     func test_to_day_month_year_invalid_format() throws {
         // (1) Given
         let date = "2022-10-32T00:00:00+00:00".toDate()

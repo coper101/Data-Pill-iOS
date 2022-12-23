@@ -15,6 +15,34 @@ final class Numbers_Test_Case: XCTestCase {
     }
 
     override func tearDownWithError() throws {}
+    
+    /// prefixDay
+    func test_prefix_day_is_1_day() throws {
+        // (1) Given
+        let input = 1
+        // (2) When
+        let output = input.prefixDay()
+        // (3) Then
+        XCTAssertEqual(output, "1 Day")
+    }
+    
+    func test_prefix_day_is_2_days() throws {
+        // (1) Given
+        let input = 2
+        // (2) When
+        let output = input.prefixDay()
+        // (3) Then
+        XCTAssertEqual(output, "2 Days")
+    }
+    
+    func test_prefix_day_is_negative_1_day() throws {
+        // (1) Given
+        let input = -1
+        // (2) When
+        let output = input.prefixDay()
+        // (3) Then
+        XCTAssertEqual(output, "-1 Day")
+    }
 
     /// toInt
     func test_convert_decimal_to_int() throws {

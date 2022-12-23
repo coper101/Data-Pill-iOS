@@ -7,6 +7,16 @@
 
 import Foundation
 
+extension Int {
+    
+    /// Appends the word Day or Days
+    func prefixDay() -> String {
+        let s = (self > 1) ? "s" : ""
+        return "\(self) Day\(s)"
+    }
+    
+}
+
 extension Double {
     
     /// Convert decimal to a whole number.

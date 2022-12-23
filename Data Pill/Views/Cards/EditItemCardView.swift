@@ -11,6 +11,7 @@ struct EditItemCardView<Content>: View where Content: View {
     // MARK: - Props
     var buttonType: ButtonType
     var buttonAction: (ButtonType) -> Void
+    var buttonDisabled = false
     var spaceBetween: CGFloat
     var isCardShown = true
     @ViewBuilder var content: () -> Content
@@ -19,7 +20,7 @@ struct EditItemCardView<Content>: View where Content: View {
     var body: some View {
         VStack(
             alignment: .trailing,
-            spacing: spaceBetween
+            spacing: 0
         ) {
             
             // Row 1: CARD
@@ -30,8 +31,10 @@ struct EditItemCardView<Content>: View where Content: View {
             // Row 2: ACTION BUTTON
             ButtonView(
                 type: buttonType,
+                disabled: buttonDisabled,
                 action: buttonAction
             )
+            .offset(y: spaceBetween)
             
         } //: VStack
     }

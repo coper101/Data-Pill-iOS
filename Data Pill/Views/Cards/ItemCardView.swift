@@ -56,16 +56,21 @@ struct ItemCardView<Content>: View where Content: View {
     var style: ItemCardStyle
     var subtitle: String
     var caption: String = ""
+    
     var verticalSpacing: CGFloat = 0
     var navigateAction: () -> Void = {}
+    
     var hasBackground = true
     var hasBlur = false
     var backgroundColor = Colors.surface
+    
     var contentVertPadding: CGFloat = 14
     var contentHorPadding: CGFloat = 20
+    
     var hasNavigateIcon = true
     var width: CGFloat?
     var height: CGFloat?
+    
     var textColor: Colors = .onSurfaceLight2
     @ViewBuilder var content: () -> Content
         
@@ -85,11 +90,12 @@ struct ItemCardView<Content>: View where Content: View {
         Text(caption)
             .kerning(style.letterSpacing)
             .textStyle(
-                foregroundColor: Colors.onSurfaceLight2,
+                foregroundColor: Colors.onSurfaceLight,
                 font: style.type,
                 size: 18,
                 lineLimit: style.lineLimit
             )
+            .opacity(0.6)
     }
     
     var body: some View {
