@@ -9,9 +9,30 @@ import SwiftUI
 
 // MARK: - Dimensions
 struct Dimensions {
+    /// Padding
     let horizontalPadding: CGFloat = 21
-    let cardHeight: CGFloat = 145
     let spaceInBetween: CGFloat = 21
+    
+    /// Card
+    let planCardHeight: CGFloat = 150
+    let planLimitCardsHeight: CGFloat = 145
+    let limitCardWidth: CGFloat = 286
+    var planCardWidth: CGFloat {
+        (screen.width <= 320) ? 280 : 331
+    }
+    let maxPillHeight: CGFloat = 390
+    
+    /// Pill
+    var pillWidth: CGFloat {
+        (screen.width <= 320) ? 134 : 171
+    }
+    var pillHeight: CGFloat {
+        (screen.width <= 320) ? 340 : 390
+    }
+    
+    /// Button
+    let buttonHeight: CGFloat = 53
+    
     let screen: CGSize = UIScreen.main.bounds.size
     
     @available(iOSApplicationExtension, unavailable)

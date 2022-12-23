@@ -17,6 +17,7 @@ enum ButtonType: String, Identifiable, CaseIterable {
 
 struct ButtonView: View {
     // MARK: - Props
+    @Environment(\.dimensions) var dimensions: Dimensions
     var type: ButtonType
     var action: (ButtonType) -> Void
     
@@ -35,7 +36,7 @@ struct ButtonView: View {
                     .transition(.opacity.animation(.linear.delay(0.2)))
                 
             } //: ZStack
-            .frame(height: 53)
+            .frame(height: dimensions.buttonHeight)
             .padding(.horizontal, 38)
             .background(Colors.tertiary.color)
             .clipShape(

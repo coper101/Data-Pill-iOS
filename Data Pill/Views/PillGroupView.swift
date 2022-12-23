@@ -12,13 +12,6 @@ struct PillGroupView: View {
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
     
-    var width: CGFloat {
-        dimensions.screen.width * 0.45
-    }
-    var height: CGFloat {
-        (dimensions.screen.width * 0.45) * 2.26
-    }
-    
     var todaysDate: Date {
         appViewModel.todaysData.date ?? .init()
     }
@@ -34,7 +27,7 @@ struct PillGroupView: View {
             
             // MARK: - Row 1: Pill Group
             HStack(
-                alignment: .top,
+                alignment: .center,
                 spacing: dimensions.spaceInBetween
             ) {
                 
@@ -45,6 +38,10 @@ struct PillGroupView: View {
                         percentage: appViewModel.dateUsedInPercentage,
                         date: todaysDate,
                         usageType: appViewModel.usageType,
+                        customSize: .init(
+                            width: dimensions.pillWidth,
+                            height: dimensions.pillHeight
+                        ),
                         isContentShown: !appViewModel.isHistoryShown
                     )
                 }
@@ -56,7 +53,6 @@ struct PillGroupView: View {
                 GeometryReader { reader in
                     
                     let cardWidth = reader.size.width - dimensions.horizontalPadding - dimensions.spaceInBetween
-                    let cardHeight = reader.size.height
                     
                     VStack(spacing: 0) {
                         
@@ -65,22 +61,23 @@ struct PillGroupView: View {
                             usedData: appViewModel.usedData,
                             maxData: appViewModel.maxData,
                             dataUnit: appViewModel.unit,
-                            width: cardWidth,
-                            height: 0.34 * cardHeight
+                            width: cardWidth
                         )
+                        
+                        Spacer()
                         
                         // USAGE TOGGLE
                         UsageCardView(
                             selectedItem: $appViewModel.usageType,
-                            width: cardWidth,
-                            height: 0.4 * cardHeight
+                            width: cardWidth
                         )
+                        
+                        Spacer()
                         
                         // AUTO DATA PERIOD TOGGLE
                         AutoPeriodCardView(
                             isAuto: $appViewModel.isPeriodAuto,
-                            width: cardWidth,
-                            height: 0.25 * cardHeight
+                            width: cardWidth
                         )
                         
                     } //: VStack
@@ -89,7 +86,7 @@ struct PillGroupView: View {
                 } //: GeometryReader
 
             } //: HStack
-            .frame(height: height)
+            .frame(height: dimensions.maxPillHeight)
             
             // MARK: - Row 2: Data Plan
             DataPlanCardView(
@@ -106,6 +103,7 @@ struct PillGroupView: View {
                 didChangePlusStepperValue: { _ in },
                 didChangeMinusStepperValue: { _ in }
             )
+            .frame(height: dimensions.planCardHeight)
             
             // MARK: - Row 3: Data Limit
             HStack(spacing: dimensions.spaceInBetween) {
@@ -135,7 +133,7 @@ struct PillGroupView: View {
                 )
                 
             } //: HStack
-            .frame(height: dimensions.cardHeight)
+            .frame(height: dimensions.planLimitCardsHeight)
             
         } //: VStack
         .padding(.horizontal, dimensions.horizontalPadding)
@@ -177,21 +175,9 @@ struct PillGroupView: View {
 
 // MARK: - Preview
 struct PillGroupView_Previews: PreviewProvider {
-    static var appViewModel: AppViewModel {
-//        let appDataRepo = MockAppDataRepository()
-//        let dataUsageRepo = DataUsageFakeRepository(thisWeeksData: weeksDataSample)
-//        let networkDataRepo = MockNetworkDataRepository(totalUsedData: 1_000)
-//        return AppViewModel.init(
-//            appDataRepository: appDataRepo,
-//            dataUsageRepository: dataUsageRepo,
-//            networkDataRepository: networkDataRepo
-//        )
-        return AppViewModel()
-    }
-    
     static var previews: some View {
         PillGroupView()
             .previewLayout(.sizeThatFits)
-            .environmentObject(appViewModel)
+            .environmentObject(AppViewModel())
     }
 }

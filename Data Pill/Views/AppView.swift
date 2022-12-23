@@ -15,30 +15,24 @@ struct AppView: View {
     @Environment(\.dimensions) var dimensions: Dimensions
     @Environment(\.scenePhase) var scenePhase
     
-    var width: CGFloat {
-        dimensions.screen.width * 0.45
-    }
-    
-    var height: CGFloat {
-        (dimensions.screen.width * 0.45) * 2.26
+    var isDatePickerShown: Bool {
+        appViewModel.isEndDatePickerShown || appViewModel.isStartDatePickerShown
     }
     
     var buttonType: ButtonType {
-        (appViewModel.isEndDatePickerShown ||
-        appViewModel.isStartDatePickerShown) ?
-            .done :
-            .save
+        isDatePickerShown ? .done : .save
     }
     
-    var additionalPadding: CGFloat {
-        (appViewModel.isDataLimitPerDayEditing
-         || appViewModel.isDataLimitEditing) ?
-            30 :
-            0
+    var spaceBetweenCardButton: CGFloat {
+        30 + (isDatePickerShown ? 300 : 0)
     }
-    
+
     var contentHeight: CGFloat {
-        height + 152 + dimensions.cardHeight + (dimensions.spaceInBetween * 2) + (dimensions.horizontalPadding * 2)
+        dimensions.maxPillHeight +
+        dimensions.planCardHeight +
+        dimensions.planLimitCardsHeight +
+        (dimensions.spaceInBetween * 2) +
+        (dimensions.horizontalPadding * 2)
     }
     
     var canFitContent: Bool {
@@ -46,11 +40,8 @@ struct AppView: View {
     }
     
     var contentSpacing: CGFloat {
-        let space = (contentHeight - dimensions.screen.height) / 2
-        if space < 0 {
-            return 0
-        }
-        return space
+        let space = (contentHeight - dimensions.screen.height) * 0.5
+        return (space < 0) ? 0 : space
     }
 
     // MARK: - UI
@@ -96,24 +87,30 @@ struct AppView: View {
             
             // MARK: Layer 2: Edit Plan - Data Amount & Period
             if appViewModel.isDataPlanEditing {
-
-                // Edit Cards
-                DataPlanCardView(
-                    editType: appViewModel.editDataPlanType,
-                    startDate: appViewModel.startDateValue,
-                    endDate: appViewModel.endDateValue,
-                    numberOfdays: appViewModel.numOfDaysOfPlanValue,
-                    periodAction: {},
-                    dataAmountAction: {},
-                    startPeriodAction: startPeriodAction,
-                    endPeriodAction: endPeriodAction,
-                    dataAmountValue: $appViewModel.dataValue,
-                    plusDataAction: plusDataAction,
-                    minusDataAction: minusDataAction,
-                    didChangePlusStepperValue: changeStepperPlusDataAction,
-                    didChangeMinusStepperValue: changeStepperMinusDatatAction
-                )
-                .padding(.horizontal, dimensions.horizontalPadding)
+                
+                EditItemCardView(
+                    buttonType: buttonType,
+                    buttonAction: buttonAction,
+                    spaceBetween: spaceBetweenCardButton,
+                    isCardShown: !isDatePickerShown
+                ) {
+                    DataPlanCardView(
+                        editType: appViewModel.editDataPlanType,
+                        startDate: appViewModel.startDateValue,
+                        endDate: appViewModel.endDateValue,
+                        numberOfdays: appViewModel.numOfDaysOfPlanValue,
+                        periodAction: {},
+                        dataAmountAction: {},
+                        startPeriodAction: startPeriodAction,
+                        endPeriodAction: endPeriodAction,
+                        dataAmountValue: $appViewModel.dataValue,
+                        plusDataAction: plusDataAction,
+                        minusDataAction: minusDataAction,
+                        didChangePlusStepperValue: changeStepperPlusDataAction,
+                        didChangeMinusStepperValue: changeStepperMinusDatatAction
+                    )
+                    .frame(width: dimensions.planCardWidth)
+                }
                 .zIndex(2)
                 .popBounceEffect()
                 .cardShadow(scheme: colorScheme)
@@ -122,19 +119,24 @@ struct AppView: View {
             // MARK: Layer 3: Edit Limit - Plan
             if appViewModel.isDataLimitEditing {
 
-                DataPlanLimitView(
-                    dataLimitValue: $appViewModel.dataLimitValue,
-                    dataAmount: appViewModel.dataAmount,
-                    isEditing: true,
-                    usageType: .plan,
-                    editAction: {},
-                    minusDataAction: minusLimitAction,
-                    plusDataAction: plusLimitAction,
-                    didChangePlusStepperValue: changeStepperPlusLimitAction,
-                    didChangeMinusStepperValue: changeStepperMinusLimitAction
-                )
-                .frame(height: dimensions.cardHeight)
-                .padding(.horizontal, dimensions.horizontalPadding + 16)
+                EditItemCardView(
+                    buttonType: buttonType,
+                    buttonAction: buttonAction,
+                    spaceBetween: spaceBetweenCardButton
+                ) {
+                    DataPlanLimitView(
+                        dataLimitValue: $appViewModel.dataLimitValue,
+                        dataAmount: appViewModel.dataAmount,
+                        isEditing: true,
+                        usageType: .plan,
+                        editAction: {},
+                        minusDataAction: minusLimitAction,
+                        plusDataAction: plusLimitAction,
+                        didChangePlusStepperValue: changeStepperPlusLimitAction,
+                        didChangeMinusStepperValue: changeStepperMinusLimitAction
+                    )
+                    .frame(width: dimensions.limitCardWidth)
+                }
                 .zIndex(3)
                 .popBounceEffect()
                 .cardShadow(scheme: colorScheme)
@@ -143,29 +145,31 @@ struct AppView: View {
             // MARK: Layer 4: Edit Limit - Daily
             if appViewModel.isDataLimitPerDayEditing {
 
-                DataPlanLimitView(
-                    dataLimitValue: $appViewModel.dataLimitPerDayValue,
-                    dataAmount: appViewModel.dataLimitPerDay,
-                    isEditing: true,
-                    usageType: .daily,
-                    editAction: {},
-                    minusDataAction: minusLimitAction,
-                    plusDataAction: plusLimitAction,
-                    didChangePlusStepperValue: changeStepperPlusDailyLimitAction,
-                    didChangeMinusStepperValue: changeStepperMinusDailyLimitAction
-                )
-                .frame(height: dimensions.cardHeight)
-                .padding(.horizontal, dimensions.horizontalPadding + 16)
+                EditItemCardView(
+                    buttonType: buttonType,
+                    buttonAction: buttonAction,
+                    spaceBetween: spaceBetweenCardButton
+                ) {
+                    DataPlanLimitView(
+                        dataLimitValue: $appViewModel.dataLimitPerDayValue,
+                        dataAmount: appViewModel.dataLimitPerDay,
+                        isEditing: true,
+                        usageType: .daily,
+                        editAction: {},
+                        minusDataAction: minusLimitAction,
+                        plusDataAction: plusLimitAction,
+                        didChangePlusStepperValue: changeStepperPlusDailyLimitAction,
+                        didChangeMinusStepperValue: changeStepperMinusDailyLimitAction
+                    )
+                    .frame(width: dimensions.limitCardWidth)
+                }
                 .zIndex(4)
                 .popBounceEffect()
                 .cardShadow(scheme: colorScheme)
             }
 
             // MARK: Layer 5: Date Picker
-            if
-                appViewModel.isStartDatePickerShown ||
-                appViewModel.isEndDatePickerShown
-            {
+            if isDatePickerShown {
                 Group {
 
                     if appViewModel.isStartDatePickerShown {
@@ -190,30 +194,8 @@ struct AppView: View {
                 .cardShadow(scheme: colorScheme)
             }
 
-            // MARK: Layer 6: Save Button when Editing
-            if
-                appViewModel.isDataPlanEditing ||
-                appViewModel.isDataLimitEditing ||
-                appViewModel.isDataLimitPerDayEditing
-            {
-                ButtonView(
-                    type: buttonType,
-                    action: buttonAction
-                )
-                .fillMaxWidth(alignment: .trailing)
-                .padding(
-                    .horizontal,
-                    dimensions.horizontalPadding + additionalPadding
-                )
-                .padding(
-                    .top,
-                    dimensions.cardHeight + 130 + (buttonType == .done ? 250 : 0)
-                )
-                .zIndex(6)
-                .popBounceEffect()
-            }
 
-            // MARK: Layer 7: Week's History
+            // MARK: Layer 6: Week's History
             if appViewModel.isHistoryShown {
                 HistoryView(
                     days: appViewModel.days,
@@ -224,11 +206,11 @@ struct AppView: View {
                     closeAction: closeAction
                 )
                 .padding(.top, 4)
-                .zIndex(7)
+                .zIndex(6)
                 .popBounceEffect()
             }
             
-            // MARK: Layer 8: Error
+            // MARK: Layer 7: Error
             if
                 let error = appViewModel.dataError,
                 error == .loadingContainer(),
@@ -243,12 +225,13 @@ struct AppView: View {
                         lineSpacing: 2,
                         textAlignment: .center
                     )
-                    .opacity(0.28)
+                    .opacity(0.5)
                     .padding(.horizontal, 35)
                     .fillMaxSize(alignment: .center)
+                    .zIndex(7)
             }
             
-            // MARK: Layer 9: Status Bar Background
+            // MARK: Layer 8: Status Bar Background
             Rectangle()
                 .fill(Colors.background.color)
                 .fillMaxWidth()
@@ -260,10 +243,7 @@ struct AppView: View {
         .ignoresSafeArea(.container, edges: .vertical)
         .fillMaxSize(alignment: .center)
         .background(Colors.background.color)
-        .onChange(
-            of: scenePhase,
-            perform: didChangeScenePhase
-        )
+        .onChange(of: scenePhase, perform: didChangeScenePhase)
         .onOpenURL(perform: appViewModel.didOpenURL)
     }
     

@@ -17,6 +17,7 @@ struct PillView: View {
     var hasBackground = true
     var usageType: ToggleItem
     var widthScale: CGFloat = 0.45
+    var customSize: CGSize? = nil
     
     var isContentShown = true
     var showFillLine = false
@@ -81,6 +82,7 @@ struct PillView: View {
             hasBackground: hasBackground,
             color: color,
             widthScale: widthScale,
+            customSize: customSize,
             label: { label }
         )
     }
