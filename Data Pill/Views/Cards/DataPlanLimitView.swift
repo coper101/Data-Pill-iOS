@@ -92,12 +92,27 @@ struct DataPlanLimitView: View {
                     plusStepperValueAction: didChangePlusStepperValue,
                     minusStepperValueAction: didChangeMinusStepperValue
                 )
-                    .padding(.bottom, 34)
-                    .padding(.top, 16)
+                .fillMaxWidth()
+                .padding(.bottom, 34)
+                .padding(.top, 16)
             }
             
         } //: ItemCardView
     }
+    
+//    var data: some View {
+//        StepperView(
+//            value: $dataAmountValue,
+//            unit: .gb,
+//            minusAction: minusDataAction,
+//            plusAction: plusDataAction,
+//            plusStepperValueAction: didChangePlusStepperValue,
+//            minusStepperValueAction: didChangeMinusStepperValue
+//        )
+//        .fillMaxWidth()
+//        .padding(.top, 28)
+//        .padding(.bottom, 12)
+//    }
     
     // MARK: - Actions
 }
@@ -120,6 +135,7 @@ struct DataPlanLimitView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Info")
             .padding()
+            .background(Color.green)
         
         DataPlanLimitView(
             dataLimitValue: .constant("9"),
@@ -137,5 +153,6 @@ struct DataPlanLimitView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit")
             .padding()
+            .background(Color.green)
     }
 }

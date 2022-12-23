@@ -124,6 +124,7 @@
 		27F233AE2945CD4800E6102D /* SmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AC2945CD4800E6102D /* SmallWidgetView.swift */; };
 		27F233B02945CD6300E6102D /* RectangularWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AF2945CD6300E6102D /* RectangularWidgetView.swift */; };
 		27F233B12945CD6300E6102D /* RectangularWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AF2945CD6300E6102D /* RectangularWidgetView.swift */; };
+		27F233B32955434B00E6102D /* EditItemCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233B22955434B00E6102D /* EditItemCardView.swift */; };
 		27F47DDA2905330D00B3F83D /* App_Data_Repository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DD92905330D00B3F83D /* App_Data_Repository_Test_Case.swift */; };
 		27F47DDC29053AE400B3F83D /* Network_Data_Repository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDB29053AE400B3F83D /* Network_Data_Repository_Test_Case.swift */; };
 		27F47DDF29067C8E00B3F83D /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDE29067C8E00B3F83D /* Button.swift */; };
@@ -248,6 +249,7 @@
 		27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Heavy.ttf"; sourceTree = "<group>"; };
 		27F233AC2945CD4800E6102D /* SmallWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidgetView.swift; sourceTree = "<group>"; };
 		27F233AF2945CD6300E6102D /* RectangularWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularWidgetView.swift; sourceTree = "<group>"; };
+		27F233B22955434B00E6102D /* EditItemCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemCardView.swift; sourceTree = "<group>"; };
 		27F47DD92905330D00B3F83D /* App_Data_Repository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_Data_Repository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDB29053AE400B3F83D /* Network_Data_Repository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network_Data_Repository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDE29067C8E00B3F83D /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
@@ -439,6 +441,7 @@
 				27801DF828DA0A8600201339 /* DataPlanCardView.swift */,
 				27801DFE28DA13C500201339 /* DataPlanLimitView.swift */,
 				27801E0028DA15C600201339 /* DailyLimitView.swift */,
+				27F233B22955434B00E6102D /* EditItemCardView.swift */,
 			);
 			path = Cards;
 			sourceTree = "<group>";
@@ -703,6 +706,7 @@
 				27E77751293B68D10031456D /* Widget.swift in Sources */,
 				27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
+				27F233B32955434B00E6102D /* EditItemCardView.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
 				27801E0F28E1E7C500201339 /* ButtonView.swift in Sources */,
 				27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */,

@@ -57,7 +57,6 @@ struct StepperView: View {
             )
             
         } //: HStack
-        .fillMaxWidth(alignment: .center)
         .frame(height: 53)
     }
     
@@ -108,6 +107,5 @@ struct StepperView_Previews: PreviewProvider {
         )
             .previewLayout(.sizeThatFits)
             .padding()
-            // .background(Colors.Background)
     }
 }

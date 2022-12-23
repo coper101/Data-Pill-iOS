@@ -79,6 +79,7 @@ struct DataPlanCardView: View {
             plusStepperValueAction: didChangePlusStepperValue,
             minusStepperValueAction: didChangeMinusStepperValue
         )
+        .fillMaxWidth()
         .padding(.top, 28)
         .padding(.bottom, 12)
     }
@@ -95,8 +96,10 @@ struct DataPlanCardView: View {
             if let editType = editType {
                 
                 switch editType {
-                case .data: data
-                case .dataPlan: dataPlan
+                case .data:
+                    data
+                case .dataPlan:
+                    dataPlan
                 }
                 
             } else {

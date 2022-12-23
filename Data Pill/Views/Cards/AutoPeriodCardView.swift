@@ -11,7 +11,6 @@ struct AutoPeriodCardView: View {
     // MARK: - Props
     @Binding var isAuto: Bool
     var width: CGFloat
-    var height: CGFloat?
     
     // MARK: - UI
     var body: some View {
@@ -37,7 +36,6 @@ struct AutoPeriodCardView: View {
             .buttonStyle(ScaleButtonStyle())
             .fillMaxWidth()
         }
-        .frame(height: height)
     }
     
     // MARK: - Actions
