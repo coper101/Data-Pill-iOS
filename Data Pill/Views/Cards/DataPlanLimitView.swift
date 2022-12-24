@@ -54,6 +54,7 @@ struct DataPlanLimitView: View {
                     size: 30,
                     lineLimit: 1
                 )
+                .accessibilityLabel("limitAmount")
             
             // Col 2: UNIT
             Text(dataUnit.rawValue)
@@ -64,6 +65,7 @@ struct DataPlanLimitView: View {
                     lineLimit: 1
                 )
                 .alignmentGuide(.bottom) { $0.height + 3 }
+                .accessibilityLabel("limitUnit")
             
         } //: HStack
         .fillMaxSize()
@@ -98,21 +100,8 @@ struct DataPlanLimitView: View {
             }
             
         } //: ItemCardView
+        .accessibilityIdentifier(usageType == .plan ? "planLimit" : "dailyLimit")
     }
-    
-//    var data: some View {
-//        StepperView(
-//            value: $dataAmountValue,
-//            unit: .gb,
-//            minusAction: minusDataAction,
-//            plusAction: plusDataAction,
-//            plusStepperValueAction: didChangePlusStepperValue,
-//            minusStepperValueAction: didChangeMinusStepperValue
-//        )
-//        .fillMaxWidth()
-//        .padding(.top, 28)
-//        .padding(.bottom, 12)
-//    }
     
     // MARK: - Actions
 }

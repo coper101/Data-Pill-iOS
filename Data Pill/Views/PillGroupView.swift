@@ -48,6 +48,7 @@ struct PillGroupView: View {
                 .buttonStyle(
                     ScaleButtonStyle(minScale: 0.9)
                 )
+                .accessibilityIdentifier("pill")
                 
                 // Col 2: INFO & CONTROLS
                 GeometryReader { reader in

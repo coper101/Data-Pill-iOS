@@ -26,7 +26,8 @@ struct UsageCardView: View {
                 title2: ToggleItem.daily.rawValue
             )
             .padding(.bottom, 5)
-        }
+        } //: ItemCardView
+        .accessibilityIdentifier("usage")
     }
     
     // MARK: - Actions

@@ -111,6 +111,7 @@ struct DataPlanCardView: View {
                     subtitle: numberOfdays.prefixDay(),
                     action: periodAction
                 )
+                .accessibilityLabel("period")
                 .padding(.top, 10)
                 
                 DividerView()
@@ -122,10 +123,12 @@ struct DataPlanCardView: View {
                     subtitle: "",
                     action: dataAmountAction
                 )
+                .accessibilityLabel("amount")
                 
             } // if-else
             
         } //: ItemCardView
+        .accessibilityIdentifier("dataPlan")
     }
     
     // MARK: - Actions

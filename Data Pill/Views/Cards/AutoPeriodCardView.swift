@@ -35,7 +35,8 @@ struct AutoPeriodCardView: View {
             }
             .buttonStyle(ScaleButtonStyle())
             .fillMaxWidth()
-        }
+        } //: ItemCardView
+        .accessibilityIdentifier("period")
     }
     
     // MARK: - Actions
