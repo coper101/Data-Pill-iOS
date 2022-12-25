@@ -45,22 +45,13 @@ struct RectangularWidgetView: View {
         usedData.toPercentage(with: maxData)
     }
     
-    var data: String {
-        let usedDataDp = usedData.toDp(n: 2)
-        let maxDataDp = maxData.toDp(n: 2)
-        if usedDataDp.count > 3 || maxDataDp.count > 3 {
-            return usedDataDp
-        }
-        return  "\(usedDataDp) / \(maxDataDp)"
-    }
-    
     // MARK: - UI
     var body: some View {
         GeometryReader { reader in
             let height = reader.size.height
             let width = reader.size.width
             
-            HStack(spacing: spaceBetween(width)) {
+            HStack(spacing: 0) {
                 
                 // MARK: - Row 1: PILL
                 ZStack(alignment: .center) {
@@ -71,9 +62,9 @@ struct RectangularWidgetView: View {
                         isContentShown: true,
                         orientation: .horizontal,
                         hasBackground: true,
-                        backgroundColor: .onBackground,
+                        backgroundColor: .widgetTint,
                         backgroundOpacity: 0.5,
-                        color: .onBackground,
+                        color: .widgetTint,
                         widthScale: 0,
                         customSize: .init(
                             width: width * 0.6,
@@ -85,38 +76,47 @@ struct RectangularWidgetView: View {
                     // Layer 2: Percentage
                     Text("\(percentageUsed)")
                         .textStyle(
-                            foregroundColor: .background,
+                            foregroundColor: .widgetBackground,
                             font: .bold,
                             size: 24,
                             lineLimit: 1
                         )
                     
                 } //: ZStack
+                
+                Spacer(minLength: 0)
                                 
                 // MARK: - Row 2:
                 VStack(
                     alignment: .trailing,
-                    spacing: 8
+                    spacing: 6
                 ) {
                     
                     // Row 1: DATA USED
-                    Text("\(data)")
+                    Text("\(usedData.toDp(n: 4))")
                         .textStyle(
-                            foregroundColor: .onBackground,
+                            foregroundColor: .widgetTint,
                             font: .bold,
                             size: 12,
                             lineLimit: 1
                         )
                     
                     // Row 2: SUBTITLE
-                    Text(subtitle(width))
-                        .kerning(1.0)
-                        .textStyle(
-                            foregroundColor: .onBackground,
-                            font: .bold,
-                            size: 12
-                        )
-                        .alignmentGuide(.trailing) { $0.width - 2 }
+                    HStack(spacing: 3) {
+                        
+                        Text("\(maxData.toDp(n: 4))")
+                            
+                        Text(dataUnit.rawValue)
+                            .kerning(1.0)
+                           
+                    } //: HStack
+                    .textStyle(
+                        foregroundColor: .widgetTint,
+                        font: .bold,
+                        size: 12
+                    )
+                    .opacity(0.5)
+                    .alignmentGuide(.trailing) { $0.width - 2 }
                     
                 } //: HStack
                                 
@@ -141,13 +141,6 @@ struct RectangularWidgetView: View {
         }
     }
     
-    func subtitle(_ width: CGFloat) -> String {
-        if width <= RectangularWidgetSize.l.size.width {
-            return "USED"
-        } else {
-            return "TODAY"
-        }
-    }
 }
 
 // MARK: - Preview
@@ -157,8 +150,8 @@ struct RectangularWidgetView_Previews: PreviewProvider {
             let size = widgetSize.size
             if #available(iOS 16.0, *) {
                 RectangularWidgetView(
-                    usedData: 0.5,
-                    maxData: 0.9,
+                    usedData: 0.3334,
+                    maxData: 0.99,
                     dataUnit: .gb,
                     subtitle: "Mon",
                     color: .secondaryBlue
@@ -166,7 +159,7 @@ struct RectangularWidgetView_Previews: PreviewProvider {
                 .previewLayout(.sizeThatFits)
                 .previewDisplayName("Rectangular / \(size.width)x\(size.height)")
                 .frame(width: size.width, height: size.height)
-                .background(Color.gray)
+                .background(Colors.widgetBackground.color)
             } else {
                 // Fallback on earlier versions
                 EmptyView()

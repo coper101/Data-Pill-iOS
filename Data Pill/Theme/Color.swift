@@ -25,8 +25,8 @@ enum Colors: String {
     case tertiaryDisabled = "Tertiary Disabled"
     case onTertiaryDisabled = "On Tertiary Disabled"
 
-    
     case widgetBackground = "Widget Background"
+    case widgetTint = "Widget Tint"
     
     // Day Pill
     case secondaryBlue = "Secondary Blue"
