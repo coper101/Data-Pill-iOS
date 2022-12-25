@@ -222,7 +222,6 @@ extension AppViewModel {
                 self.thisWeeksData = $0
                 self.totalUsedDataPlan = self.dataUsageRepository
                     .getTotalUsedData(from: self.startDate, to: self.endDate)
-                // print(self.networkDataRepository, self, separator: "\n")
             }
             .store(in: &cancellables)
         

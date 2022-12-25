@@ -65,6 +65,8 @@
 		278FB2D728F544C100BE78C2 /* Stepper_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB2D628F544C100BE78C2 /* Stepper_Test_Case.swift */; };
 		278FB31128FAA00F00BE78C2 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB31028FAA00F00BE78C2 /* Animation.swift */; };
 		278FB31328FAA61500BE78C2 /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB31228FAA61500BE78C2 /* StepperView.swift */; };
+		27A0A8F1295858AD0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
+		27A0A8F2295858EF0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
 		27AECC8E2916E5E700AB963E /* App_View_Model_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */; };
 		27B90B8528F2D28100263983 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8428F2D28100263983 /* Constants.swift */; };
 		27B90B8728F2D31600263983 /* DataUsagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8628F2D31600263983 /* DataUsagePreview.swift */; };
@@ -230,6 +232,7 @@
 		278FB2D628F544C100BE78C2 /* Stepper_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stepper_Test_Case.swift; sourceTree = "<group>"; };
 		278FB31028FAA00F00BE78C2 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		278FB31228FAA61500BE78C2 /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
+		27A0A8F0295858AD0007C412 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Test_Case.swift; sourceTree = "<group>"; };
 		27B90B8428F2D28100263983 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		27B90B8628F2D31600263983 /* DataUsagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsagePreview.swift; sourceTree = "<group>"; };
@@ -393,6 +396,7 @@
 				27801DE928D72A6600201339 /* Date.swift */,
 				27801DED28D8B7FA00201339 /* Numbers.swift */,
 				278FB2D428F53DCA00BE78C2 /* Stepper.swift */,
+				27A0A8F0295858AD0007C412 /* Logging.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -798,6 +802,7 @@
 				27B90B8928F2D43700263983 /* DataTest.swift in Sources */,
 				27801DEE28D8B7FA00201339 /* Numbers.swift in Sources */,
 				27801DEA28D72A6600201339 /* Date.swift in Sources */,
+				27A0A8F1295858AD0007C412 /* Logging.swift in Sources */,
 				27801DB428D6C96800201339 /* PillGroupView.swift in Sources */,
 				27801E3728E9E3D100201339 /* DataUsage.swift in Sources */,
 				27801DE428D6F01900201339 /* Modifier.swift in Sources */,
@@ -861,6 +866,7 @@
 				27E777442934D1DB0031456D /* DataTest.swift in Sources */,
 				27F233AE2945CD4800E6102D /* SmallWidgetView.swift in Sources */,
 				27E7771E29336A420031456D /* WidgetPillView.swift in Sources */,
+				27A0A8F2295858EF0007C412 /* Logging.swift in Sources */,
 				27E777402934CCFF0031456D /* Date.swift in Sources */,
 				27E777362934AEB80031456D /* DataUsage.xcdatamodeld in Sources */,
 				27E7773B2934B3440031456D /* LocalStorage.swift in Sources */,

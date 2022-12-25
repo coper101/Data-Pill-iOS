@@ -7,6 +7,7 @@
 
 import WidgetKit
 import CoreData
+import OSLog
 
 struct Provider: IntentTimelineProvider {
     
@@ -46,7 +47,7 @@ struct Provider: IntentTimelineProvider {
         let currentDate = Date()
         let entry = getNewEntry(for: configuration, date: currentDate)
         let timeline = Timeline(entries: [entry], policy: .atEnd)
-        // print("timeline: ", timeline)
+        Logger.widgetProvider.debug("timeline: \(timeline.entries)")
         completion(timeline)
     }
     

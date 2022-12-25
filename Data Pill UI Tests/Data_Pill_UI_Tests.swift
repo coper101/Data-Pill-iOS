@@ -380,7 +380,7 @@ extension Data_Pill_UI_Tests {
             query = query.matching(.init(format: "label == [cd] %@", label))
         }
                 
-        print("count: ", query.count)
+        // print("count: ", query.count)
         return query.element
     }
     

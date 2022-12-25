@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import OSLog
 
 // MARK: - Protocol
 protocol NetworkDataRepositoryProtocol {
@@ -67,7 +68,10 @@ final class NetworkDataRepository:
         $usedDataInfo
             .map { $0.wirelessWanDataReceived + $0.wirelessWanDataSent }
             .map { $0.toInt64().toMB() }
-            .sink { [weak self] in self?.totalUsedData = $0 }
+            .sink { [weak self] in
+                self?.totalUsedData = $0
+                Logger.networkRepository.debug("totalUsedData: \($0) MB")
+            }
             .store(in: &cancellables)
     }
     

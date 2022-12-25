@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import OSLog
 
 enum AppGroup: String {
     case dataPill = "group.com.penguinworks.Data-Pill"
@@ -21,7 +22,7 @@ extension URL {
         guard let fileContainer = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: appGroup.name
         ) else {
-            print("Failed to get file container")
+            Logger.database.error("failed to get file container \(container.name)")
             return nil
         }
         return fileContainer.appendingPathComponent("\(container.name).sqlite")
@@ -102,7 +103,7 @@ class LocalDatabase: Database {
         {
             let description = NSPersistentStoreDescription(url: storeURL)
             self.container.persistentStoreDescriptions = [description]
-            print("persistent descriptions: ", self.container.persistentStoreDescriptions)
+            Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
         }
     }
     
@@ -121,7 +122,7 @@ class InMemoryLocalDatabase: Database {
             storeDescription.type = NSInMemoryStoreType
             storeDescription.url = URL(fileURLWithPath: "/dev/null")
         }
-        print("persistent descriptions: ", self.container.persistentStoreDescriptions)
+        Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
     }
     
 }

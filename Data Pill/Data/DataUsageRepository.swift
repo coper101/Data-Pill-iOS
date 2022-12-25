@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import OSLog
 
 enum DatabaseError: Error, Equatable {
     
@@ -135,11 +136,12 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
         self.database = database
         database.loadContainer { [weak self] error in
             self?.dataError = DatabaseError.loadingContainer()
-            print("database error", error.localizedDescription)
+            Logger.database.error("failed to load container: \(error.localizedDescription)")
         } onSuccess: { [weak self] in
             guard let self = self else {
                 return
             }
+            Logger.database.debug("successfully loaded DataUsage container")
             self.database.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             self.updateToLatestData()
             self.updateToLatestPlan()
@@ -171,7 +173,7 @@ extension DataUsageRepository {
             updateToLatestData()
         } catch let error {
             dataError = DatabaseError.adding(error.localizedDescription)
-            print("add data error: ", error.localizedDescription)
+            Logger.database.error("failed to add data: \(error.localizedDescription)")
         }
     }
     
@@ -184,7 +186,7 @@ extension DataUsageRepository {
             }
         } catch let error {
             dataError = DatabaseError.updatingData(error.localizedDescription)
-            print("update data error: ", error.localizedDescription)
+            Logger.database.error("failed to update data: \(error.localizedDescription)")
         }
     }
     
@@ -195,7 +197,7 @@ extension DataUsageRepository {
             return try database.context.fetch(request)
         } catch let error {
             dataError = DatabaseError.gettingAll(error.localizedDescription)
-            print("getting all data error: ", error.localizedDescription)
+            Logger.database.error("failed to get all data: \(error.localizedDescription)")
             return []
         }
     }
@@ -224,7 +226,7 @@ extension DataUsageRepository {
             return dataItems.first
         } catch let error {
             dataError = DatabaseError.gettingTodaysData(error.localizedDescription)
-            print("get todays data error: ", error.localizedDescription)
+            Logger.database.error("failed to get today's data: \(error.localizedDescription)")
             return nil
         }
     }
@@ -244,7 +246,7 @@ extension DataUsageRepository {
             return data.first
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
-            print("filter data with has total data error: ", error.localizedDescription)
+            Logger.database.error("failed to filter data with has total: \(error.localizedDescription)")
             return nil
         }
     }
@@ -293,7 +295,7 @@ extension DataUsageRepository {
             return thisWeeksData
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
-            print("get weeks data error: ", error.localizedDescription)
+            Logger.database.error("failed to get weeks data: \(error.localizedDescription)")
             return []
         }
     }
@@ -313,7 +315,7 @@ extension DataUsageRepository {
             return totalUsedData
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
-            print("getTotalUsedData error: ", error.localizedDescription)
+            Logger.database.error("failed to get total used data: \(error.localizedDescription)")
             return 0
         }
     }
@@ -345,7 +347,7 @@ extension DataUsageRepository {
             try database.context.saveIfNeeded()
         } catch let error {
             dataError = DatabaseError.addingPlan(error.localizedDescription)
-            print("add plan error: ", error.localizedDescription)
+            Logger.database.error("failed to add plan: \(error.localizedDescription)")
         }
     }
     
@@ -359,7 +361,7 @@ extension DataUsageRepository {
     ) {
         do {
             guard let plan = getPlan() else {
-                print("no plan found despite creating one")
+                Logger.database.error("no plan found despite creating one in update plan block")
                 return
             }
             if let startDate {
@@ -383,7 +385,7 @@ extension DataUsageRepository {
             }
         } catch let error {
             dataError = DatabaseError.updatingPlan(error.localizedDescription)
-            print("update plan error: ", error.localizedDescription)
+            Logger.database.error("failed to update plan: \(error.localizedDescription)")
         }
     }
     
@@ -411,7 +413,7 @@ extension DataUsageRepository {
             return plan
         } catch let error {
             dataError = DatabaseError.gettingAll(error.localizedDescription)
-            print("getting all plan error: ", error.localizedDescription)
+            Logger.database.error("failed to get all plan: \(error.localizedDescription)")
             return nil
         }
     }
@@ -458,7 +460,7 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         
         database.loadContainer { [weak self] error in
             self?.dataError = DatabaseError.loadingContainer()
-            print(error.localizedDescription)
+            Logger.database.error("failed to load container: \(error.localizedDescription)")
         } onSuccess: { [weak self] in
             guard let self = self else {
                 return
@@ -595,7 +597,7 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         self.database = database
         database.loadContainer { [weak self] error in
             self?.dataError = DatabaseError.loadingContainer()
-            print("database error: ", error.localizedDescription)
+            Logger.database.error("failed to load container: \(error.localizedDescription)")
         } onSuccess: { [weak self] in
             guard let _ = self else {
                 return
