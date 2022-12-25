@@ -16,7 +16,7 @@ final class Data_Pill_UI_TestsLaunchTests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
-
+    
     func testLaunch() throws {
         let app = XCUIApplication()
         app.launch()

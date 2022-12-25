@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>classNames</key>
+	<dict>
+		<key>Data_Pill_UI_Tests_Launch_Performance</key>
+		<dict>
+			<key>test_launch_performance()</key>
+			<dict>
+				<key>com.apple.dt.XCTMetric_ApplicationLaunch-AppLaunch.duration</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>1.600000</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
+			</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>
