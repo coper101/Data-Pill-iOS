@@ -45,6 +45,7 @@ struct UsedCardView: View {
                         lineLimit: 1
                     )
                     .id(percentageUsed)
+                    .accessibilityLabel("percentageUsedNumber")
                 
                 Text("%")
                     .textStyle(
@@ -53,6 +54,7 @@ struct UsedCardView: View {
                         size: 28,
                         lineLimit: 1
                     )
+                    .accessibilityLabel("percentageUsedSign")
             } //: HStack
             
             // Row 2: DATA
@@ -66,8 +68,10 @@ struct UsedCardView: View {
                 .opacity(0.5)
                 .padding(.bottom, 10)
                 .id(data)
+                .accessibilityLabel("dataUsedAmount")
             
         } //: ItemCardView
+        .accessibilityIdentifier("used")
     }
     
     // MARK: - Actions

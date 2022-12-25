@@ -31,6 +31,7 @@ struct DateInputView: View {
                     size: 17,
                     maxWidth: .infinity
                 )
+                .accessibilityLabel(title)
             
             // Row 2: INPUT
             Button(action: action) {
@@ -54,7 +55,8 @@ struct DateInputView: View {
                 
             } //: Button
             .buttonStyle(ScaleButtonStyle())
-            
+            .accessibilityLabel("\(title) Button")
+
         } //: VStack
     }
     

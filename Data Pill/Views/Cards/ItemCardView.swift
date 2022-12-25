@@ -96,6 +96,9 @@ struct ItemCardView<Content>: View where Content: View {
                 lineLimit: style.lineLimit
             )
             .opacity(0.6)
+            .`if`(caption != "") { view in
+                view.accessibilityLabel("secondaryLabel")
+            }
     }
     
     var body: some View {

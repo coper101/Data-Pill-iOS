@@ -56,16 +56,19 @@ struct DataPlanCardView: View {
     // MARK: - UI
     var dataPlan: some View {
         HStack(spacing: 15) {
+            
             DateInputView(
                 date: startDate,
                 title: "From",
                 action: startPeriodAction
             )
+            
             DateInputView(
                 date: endDate,
                 title: "To",
                 action: endPeriodAction
             )
+
         } //: HStack
         .fillMaxWidth()
         .padding(.top, 10)
@@ -111,6 +114,7 @@ struct DataPlanCardView: View {
                     subtitle: numberOfdays.prefixDay(),
                     action: periodAction
                 )
+                .accessibilityLabel("period")
                 .padding(.top, 10)
                 
                 DividerView()
@@ -122,10 +126,12 @@ struct DataPlanCardView: View {
                     subtitle: "",
                     action: dataAmountAction
                 )
+                .accessibilityLabel("amount")
                 
             } // if-else
             
         } //: ItemCardView
+        .accessibilityIdentifier("dataPlan")
     }
     
     // MARK: - Actions

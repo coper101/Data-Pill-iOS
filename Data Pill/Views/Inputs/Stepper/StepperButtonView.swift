@@ -62,6 +62,7 @@ struct StepperButtonView: View {
                         Icons.plusIcon.image
                             .resizable()
                             .rotationEffect(.init(degrees: showStepperValue ? 45 : 0))
+                            .accessibilityLabel("\(`operator`.id) / Rotated Plus Icon")
                         
                     } //: Button
                     

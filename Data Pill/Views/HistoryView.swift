@@ -84,6 +84,7 @@ struct HistoryView: View {
             .fillMaxSize(alignment: .bottom)
             
         } //: VStack
+        .accessibilityIdentifier("history")
     }
     
     // MARK: - Actions
