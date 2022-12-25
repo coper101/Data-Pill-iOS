@@ -678,8 +678,8 @@
 			projectRoot = "";
 			targets = (
 				27801DAB28D6C96800201339 /* Data Pill */,
-				278FB2C828F2E55900BE78C2 /* Data Pill Tests */,
 				27E77703293367450031456D /* Data Pill WidgetExtension */,
+				278FB2C828F2E55900BE78C2 /* Data Pill Tests */,
 				270EC9B92956A898008A27AA /* Data Pill UI Tests */,
 			);
 		};

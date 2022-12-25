@@ -56,16 +56,19 @@ struct DataPlanCardView: View {
     // MARK: - UI
     var dataPlan: some View {
         HStack(spacing: 15) {
+            
             DateInputView(
                 date: startDate,
                 title: "From",
                 action: startPeriodAction
             )
+            
             DateInputView(
                 date: endDate,
                 title: "To",
                 action: endPeriodAction
             )
+
         } //: HStack
         .fillMaxWidth()
         .padding(.top, 10)

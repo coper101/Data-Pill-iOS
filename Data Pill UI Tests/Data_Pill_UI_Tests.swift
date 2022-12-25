@@ -21,56 +21,36 @@ final class Data_Pill_UI_Tests: XCTestCase {
         app = nil
     }
     
-    func test_main_screen() throws {
-        // MARK: Daily Limit Info
-//        let dailyLimitCard = app
-//            .otherElements
-//            .containing(.init(format: "identifier == 'dailyLimit'"))
-//        XCTAssertGreaterThan(planLimitCard.count, 0)
-//
-//        XCTAssert(
-//            dailyLimitCard
-//                .staticTexts
-//                .containing(.init(format: "label BEGINSWITH 'Daily'"))
-//                .containing(.init(format: "label ENDSWITH 'Limit'"))
-//                .element
-//                .exists
-//        )
-//        XCTAssert(dailyLimitCard.staticTexts["limitAmount"].exists)
-//        XCTAssert(dailyLimitCard.staticTexts["limitUnit"].exists)
-//        XCTAssert(dailyLimitCard.buttons["Right Arrow Icon"].exists)
-    }
-    
     // MARK: - Pill
     func test_pill() throws {
+        let identifier = "history"
+
         let pillButton = getElement(type: .button, identifier: "pill", label: "TODAY")
         XCTAssert(pillButton.exists)
         
-        try open_history(pillButton)
-        try close_history()
+        try open_history_then_close(pillButton, identifier: identifier)
     }
     
-    func open_history(_ pillButton: XCUIElement) throws {
+    func open_history_then_close(_ pillButton: XCUIElement, identifier: String) throws {
         pillButton.tap()
 
-        // MARK: Top Bar
-        let weekLabel = getElement(type: .text, identifier: "history", label: "This Week")
-        let closeButton = getElement(type: .button, identifier: "history", label: "X Mark Icon")
+        // Top Bar
+        let weekLabel = getElement(type: .text, identifier: identifier, label: "This Week")
+        let closeButton = getElement(type: .button, identifier: identifier, label: "X Mark Icon")
+        
         XCTAssert(weekLabel.exists)
         XCTAssert(closeButton.exists)
         
-        // MARK: Day Pills
-        let dayPercentageLabel = getElement(type: .text, identifier: "history", label: "0%")
-        let dayLabel = getElement(type: .text, identifier: "history", label: "TODAY")
+        // Day Pills
+        let dayPercentageLabel = getElement(type: .text, identifier: identifier, label: "0%")
+        let dayLabel = getElement(type: .text, identifier: identifier, label: "TODAY")
+        
         XCTAssert(dayPercentageLabel.exists)
         XCTAssert(dayLabel.exists)
-    }
-    
-    func close_history() throws {
-        let closeButton = getElement(type: .button, identifier: "history", label: "X Mark Icon")
+        
         closeButton.tap()
         
-        XCTAssertFalse(hasElements(identifier: "history"))
+        XCTAssertFalse(hasElements(identifier: identifier))
     }
     
     // MARK: - Used Card
@@ -79,6 +59,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
         let percentageNumberLabel = getElement(type: .text, identifier: "used", label: "percentageUsedNumber")
         let percentageSignLabel = getElement(type: .text, identifier: "used", label: "percentageUsedSign")
         let dataAmountLabel = getElement(type: .text, identifier: "used", label: "dataUsedAmount")
+        
         XCTAssert(usedLabel.exists)
         XCTAssert(percentageNumberLabel.exists)
         XCTAssert(percentageSignLabel.exists)
@@ -90,6 +71,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
         let usageLabel = getElement(type: .text, identifier: "usage", label: "USAGE")
         let planToggleButton = getElement(type: .button, identifier: "usage", label: "Plan")
         let dailyToggleButton = getElement(type: .button, identifier: "usage", label: "Daily")
+        
         XCTAssert(usageLabel.exists)
         XCTAssert(planToggleButton.exists)
         XCTAssert(dailyToggleButton.exists)
@@ -106,6 +88,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
     func test_period() throws {
         let periodCardLabel = getElement(type: .text, identifier: "period", label: "PERIOD")
         let manualOptionButton = getElement(type: .button, identifier: "period", label: "Manual")
+        
         XCTAssert(periodCardLabel.exists)
         XCTAssert(manualOptionButton.exists)
         
@@ -115,151 +98,249 @@ final class Data_Pill_UI_Tests: XCTestCase {
     func toggle_auto_period() throws {
         let manualOptionButton = getElement(type: .button, identifier: "period", label: "Manual")
         let autoOptionButton = getElement(type: .button, identifier: "period", label: "Auto")
+        
         manualOptionButton.tap()
+        
         XCTAssert(autoOptionButton.exists)
+        
         autoOptionButton.tap()
+        
         XCTAssert(manualOptionButton.exists)
     }
     
     // MARK: - Data Plan Card
     func test_data_plan() throws {
-        let dataPlanLabel = getElement(type: .text, identifier: "dataPlan", label: "Data Plan")
+        let identifier = "dataPlan"
+        
+        let dataPlanLabel = getElement(type: .text, identifier: identifier, label: "Data Plan")
+        
         XCTAssert(dataPlanLabel.exists)
                 
-        let periodButton = getElement(type: .button, identifier: "dataPlan", label: "period")
-        let periodButtonImage = periodButton.images["Right Arrow Icon"]
-        XCTAssert(periodButton.exists)
-        XCTAssert(periodButtonImage.exists)
+        let editPeriodButton = getElement(type: .button, identifier: identifier, label: "period")
+        let editPeriodButtonImage = editPeriodButton.images["Right Arrow Icon"]
+        
+        XCTAssert(editPeriodButton.exists)
+        XCTAssert(editPeriodButtonImage.exists)
 
-        let amountButton = getElement(type: .button, identifier: "dataPlan", label: "amount")
-        let amountButtonImage = amountButton.images["Right Arrow Icon"]
-        XCTAssert(amountButton.exists)
-        XCTAssert(amountButtonImage.exists)
+        let editAmountButton = getElement(type: .button, identifier: identifier, label: "amount")
+        let editAmountButtonImage = editAmountButton.images["Right Arrow Icon"]
+        
+        XCTAssert(editAmountButton.exists)
+        XCTAssert(editAmountButtonImage.exists)
 
-        try open_then_close_edit_period(periodButton)
-        try open_then_close_edit_data_amount(amountButton)
-    }
-    
-    func open_then_close_edit_period(_ periodButton: XCUIElement) throws {
-        periodButton.tap()
-        
-        let saveButton = app.buttons["Save"]
-        let periodLabel = getElement(type: .text, identifier: "dataPlan", label: "Period")
-
-        XCTAssert(saveButton.waitForExistence(timeout: 0.5))
-        XCTAssert(periodLabel.exists)
-        
-        saveButton.tap()
-        
-        XCTAssertFalse(saveButton.waitForExistence(timeout: 0.5))
-        XCTAssertFalse(periodLabel.exists)
-    }
-    
-    func open_then_close_edit_data_amount(_ amountButton: XCUIElement) throws {
-        amountButton.tap()
-        
-        let saveButton = app.buttons["Save"]
-        let dataAmountLabel = getElement(type: .text, identifier: "dataPlan", label: "Data Amount")
-        let plusButton = getElement(type: .button, identifier: "dataPlan", label: "Plus")
-        let minusButton = getElement(type: .button, identifier: "dataPlan", label: "Minus")
-
-        XCTAssert(saveButton.waitForExistence(timeout: 0.5))
-        XCTAssert(dataAmountLabel.exists)
-        XCTAssert(plusButton.exists)
-        XCTAssert(minusButton.exists)
-        
-        saveButton.tap()
-        
-        XCTAssertFalse(saveButton.waitForExistence(timeout: 0.5))
-        XCTAssertFalse(dataAmountLabel.exists)
-        XCTAssertFalse(plusButton.exists)
-        XCTAssertFalse(minusButton.exists)
+        try edit_period_with_picker_then_save(editPeriodButton, identifier: identifier)
+        try edit_period_then_show_date_picker_then_save(editPeriodButton, identifier: identifier)
+        try edit_value_with_stepper_then_save(editAmountButton, identifier: identifier, title: "Data Amount")
+        try edit_then_show_stepper_values(editAmountButton, identifier: identifier)
     }
     
     // MARK: - Plan Limit
     func test_plan_limit() throws {
+        let identifier = "planLimit"
+        
         let planLimitLabel = app.staticTexts
-            .matching(.init(format: "identifier == [cd] %@", "planLimit"))
+            .matching(.init(format: "identifier == [cd] %@", identifier))
             .containing(.init(format: "label BEGINSWITH 'Plan'"))
             .containing(.init(format: "label ENDSWITH 'Limit'"))
             .element
+        
         XCTAssert(planLimitLabel.exists)
         
-        let limitAmount = getElement(type: .text, identifier: "planLimit", label: "limitAmount")
-        let limitUnit = getElement(type: .text, identifier: "planLimit", label: "limitUnit")
-        let editButton = getElement(type: .button, identifier: "planLimit", label: "Right Arrow Icon")
+        let limitAmount = getElement(type: .text, identifier: identifier, label: "limitAmount")
+        let limitUnit = getElement(type: .text, identifier: identifier, label: "limitUnit")
+        let editButton = getElement(type: .button, identifier: identifier, label: "Right Arrow Icon")
 
         XCTAssert(limitAmount.exists)
         XCTAssert(limitUnit.exists)
         XCTAssert(editButton.exists)
         
-        try open_the_close_edit_plan_limit(editButton)
-    }
-    
-    func open_the_close_edit_plan_limit(_ editButton: XCUIElement) throws {
-        if !editButton.isVisible() {
-            app.swipeUp()
-        }
-        editButton.tap()
-        
-        let saveButton = app.buttons["Save"]
-        let planLimitLabel = getElement(type: .text, identifier: "planLimit", label: "Plan Limit")
-        let plusButton = getElement(type: .button, identifier: "planLimit", label: "Plus")
-        let minusButton = getElement(type: .button, identifier: "planLimit", label: "Minus")
-
-        XCTAssert(saveButton.waitForExistence(timeout: 0.5))
-        XCTAssert(planLimitLabel.exists)
-        XCTAssert(plusButton.exists)
-        XCTAssert(minusButton.exists)
-        
-        saveButton.tap()
-        
-        XCTAssertFalse(saveButton.waitForExistence(timeout: 0.5))
-        XCTAssertFalse(plusButton.exists)
-        XCTAssertFalse(minusButton.exists)
+        try edit_value_with_stepper_then_save(editButton, identifier: identifier, title: "Plan Limit")
+        try edit_then_show_stepper_values(editButton, identifier: identifier)
     }
     
     // MARK: - Daily Limit
     func test_daily_limit() throws {
+        let identifier = "dailyLimit"
+        
         let dailyLimitLabel = app.staticTexts
-            .matching(.init(format: "identifier == [cd] %@", "dailyLimit"))
+            .matching(.init(format: "identifier == [cd] %@", identifier))
             .containing(.init(format: "label BEGINSWITH 'Daily'"))
             .containing(.init(format: "label ENDSWITH 'Limit'"))
             .element
+        
         XCTAssert(dailyLimitLabel.exists)
         
-        let limitAmount = getElement(type: .text, identifier: "dailyLimit", label: "limitAmount")
-        let limitUnit = getElement(type: .text, identifier: "dailyLimit", label: "limitUnit")
-        let editButton = getElement(type: .button, identifier: "dailyLimit", label: "Right Arrow Icon")
+        let limitAmount = getElement(type: .text, identifier: identifier, label: "limitAmount")
+        let limitUnit = getElement(type: .text, identifier: identifier, label: "limitUnit")
+        let editButton = getElement(type: .button, identifier: identifier, label: "Right Arrow Icon")
 
         XCTAssert(limitAmount.waitForExistence(timeout: 0.5))
         XCTAssert(limitUnit.exists)
         XCTAssert(editButton.exists)
         
-        try open_then_close_edit_daily_limit(editButton)
+        try edit_value_with_stepper_then_save(editButton, identifier: identifier, title: "Daily Limit")
+        try edit_then_show_stepper_values(editButton, identifier: identifier)
     }
     
-    func open_then_close_edit_daily_limit(_ editButton: XCUIElement) throws {
+    // MARK: - Reusables
+    func edit_period_with_picker_then_save(_ editButton: XCUIElement, identifier: String) throws {
+        // show edit input
+        editButton.tap()
+        
+        let saveButton = app.buttons["Save"]
+        let periodLabel = getElement(type: .text, identifier: identifier, label: "Period")
+        let fromLabel = getElement(type: .text, identifier: identifier, label: "From")
+        let toLabel = getElement(type: .text, identifier: identifier, label: "To")
+        let numberOfDaysLabel = getElement(type: .text, identifier: identifier, label: "secondaryLabel")
+
+        XCTAssert(saveButton.waitForExistence(timeout: 0.5))
+        XCTAssert(periodLabel.exists)
+        XCTAssert(fromLabel.exists)
+        XCTAssert(toLabel.exists)
+        XCTAssert(numberOfDaysLabel.exists)
+        
+        // save
+        saveButton.tap()
+                
+        XCTAssertFalse(saveButton.waitForExistence(timeout: 0.5))
+        XCTAssertFalse(periodLabel.exists)
+        XCTAssertFalse(fromLabel.exists)
+        XCTAssertFalse(toLabel.exists)
+        XCTAssertFalse(numberOfDaysLabel.exists)
+    }
+    
+    func edit_period_then_show_date_picker_then_save(_ editButton: XCUIElement, identifier: String) throws {
+        // show edit input
+        editButton.tap()
+        
+        let startDateButton = getElement(type: .button, identifier: identifier, label: "From Button")
+        let endDateButton = getElement(type: .button, identifier: identifier, label: "To Button")
+
+        XCTAssert(startDateButton.waitForExistence(timeout: 0.5))
+        XCTAssert(endDateButton.exists)
+
+        // show start date picker then done
+        startDateButton.tap()
+        
+        let doneButton = app.buttons["Done"]
+        let datePicker = app.datePickers.element
+        
+        XCTAssert(doneButton.waitForExistence(timeout: 0.5))
+        XCTAssert(datePicker.exists)
+        
+        doneButton.tap()
+        
+        XCTAssertFalse(doneButton.waitForExistence(timeout: 0.5))
+        XCTAssertFalse(datePicker.exists)
+        
+        // show end date picker then done
+        endDateButton.tap()
+        
+        XCTAssert(doneButton.waitForExistence(timeout: 0.5))
+        XCTAssert(datePicker.exists)
+        
+        doneButton.tap()
+        
+        XCTAssertFalse(doneButton.waitForExistence(timeout: 0.5))
+        XCTAssertFalse(datePicker.exists)
+
+        // save
+        let saveButton = app.buttons["Save"]
+        
+        XCTAssert(saveButton.exists)
+        
+        saveButton.tap()
+        
+        XCTAssertFalse(saveButton.waitForExistence(timeout: 0.5))
+    }
+    
+    func edit_value_with_stepper_then_save(_ editButton: XCUIElement, identifier: String, title: String) throws {
+        // show edit input
         if !editButton.isVisible() {
             app.swipeUp()
         }
+        
         editButton.tap()
                         
         let saveButton = app.buttons["Save"]
-        let dailyLimitLabel = getElement(type: .text, identifier: "dailyLimit", label: "Daily Limit")
-        let plusButton = getElement(type: .button, identifier: "dailyLimit", label: "Plus")
-        let minusButton = getElement(type: .button, identifier: "dailyLimit", label: "Minus")
+        let dailyLimitLabel = getElement(type: .text, identifier: identifier, label: title)
+        let plusButton = getElement(type: .button, identifier: identifier, label: "Plus")
+        let minusButton = getElement(type: .button, identifier: identifier, label: "Minus")
 
         XCTAssert(saveButton.waitForExistence(timeout: 0.5))
         XCTAssert(dailyLimitLabel.exists)
         XCTAssert(plusButton.exists)
         XCTAssert(minusButton.exists)
         
+        // save
         saveButton.tap()
         
         XCTAssertFalse(saveButton.waitForExistence(timeout: 0.5))
         XCTAssertFalse(plusButton.exists)
         XCTAssertFalse(minusButton.exists)
+    }
+    
+    func edit_then_show_stepper_values(_ editButton: XCUIElement, identifier: String) throws {
+        // show edit input
+        if !editButton.isVisible() {
+            app.swipeUp()
+        }
+        
+        editButton.tap()
+        
+        let minusButton = getElement(type: .button, identifier: identifier, label: "Minus")
+        let plusButton = getElement(type: .button, identifier: identifier, label: "Plus")
+        
+        XCTAssert(minusButton.exists)
+        XCTAssert(plusButton.exists)
+        
+        // show minus stepper values then close
+        minusButton.press(forDuration: 1.0)
+
+        let minusCloseButton = getElement(type: .button, identifier: identifier, label: "minus / Rotated Plus Icon")
+        let value1Button = getElement(type: .button, identifier: identifier, label: "0.1")
+        let value2Button = getElement(type: .button, identifier: identifier, label: "1")
+
+        XCTAssert(minusCloseButton.exists)
+        XCTAssert(value1Button.exists)
+        XCTAssert(value2Button.exists)
+
+        minusCloseButton.tap()
+        
+        XCTAssertFalse(minusCloseButton.exists)
+        XCTAssertFalse(value1Button.exists)
+        XCTAssertFalse(value2Button.exists)
+
+        // show plus stepper values then close
+        plusButton.press(forDuration: 1.0)
+        
+        let plusCloseButton = getElement(type: .button, identifier: identifier, label: "plus / Rotated Plus Icon")
+        
+        XCTAssert(plusCloseButton.exists)
+        XCTAssert(value1Button.exists)
+        XCTAssert(value2Button.exists)
+        
+        plusCloseButton.tap()
+        
+        XCTAssertFalse(plusCloseButton.exists)
+        XCTAssertFalse(value1Button.exists)
+        XCTAssertFalse(value2Button.exists)
+
+        // show minus stepper values then show plus stepper value
+        minusButton.press(forDuration: 1.0)
+        
+        XCTAssert(minusCloseButton.exists)
+        
+        plusButton.press(forDuration: 1.0)
+        
+        XCTAssertFalse(minusCloseButton.exists)
+        XCTAssert(plusCloseButton.exists)
+        
+        // then show minus stepper value
+        minusButton.press(forDuration: 1.0)
+        
+        XCTAssertFalse(plusCloseButton.exists)
+        XCTAssert(minusCloseButton.exists)
     }
 
 }
@@ -309,6 +390,7 @@ extension Data_Pill_UI_Tests {
             query = query.matching(.init(format: "label == [cd] %@", label))
         }
                 
+        print("count: ", query.count)
         return query.element
     }
     
