@@ -368,9 +368,56 @@ struct AppView: View {
 
 // MARK: - Preview
 struct AppView_Previews: PreviewProvider {
+    static var appViewModel: AppViewModel {
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        let todaysDate = Date()
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -3, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 1_500,
+            hasLastTotal: true
+        )
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -2, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 3_000,
+            hasLastTotal: true
+        )
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -1, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 2100,
+            hasLastTotal: true
+        )
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: 0, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 1100,
+            hasLastTotal: false
+        )
+        dataRepo.updatePlan(
+            startDate: Calendar.current.date(
+                byAdding: .day, value: -3, to: todaysDate)!,
+            endDate: Calendar.current.date(
+                byAdding: .day, value: 1, to: todaysDate)!,
+            dataAmount: 10,
+            dailyLimit: 4,
+            planLimit: 9
+        )
+        
+        let viewModel = AppViewModel(dataUsageRepository: dataRepo)
+        return viewModel
+    }
+    
     static var previews: some View {
         AppView()
+            .padding(.top, 1)
             .previewLayout(.sizeThatFits)
-            .environmentObject(AppViewModel())
+            .environmentObject(appViewModel)
     }
 }
