@@ -59,6 +59,8 @@
 		27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3C28E9F72F00201339 /* DataUsageRepository.swift */; };
 		27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3E28E9FDAA00201339 /* AppDataRepository.swift */; };
 		278D6B6928F17065006931DA /* DataInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D6B6828F17065006931DA /* DataInfo.swift */; };
+		278E7344295BFAB20020F84B /* ToastTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E7343295BFAB20020F84B /* ToastTimer.swift */; };
+		278E7348295C57E30020F84B /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E7347295C57E30020F84B /* Validator.swift */; };
 		278FB2CC28F2E55900BE78C2 /* Numbers_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB2CB28F2E55900BE78C2 /* Numbers_Test_Case.swift */; };
 		278FB2D328F321EE00BE78C2 /* Date_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB2D228F321EE00BE78C2 /* Date_Test_Case.swift */; };
 		278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB2D428F53DCA00BE78C2 /* Stepper.swift */; };
@@ -68,6 +70,7 @@
 		27A0A8F1295858AD0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
 		27A0A8F2295858EF0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
 		27AECC8E2916E5E700AB963E /* App_View_Model_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */; };
+		27B10A72295BE714009E910C /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B10A71295BE714009E910C /* ToastView.swift */; };
 		27B90B8528F2D28100263983 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8428F2D28100263983 /* Constants.swift */; };
 		27B90B8728F2D31600263983 /* DataUsagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8628F2D31600263983 /* DataUsagePreview.swift */; };
 		27B90B8928F2D43700263983 /* DataTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8828F2D43700263983 /* DataTest.swift */; };
@@ -225,6 +228,8 @@
 		27801E3C28E9F72F00201339 /* DataUsageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsageRepository.swift; sourceTree = "<group>"; };
 		27801E3E28E9FDAA00201339 /* AppDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository.swift; sourceTree = "<group>"; };
 		278D6B6828F17065006931DA /* DataInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInfo.swift; sourceTree = "<group>"; };
+		278E7343295BFAB20020F84B /* ToastTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastTimer.swift; sourceTree = "<group>"; };
+		278E7347295C57E30020F84B /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
 		278FB2C928F2E55900BE78C2 /* Data Pill Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Data Pill Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		278FB2CB28F2E55900BE78C2 /* Numbers_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Numbers_Test_Case.swift; sourceTree = "<group>"; };
 		278FB2D228F321EE00BE78C2 /* Date_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date_Test_Case.swift; sourceTree = "<group>"; };
@@ -234,6 +239,7 @@
 		278FB31228FAA61500BE78C2 /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
 		27A0A8F0295858AD0007C412 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Test_Case.swift; sourceTree = "<group>"; };
+		27B10A71295BE714009E910C /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		27B90B8428F2D28100263983 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		27B90B8628F2D31600263983 /* DataUsagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsagePreview.swift; sourceTree = "<group>"; };
 		27B90B8828F2D43700263983 /* DataTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTest.swift; sourceTree = "<group>"; };
@@ -391,11 +397,12 @@
 		27801DB828D6C96800201339 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				278FB2D428F53DCA00BE78C2 /* Stepper.swift */,
+				278E7347295C57E30020F84B /* Validator.swift */,
 				27801DB928D6C96800201339 /* Dimensions.swift */,
 				27801DE728D7215D00201339 /* Enums.swift */,
 				27801DE928D72A6600201339 /* Date.swift */,
 				27801DED28D8B7FA00201339 /* Numbers.swift */,
-				278FB2D428F53DCA00BE78C2 /* Stepper.swift */,
 				27A0A8F0295858AD0007C412 /* Logging.swift */,
 			);
 			path = Utils;
@@ -459,6 +466,7 @@
 				27BE08282928BD3F00E0781C /* Stepper */,
 				27801DF128D8BDBE00201339 /* ToggleView.swift */,
 				27801E1628E82B9100201339 /* TextInputView.swift */,
+				27B10A71295BE714009E910C /* ToastView.swift */,
 			);
 			path = Inputs;
 			sourceTree = "<group>";
@@ -485,6 +493,7 @@
 				27801E3E28E9FDAA00201339 /* AppDataRepository.swift */,
 				27801E1D28E98F0D00201339 /* LocalStorage.swift */,
 				27801E2228E9B29D00201339 /* LocalDatabase.swift */,
+				278E7343295BFAB20020F84B /* ToastTimer.swift */,
 				27B90B8428F2D28100263983 /* Constants.swift */,
 			);
 			path = Data;
@@ -766,6 +775,8 @@
 				27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */,
 				27E776FF293365730031456D /* BasePillView.swift in Sources */,
 				27B90B8728F2D31600263983 /* DataUsagePreview.swift in Sources */,
+				278E7348295C57E30020F84B /* Validator.swift in Sources */,
+				27B10A72295BE714009E910C /* ToastView.swift in Sources */,
 				27E7772D2933844A0031456D /* ToggleItem.swift in Sources */,
 				27E7772A2933780D0031456D /* UsageType.intentdefinition in Sources */,
 				27E777422934CD610031456D /* DayPill.swift in Sources */,
@@ -774,6 +785,7 @@
 				278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
 				27E77751293B68D10031456D /* Widget.swift in Sources */,
+				278E7344295BFAB20020F84B /* ToastTimer.swift in Sources */,
 				27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
 				27F233B32955434B00E6102D /* EditItemCardView.swift in Sources */,

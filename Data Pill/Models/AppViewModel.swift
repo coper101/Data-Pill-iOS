@@ -16,6 +16,7 @@ final class AppViewModel: ObservableObject {
     let appDataRepository: AppDataRepositoryProtocol
     let dataUsageRepository: DataUsageRepositoryProtocol
     let networkDataRepository: NetworkDataRepositoryProtocol
+    let toastTimer: ToastTimer
     
     /// [A] App Data
     @Published var unit = Unit.gb
@@ -100,6 +101,8 @@ final class AppViewModel: ObservableObject {
     @Published var date = Date()
     
     /// Edit Data Limit
+    @Published var toastMessage: String?
+
     @Published var isDataLimitEditing = false
     @Published var isDataLimitPerDayEditing = false
     
@@ -122,6 +125,22 @@ final class AppViewModel: ObservableObject {
         (numOfDaysOfPlanValue <= 0) && (buttonType == .save)
     }
     
+    var buttonDisabledPlanLimit: Bool {
+        Validator.hasExceededLimit(
+            value: dataLimitValue,
+            max: dataAmount,
+            min: 0
+        )
+    }
+    
+    var buttonDisabledDailyLimit: Bool {
+        Validator.hasExceededLimit(
+            value: dataLimitPerDayValue,
+            max: dataAmount,
+            min: 0
+        )
+    }
+    
     /// Weekday color can be customizable in the future
     @Published var days = dayPills
     
@@ -137,11 +156,13 @@ final class AppViewModel: ObservableObject {
             database: LocalDatabase(container: .dataUsage, appGroup: .dataPill)
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
+        toastTimer: ToastTimer = .init(),
         setupValues: Bool = true
     ) {
         self.appDataRepository = appDataRepository
         self.dataUsageRepository = dataUsageRepository
         self.networkDataRepository = networkDataRepository
+        self.toastTimer = toastTimer
         
         guard setupValues else {
             return
@@ -149,6 +170,7 @@ final class AppViewModel: ObservableObject {
         republishAppData()
         republishDataUsage()
         republishNetworkData()
+        republishToast()
         
         setInputValues()
         observePlanSettings()
@@ -235,6 +257,13 @@ extension AppViewModel {
         networkDataRepository.totalUsedDataPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.totalUsedData = $0 }
+            .store(in: &cancellables)
+    }
+    
+    func republishToast() {
+        toastTimer.$message
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.toastMessage = $0 }
             .store(in: &cancellables)
     }
 }
@@ -442,6 +471,10 @@ extension AppViewModel {
     }
     
     func didChangeIsDataPlanEditing(_ isEditing: Bool) {
+        if toastTimer.timer != nil {
+            toastTimer.reset()
+        }
+        
         guard !isTappedOutside else {
             /// revert to previous values
 
@@ -456,6 +489,7 @@ extension AppViewModel {
             dataLimitPerDayValue = "\(dataLimitPerDay)"
             
             isTappedOutside = false
+            
             return
         }
         
@@ -537,7 +571,11 @@ extension AppViewModel {
         let newValue = Stepper.plus(
             value: value,
             max: dataAmount,
-            by: plusValue
+            by: plusValue,
+            onExceed: { [weak self] in
+                let message = "Exceeds maximum data amount"
+                self?.toastTimer.showToast(message: message)
+            }
         )
         
         if isDataLimitEditing {

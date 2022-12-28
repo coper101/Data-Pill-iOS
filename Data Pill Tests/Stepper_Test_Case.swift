@@ -33,6 +33,22 @@ final class Stepper_Test_Case: XCTestCase {
         XCTAssertEqual(output, "5.0")
     }
     
+    func test_plus_exceeds_max_value() {
+        // (1) Given
+        // (2) When
+        var hasExceeded = false
+        let output = Stepper.plus(
+            value: "5.0",
+            max: 5.0,
+            by: 1.0,
+            onExceed: {
+                hasExceeded = true
+            }
+        )
+        // (3) Then
+        XCTAssertEqual(hasExceeded, true)
+    }
+    
     func test_plus_value_out_of_range() {
         // (1) Given
         // (2) When

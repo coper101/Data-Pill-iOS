@@ -12,31 +12,52 @@ struct EditItemCardView<Content>: View where Content: View {
     var buttonType: ButtonType
     var buttonAction: (ButtonType) -> Void
     var buttonDisabled = false
+    
     var spaceBetween: CGFloat
     var isCardShown = true
+    
+    var toastMessage: String? = nil
+    
     @ViewBuilder var content: () -> Content
     
     // MARK: - UI
     var body: some View {
-        VStack(
-            alignment: .trailing,
-            spacing: 0
-        ) {
+        ZStack {
             
-            // Row 1: CARD
-            content()
-                .opacity(isCardShown ? 1 : 0)
-                .animation(nil, value: isCardShown)
+            // Layer 1: Toast
+            if let toastMessage {
+                ToastView(message: toastMessage)
+                    .zIndex(0)
+                    .offset(y: -150)
+                    .popSlide(endOffsetY: 100)
+            }
             
-            // Row 2: ACTION BUTTON
-            ButtonView(
-                type: buttonType,
-                disabled: buttonDisabled,
-                action: buttonAction
-            )
-            .offset(y: spaceBetween)
+            // Layer 2: Input
+            VStack(
+                alignment: .trailing,
+                spacing: 0
+            ) {
             
-        } //: VStack
+                // Row 2: CARD
+                content()
+                    .opacity(isCardShown ? 1 : 0)
+                    .animation(nil, value: isCardShown)
+                
+                // Row 3: ACTION BUTTON
+                ButtonView(
+                    type: buttonType,
+                    disabled: buttonDisabled,
+                    action: buttonAction
+                )
+                .offset(y: spaceBetween)
+                
+            } //: VStack
+            .zIndex(1)
+            
+        } //: ZStack
+        .fixedSize()
+        .animation(.easeIn, value: toastMessage)
+
     }
     
     // MARK: - Actions
@@ -50,11 +71,13 @@ struct EditItemCardView_Previews: PreviewProvider {
             EditItemCardView(
                 buttonType: .save,
                 buttonAction: { _ in },
-                spaceBetween: 30
+                spaceBetween: 30,
+                toastMessage: "Exceeds maximum data amount"
             ) {
                 ItemCardView(
                     style: .wide,
                     subtitle: "Card",
+                    backgroundColor: .background,
                     content: {}
                 )
             }
@@ -68,6 +91,7 @@ struct EditItemCardView_Previews: PreviewProvider {
                 ItemCardView(
                     style: .wide,
                     subtitle: "Card",
+                    backgroundColor: .background,
                     content: {}
                 )
             }
@@ -76,6 +100,7 @@ struct EditItemCardView_Previews: PreviewProvider {
         }
         .previewLayout(.sizeThatFits)
         .padding()
-        .background(Color.white)
+        .frame(height: 300)
+        .background(Color.green)
     }
 }

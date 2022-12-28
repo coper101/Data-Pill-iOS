@@ -116,7 +116,9 @@ struct AppView: View {
                 EditItemCardView(
                     buttonType: appViewModel.buttonType,
                     buttonAction: buttonAction,
-                    spaceBetween: spaceBetweenCardButton
+                    buttonDisabled: appViewModel.buttonDisabledPlanLimit,
+                    spaceBetween: spaceBetweenCardButton,
+                    toastMessage: appViewModel.toastMessage
                 ) {
                     DataPlanLimitView(
                         dataLimitValue: $appViewModel.dataLimitValue,
@@ -142,7 +144,9 @@ struct AppView: View {
                 EditItemCardView(
                     buttonType: appViewModel.buttonType,
                     buttonAction: buttonAction,
-                    spaceBetween: spaceBetweenCardButton
+                    buttonDisabled: appViewModel.buttonDisabledDailyLimit,
+                    spaceBetween: spaceBetweenCardButton,
+                    toastMessage: appViewModel.toastMessage
                 ) {
                     DataPlanLimitView(
                         dataLimitValue: $appViewModel.dataLimitPerDayValue,

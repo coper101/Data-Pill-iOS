@@ -63,6 +63,7 @@ struct StepperButtonView: View {
                             .resizable()
                             .rotationEffect(.init(degrees: showStepperValue ? 45 : 0))
                             .accessibilityLabel("\(`operator`.id) / Rotated Plus Icon")
+                            .transition(.identity)
                         
                     } //: Button
                     
@@ -72,6 +73,7 @@ struct StepperButtonView: View {
                         
                         icon.image
                             .resizable()
+                            .transition(.identity)
                         
                     } //: Button
                     
@@ -86,15 +88,16 @@ struct StepperButtonView: View {
                 RoundedRectangle(cornerRadius: 15)
             )
             .buttonStyle(ScaleButtonStyle())
-            
+
             // Layer 2: CUSTOM VALUES +/- 0.1, +/- 1
             if showStepperValue {
                 StepperValueView(stepperValues: stepperValues)
                     .offset(y: -95)
-                    .popBounceEffect()
+                    .popSlide(endOffsetY: 30)
             }
             
         } //: VStack
+        .animation(.popBounce(), value: showStepperValue)
     }
     
     // MARK: - Actions

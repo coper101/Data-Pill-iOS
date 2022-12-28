@@ -18,6 +18,22 @@ extension Animation {
     
 }
 
+struct PopSlide: ViewModifier {
+    let endOffsetY: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .transition(
+                .asymmetric(
+                    insertion: .offset(y: endOffsetY),
+                    removal: .offset(y: endOffsetY)
+                        .combined(with: .opacity)
+                )
+            )
+            .animation(.popBounce())
+    }
+}
+
 struct PopBounce: ViewModifier {
     // MARK: - Props
     let maxOffsetY: CGFloat
@@ -89,6 +105,13 @@ extension View {
     /// - Parameter maxOffsetY : The initial offset in y axis before it animates to the original position
     func popBounceEffect(maxOffsetY: CGFloat = 100) -> some View {
         modifier(PopBounce(maxOffsetY: maxOffsetY))
+    }
+    
+    /// Applies a bounce animation when the View becomes visible
+    /// and slide animation when the View becomes hidden
+    /// - Parameter endOffsetY : The initial offset in y axis before it animates to the original position
+    func popSlide(endOffsetY: CGFloat) -> some View {
+        modifier(PopSlide(endOffsetY: endOffsetY))
     }
     
     /// Applies a gesture to scroll the content up and down in a fixed behaviour
