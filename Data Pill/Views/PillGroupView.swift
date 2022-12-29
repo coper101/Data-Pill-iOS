@@ -10,16 +10,7 @@ import SwiftUI
 struct PillGroupView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
-
-    var spaceInBetween: CGFloat = 21
-    var paddingHorizontal: CGFloat = 21
-    
-    var width: CGFloat {
-        Dimensions.Screen.width * 0.45
-    }
-    var height: CGFloat {
-        (Dimensions.Screen.width * 0.45) * 2.26
-    }
+    @Environment(\.dimensions) var dimensions: Dimensions
     
     var todaysDate: Date {
         appViewModel.todaysData.date ?? .init()
@@ -32,113 +23,122 @@ struct PillGroupView: View {
     
     // MARK: - UI
     var body: some View {
-        ScrollView {
+        VStack(spacing: dimensions.spaceInBetween) {
             
-            VStack(spacing: spaceInBetween) {
+            // MARK: - Row 1: Pill Group
+            HStack(
+                alignment: .center,
+                spacing: dimensions.spaceInBetween
+            ) {
                 
-                // MARK: - Row 1:
-                HStack(
-                    alignment: .top,
-                    spacing: spaceInBetween
-                ) {
-                    
-                    // Col 1: DATA PILL
-                    Button(action: dataPillAction) {
-                        PillView(
-                            color: color,
-                            percentage: appViewModel.dateUsedInPercentage,
-                            date: todaysDate,
-                            usageType: appViewModel.usageType
-                        )
-                    }
-                    .buttonStyle(
-                        ScaleButtonStyle(minScale: 0.9)
+                // Col 1: DATA PILL
+                Button(action: dataPillAction) {
+                    PillView(
+                        color: color,
+                        percentage: appViewModel.dateUsedInPercentage,
+                        date: todaysDate,
+                        usageType: appViewModel.usageType,
+                        customSize: .init(
+                            width: dimensions.pillWidth,
+                            height: dimensions.pillHeight
+                        ),
+                        isContentShown: !appViewModel.isHistoryShown
                     )
-                    
-                    // Col 2: INFO & CONTROLS
-                    GeometryReader { reader in
-                        
-                        let cardWidth = reader.size.width - paddingHorizontal - spaceInBetween
-                        let cardHeight = reader.size.height
-                        
-                        VStack(spacing: 0) {
-                            
-                            // USED
-                            UsedCardView(
-                                usedData: appViewModel.usedData,
-                                maxData: appViewModel.maxData,
-                                dataUnit: appViewModel.unit,
-                                width: cardWidth,
-                                height: 0.34 * cardHeight
-                            )
-                            
-                            // USAGE TOGGLE
-                            UsageCardView(
-                                selectedItem: $appViewModel.usageType,
-                                width: cardWidth,
-                                height: 0.4 * cardHeight
-                            )
-                            
-                            // NOTIF TOGGLE
-                            NotifCardView(
-                                isTurnedOn: $appViewModel.isNotifOn,
-                                width: cardWidth,
-                                height: 0.25 * cardHeight
-                            )
-                            
-                        } //: VStack
-                        .fillMaxSize()
-                        
-                    } //: GeometryReader
-
-                } //: HStack
-                .frame(height: height)
+                }
+                .buttonStyle(
+                    ScaleButtonStyle(minScale: 0.9)
+                )
+                .accessibilityIdentifier("pill")
                 
-                // DATA PLAN
-                DataPlanCardView(
-                    startDate: appViewModel.startDate,
-                    endDate: appViewModel.endDate,
-                    numberOfdays: appViewModel.numOfDaysOfPlan,
-                    periodAction: planPeriodAction,
-                    dataAmountAction: planAmountAction,
-                    startPeriodAction: {},
-                    endPeriodAction: {},
-                    dataAmountValue: $appViewModel.dataValue,
+                // Col 2: INFO & CONTROLS
+                GeometryReader { reader in
+                    
+                    let cardWidth = reader.size.width - dimensions.horizontalPadding - dimensions.spaceInBetween
+                    
+                    VStack(spacing: 0) {
+                        
+                        // USED
+                        UsedCardView(
+                            usedData: appViewModel.usedData,
+                            maxData: appViewModel.maxData,
+                            dataUnit: appViewModel.unit,
+                            width: cardWidth
+                        )
+                        
+                        Spacer()
+                        
+                        // USAGE TOGGLE
+                        UsageCardView(
+                            selectedItem: $appViewModel.usageType,
+                            width: cardWidth
+                        )
+                        
+                        Spacer()
+                        
+                        // AUTO DATA PERIOD TOGGLE
+                        AutoPeriodCardView(
+                            isAuto: $appViewModel.isPeriodAuto,
+                            width: cardWidth
+                        )
+                        
+                    } //: VStack
+                    .fillMaxSize()
+                    
+                } //: GeometryReader
+
+            } //: HStack
+            .frame(height: dimensions.maxPillHeight)
+            
+            // MARK: - Row 2: Data Plan
+            DataPlanCardView(
+                startDate: appViewModel.startDate,
+                endDate: appViewModel.endDate,
+                numberOfdays: appViewModel.numOfDaysOfPlan,
+                periodAction: planPeriodAction,
+                dataAmountAction: planAmountAction,
+                startPeriodAction: {},
+                endPeriodAction: {},
+                dataAmountValue: $appViewModel.dataValue,
+                plusDataAction: {},
+                minusDataAction: {},
+                didChangePlusStepperValue: { _ in },
+                didChangeMinusStepperValue: { _ in }
+            )
+            .frame(height: dimensions.planCardHeight)
+            
+            // MARK: - Row 3: Data Limit
+            HStack(spacing: dimensions.spaceInBetween) {
+                
+                DataPlanLimitView(
+                    dataLimitValue: $appViewModel.dataLimitValue,
+                    dataAmount: appViewModel.dataLimit,
+                    isEditing: false,
+                    usageType: .plan,
+                    editAction: planLimitAction,
+                    minusDataAction: {},
                     plusDataAction: {},
-                    minusDataAction: {}
+                    didChangePlusStepperValue: { _ in },
+                    didChangeMinusStepperValue: { _ in }
                 )
                 
-                // DATA LIMIT
-                HStack(spacing: 21) {
-                    
-                    DataPlanLimitView(
-                        dataLimitValue: $appViewModel.dataLimitValue,
-                        dataAmount: appViewModel.dataLimit,
-                        isEditing: false,
-                        usageType: .plan,
-                        editAction: planLimitAction,
-                        minusDataAction: {},
-                        plusDataAction: {}
-                    )
-                    
-                    DataPlanLimitView(
-                        dataLimitValue: $appViewModel.dataLimitPerDayValue,
-                        dataAmount: appViewModel.dataLimitPerDay,
-                        isEditing: false,
-                        usageType: .daily,
-                        editAction: planLimitPerDayAction,
-                        minusDataAction: {},
-                        plusDataAction: {}
-                    )
-                    
-                } //: HStack
-                .frame(height: 145)
+                DataPlanLimitView(
+                    dataLimitValue: $appViewModel.dataLimitPerDayValue,
+                    dataAmount: appViewModel.dataLimitPerDay,
+                    isEditing: false,
+                    usageType: .daily,
+                    editAction: planLimitPerDayAction,
+                    minusDataAction: {},
+                    plusDataAction: {},
+                    didChangePlusStepperValue: { _ in },
+                    didChangeMinusStepperValue: { _ in }
+                )
                 
-            } //: VStack
-            .padding(.horizontal, paddingHorizontal)
-            .padding(.vertical, paddingHorizontal)
-             
-        } //: ScrollView
+            } //: HStack
+            .frame(height: dimensions.planLimitCardsHeight)
+            
+        } //: VStack
+        .padding(.horizontal, dimensions.horizontalPadding)
+        .padding(.vertical, dimensions.horizontalPadding)
     }
     
     // MARK: - Actions
@@ -176,20 +176,9 @@ struct PillGroupView: View {
 
 // MARK: - Preview
 struct PillGroupView_Previews: PreviewProvider {
-    static var appViewModel: AppViewModel {
-        let networkDataRepo = NetworkDataFakeRepository(totalUsedData: 1_000)
-        let dataUsageRepo = DataUsageFakeRepository(thisWeeksData: weeksDataSample)
-        let appDataRepo = AppDataFakeRepository()
-        return AppViewModel.init(
-//            appDataRepository: appDataRepo,
-            dataUsageRepository: dataUsageRepo
-//            networkDataRepository: networkDataRepo
-        )
-    }
-    
     static var previews: some View {
         PillGroupView()
             .previewLayout(.sizeThatFits)
-            .environmentObject(appViewModel)
+            .environmentObject(AppViewModel())
     }
 }

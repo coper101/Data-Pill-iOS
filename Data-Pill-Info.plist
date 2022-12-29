@@ -2,13 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>UsageTypeIntent</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SFProText-Bold.ttf</string>
 		<string>SFProText-Medium.ttf</string>
 		<string>SFProText-Semibold.ttf</string>
+		<string>SFProText-Heavy.ttf</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>Launch Screen Background</string>
+	</dict>
 </dict>
 </plist>

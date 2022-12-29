@@ -10,7 +10,7 @@ import Foundation
 extension String {
     
     /// Converts ISO String Date to Date
-    public func toDate() -> Date {
+    func toDate() -> Date {
         let dateFormatter = ISO8601DateFormatter()
         return dateFormatter.date(from: self) ?? Date()
     }
@@ -19,17 +19,20 @@ extension String {
 
 extension Date {
     
-    /// Format the Date to `dd mm yyyy`
+    /// Format the Date to `dd mm yyyy` or `dd mm yy`
     /// e.g. 1 Jan 2022
-    public func toDayMonthYearFormat() -> String {
+    func toDayMonthYearFormat(isLongYear: Bool = true) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "d MMM yyyy"
+        let longYear = "yyyy"
+        let shortYear = "yy"
+        let year = isLongYear ? longYear : shortYear
+        dateFormatter.dateFormat = "d MMM \(year)"
         return dateFormatter.string(from: self)
     }
    
     /// Formats the Date to `dd mm`
     /// e.g. 1 Jan
-    public func toDayMonthFormat() -> String {
+    func toDayMonthFormat() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d MMM"
         return dateFormatter.string(from: self)
@@ -37,9 +40,17 @@ extension Date {
     
     /// Formats the Date to `dd mm`
     /// e.g. 1 Jan  =  1
-    public func toDayFormat() -> String {
+    func toDayFormat() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d"
+        return dateFormatter.string(from: self)
+    }
+    
+    /// Formats the Date to `E`
+    /// e.g. 1 Jan  2022 =  Sat
+    func toWeekdayFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E"
         return dateFormatter.string(from: self)
     }
     
@@ -51,14 +62,46 @@ extension Date {
     }
     
     /// Checks Date is Today's Date
-    public func isToday() -> Bool {
+    func isToday() -> Bool {
         Calendar.current.isDateInToday(self)
     }
     
     /// Counts the number of days between two Dates
     /// - Parameter end: A value to specify the last Date
-    public func toNumOfDays(to end: Date) -> Int {
+    func toNumOfDays(to end: Date) -> Int {
         Calendar.current.daysBetween(start: self, end: end)
+    }
+    
+    /// Creates a range from the specified Date to Any Date
+    func fromDateRange() -> PartialRangeFrom<Date> {
+        let startComponents = self.toDateComp()
+        return Calendar.current.date(from: startComponents)!...
+    }
+    
+    /// Creates a range from Any Date to specified Date
+    func toDateRange() -> PartialRangeThrough<Date> {
+        let endComponents = self.toDateComp()
+        return ...Calendar.current.date(from: endComponents)!
+    }
+    
+    /// Checks if Date is in range from the specified start Date and end Date
+    /// - Parameters:
+    ///    - from : The starting date of the range
+    ///    - to : The ending date of the range
+    func isDateInRange(from start: Date, to end: Date) -> Bool {
+        let startDate = Calendar.current.startOfDay(for: start)
+        let endDate = Calendar.current.startOfDay(for: end)
+        if endDate < startDate {
+            return false
+        }
+        let dateInterval = DateInterval(start: startDate, end: endDate)
+        return dateInterval.contains(self)
+    }
+    
+    /// Returns a new Date after adding number of days
+    /// - Parameter value: The number of days to add
+    func addDay(value: Int) -> Date? {
+        Calendar.current.date(byAdding: .day, value: value, to: self)
     }
 }
 
@@ -72,7 +115,7 @@ extension Calendar {
             from: from,
             to: to
         )
-        return numberOfDays.day!
+        return numberOfDays.day! + 1
     }
     
 }

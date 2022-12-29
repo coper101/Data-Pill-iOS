@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Data Pill WidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>Data Pill.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -18,6 +23,11 @@
 			<true/>
 		</dict>
 		<key>278FB2C828F2E55900BE78C2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>27E77703293367450031456D</key>
 		<dict>
 			<key>primary</key>
 			<true/>

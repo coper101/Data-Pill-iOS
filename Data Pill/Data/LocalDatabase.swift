@@ -7,6 +7,27 @@
 
 import Foundation
 import CoreData
+import OSLog
+
+enum AppGroup: String {
+    case dataPill = "group.com.penguinworks.Data-Pill"
+    var name: String {
+        self.rawValue
+    }
+}
+
+extension URL {
+    
+    static func storeURL(for appGroup: AppGroup, of container: Containers) -> URL? {
+        guard let fileContainer = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: appGroup.name
+        ) else {
+            Logger.database.error("failed to get file container \(container.name)")
+            return nil
+        }
+        return fileContainer.appendingPathComponent("\(container.name).sqlite")
+    }
+}
 
 enum Containers: String {
     case dataUsage = "DataUsage"
@@ -17,42 +38,31 @@ enum Containers: String {
 
 enum Entities: String {
     case data = "Data"
+    case plan = "Plan"
     var name: String {
         return self.rawValue
     }
 }
 
 enum StorageType {
-  case sql
-  case memory
+    case sql
+    case memory
 }
 
-class LocalDatabase<Entity: NSManagedObject> {
+// MARK: - Protocol
+protocol Database {
+    var container: NSPersistentContainer { get }
+    var context: NSManagedObjectContext { get }
     
-    let container: NSPersistentContainer
-    private let entityName: String
+    init(container: Containers, appGroup: AppGroup?)
     
-    var context: NSManagedObjectContext {
-        container.viewContext
-    }
-    
-    // MARK: - Initializer
-    init(
-        container: Containers,
-        entity: Entities,
-        storageType: StorageType = .sql
-    ) {
-        self.container = NSPersistentContainer(name: container.name)
-        if storageType == .memory {
-            let description = NSPersistentStoreDescription()
-            description.type = NSInMemoryStoreType
-//            description.url = URL(fileURLWithPath: "/dev/null")
-            self.container.persistentStoreDescriptions = [description]
-        }
-        entityName = entity.name
-    }
-    
-    // MARK: - Operations
+    func loadContainer(
+        onError: @escaping (Error) -> Void,
+        onSuccess: @escaping () -> Void
+    ) -> Void
+}
+
+extension Database {
     func loadContainer(
         onError: @escaping (Error) -> Void,
         onSuccess: @escaping () -> Void
@@ -64,38 +74,6 @@ class LocalDatabase<Entity: NSManagedObject> {
             onSuccess(); return
         }
     }
-    
-    func getAllItems() throws -> [Entity] {
-        let request = NSFetchRequest<Entity>(entityName: entityName)
-        return try context.fetch(request)
-    }
-    
-    func getItemsWith(
-        format: String,
-        _ args: CVarArg...,
-        sortDescriptors: [NSSortDescriptor] = []
-    ) throws -> [Entity] {
-        let request = NSFetchRequest<Entity>(entityName: entityName)
-        request.sortDescriptors = sortDescriptors
-        request.predicate = .init(format: format, args)
-        return try context.fetch(request)
-    }
-    
-    func addItem(_ creator: @escaping (inout Entity) -> Void) throws -> Bool {
-        var newItem = Entity.init(context: context)
-        creator(&newItem)
-        return try context.saveIfNeeded()
-    }
-    
-    func updateItem(_ item: Entity) throws -> Bool {
-        return try context.saveIfNeeded()
-    }
-    
-    func deleteItem(_ item: Entity) throws -> Bool {
-        context.delete(item)
-        return try context.saveIfNeeded()
-    }
-    
 }
 
 extension NSManagedObjectContext {
@@ -107,4 +85,44 @@ extension NSManagedObjectContext {
         try save()
         return true
     }
+}
+
+// MARK: Implementation
+class LocalDatabase: Database {
+
+    let container: NSPersistentContainer
+    var context: NSManagedObjectContext {
+        container.viewContext
+    }
+    
+    required init(container: Containers, appGroup: AppGroup?) {
+        self.container = NSPersistentContainer(name: container.name)
+        if
+            let appGroup = appGroup,
+            let storeURL = URL.storeURL(for: appGroup, of: container)
+        {
+            let description = NSPersistentStoreDescription(url: storeURL)
+            self.container.persistentStoreDescriptions = [description]
+            Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
+        }
+    }
+    
+}
+
+class InMemoryLocalDatabase: Database {
+
+    let container: NSPersistentContainer
+    var context: NSManagedObjectContext {
+        container.viewContext
+    }
+    
+    required init(container: Containers, appGroup: AppGroup?) {
+        self.container = NSPersistentContainer(name: container.name)
+        if let storeDescription = self.container.persistentStoreDescriptions.first {
+            storeDescription.type = NSInMemoryStoreType
+            storeDescription.url = URL(fileURLWithPath: "/dev/null")
+        }
+        Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
+    }
+    
 }

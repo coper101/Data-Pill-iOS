@@ -6,15 +6,17 @@
 //
 
 import SwiftUI
+import OSLog
 
 @main
 struct Data_PillApp: App {
-    var appViewModel: AppViewModel = .init()
+    @StateObject private var appViewModel = AppViewModel()
 
     var body: some Scene {
         WindowGroup {
             AppView()
                 .environmentObject(appViewModel)
+                .background(Colors.background.color)
         }
     }
 }

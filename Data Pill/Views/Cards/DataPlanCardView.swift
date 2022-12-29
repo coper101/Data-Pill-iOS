@@ -19,31 +19,35 @@ struct DataPlanCardView: View {
     var endDate: Date
     var numberOfdays: Int
     
-    var periodAction: () -> Void
-    var dataAmountAction: () -> Void
-    var startPeriodAction: () -> Void
-    var endPeriodAction: () -> Void
+    var periodAction: Action
+    var dataAmountAction: Action
+    var startPeriodAction: Action
+    var endPeriodAction: Action
     
     @Binding var dataAmountValue: String
     var dataUnit: Unit = .gb
-    var plusDataAction: () -> Void
-    var minusDataAction: () -> Void
+    
+    var plusDataAction: Action
+    var minusDataAction: Action
+    var didChangePlusStepperValue: StepperValueAction
+    var didChangeMinusStepperValue: StepperValueAction
         
     var periodTitle: String {
         "\(startDate.toDayMonthFormat()) - \(endDate.toDayMonthFormat())".uppercased()
     }
     
     var caption: String {
-        editType == nil || editType == .data ?
-            "" :
-            "\(numberOfdays) Days"
+        (editType == nil || editType == .data) ?
+            "" : numberOfdays.prefixDay()
     }
     
     var subtitle: String {
         if let editType = editType {
             switch editType {
-            case .data: return "Data"
-            case .dataPlan: return "Data Plan"
+            case .data:
+                return "Data Amount"
+            case .dataPlan:
+                return "Period"
             }
         }
         return "Data Plan"
@@ -52,38 +56,36 @@ struct DataPlanCardView: View {
     // MARK: - UI
     var dataPlan: some View {
         HStack(spacing: 15) {
+            
             DateInputView(
                 date: startDate,
                 title: "From",
                 action: startPeriodAction
             )
+            
             DateInputView(
                 date: endDate,
                 title: "To",
                 action: endPeriodAction
             )
+
         } //: HStack
         .fillMaxWidth()
         .padding(.top, 10)
     }
     
     var data: some View {
-        HStack(spacing: 10) {
-            StepperButtonView(
-                operator: .minus,
-                action: minusDataAction
-            )
-            TextInputView(
-                data: $dataAmountValue,
-                unit: dataUnit
-            )
-            StepperButtonView(
-                operator: .plus,
-                action: plusDataAction
-            )
-        } //: VStack
-        .padding(.top, 20)
-        .fillMaxWidth(alignment: .center)
+        StepperView(
+            value: $dataAmountValue,
+            unit: .gb,
+            minusAction: minusDataAction,
+            plusAction: plusDataAction,
+            plusStepperValueAction: didChangePlusStepperValue,
+            minusStepperValueAction: didChangeMinusStepperValue
+        )
+        .fillMaxWidth()
+        .padding(.top, 28)
+        .padding(.bottom, 12)
     }
     
     var body: some View {
@@ -91,15 +93,17 @@ struct DataPlanCardView: View {
             style: .wide,
             subtitle: subtitle,
             caption: caption,
-            hasBackground: editType == nil,
+            backgroundColor: editType == nil ? .surface : .background,
             textColor: editType == nil ? .onSurfaceLight2 : .onBackground
         ) {
             
             if let editType = editType {
                 
                 switch editType {
-                case .data: data
-                case .dataPlan: dataPlan
+                case .data:
+                    data
+                case .dataPlan:
+                    dataPlan
                 }
                 
             } else {
@@ -107,9 +111,10 @@ struct DataPlanCardView: View {
                 // Row 1: PERIOD
                 NavRowView(
                     title: periodTitle,
-                    subtitle: "\(numberOfdays) Days",
+                    subtitle: numberOfdays.prefixDay(),
                     action: periodAction
                 )
+                .accessibilityLabel("period")
                 .padding(.top, 10)
                 
                 DividerView()
@@ -121,10 +126,12 @@ struct DataPlanCardView: View {
                     subtitle: "",
                     action: dataAmountAction
                 )
+                .accessibilityLabel("amount")
                 
             } // if-else
             
         } //: ItemCardView
+        .accessibilityIdentifier("dataPlan")
     }
     
     // MARK: - Actions
@@ -145,11 +152,14 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endPeriodAction: {},
             dataAmountValue: .constant("10"),
             plusDataAction: {},
-            minusDataAction: {}
+            minusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Information")
             .padding()
+            .background(Color.green)
         
         DataPlanCardView(
             editType: .data,
@@ -162,11 +172,14 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endPeriodAction: {},
             dataAmountValue: .constant("10"),
             plusDataAction: {},
-            minusDataAction: {}
+            minusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit Data")
             .padding()
+            .background(Color.green)
         
         DataPlanCardView(
             editType: .dataPlan,
@@ -179,11 +192,14 @@ struct DataPlanCardView_Previews: PreviewProvider {
             endPeriodAction: {},
             dataAmountValue: .constant("10"),
             plusDataAction: {},
-            minusDataAction: {}
+            minusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit Data Plan")
             .padding()
+            .background(Color.green)
     }
 }
 

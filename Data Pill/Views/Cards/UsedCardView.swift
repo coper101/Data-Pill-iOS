@@ -13,7 +13,6 @@ struct UsedCardView: View {
     var maxData: Double
     var dataUnit: Unit
     var width: CGFloat
-    var height: CGFloat?
     
     var percentageUsed: Int {
         usedData.toPercentage(with: maxData)
@@ -33,13 +32,30 @@ struct UsedCardView: View {
         ) {
             
             // Row 1: PERCENTAGE USED
-            Text("\(percentageUsed) %")
-                .textStyle(
-                    foregroundColor: .onSurface,
-                    font: .semibold,
-                    size: 32,
-                    lineLimit: 1
-                )
+            HStack(
+                alignment: .firstTextBaseline,
+                spacing: 0
+            ) {
+                
+                Text("\(percentageUsed)")
+                    .textStyle(
+                        foregroundColor: .onSurface,
+                        font: .semibold,
+                        size: 32,
+                        lineLimit: 1
+                    )
+                    .id(percentageUsed)
+                    .accessibilityLabel("percentageUsedNumber")
+                
+                Text("%")
+                    .textStyle(
+                        foregroundColor: .onSurface,
+                        font: .semibold,
+                        size: 28,
+                        lineLimit: 1
+                    )
+                    .accessibilityLabel("percentageUsedSign")
+            } //: HStack
             
             // Row 2: DATA
             Text(data)
@@ -51,9 +67,11 @@ struct UsedCardView: View {
                 )
                 .opacity(0.5)
                 .padding(.bottom, 10)
+                .id(data)
+                .accessibilityLabel("dataUsedAmount")
             
         } //: ItemCardView
-        .frame(height: height)
+        .accessibilityIdentifier("used")
     }
     
     // MARK: - Actions
@@ -68,8 +86,7 @@ struct UsedCardView_Previews: PreviewProvider {
             usedData: 0.13,
             maxData: 0.3,
             dataUnit: appViewModel.unit,
-            width: 150,
-            height: 0.34 * 400
+            width: 150
         )
             .previewLayout(.sizeThatFits)
             .padding()

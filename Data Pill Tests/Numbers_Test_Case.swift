@@ -15,95 +15,194 @@ final class Numbers_Test_Case: XCTestCase {
     }
 
     override func tearDownWithError() throws {}
+    
+    /// prefixDay
+    func test_prefix_day_is_1_day() throws {
+        // (1) Given
+        let input = 1
+        // (2) When
+        let output = input.prefixDay()
+        // (3) Then
+        XCTAssertEqual(output, "1 Day")
+    }
+    
+    func test_prefix_day_is_2_days() throws {
+        // (1) Given
+        let input = 2
+        // (2) When
+        let output = input.prefixDay()
+        // (3) Then
+        XCTAssertEqual(output, "2 Days")
+    }
+    
+    func test_prefix_day_is_negative_1_day() throws {
+        // (1) Given
+        let input = -1
+        // (2) When
+        let output = input.prefixDay()
+        // (3) Then
+        XCTAssertEqual(output, "-1 Day")
+    }
 
-    // MARK: - toInt()
-    func test_non_zero_int_conversion() throws {
-        let output = 40.1.toInt()
+    /// toInt
+    func test_convert_decimal_to_int() throws {
+        // (1) Given
+        let input = 40.1
+        // (2) When
+        let output = input.toInt()
+        // (3) Then
         XCTAssertEqual(output, 40)
     }
     
-    func test_zero_int_conversion() throws {
-        let output = 0.001.toInt()
+    func test_convert_zero_to_int() throws {
+        // (1) Given
+        let input = 0.001
+        // (2) When
+        let output = input.toInt()
+        // (3) Then
         XCTAssertEqual(output, 0)
     }
     
-    func test_negative_int_conversion() throws {
-        let number = -2.0
-        let output = number.toInt()
+    func test_convert_negative_number_to_int() throws {
+        // (1) Given
+        let input = -2.0
+        // (2) When
+        let output = input.toInt()
+        // (3) Then
         XCTAssertEqual(output, 0)
     }
     
-    // MARK: - toIntOrDp()
-    func test_round_4_decimal_places() throws {
-        let output = 3.2032.toIntOrDp()
-        XCTAssertEqual(output, "3.20")
+    /// toIntOrDp
+    func test_round_decimal_places_to_2_dp() throws {
+        // (1) Given
+        let input = 1.2345
+        // (2) When
+        let output = input.toIntOrDp()
+        // (3) Then
+        XCTAssertEqual(output, "1.23")
     }
     
-    func test_round_2_decimal_places() throws {
-        let output = 3.20.toIntOrDp()
-        XCTAssertEqual(output, "3.20")
+    func test_round_2_decimal_places_to_1_dp() throws {
+        // (1) Given
+        let input = 1.2045
+        // (2) When
+        let output = input.toIntOrDp()
+        // (3) Then
+        XCTAssertEqual(output, "1.2")
     }
     
-    func test_round_0_decimal_place() throws {
-        let output = 3.00.toIntOrDp()
-        XCTAssertEqual(output, "3")
+    func test_round_zero_decimal_places_to_int() throws {
+        // (1) Given
+        let input = 1.00
+        // (2) When
+        let output = input.toIntOrDp()
+        // (3) Then
+        XCTAssertEqual(output, "1")
     }
     
-    func test_round_negative_decimal_place() throws {
+    func test_round_negative_decimal_place_to_int() throws {
+        // (1) Given
         let number = -2.0
+        // (2) When
         let output = number.toIntOrDp()
+        // (3) Then
         XCTAssertEqual(output, "0")
     }
 
-    // MARK: - toDp()
+    /// toDp
     func test_4_decimal_places() throws {
-        let output = 4.123456.toDp(n: 4)
+        // (1) Given
+        let input = 4.123456
+        let n = 4
+        // (2) When
+        let output = input.toDp(n: n)
+        // (3) Then
         XCTAssertEqual(output, "4.1234")
     }
     
     func test_2_decimal_places() throws {
-        let output = 4.123456.toDp(n: 2)
+        // (1) Given
+        let input = 4.123456
+        let n = 2
+        // (2) When
+        let output = input.toDp(n: n)
+        // (3) Then
         XCTAssertEqual(output, "4.12")
     }
     
     func test_1_decimal_places() throws {
-        let output = 4.123456.toDp(n: 1)
+        // (1) Given
+        let input = 4.123456
+        let n = 1
+        // (2) When
+        let output = input.toDp(n: n)
+        // (3) Then
         XCTAssertEqual(output, "4.1")
     }
     
     func test_negative_decimal_places() throws {
-        let number = -4.12356
-        let output = number.toDp(n: 1)
+        // (1) Given
+        let input = -4.12356
+        let n = 1
+        // (2) When
+        let output = input.toDp(n: n)
+        // (3) Then
         XCTAssertEqual(output, "0")
     }
     
-    // MARK: - toPerc()
+    /// toPerc
     func test_to_percentage() throws {
-        let output = 2.toPercentage(with: 10)
+        // (1) Given
+        let numerator = 2.0
+        let denaminator = 10.0
+        // (2) When
+        let output = numerator.toPercentage(with: denaminator)
+        // (3) Then
         XCTAssertEqual(output, 20)
     }
     
     func test_to_percentage_exceeds_max() throws {
-        let output = 14.toPercentage(with: 10)
+        // (1) Given
+        let numerator = 14.0
+        let denaminator = 10.0
+        // (2) When
+        let output = numerator.toPercentage(with: denaminator)
+        // (3) Then
         XCTAssertEqual(output, 100)
     }
     
     func test_to_percentage_negative() throws {
-        let number = -2.0
-        let output = number.toPercentage(with: 10)
+        // (1) Given
+        let numerator = -2.0
+        let denaminator = 10.0
+        // (2) When
+        let output = numerator.toPercentage(with: denaminator)
+        // (3) Then
         XCTAssertEqual(output, 0)
     }
     
-    // MARK: - toGB()
+    /// toGB
     func test_megabyte_to_gigabye() throws {
-        let output = 1_400.toGB()
+        // (1) Given
+        let input = 1_400.0
+        // (2) When
+        let output = input.toGB()
+        // (3) Then
         XCTAssertEqual(output, 1.4)
     }
     
-    func test_negative_megabyte_to_gigabye() throws {
-        let number = -1_400.0
-        let output = number.toGB()
-        XCTAssertEqual(output, 0.0)
+    func test_negative_megabyte_to_gigabyte() throws {
+        // (1) Given
+        let input = -1_400.0
+        // (2) When
+        let output = input.toGB()
+        // (3) Then
+        XCTAssertEqual(output, 0)
     }
+    
+    /// toInt64
+//    func test_unsigned_64_to_int() throws {
+//        let uint64: UInt64 = 1_000_000
+//    }
     
 }

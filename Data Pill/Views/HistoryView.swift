@@ -10,11 +10,15 @@ import CoreData
 
 struct HistoryView: View {
     // MARK: - Props
+    @Environment(\.dimensions) var dimensions: Dimensions
+
     var paddingHorizontal: CGFloat = 21
     var days: [DayPill]
     var weekData: [Data]
     var dataLimitPerDay: Double
     var usageType: ToggleItem
+    
+    var showFilledLines: Bool = false
     var closeAction: () -> Void
     
     var descendingWeeksData: [Data] {
@@ -50,20 +54,26 @@ struct HistoryView: View {
                 CloseIconView(action: closeAction)
                 
             } //: HStack
-            .padding(.leading, 16)
-            .padding(.trailing, 20)
-            .padding(.bottom, 17)
-            .padding(.top, EdgeInsets.insets.top + 4)
+            .padding(.leading, 21)
+            .padding(.trailing, 6)
+            .padding(.top, dimensions.insets.top)
             
             // MARK: - Row 2: Days of Week
             ZStack {
                 
-                ForEach(Array(descendingWeeksData.enumerated()), id: \.element) { index, element in
+                ForEach(
+                    Array(descendingWeeksData.enumerated()),
+                    id: \.element
+                ) { index, element in
+                    
                     DraggablePillView(
                         date: element.date ?? Date(),
                         color: days[index].color,
-                        percentage: element.dailyUsedData.toGB().toPercentage(with: dataLimitPerDay),
+                        percentage: element.dailyUsedData.toGB()
+                            .toPercentage(with: dataLimitPerDay),
                         usageType: usageType,
+                        hasBackground: index == 0 && showFilledLines,
+                        showFillLine: showFilledLines,
                         widthScale: 0.65
                     )
                     
@@ -74,6 +84,7 @@ struct HistoryView: View {
             .fillMaxSize(alignment: .bottom)
             
         } //: VStack
+        .accessibilityIdentifier("history")
     }
     
     // MARK: - Actions
@@ -85,14 +96,29 @@ struct HistoryView_Previews: PreviewProvider {
     static var dataLimitPerDay = 2.0
     
     static var previews: some View {
-        HistoryView(
-            days: dayPills,
-            weekData: repo.thisWeeksData,
-            dataLimitPerDay: dataLimitPerDay,
-            usageType: .daily,
-            closeAction: {}
-        )
-            .previewLayout(.sizeThatFits)
+        Group {
+            
+            HistoryView(
+                days: dayPills,
+                weekData: repo.thisWeeksData,
+                dataLimitPerDay: dataLimitPerDay,
+                usageType: .daily,
+                closeAction: {}
+            )
+            .previewDisplayName("Filled")
+            
+            HistoryView(
+                days: dayPills,
+                weekData: repo.thisWeeksData,
+                dataLimitPerDay: dataLimitPerDay,
+                usageType: .daily,
+                showFilledLines: true,
+                closeAction: {}
+            )
+            .previewDisplayName("Filled Lines")
+            
+        }
+        .previewLayout(.sizeThatFits)
     }
 }
 

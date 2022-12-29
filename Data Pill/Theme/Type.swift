@@ -11,6 +11,7 @@ enum SFProText: String {
     case bold = "SFProText-Bold"
     case medium = "SFProText-Medium"
     case semibold = "SFProText-Semibold"
+    case heavy = "SFProText-Heavy"
     var value: String {
         self.rawValue
     }

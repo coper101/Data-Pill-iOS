@@ -16,7 +16,7 @@ struct NavRowView: View {
     // MARK: - UI
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 14) {
+            HStack(spacing: 8) {
                 
                 // Col 1: TITLE
                 Text(title)
@@ -26,6 +26,7 @@ struct NavRowView: View {
                         size: 15,
                         lineLimit: 1
                     )
+                    .fixedSize()
                 
                 // Col 2: SUBTITLE
                 Text(subtitle)
@@ -37,7 +38,7 @@ struct NavRowView: View {
                     )
                 
                 // Col 3: NAV ICON
-                Spacer()
+                Spacer(minLength: 0)
                 Icons.navigateIcon.image
                     .resizable()
                     .size(length: 26)
@@ -47,7 +48,10 @@ struct NavRowView: View {
                  
             } //: HStack
             .frame(height: 37)
+            .contentShape(Rectangle())
+            
         } //: Button
+        .buttonStyle(ScaleButtonStyle())
     }
     
     // MARK: - Actions

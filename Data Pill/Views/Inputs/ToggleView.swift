@@ -34,12 +34,8 @@ struct ToggleItemView: View {
                 .fillMaxWidth()
                 .opacity(opacity)
         } //: Button
+        .buttonStyle(ScaleButtonStyle())
     }
-}
-
-enum ToggleItem: String {
-    case plan = "Plan"
-    case daily = "Daily"
 }
 
 struct ToggleView: View {

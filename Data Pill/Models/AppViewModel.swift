@@ -16,21 +16,36 @@ final class AppViewModel: ObservableObject {
     let appDataRepository: AppDataRepositoryProtocol
     let dataUsageRepository: DataUsageRepositoryProtocol
     let networkDataRepository: NetworkDataRepositoryProtocol
+    let toastTimer: ToastTimer
     
-    /// App Data
+    /// [A] App Data
+    @Published var unit = Unit.gb
+    @Published var usageType: ToggleItem = .daily
+    @Published var isPeriodAuto = false
+    
+    @Published var dataPlusStepperValue = 1.0
+    @Published var dataMinusStepperValue = 1.0
+    
+    @Published var dataLimitPerDayPlusStepperValue = 1.0
+    @Published var dataLimitPerDayMinusStepperValue = 1.0
+    
+    @Published var dataLimitPlusStepperValue = 1.0
+    @Published var dataLimitMinusStepperValue = 1.0
+    
+    /// [B] Data Usage
     @Published var startDate = Date()
     @Published var endDate = Date()
     @Published var dataAmount = 0.0
     @Published var dataLimit = 0.0
     @Published var dataLimitPerDay = 0.0
-    @Published var unit = Unit.gb
     
-    /// Data Usage
     @Published var thisWeeksData = [Data]()
+    
     @Published var totalUsedDataPlan = 0.0
+    
     @Published var dataError: DatabaseError?
     
-    /// Network Data
+    /// [3] Network Data
     @Published var totalUsedData = 0.0
 
     var numOfDaysOfPlan: Int {
@@ -65,17 +80,14 @@ final class AppViewModel: ObservableObject {
     
     
     var dateUsedInPercentage: Int {
-        return usedData.toPercentage(with: maxData)
+        usedData.toPercentage(with: maxData)
     }
     
     // MARK: - UI
-    /// Usage Type - Plan or Daily
-    @Published var usageType: ToggleItem = .daily
-    
-    /// Notification
-    @Published var isNotifOn = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
+    @Published var isTappedOutside = false
+    @Published var isLongPressedOutside = false
     
     /// Edit Data Plan
     @Published var isDataPlanEditing = false
@@ -84,10 +96,13 @@ final class AppViewModel: ObservableObject {
     @Published var isEndDatePickerShown = false
     
     @Published var dataValue = "0.0"
-    @Published var startDateValue: Date = .init()
-    @Published var endDateValue: Date = .init()
+    @Published var startDateValue = Date()
+    @Published var endDateValue = Date()
+    @Published var date = Date()
     
     /// Edit Data Limit
+    @Published var toastMessage: String?
+
     @Published var isDataLimitEditing = false
     @Published var isDataLimitPerDayEditing = false
     
@@ -98,31 +113,74 @@ final class AppViewModel: ObservableObject {
         startDateValue.toNumOfDays(to: endDateValue)
     }
     
+    var isDatePickerShown: Bool {
+        isEndDatePickerShown || isStartDatePickerShown
+    }
+    
+    var buttonType: ButtonType {
+        isDatePickerShown ? .done : .save
+    }
+    
+    var buttonDisabled: Bool {
+        (numOfDaysOfPlanValue <= 0) && (buttonType == .save)
+    }
+    
+    var buttonDisabledPlanLimit: Bool {
+        Validator.hasExceededLimit(
+            value: dataLimitValue,
+            max: dataAmount,
+            min: 0
+        )
+    }
+    
+    var buttonDisabledDailyLimit: Bool {
+        Validator.hasExceededLimit(
+            value: dataLimitPerDayValue,
+            max: dataAmount,
+            min: 0
+        )
+    }
+    
     /// Weekday color can be customizable in the future
     @Published var days = dayPills
     
     // MARK: - Initializer
+    /// - parameters:
+    ///   - appDataRepository: The data source for app settings
+    ///   - dataUsageRepository: The data source for data usage persistence
+    ///   - networkDataRepository: The data source for ceullular data usage
+    ///   - setupValues: Execute events (useful for testing)
     init(
         appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
-        dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(),
-        networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository()
+        dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(
+            database: LocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        ),
+        networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
+        toastTimer: ToastTimer = .init(),
+        setupValues: Bool = true
     ) {
         self.appDataRepository = appDataRepository
         self.dataUsageRepository = dataUsageRepository
         self.networkDataRepository = networkDataRepository
+        self.toastTimer = toastTimer
         
+        guard setupValues else {
+            return
+        }
         republishAppData()
         republishDataUsage()
         republishNetworkData()
+        republishToast()
         
         setInputValues()
         observePlanSettings()
         observeEditPlan()
+        observeDataErrors()
     }
     
 }
 
-// MARK: - Republish
+// MARK: Republication
 extension AppViewModel {
     
     func republishAppData() {
@@ -130,36 +188,53 @@ extension AppViewModel {
             .sink { [weak self] in self?.usageType = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.isNotifOnPublisher
-            .sink { [weak self] in self?.isNotifOn = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.startDatePublisher
-            .sink { [weak self] in self?.startDate = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.endDatePublisher
-            .sink { [weak self] in self?.endDate = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataAmountPublisher
-            .sink { [weak self] in self?.dataAmount = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataLimitPublisher
-            .sink { [weak self] in self?.dataLimit = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dataLimitPerDayPublisher
-            .sink { [weak self] in self?.dataLimitPerDay = $0 }
+        appDataRepository.isPeriodAutoPublisher
+            .sink { [weak self] in self?.isPeriodAuto = $0 }
             .store(in: &cancellables)
         
         appDataRepository.unitPublisher
             .sink { [weak self] in self?.unit = $0 }
             .store(in: &cancellables)
+        
+        appDataRepository.dataPlusStepperValuePublisher
+            .sink { [weak self] in self?.dataPlusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataMinusStepperValuePublisher
+            .sink { [weak self] in self?.dataMinusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataLimitPlusStepperValuePublisher
+            .sink { [weak self] in self?.dataLimitPlusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataLimitMinusStepperValuePublisher
+            .sink { [weak self] in self?.dataLimitMinusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataLimitPerDayPlusStepperValuePublisher
+            .sink { [weak self] in self?.dataLimitPerDayPlusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataLimitPerDayMinusStepperValuePublisher
+            .sink { [weak self] in self?.dataLimitPerDayMinusStepperValue = $0 }
+            .store(in: &cancellables)
     }
     
     func republishDataUsage() {
+        dataUsageRepository.planPublisher
+            .sink { [weak self] plan in
+                guard let plan, let self else {
+                    return
+                }
+                self.startDate = plan.startDate ?? .init()
+                self.endDate = plan.endDate ?? .init()
+                self.dataAmount = plan.dataAmount
+                self.dataLimit = plan.planLimit
+                self.dataLimitPerDay = plan.dailyLimit
+            }
+            .store(in: &cancellables)
+        
         dataUsageRepository.thisWeeksDataPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
@@ -169,7 +244,6 @@ extension AppViewModel {
                 self.thisWeeksData = $0
                 self.totalUsedDataPlan = self.dataUsageRepository
                     .getTotalUsedData(from: self.startDate, to: self.endDate)
-                print(self.networkDataRepository, self, separator: "\n")
             }
             .store(in: &cancellables)
         
@@ -181,46 +255,59 @@ extension AppViewModel {
     
     func republishNetworkData() {
         networkDataRepository.totalUsedDataPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.totalUsedData = $0 }
             .store(in: &cancellables)
     }
     
+    func republishToast() {
+        toastTimer.$message
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.toastMessage = $0 }
+            .store(in: &cancellables)
+    }
 }
 
-// MARK: - Observables
+// MARK: Observation
 extension AppViewModel {
     
     func observePlanSettings() {
-        
+        /// UI
         $usageType
             .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
             .store(in: &cancellables)
         
-        $isNotifOn
-            .sink { [weak self] in self?.appDataRepository.setIsNotification($0) }
+        $isPeriodAuto
+            .sink { [weak self] in self?.appDataRepository.setIsPeriodAuto($0) }
             .store(in: &cancellables)
         
-        $startDate
-            .sink { [weak self] in self?.appDataRepository.setStartDate($0) }
+        $dataPlusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .data) }
             .store(in: &cancellables)
         
-        $endDate
-            .sink { [weak self] in self?.appDataRepository.setEndDate($0) }
+        $dataLimitPerDayPlusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .data) }
             .store(in: &cancellables)
         
-        $dataAmount
-            .sink { [weak self] in self?.appDataRepository.setDataAmount($0) }
+        $dataLimitPerDayPlusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .dailyLimit) }
             .store(in: &cancellables)
         
-        $dataLimitPerDay
-            .sink { [weak self] in self?.appDataRepository.setDataLimitPerDay($0) }
+        $dataLimitPerDayMinusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .dailyLimit) }
             .store(in: &cancellables)
         
-        $dataLimit
-            .sink { [weak self] in self?.appDataRepository.setDataLimit($0) }
+        $dataLimitPlusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .planLimit) }
             .store(in: &cancellables)
         
+        $dataLimitMinusStepperValue
+            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .planLimit) }
+            .store(in: &cancellables)
+        
+        /// Data Usage
         $totalUsedData
+            .removeDuplicates()
             .sink { [weak self] in self?.refreshUsedDataToday($0) }
             .store(in: &cancellables)
         
@@ -240,27 +327,32 @@ extension AppViewModel {
             .sink(receiveValue: didChangeIsDataLimitPerDayEditing)
             .store(in: &cancellables)
     }
+    
+    func observeDataErrors() {
+        
+        $dataError
+            .sink(receiveValue: didChangeDataError)
+            .store(in: &cancellables)
+    }
 }
 
-// MARK: - Events
+// MARK: Events
 extension AppViewModel {
     
     // MARK: - Mobile Data
     /// updates the amount used Data today
     func refreshUsedDataToday(_ totalUsedData: Double) {
-        // print("- * Network Data *")
-        // ignore initial value which is exactly zero
+        /// ignore initial value which is exactly zero
         if totalUsedData == 0 {
             return
         }
-        // calculate new amount used data
+        /// calculate new amount used data
         var amountUsed = 0.0
         if let recentDataWithHasTotal = dataUsageRepository.getDataWithHasTotal() {
-            // print("- recentDataWithHasTotal:\n", recentDataWithHasTotal)
             let recentTotalUsedData = recentDataWithHasTotal.totalUsedData
             amountUsed = totalUsedData - recentTotalUsedData
         }
-        // new amount can't be calculated since device was restarted
+        /// new amount can't be calculated since device was restarted
         if amountUsed < 0 {
             amountUsed = 0
         }
@@ -269,17 +361,7 @@ extension AppViewModel {
         todaysData.totalUsedData = totalUsedData
         todaysData.hasLastTotal = true
         
-        dataUsageRepository.updateData(item: todaysData)
-
-//        print(
-//            """
-//                  Total Data Used: \(totalUsedData) MB
-//                  Amount Used: \(amountUsed) MB
-//
-//                - Updated Today's Data:
-//                \(todaysData)
-//                """
-//        )
+        dataUsageRepository.updateData(todaysData)
     }
     
     // MARK: - Edit Data Plan
@@ -309,6 +391,35 @@ extension AppViewModel {
         isEndDatePickerShown = true
     }
     
+    func updatePlanPeriod() {
+        guard
+            isPeriodAuto,
+            let todaysDate = todaysData.date,
+            !todaysDate.isDateInRange(from: startDate, to: endDate),
+            let newStartDate = startDate.addDay(value: numOfDaysOfPlan),
+            let newEndDate = newStartDate.addDay(value: numOfDaysOfPlan - 1)
+        else {
+            return
+        }
+        updatePlan(startDate: newStartDate, endDate: newEndDate)
+    }
+    
+    func updatePlan(
+        startDate: Date? = nil,
+        endDate: Date? = nil,
+        dataAmount: Double? = nil,
+        dailyLimit: Double? = nil,
+        planLimit: Double? = nil
+    ) {
+        dataUsageRepository.updatePlan(
+            startDate: startDate,
+            endDate: endDate,
+            dataAmount: dataAmount,
+            dailyLimit: dailyLimit,
+            planLimit: planLimit
+        )
+    }
+    
     /// Data Amount
     func didTapAmount() {
         isBlurShown = true
@@ -317,30 +428,75 @@ extension AppViewModel {
     }
     
     func didTapPlusData() {
-        guard var doubleValue = Double(dataValue) else {
-            return
-        }
-        doubleValue += 1
-        dataValue = "\(doubleValue)"
+        dataValue = Stepper.plus(
+            value: dataValue,
+            max: 100,
+            by: dataPlusStepperValue
+        )
     }
     
     func didTapMinusData() {
-        guard
-            var doubleValue = Double(dataValue),
-            doubleValue > 0
-        else {
-            return
+        dataValue = Stepper.minus(
+            value: dataValue,
+            by: dataMinusStepperValue
+        )
+    }
+    
+    func didChangePlusStepperValue(value: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            dataLimitPlusStepperValue = value
+            didTapPlusLimit()
+        case .dailyLimit:
+            dataLimitPerDayPlusStepperValue = value
+            didTapPlusLimit()
+        case .data:
+            dataPlusStepperValue = value
+            didTapPlusData()
         }
-        doubleValue -= 1
-        dataValue = "\(doubleValue)"
+    }
+    
+    func didChangeMinusStepperValue(value: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            dataLimitMinusStepperValue = value
+            didTapMinusLimit()
+        case .dailyLimit:
+            dataLimitPerDayMinusStepperValue = value
+            didTapMinusLimit()
+        case .data:
+            dataMinusStepperValue = value
+            didTapMinusData()
+        }
     }
     
     func didChangeIsDataPlanEditing(_ isEditing: Bool) {
+        if toastTimer.timer != nil {
+            toastTimer.reset()
+        }
+        
+        guard !isTappedOutside else {
+            /// revert to previous values
+
+            /// data plan
+            dataValue = "\(dataAmount)"
+            dataValue = "\(dataValue)"
+            startDateValue = startDate
+            endDateValue = endDate
+            
+            /// edit data limit
+            dataLimitValue = "\(dataLimit)"
+            dataLimitPerDayValue = "\(dataLimitPerDay)"
+            
+            isTappedOutside = false
+            
+            return
+        }
+        
         switch editDataPlanType {
         case .dataPlan:
             /// update dates
-            startDate = startDateValue
-            endDate = endDateValue
+            updatePlan(startDate: startDateValue, endDate: endDateValue)
         case .data:
             /// update data amount only if editing is done
             guard
@@ -348,9 +504,25 @@ extension AppViewModel {
                 !isEditing,
                 editDataPlanType == .data
             else {
+                /// invalid input, revert to previous value
+                dataValue = "\(dataAmount)"
                 return
             }
-            dataAmount = amount
+            updatePlan(dataAmount: amount)
+            /// show proper format  e.g. 0.1 instead of .1
+            dataValue = "\(dataAmount)"
+            
+            /// adjust daily limit
+            if dataLimitPerDay > dataAmount {
+                updatePlan(dailyLimit: dataAmount)
+                dataLimitPerDayValue = "\(dataLimitPerDay)"
+            }
+            
+            /// adjust plan limit
+            if dataLimit > dataAmount {
+                updatePlan(planLimit: dataAmount)
+                dataLimitValue = "\(dataLimit)"
+            }
         }
     }
     
@@ -362,7 +534,7 @@ extension AppViewModel {
         else {
             return
         }
-        dataLimit = amount
+        updatePlan(planLimit: amount)
     }
     
     func didChangeIsDataLimitPerDayEditing(_ isEditing: Bool) {
@@ -373,7 +545,7 @@ extension AppViewModel {
         else {
             return
         }
-        dataLimitPerDay = amount
+        updatePlan(dailyLimit: amount)
     }
     
     // MARK: - Edit Data Limit
@@ -392,9 +564,18 @@ extension AppViewModel {
             dataLimitValue :
             dataLimitPerDayValue
         
+        let plusValue = (isDataLimitEditing) ?
+            dataLimitPlusStepperValue :
+            dataLimitPerDayPlusStepperValue
+        
         let newValue = Stepper.plus(
             value: value,
-            max: dataAmount
+            max: dataAmount,
+            by: plusValue,
+            onExceed: { [weak self] in
+                let message = "Exceeds maximum data amount"
+                self?.toastTimer.showToast(message: message)
+            }
         )
         
         if isDataLimitEditing {
@@ -408,8 +589,15 @@ extension AppViewModel {
         let value = (isDataLimitEditing) ?
             dataLimitValue :
             dataLimitPerDayValue
+        
+        let minusValue = (isDataLimitEditing) ?
+            dataLimitMinusStepperValue :
+            dataLimitPerDayMinusStepperValue
                 
-        let newValue = Stepper.minus(value: value)
+        let newValue = Stepper.minus(
+            value: value,
+            by: minusValue
+        )
         
         if isDataLimitEditing {
             dataLimitValue = newValue
@@ -418,6 +606,7 @@ extension AppViewModel {
         dataLimitPerDayValue = newValue
     }
     
+    // MARK: - Operations
     func didTapSave() {
         isBlurShown = false
         isDataPlanEditing = false
@@ -429,14 +618,40 @@ extension AppViewModel {
         isDataLimitPerDayEditing = false
     }
     
-    // MARK: History
+    func didTapDone() {
+        isStartDatePickerShown = false
+        isEndDatePickerShown = false
+    }
+    
+    func didTapOutside() {
+        isTappedOutside = true
+        
+        isBlurShown = false
+        isDataPlanEditing = false
+        
+        isStartDatePickerShown = false
+        isEndDatePickerShown = false
+        
+        isDataLimitEditing = false
+        isDataLimitPerDayEditing = false
+    }
+    
+    func didLongPressedOutside() {
+        isLongPressedOutside = true
+    }
+    
+    func didReleasedLongPressed() {
+        isLongPressedOutside = false
+    }
+    
+    // MARK: - History
     func didTapCloseHistory() {
         isBlurShown = false
         isHistoryShown = false
     }
     
     func didTapOpenHistory() {
-        if usageType == .plan {
+        guard usageType == .daily else {
             return
         }
         isBlurShown = true
@@ -444,24 +659,45 @@ extension AppViewModel {
     }
     
     // MARK: - Data Error
-    func didChangeDataError(_ error: Error) {
-        
+    func didChangeDataError(_ error: DatabaseError?) {
+        guard let error = error, error == .loadingContainer() else {
+            return
+        }
+        isBlurShown = true
+    }
+    
+    // MARK: - Deep Link
+    func didOpenURL(url: URL) {
+        if url == ToggleItem.plan.url {
+            usageType = .plan
+        } else if url == ToggleItem.daily.url {
+            usageType = .daily
+        }
     }
     
 }
 
-// MARK: - Debug
+// MARK: Debugging
 extension AppViewModel: CustomDebugStringConvertible {
     
     var debugDescription: String {
         """
             
             
-            * * App State * *
+            * * * * * *  App State  * * * * * *
             
             - UI
               usage type: \(usageType)
-              is Notification On: \(isNotifOn)
+              is Period Auto: \(isPeriodAuto)
+            
+              data plus val: \(dataPlusStepperValue)
+              data minus val: \(dataMinusStepperValue)
+            
+              data limit per day plus val: \(dataLimitPerDayPlusStepperValue)
+              data limit per day minus val: \(dataLimitPerDayMinusStepperValue)
+            
+              data limit plus val: \(dataLimitPlusStepperValue)
+              data limit minus val: \(dataLimitMinusStepperValue)
             
             - Data
               plan data amount: \(dataAmount)
@@ -478,5 +714,4 @@ extension AppViewModel: CustomDebugStringConvertible {
                         
             """
     }
-    
 }

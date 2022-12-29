@@ -9,12 +9,18 @@ import SwiftUI
 
 struct DraggablePillView: View {
     // MARK: - Props
+    @Environment(\.dimensions) var dimensions: Dimensions
     @State private var translation: CGSize = .zero
     @State private var cardOffset: CGSize = .zero
+    
     var date: Date = .init()
     var color: Colors
     var percentage: Int
     var usageType: ToggleItem
+    
+    var hasBackground = false
+    var showFillLine = false
+    
     var widthScale: CGFloat = 0.45
     
     // MARK: - UI
@@ -60,11 +66,13 @@ struct DraggablePillView: View {
                 color: color,
                 percentage: percentage,
                 date: date,
-                hasBackground: false,
+                hasBackground: hasBackground,
                 usageType: usageType,
-                widthScale: widthScale
+                widthScale: widthScale,
+                showFillLine: showFillLine,
+                showPercentage: true
             )
-            .padding(.horizontal, Dimensions.HorizontalPadding)
+            .padding(.horizontal, dimensions.horizontalPadding)
             .offset(cardOffset)
             .gesture(drag)
         }
@@ -77,12 +85,26 @@ struct DraggablePillView: View {
 // MARK: - Preview
 struct DraggablePillView_Previews: PreviewProvider {
     static var previews: some View {
-        DraggablePillView(
-            color: .secondaryBlue,
-            percentage: 20,
-            usageType: .daily
-        )
-            .previewLayout(.sizeThatFits)
-            .padding()
+        
+        Group {
+            
+            DraggablePillView(
+                color: .secondaryBlue,
+                percentage: 20,
+                usageType: .daily
+            )
+            .previewDisplayName("Filled")
+            
+            DraggablePillView(
+                color: .secondaryBlue,
+                percentage: 20,
+                usageType: .daily,
+                showFillLine: true
+            )
+            .previewDisplayName("Fill Line")
+            
+        }
+        .previewLayout(.sizeThatFits)
+        .padding()
     }
 }

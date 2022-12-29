@@ -6,39 +6,88 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct AppView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.dimensions) var dimensions: Dimensions
+    @Environment(\.scenePhase) var scenePhase
     
-    var width: CGFloat {
-        Dimensions.Screen.width * 0.45
+    var spaceBetweenCardButton: CGFloat {
+        /// graphical: 130
+        30 + (appViewModel.isDatePickerShown ? 60 : 0)
+    }
+
+    var contentHeight: CGFloat {
+        dimensions.maxPillHeight +
+        dimensions.planCardHeight +
+        dimensions.planLimitCardsHeight +
+        (dimensions.spaceInBetween * 2) +
+        (dimensions.horizontalPadding * 2)
     }
     
-    var height: CGFloat {
-        (Dimensions.Screen.width * 0.45) * 2.26
+    var canFitContent: Bool {
+        contentHeight <= dimensions.screen.height
     }
     
+    var contentSpacing: CGFloat {
+        let space = (contentHeight - dimensions.screen.height) * 0.5
+        return (space < 0) ? 0 : space
+    }
+
     // MARK: - UI
     var body: some View {
-        ZStack(alignment: .top) {
-            
-            // Layer 0: BASIC INFO
+        ZStack {
+
+            // MARK: Layer 0: Today's Data Pill
             PillGroupView()
-                .padding(.top, 12)
-                .fillMaxSize(alignment: .top)
+                .fillMaxHeight(alignment: .top)
+                .padding(.top, dimensions.insets.top)
+                .position(
+                    x: dimensions.screen.width * 0.5,
+                    y: (dimensions.screen.height * 0.5) + contentSpacing
+                )
+                .`if`(!canFitContent) { view in
+                    view.scrollSnap(
+                        contentHeight: contentHeight,
+                        screenHeight: dimensions.screen.height
+                    )
+                }
                 .blur(radius: appViewModel.isBlurShown ? 15 : 0)
                 .allowsHitTesting(!appViewModel.isBlurShown)
                 .zIndex(0)
             
-            // Layer 1: EDIT PLAN
-            // another layer of data plan card
+            if appViewModel.isBlurShown {
+                VStack {}
+                    .fillMaxSize()
+                    .contentShape(Rectangle())
+                    .zIndex(1)
+                    .`if`(!appViewModel.isHistoryShown) { view in
+                        view
+                            .onTapGesture(perform: blurTappedAction)
+                    }
+                    .`if`(appViewModel.isHistoryShown) { view in
+                        view
+                            .onLongPressGesture(
+                                minimumDuration: 100,
+                                pressing: longPressedAction,
+                                perform: {}
+                            )
+                    }
+            }
+            
+            // MARK: Layer 2: Edit Plan - Data Amount & Period
             if appViewModel.isDataPlanEditing {
-                VStack(
-                    alignment: .trailing,
-                    spacing: 50
+                
+                EditItemCardView(
+                    buttonType: appViewModel.buttonType,
+                    buttonAction: buttonAction,
+                    buttonDisabled: appViewModel.buttonDisabled,
+                    spaceBetween: spaceBetweenCardButton,
+                    isCardShown: !appViewModel.isDatePickerShown
                 ) {
-                    // Edit Cards
                     DataPlanCardView(
                         editType: appViewModel.editDataPlanType,
                         startDate: appViewModel.startDateValue,
@@ -50,26 +99,27 @@ struct AppView: View {
                         endPeriodAction: endPeriodAction,
                         dataAmountValue: $appViewModel.dataValue,
                         plusDataAction: plusDataAction,
-                        minusDataAction: minusDataAction
+                        minusDataAction: minusDataAction,
+                        didChangePlusStepperValue: changeStepperPlusDataAction,
+                        didChangeMinusStepperValue: changeStepperMinusDatatAction
                     )
-                                        
-                    // Save Button
-                    SaveButtonView(action: saveAction)
-                        .alignmentGuide(.trailing) { $0.width + 21 }
-                    
-                } //: VStack
-                .zIndex(1)
-                .padding(.horizontal, 21)
-                .padding(.top, height + 21 * 2)
+                    .frame(width: dimensions.planCardWidth)
+                }
+                .zIndex(2)
+                .popBounceEffect()
+                .cardShadow(scheme: colorScheme)
             }
-            
-            // Layer 2: EDIT LIMIT - Data
+
+            // MARK: Layer 3: Edit Limit - Plan
             if appViewModel.isDataLimitEditing {
-                VStack(
-                    alignment: .trailing,
-                    spacing: 50
+
+                EditItemCardView(
+                    buttonType: appViewModel.buttonType,
+                    buttonAction: buttonAction,
+                    buttonDisabled: appViewModel.buttonDisabledPlanLimit,
+                    spaceBetween: spaceBetweenCardButton,
+                    toastMessage: appViewModel.toastMessage
                 ) {
-                    // Edit Card
                     DataPlanLimitView(
                         dataLimitValue: $appViewModel.dataLimitValue,
                         dataAmount: appViewModel.dataAmount,
@@ -77,27 +127,27 @@ struct AppView: View {
                         usageType: .plan,
                         editAction: {},
                         minusDataAction: minusLimitAction,
-                        plusDataAction: plusLimitAction
+                        plusDataAction: plusLimitAction,
+                        didChangePlusStepperValue: changeStepperPlusLimitAction,
+                        didChangeMinusStepperValue: changeStepperMinusLimitAction
                     )
-                    .padding(.horizontal, 21)
-                    .frame(height: 145)
-                    .zIndex(2)
-                    
-                    // Save Button
-                    SaveButtonView(action: saveAction)
-                        .alignmentGuide(.trailing) { $0.width + 21 }
-                    
-                } //: VStack
-                .padding(.top, height + 21 * 2)
+                    .frame(width: dimensions.limitCardWidth)
+                }
+                .zIndex(3)
+                .popBounceEffect()
+                .cardShadow(scheme: colorScheme)
             }
-            
-            // Layer 3: EDIT LIMIT - Daily or Plan
+
+            // MARK: Layer 4: Edit Limit - Daily
             if appViewModel.isDataLimitPerDayEditing {
-                VStack(
-                    alignment: .trailing,
-                    spacing: 50
+
+                EditItemCardView(
+                    buttonType: appViewModel.buttonType,
+                    buttonAction: buttonAction,
+                    buttonDisabled: appViewModel.buttonDisabledDailyLimit,
+                    spaceBetween: spaceBetweenCardButton,
+                    toastMessage: appViewModel.toastMessage
                 ) {
-                    // Edit Card
                     DataPlanLimitView(
                         dataLimitValue: $appViewModel.dataLimitPerDayValue,
                         dataAmount: appViewModel.dataLimitPerDay,
@@ -105,91 +155,186 @@ struct AppView: View {
                         usageType: .daily,
                         editAction: {},
                         minusDataAction: minusLimitAction,
-                        plusDataAction: plusLimitAction
+                        plusDataAction: plusLimitAction,
+                        didChangePlusStepperValue: changeStepperPlusDailyLimitAction,
+                        didChangeMinusStepperValue: changeStepperMinusDailyLimitAction
                     )
-                    .padding(.horizontal, 21)
-                    .frame(height: 145)
-                    .zIndex(3)
-                    
-                    // Save Button
-                    SaveButtonView(action: saveAction)
-                        .alignmentGuide(.trailing) { $0.width + 21 }
-                    
-                } //: VStack
-                .padding(.top, height + 21 * 2)
+                    .frame(width: dimensions.limitCardWidth)
+                }
+                .zIndex(4)
+                .popBounceEffect()
+                .cardShadow(scheme: colorScheme)
             }
-            
-            // Layer 4: EDIT PLAN - Period
-            if appViewModel.isStartDatePickerShown || appViewModel.isEndDatePickerShown {
+
+            // MARK: Layer 5: Date Picker
+            if appViewModel.isDatePickerShown {
+                /// NOTE:
+                /// `.graphical` Date Picker Style Immediatelly Scrolls to Original Month
+                /// When Scrolling to Next or Previous Month
                 DatePicker(
+                    "",
                     selection: appViewModel.isStartDatePickerShown ?
                         $appViewModel.startDateValue : $appViewModel.endDateValue,
-                    displayedComponents: .date,
-                    label: {}
+                    displayedComponents: .date
                 )
-                .preferredColorScheme(.light)
-                .datePickerStyle(.graphical)
-                .transition(.move(edge: .bottom))
-                .frame(width: Dimensions.Screen.width * 0.9)
+                .datePickerStyle(.wheel)
+                .frame(width: dimensions.calendarWidth)
                 .scaleEffect(0.9)
                 .background(
-                    Colors.surface.color
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    Colors.background.color
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
                 )
-                .padding(.top, EdgeInsets.insets.top + 14)
-//                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .zIndex(4)
+                .zIndex(5)
+                .popBounceEffect()
+                .cardShadow(scheme: colorScheme)
             }
-            
-            // Layer 5: OVERVIEW OF USED DATA THIS WEEK
+
+            // MARK: Layer 6: Week's History
             if appViewModel.isHistoryShown {
                 HistoryView(
                     days: appViewModel.days,
                     weekData: appViewModel.thisWeeksData,
                     dataLimitPerDay: appViewModel.dataLimitPerDay,
                     usageType: appViewModel.usageType,
+                    showFilledLines: appViewModel.isLongPressedOutside,
                     closeAction: closeAction
                 )
-                .zIndex(5)
+                .padding(.top, 4)
+                .zIndex(6)
+                .popBounceEffect()
             }
             
+            // MARK: Layer 7: Error
+            if
+                let error = appViewModel.dataError,
+                error == .loadingContainer(),
+                case .loadingContainer(let message) = error
+            {
+                Text(message)
+                    .textStyle(
+                        foregroundColor: .onBackground,
+                        font: .semibold,
+                        size: 18,
+                        lineLimit: 5,
+                        lineSpacing: 2,
+                        textAlignment: .center
+                    )
+                    .opacity(0.5)
+                    .padding(.horizontal, 35)
+                    .fillMaxSize(alignment: .center)
+                    .zIndex(7)
+            }
+            
+            // MARK: Layer 8: Status Bar Background
+            Rectangle()
+                .fill(Colors.background.color)
+                .fillMaxWidth()
+                .frame(height: dimensions.insets.top)
+                .fillMaxSize(alignment: .top)
+                .zIndex(8)
+
         } //: ZStack
+        .ignoresSafeArea(.container, edges: .vertical)
+        .fillMaxSize(alignment: .center)
         .background(Colors.background.color)
-        .edgesIgnoringSafeArea(.all)
+        .onChange(of: scenePhase, perform: didChangeScenePhase)
+        .onOpenURL(perform: appViewModel.didOpenURL)
     }
     
     // MARK: - Actions
+    /// Period
     func startPeriodAction() {
-        withAnimation {
+        withAnimation(.easeInOut) {
             appViewModel.didTapStartPeriod()
         }
     }
     
     func endPeriodAction() {
-        withAnimation {
+        withAnimation(.easeInOut) {
             appViewModel.didTapEndPeriod()
         }
     }
 
+    /// Limit
     func plusLimitAction() {
-        appViewModel.didTapPlusLimit()
+        withAnimation {
+            appViewModel.didTapPlusLimit()
+        }
     }
     
     func minusLimitAction() {
-        appViewModel.didTapMinusLimit()
+        withAnimation {
+            appViewModel.didTapMinusLimit()
+        }
     }
     
+    /// Limit Plan
+    func changeStepperPlusLimitAction(value: Double) {
+        appViewModel.didChangePlusStepperValue(
+            value: value,
+            type: .planLimit
+        )
+    }
+    
+    func changeStepperMinusLimitAction(value: Double) {
+        appViewModel.didChangeMinusStepperValue(
+            value: value,
+            type: .planLimit
+        )
+    }
+    
+    /// Limit Daily
+    func changeStepperPlusDailyLimitAction(value: Double) {
+        appViewModel.didChangePlusStepperValue(
+            value: value,
+            type: .dailyLimit
+        )
+    }
+    
+    func changeStepperMinusDailyLimitAction(value: Double) {
+        appViewModel.didChangeMinusStepperValue(
+            value: value,
+            type: .dailyLimit
+        )
+    }
+    
+    
+    /// Data
     func plusDataAction() {
-        appViewModel.didTapPlusData()
+        withAnimation {
+            appViewModel.didTapPlusData()
+        }
     }
     
     func minusDataAction() {
-        appViewModel.didTapMinusData()
+        withAnimation {
+            appViewModel.didTapMinusData()
+        }
     }
     
-    func saveAction() {
+    func changeStepperPlusDataAction(value: Double) {
+        appViewModel.didChangePlusStepperValue(
+            value: value,
+            type: .data
+        )
+    }
+    
+    func changeStepperMinusDatatAction(value: Double) {
+        appViewModel.didChangeMinusStepperValue(
+            value: value,
+            type: .data
+        )
+    }
+    
+    /// UI
+    func buttonAction(type: ButtonType) {
         withAnimation {
-            appViewModel.didTapSave()
+            switch type {
+            case .save:
+                appViewModel.didTapSave()
+            case .done:
+                appViewModel.didTapDone()
+            }
         }
     }
     
@@ -198,14 +343,85 @@ struct AppView: View {
             appViewModel.didTapCloseHistory()
         }
     }
+    
+    func blurTappedAction() {
+        withAnimation {
+            appViewModel.didTapOutside()
+        }
+    }
+    
+    func longPressedAction(pressed: Bool) {
+        withAnimation {
+            if pressed {
+                appViewModel.didLongPressedOutside()
+                return
+            }
+            appViewModel.didReleasedLongPressed()
+        }
+    }
+    
+    func didChangeScenePhase(phase: ScenePhase) {
+        if phase == .active {
+            appViewModel.updatePlanPeriod()
+        } else if phase == .background {
+            WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.main.name)
+        }
+    }
 
 }
 
 // MARK: - Preview
 struct AppView_Previews: PreviewProvider {
+    static var appViewModel: AppViewModel {
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        let todaysDate = Date()
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -3, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 1_500,
+            hasLastTotal: true
+        )
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -2, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 3_000,
+            hasLastTotal: true
+        )
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -1, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 2100,
+            hasLastTotal: true
+        )
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: 0, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 1100,
+            hasLastTotal: false
+        )
+        dataRepo.updatePlan(
+            startDate: Calendar.current.date(
+                byAdding: .day, value: -3, to: todaysDate)!,
+            endDate: Calendar.current.date(
+                byAdding: .day, value: 1, to: todaysDate)!,
+            dataAmount: 10,
+            dailyLimit: 4,
+            planLimit: 9
+        )
+        
+        let viewModel = AppViewModel(dataUsageRepository: dataRepo)
+        return viewModel
+    }
+    
     static var previews: some View {
         AppView()
+            .padding(.top, 1)
             .previewLayout(.sizeThatFits)
-            .environmentObject(AppViewModel())
+            .environmentObject(appViewModel)
     }
 }

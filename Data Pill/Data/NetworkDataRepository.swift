@@ -7,44 +7,58 @@
 
 import Foundation
 import Combine
+import OSLog
 
 // MARK: - Protocol
 protocol NetworkDataRepositoryProtocol {
     var totalUsedData: Double { get set }
     var totalUsedDataPublisher: Published<Double>.Publisher { get }
+    
+    var usedDataInfo: UsedDataInfo { get set }
+    var usedDataInfoPublisher: Published<UsedDataInfo>.Publisher { get }
+    
+    func getTotalUsedData() -> UsedDataInfo
+    func receiveDataInfo() -> Void
+    func receiveTotalUsedData() -> Void
 }
 
-// MARK: - Implementations
+// MARK: - Implementation
 // Source: https://stackoverflow.com/questions/25888272/track-cellular-data-usage-using-swift
-class NetworkDataRepository: ObservableObject, CustomStringConvertible, NetworkDataRepositoryProtocol {
-    
-    // MARK: - Data
-    @Published var usedDataInfo: UsedDataInfo = .init()
+final class NetworkDataRepository:
+    ObservableObject, CustomStringConvertible,
+    NetworkDataRepositoryProtocol {
     
     @Published var totalUsedData = 0.0
     var totalUsedDataPublisher: Published<Double>.Publisher { $totalUsedData }
+    
+    @Published var usedDataInfo: UsedDataInfo = .init()
+    var usedDataInfoPublisher: Published<UsedDataInfo>.Publisher { $usedDataInfo }
         
     private var timer: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = .init()
 
-    // MARK: - Initializer
-    init() {
-        receiveUpdatedDataInfo()
+    init(automaticUpdates: Bool = true) {
+        if automaticUpdates {
+            receiveUpdatedDataInfo()
+        }
         receiveTotalUsedData()
     }
     
-    // MARK: - Functions
+    func receiveDataInfo() {
+        usedDataInfo = getTotalUsedData()
+    }
     
-    /// receive Data Usage Info every 2 seconds
-    func receiveUpdatedDataInfo() {
+    /// receive Data Usage Info every n seconds
+    func receiveUpdatedDataInfo(every n: TimeInterval = 2) {
         timer = Timer
-            .publish(every: 2, on: .main, in: .default)
+            .publish(every: n, on: .main, in: .default)
             .autoconnect()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else {
                     return
                 }
-                self.usedDataInfo = self.getTotalUsedData()
+                self.receiveDataInfo()
             }
     }
     
@@ -56,6 +70,7 @@ class NetworkDataRepository: ObservableObject, CustomStringConvertible, NetworkD
             .map { $0.toInt64().toMB() }
             .sink { [weak self] in
                 self?.totalUsedData = $0
+                Logger.networkRepository.debug("totalUsedData: \($0) MB")
             }
             .store(in: &cancellables)
     }
@@ -129,7 +144,7 @@ class NetworkDataRepository: ObservableObject, CustomStringConvertible, NetworkD
           """
             
             
-            * * Network Data Repository * *
+            * * * * * *  Network Data Repository  * * * * * *
             
             - Data
               data received: \(usedDataInfo.wirelessWanDataReceived.toInt64().toMB())
@@ -141,13 +156,39 @@ class NetworkDataRepository: ObservableObject, CustomStringConvertible, NetworkD
     }
 }
 
-class NetworkDataFakeRepository: ObservableObject, NetworkDataRepositoryProtocol {
+class MockNetworkDataRepository: ObservableObject, NetworkDataRepositoryProtocol {
     
-    // MARK: - Data
     @Published var totalUsedData = 0.0
     var totalUsedDataPublisher: Published<Double>.Publisher { $totalUsedData }
         
-    init(totalUsedData: Double) {
+    @Published var usedDataInfo: UsedDataInfo = .init()
+    var usedDataInfoPublisher: Published<UsedDataInfo>.Publisher { $usedDataInfo }
+
+    private var cancellables: Set<AnyCancellable> = .init()
+
+    init(totalUsedData: Double = 0.0) {
         self.totalUsedData = totalUsedData
+        receiveTotalUsedData()
+    }
+    
+    func receiveDataInfo() {
+        usedDataInfo = getTotalUsedData()
+    }
+    
+    func receiveTotalUsedData() {
+        $usedDataInfo
+            .map { $0.wirelessWanDataReceived + $0.wirelessWanDataSent }
+            .map { $0.toInt64().toMB() }
+            .sink { [weak self] in
+                self?.totalUsedData = $0
+            }
+            .store(in: &cancellables)
+    }
+    
+    func getTotalUsedData() -> UsedDataInfo {
+        .init(
+            wirelessWanDataReceived: 10_000_000 ,
+            wirelessWanDataSent: 485_760
+        )
     }
 }

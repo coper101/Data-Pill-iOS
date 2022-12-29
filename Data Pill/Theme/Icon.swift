@@ -12,6 +12,7 @@ enum Icons: String {
     case closeIcon = "X Mark Icon"
     case minusIcon = "Minus"
     case plusIcon = "Plus"
+    case warningIcon = "Warning Icon"
     var image: Image {
         Image(self.rawValue)
     }

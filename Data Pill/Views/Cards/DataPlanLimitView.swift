@@ -14,16 +14,19 @@ struct DataPlanLimitView: View {
     var dataUnit: Unit = .gb
     var isEditing: Bool
     var usageType: ToggleItem
-    var editAction: () -> Void
-    var minusDataAction: () -> Void
-    var plusDataAction: () -> Void
+    var editAction: Action
+    
+    var minusDataAction: Action
+    var plusDataAction: Action
+    var didChangePlusStepperValue: StepperValueAction
+    var didChangeMinusStepperValue: StepperValueAction
     
     var subtitle: String {
         switch usageType {
         case .plan:
             return !isEditing ?
-                "Data Plan\nLimit" :
-                "Data Plan Limit"
+                "Plan\nLimit" :
+                "Plan Limit"
         case .daily:
             return !isEditing ?
                 "Daily\nLimit" :
@@ -38,24 +41,6 @@ struct DataPlanLimitView: View {
     }
     
     // MARK: - UI
-    var editingContent: some View {
-        HStack(spacing: 10) {
-            StepperButtonView(
-                operator: .minus,
-                action: minusDataAction
-            )
-            TextInputView(
-                data: $dataLimitValue,
-                unit: dataUnit
-            )
-            StepperButtonView(
-                operator: .plus,
-                action: plusDataAction
-            )
-        } //: VStack
-        .fillMaxWidth(alignment: .center)
-    }
-    
     var content: some View {
         HStack(
             alignment: .bottom,
@@ -69,6 +54,7 @@ struct DataPlanLimitView: View {
                     size: 30,
                     lineLimit: 1
                 )
+                .accessibilityLabel("limitAmount")
             
             // Col 2: UNIT
             Text(dataUnit.rawValue)
@@ -79,6 +65,7 @@ struct DataPlanLimitView: View {
                     lineLimit: 1
                 )
                 .alignmentGuide(.bottom) { $0.height + 3 }
+                .accessibilityLabel("limitUnit")
             
         } //: HStack
         .fillMaxSize()
@@ -89,7 +76,9 @@ struct DataPlanLimitView: View {
             style: .mini2,
             subtitle: subtitle,
             navigateAction: editAction,
-            hasBackground: !isEditing,
+            hasBackground: true,
+            hasBlur: false,
+            backgroundColor: isEditing ? .background : .surface,
             hasNavigateIcon: !isEditing,
             textColor: textColor
         ) {
@@ -97,11 +86,21 @@ struct DataPlanLimitView: View {
             if !isEditing {
                 content
             } else {
-                editingContent
-                    .padding(.bottom, 20)
+                StepperView(
+                    value: $dataLimitValue,
+                    unit: .gb,
+                    minusAction: minusDataAction,
+                    plusAction: plusDataAction,
+                    plusStepperValueAction: didChangePlusStepperValue,
+                    minusStepperValueAction: didChangeMinusStepperValue
+                )
+                .fillMaxWidth()
+                .padding(.bottom, 34)
+                .padding(.top, 16)
             }
             
         } //: ItemCardView
+        .accessibilityIdentifier(usageType == .plan ? "planLimit" : "dailyLimit")
     }
     
     // MARK: - Actions
@@ -117,12 +116,15 @@ struct DataPlanLimitView_Previews: PreviewProvider {
             usageType: .daily,
             editAction: {},
             minusDataAction: {},
-            plusDataAction: {}
+            plusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .frame(width: 175, height: 145)
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Info")
             .padding()
+            .background(Color.green)
         
         DataPlanLimitView(
             dataLimitValue: .constant("9"),
@@ -131,12 +133,15 @@ struct DataPlanLimitView_Previews: PreviewProvider {
             usageType: .daily,
             editAction: {},
             minusDataAction: {},
-            plusDataAction: {}
+            plusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
         )
             .fillMaxWidth()
             .frame(height: 145)
             .previewLayout(.sizeThatFits)
             .previewDisplayName("Edit")
             .padding()
+            .background(Color.green)
     }
 }

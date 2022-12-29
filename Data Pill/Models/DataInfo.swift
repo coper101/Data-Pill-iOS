@@ -19,5 +19,16 @@ struct UsedDataInfo {
         wirelessWanDataSent += info.wirelessWanDataSent
         wirelessWanDataReceived += info.wirelessWanDataReceived
     }
+}
+
+extension UsedDataInfo: Equatable {
+    
+    static func == (lhs: UsedDataInfo, rhs: UsedDataInfo) -> Bool {
+        return
+            (lhs.wifiReceived == rhs.wifiReceived) &&
+            (lhs.wifiSent == rhs.wifiSent) &&
+            (lhs.wirelessWanDataReceived == rhs.wirelessWanDataReceived) &&
+            (lhs.wirelessWanDataSent == rhs.wirelessWanDataSent)
+    }
     
 }

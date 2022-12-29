@@ -9,33 +9,40 @@ import SwiftUI
 
 struct DateInputView: View {
     // MARK: - Props
+    @Environment(\.dimensions) var dimensions: Dimensions
     var date: Date
     var title: String
     var action: () -> Void
+    
+    var displayedDate: String {
+        let isLongYear = !dimensions.isSmallDevice
+        return date.toDayMonthYearFormat(isLongYear: isLongYear).uppercased()
+    }
     
     // MARK: - UI
     var body: some View {
         VStack(spacing: 10) {
             
-            // TITLE
+            // Row 1: TITLE
             Text(title)
                 .textStyle(
                     foregroundColor: .onSurfaceLight,
                     font: .semibold,
-                    size: 18,
+                    size: 17,
                     maxWidth: .infinity
                 )
+                .accessibilityLabel(title)
             
-            // INPUT
+            // Row 2: INPUT
             Button(action: action) {
                 
-                VStack() {
+                VStack {
                     
-                    Text("\(date.toDayMonthYearFormat())".uppercased())
+                    Text(displayedDate)
                         .textStyle(
                             foregroundColor: .onSurface,
                             font: .semibold,
-                            size: 18
+                            size: 17
                         )
                     
                 } //: VStack
@@ -47,7 +54,9 @@ struct DateInputView: View {
                 )
                 
             } //: Button
-            
+            .buttonStyle(ScaleButtonStyle())
+            .accessibilityLabel("\(title) Button")
+
         } //: VStack
     }
     

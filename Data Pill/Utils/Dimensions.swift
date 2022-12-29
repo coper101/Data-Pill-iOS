@@ -7,40 +7,71 @@
 
 import SwiftUI
 
+// MARK: - Dimensions
 struct Dimensions {
-    static let TopBarHeight: CGFloat = 76
-    static let BottomBarHeight: CGFloat = 62
-    static let HorizontalPadding: CGFloat = 21
-    static let Screen: CGSize = UIScreen.main.bounds.size
-}
-
-struct EdgeInsets {
-    
-    static func getKeyWindows() -> UIWindow? {
-        /// Get connected scenes
-        return UIApplication.shared.connectedScenes
-            /// Keep only active scenes, onscreen and visible to the user
-            .filter { $0.activationState == .foregroundActive }
-            /// Keep only the first `UIWindowScene`
-            .first(where: { $0 is UIWindowScene })
-            /// Get its associated windows
-            .flatMap({ $0 as? UIWindowScene })?.windows
-            /// Finally, keep only the key window
-            .first(where: \.isKeyWindow)
+    var isSmallDevice: Bool {
+        screen.width <= 320
     }
     
-    static var insets: (
-        top: CGFloat,
-        bottom: CGFloat,
-        leading: CGFloat,
-        trailing: CGFloat
-    ) {
-        let insets = getKeyWindows()?.safeAreaInsets ?? .zero
+    /// Padding
+    let horizontalPadding: CGFloat = 21
+    let spaceInBetween: CGFloat = 21
+    
+    /// Card
+    let planCardHeight: CGFloat = 150
+    let planLimitCardsHeight: CGFloat = 145
+    let limitCardWidth: CGFloat = 286
+    var planCardWidth: CGFloat {
+        isSmallDevice ? 280 : 331
+    }
+    let maxPillHeight: CGFloat = 390
+    
+    /// Calendar
+    var calendarWidth: CGFloat {
+        isSmallDevice ? 295 : 320
+    }
+    
+    /// Pill
+    var pillWidth: CGFloat {
+        isSmallDevice ? 134 : 171
+    }
+    var pillHeight: CGFloat {
+        isSmallDevice ? 340 : 390
+    }
+    
+    /// Button
+    let buttonHeight: CGFloat = 53
+    
+    let screen: CGSize = UIScreen.main.bounds.size
+    
+    @available(iOSApplicationExtension, unavailable)
+    let insets: EdgeInset = theInsets
+    
+    static var theInsets: EdgeInset {
+        let insets = UIApplication.shared.windows.first?.safeAreaInsets
         return (
-            insets.top,
-            insets.bottom,
-            insets.left,
-            insets.right
+            insets?.top ?? 0,
+            insets?.bottom ?? 0,
+            insets?.left ?? 0,
+            insets?.right ?? 0
         )
     }
 }
+
+struct DimensionsKey: EnvironmentKey {
+    static var defaultValue: Dimensions = .init()
+}
+
+extension EnvironmentValues {
+    var dimensions: Dimensions {
+        get { self[DimensionsKey.self] }
+        set { }
+    }
+}
+
+typealias EdgeInset = (
+    top: CGFloat,
+    bottom: CGFloat,
+    leading: CGFloat,
+    trailing: CGFloat
+)

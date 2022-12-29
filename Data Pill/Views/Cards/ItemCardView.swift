@@ -52,16 +52,25 @@ enum ItemCardStyle: String, Identifiable, CaseIterable {
 }
 
 struct ItemCardView<Content>: View where Content: View {
-    // MARK: - Props
+    // MARK: - Props    
     var style: ItemCardStyle
     var subtitle: String
     var caption: String = ""
+    
     var verticalSpacing: CGFloat = 0
     var navigateAction: () -> Void = {}
+    
     var hasBackground = true
+    var hasBlur = false
+    var backgroundColor = Colors.surface
+    
+    var contentVertPadding: CGFloat = 14
+    var contentHorPadding: CGFloat = 20
+    
     var hasNavigateIcon = true
     var width: CGFloat?
     var height: CGFloat?
+    
     var textColor: Colors = .onSurfaceLight2
     @ViewBuilder var content: () -> Content
         
@@ -86,6 +95,10 @@ struct ItemCardView<Content>: View where Content: View {
                 size: 18,
                 lineLimit: style.lineLimit
             )
+            .opacity(0.6)
+            .`if`(caption != "") { view in
+                view.accessibilityLabel("secondaryLabel")
+            }
     }
     
     var body: some View {
@@ -93,24 +106,27 @@ struct ItemCardView<Content>: View where Content: View {
             alignment: .leading,
             spacing: verticalSpacing
         ) {
+            // MARK: - Wide (label top)
             if (style == .wide) {
                 
-                // Row 1: LABEL
+                // Label
                 HStack(spacing: 0) {
                     label
                     Spacer()
                     secondaryLabel
                 }
                 
-                // Row 2: CONTENT
+                // Content
                 content()
                 
-            } else {
+            }
+            // MARK: - Minis (label down)
+            else {
                 
-                // Row 1: CONTENT
+                // Content
                 content()
 
-                // Row 2: LABEL
+                // Label
                 HStack(
                     alignment: .bottom,
                     spacing: 0
@@ -121,7 +137,9 @@ struct ItemCardView<Content>: View where Content: View {
                     
                     // Col 2: ICON
                     if (style == .mini2 && hasNavigateIcon) {
+                        
                         Spacer()
+                        
                         Button(action: navigateAction) {
                             Icons.navigateIcon.image
                                 .resizable()
@@ -129,7 +147,9 @@ struct ItemCardView<Content>: View where Content: View {
                                 .foregroundColor(
                                     Colors.onSurfaceLight2.color
                                 )
-                        }
+                        } //: Button
+                        .buttonStyle(ScaleButtonStyle())
+                        
                     } //: if
                     
                 } //: HStack
@@ -142,16 +162,14 @@ struct ItemCardView<Content>: View where Content: View {
             height: height,
             alignment: .leading
         )
-        .padding(.vertical, 14)
-        .padding(.horizontal, 20)
+        .padding(.vertical, contentVertPadding)
+        .padding(.horizontal, contentHorPadding)
         .background(
-            Colors.surface.color.opacity(
-                hasBackground ? 1 : 0
-            )
-        )
-        .clipShape(
             RoundedRectangle(cornerRadius: 20)
+                .fill(backgroundColor.color)
+                .blur(radius: hasBlur ? 100 : 0)
         )
+        .shadow(color: Color.clear, radius: 0, x: 0, y: 0)
     }
     
     // MARK: - Actions
@@ -178,6 +196,8 @@ struct ItemCardView_Previews: PreviewProvider {
                 "Editing"
             )
         )
+        .padding()
+        .background(Color.green)
         
         ForEach(ItemCardStyle.allCases) { style in
             ItemCardView(
@@ -195,6 +215,7 @@ struct ItemCardView_Previews: PreviewProvider {
                 )
             )
             .padding()
+            .background(Color.green)
         }
     }
 }

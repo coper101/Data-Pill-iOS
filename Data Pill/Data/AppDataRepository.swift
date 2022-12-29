@@ -9,199 +9,268 @@ import Foundation
 
 // MARK: - Protocol
 protocol AppDataRepositoryProtocol {
-    
+
     var usageType: ToggleItem { get set }
     var usageTypePublisher: Published<ToggleItem>.Publisher { get }
     
-    var isNotifOn: Bool { get set }
-    var isNotifOnPublisher: Published<Bool>.Publisher { get }
-    
-    var startDate: Date { get set }
-    var startDatePublisher: Published<Date>.Publisher { get }
-    
-    var endDate: Date { get set }
-    var endDatePublisher: Published<Date>.Publisher { get }
-    
-    var dataAmount: Double { get set }
-    var dataAmountPublisher: Published<Double>.Publisher { get }
-    
-    var dataLimit: Double { get set }
-    var dataLimitPublisher: Published<Double>.Publisher { get }
-    
-    var dataLimitPerDay: Double { get set }
-    var dataLimitPerDayPublisher: Published<Double>.Publisher { get }
+    var isPeriodAuto: Bool { get set }
+    var isPeriodAutoPublisher: Published<Bool>.Publisher { get }
     
     var unit: Unit { get set }
     var unitPublisher: Published<Unit>.Publisher { get }
     
+    var dataPlusStepperValue: Double { get set }
+    var dataPlusStepperValuePublisher: Published<Double>.Publisher { get }
+    
+    var dataMinusStepperValue: Double { get set }
+    var dataMinusStepperValuePublisher: Published<Double>.Publisher { get }
+    
+    var dataLimitPerDayPlusStepperValue: Double { get set }
+    var dataLimitPerDayPlusStepperValuePublisher: Published<Double>.Publisher { get }
+    
+    var dataLimitPerDayMinusStepperValue: Double { get set }
+    var dataLimitPerDayMinusStepperValuePublisher: Published<Double>.Publisher { get }
+    
+    var dataLimitPlusStepperValue: Double { get set }
+    var dataLimitPlusStepperValuePublisher: Published<Double>.Publisher { get }
+    
+    var dataLimitMinusStepperValue: Double { get set }
+    var dataLimitMinusStepperValuePublisher: Published<Double>.Publisher { get }
+    
+    func loadAllData(
+        unit: Unit?,
+        usageType: ToggleItem?
+    ) -> Void
+    
+    /// Setters
     func setUsageType(_ type: String) -> Void
-    func setIsNotification(_ isOn: Bool) -> Void
-    func setDataAmount(_ amount: Double) -> Void
-    func setStartDate(_ date: Date) -> Void
-    func setEndDate(_ date: Date) -> Void
-    func setDataLimit(_ amount: Double) -> Void
-    func setDataLimitPerDay(_ amount: Double) -> Void
+    func setIsPeriodAuto(_ isOn: Bool) -> Void
+    func setPlusStepperValue(_ amount: Double, type: StepperValueType)
+    func setMinusStepperValue(_ amount: Double, type: StepperValueType)
 }
 
-// MARK: - Implementations
+// MARK: - Implementation
 enum Keys: String {
     case usageType = "Usage_Type"
-    case notification = "Notification"
+    case autoPeriod = "Auto_Period"
     case startDatePlan = "Start_Data_Plan"
     case endDatePlan = "End_Data_Plan"
     case dataAmount = "Data_Amount"
     case dailyDataLimit = "Daily_Data_Limit"
     case totalDataLimit = "Total_Data_Limit"
+    
+    case dataPlusStepperValue = "Data_Plus_Stepper_Value"
+    case dataMinusStepperValue = "Data_Minus_Stepper_Value"
+    
+    case dataLimitPerDayPlusStepperValue = "Data_Plus_Daily_Limit_Stepper_Value"
+    case dataLimitPerDayMinusStepperValue = "Data_Minus_Daily_Limit_Stepper_Value"
+    
+    case dataLimitPlusStepperValue = "Data_Plus_Total_Limit_Stepper_Value"
+    case dataLimitMinusStepperValue = "Data_Minus_Total_Limit_Stepper_Value"
 }
 
-class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
+final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
 
-    @Published var isNotifOn = false
-    var isNotifOnPublisher: Published<Bool>.Publisher { $isNotifOn }
-    
-    @Published var startDate = "2022-09-12T10:44:00+0000".toDate()
-    var startDatePublisher: Published<Date>.Publisher { $startDate }
-    
-    @Published var endDate = "2022-10-12T10:44:00+0000".toDate()
-    var endDatePublisher: Published<Date>.Publisher { $endDate}
-
-    @Published var dataAmount = 0.0
-    var dataAmountPublisher: Published<Double>.Publisher { $dataAmount }
-    
-    @Published var dataLimit = 0.0
-    var dataLimitPublisher: Published<Double>.Publisher { $dataLimit }
-
-    @Published var dataLimitPerDay = 0.0
-    var dataLimitPerDayPublisher: Published<Double>.Publisher { $dataLimitPerDay }
+    @Published var isPeriodAuto = false
+    var isPeriodAutoPublisher: Published<Bool>.Publisher { $isPeriodAuto }
 
     @Published var unit: Unit = .gb
     var unitPublisher: Published<Unit>.Publisher { $unit }
+    
+    @Published var dataPlusStepperValue = 1.0
+    var dataPlusStepperValuePublisher: Published<Double>.Publisher { $dataPlusStepperValue }
+    
+    @Published var dataMinusStepperValue = 1.0
+    var dataMinusStepperValuePublisher: Published<Double>.Publisher { $dataMinusStepperValue }
+    
+    @Published var dataLimitPerDayPlusStepperValue = 1.0
+    var dataLimitPerDayPlusStepperValuePublisher: Published<Double>.Publisher { $dataLimitPerDayPlusStepperValue }
+    
+    @Published var dataLimitPerDayMinusStepperValue = 1.0
+    var dataLimitPerDayMinusStepperValuePublisher: Published<Double>.Publisher { $dataLimitPerDayMinusStepperValue }
+    
+    @Published var dataLimitPlusStepperValue = 1.0
+    var dataLimitPlusStepperValuePublisher: Published<Double>.Publisher { $dataLimitPlusStepperValue }
+    
+    @Published var dataLimitMinusStepperValue = 1.0
+    var dataLimitMinusStepperValuePublisher: Published<Double>.Publisher { $dataLimitMinusStepperValue }
     
     init() {
         loadAllData()
     }
     
-    func loadAllData() {
-        /// - Usage Type
+    func loadAllData(
+        unit: Unit? = nil,
+        usageType: ToggleItem? = nil
+    ) {
+        if unit != nil || usageType != nil {
+            return
+        }
         let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
-        usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
+        self.usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
+        isPeriodAuto = LocalStorage.getBoolItem(forKey: .autoPeriod)
         
-        /// - Notification
-        isNotifOn = LocalStorage.getBoolItem(forKey: .notification) ?? false
+        dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
+        dataMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataMinusStepperValue)
         
-        /// - Data Plan
-        dataAmount = LocalStorage.getDoubleItem(forKey: .dataAmount) ?? 0
-        startDate = LocalStorage.getDateItem(forKey: .startDatePlan) ?? Date()
-        endDate = LocalStorage.getDateItem(forKey: .endDatePlan) ?? Date()
-        dataLimit = LocalStorage.getDoubleItem(forKey: .totalDataLimit) ?? 0
-        dataLimitPerDay = LocalStorage.getDoubleItem(forKey: .dailyDataLimit) ?? 0
+        dataLimitPerDayPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayPlusStepperValue)
+        dataLimitPerDayMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayMinusStepperValue)
+        
+        dataLimitPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPlusStepperValue)
+        dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
+        
+        if dataPlusStepperValue == 0 {
+            LocalStorage.setItem(1.0, forKey: .dataPlusStepperValue)
+            dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
+        }
+        if dataMinusStepperValue == 0 {
+            LocalStorage.setItem(1.0, forKey: .dataMinusStepperValue)
+            dataMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataMinusStepperValue)
+        }
+        
+        if dataLimitPerDayPlusStepperValue == 0 {
+            LocalStorage.setItem(1.0, forKey: .dataLimitPerDayPlusStepperValue)
+            dataLimitPerDayPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayPlusStepperValue)
+        }
+        if dataLimitPerDayMinusStepperValue == 0 {
+            LocalStorage.setItem(1.0, forKey: .dataLimitPerDayMinusStepperValue)
+            dataLimitPerDayMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayMinusStepperValue)
+        }
+        
+        if dataLimitPlusStepperValue == 0 {
+            LocalStorage.setItem(1.0, forKey: .dataLimitPlusStepperValue)
+            dataLimitPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPlusStepperValue)
+        }
+        if dataLimitMinusStepperValue == 0 {
+            LocalStorage.setItem(1.0, forKey: .dataLimitMinusStepperValue)
+            dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
+        }
     }
     
+    /// Setters
     func setUsageType(_ type: String) {
         LocalStorage.setItem(type, forKey: .usageType)
     }
     
-    func setIsNotification(_ isOn: Bool) {
-        LocalStorage.setItem(isOn, forKey: .notification)
+    func setIsPeriodAuto(_ isOn: Bool) {
+        LocalStorage.setItem(isOn, forKey: .autoPeriod)
     }
     
-    func setDataAmount(_ amount: Double) {
-        LocalStorage.setItem(amount, forKey: .dataAmount)
+    func setPlusStepperValue(_ amount: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            LocalStorage.setItem(amount, forKey: .dataLimitPlusStepperValue)
+        case .dailyLimit:
+            LocalStorage.setItem(amount, forKey: .dataLimitPerDayPlusStepperValue)
+        case .data:
+            LocalStorage.setItem(amount, forKey: .dataPlusStepperValue)
+        }
     }
     
-    func setStartDate(_ date: Date) {
-        LocalStorage.setItem(date, forKey: .startDatePlan)
-    }
-    
-    func setEndDate(_ date: Date) {
-        LocalStorage.setItem(date, forKey: .endDatePlan)
-    }
-    
-    func setDataLimit(_ amount: Double) {
-        LocalStorage.setItem(amount, forKey: .totalDataLimit)
-    }
-    
-    func setDataLimitPerDay(_ amount: Double) {
-        LocalStorage.setItem(amount, forKey: .dailyDataLimit)
+    func setMinusStepperValue(_ amount: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            LocalStorage.setItem(amount, forKey: .dataLimitMinusStepperValue)
+        case .dailyLimit:
+            LocalStorage.setItem(amount, forKey: .dataLimitPerDayMinusStepperValue)
+        case .data:
+            LocalStorage.setItem(amount, forKey: .dataMinusStepperValue)
+        }
     }
 
 }
 
-class AppDataFakeRepository: ObservableObject, AppDataRepositoryProtocol {
+class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
 
-    @Published var isNotifOn = false
-    var isNotifOnPublisher: Published<Bool>.Publisher { $isNotifOn }
-    
-    @Published var startDate = "2022-09-12T10:44:00+0000".toDate()
-    var startDatePublisher: Published<Date>.Publisher { $startDate }
-    
-    @Published var endDate = "2022-10-12T10:44:00+0000".toDate()
-    var endDatePublisher: Published<Date>.Publisher { $endDate}
-
-    @Published var dataAmount = 0.0
-    var dataAmountPublisher: Published<Double>.Publisher { $dataAmount }
-    
-    @Published var dataLimit = 0.0
-    var dataLimitPublisher: Published<Double>.Publisher { $dataLimit }
-
-    @Published var dataLimitPerDay = 0.0
-    var dataLimitPerDayPublisher: Published<Double>.Publisher { $dataLimitPerDay }
+    @Published var isPeriodAuto = false
+    var isPeriodAutoPublisher: Published<Bool>.Publisher { $isPeriodAuto }
 
     @Published var unit: Unit = .gb
     var unitPublisher: Published<Unit>.Publisher { $unit }
     
+    @Published var dataPlusStepperValue = 1.0
+    var dataPlusStepperValuePublisher: Published<Double>.Publisher { $dataPlusStepperValue }
+    
+    @Published var dataMinusStepperValue = 1.0
+    var dataMinusStepperValuePublisher: Published<Double>.Publisher { $dataMinusStepperValue }
+    
+    @Published var dataLimitPerDayPlusStepperValue = 1.0
+    var dataLimitPerDayPlusStepperValuePublisher: Published<Double>.Publisher { $dataLimitPerDayPlusStepperValue }
+    
+    @Published var dataLimitPerDayMinusStepperValue = 1.0
+    var dataLimitPerDayMinusStepperValuePublisher: Published<Double>.Publisher { $dataLimitPerDayMinusStepperValue }
+    
+    @Published var dataLimitPlusStepperValue = 1.0
+    var dataLimitPlusStepperValuePublisher: Published<Double>.Publisher { $dataLimitPlusStepperValue }
+    
+    @Published var dataLimitMinusStepperValue = 1.0
+    var dataLimitMinusStepperValuePublisher: Published<Double>.Publisher { $dataLimitMinusStepperValue }
+    
     init(
         usageType: ToggleItem = .daily,
         isNotifOn: Bool = false,
-        startDate: Date = "2022-09-12T10:44:00+0000".toDate(),
-        endDate: Date = "2022-10-12T10:44:00+0000".toDate(),
-        dataAmount: Double = 0.0,
-        dataLimit: Double = 0.0,
-        dataLimitPerDay: Double = 0.0,
-        unit: Unit = .gb
+        unit: Unit = .gb,
+        dataPlusStepperValue: Double = 1.0,
+        dataMinusStepperValue: Double = 1.0,
+        dataLimitPerDayPlusStepperValue: Double = 1.0,
+        dataLimitPerDayMinusStepperValue: Double = 1.0,
+        dataLimitPlusStepperValue: Double = 1.0,
+        dataLimitMinusStepperValue: Double = 1.0
     ) {
         self.usageType = usageType
-        self.isNotifOn = isNotifOn
-        self.startDate = startDate
-        self.endDate = endDate
-        self.dataAmount = dataAmount
-        self.dataLimit = dataLimit
-        self.dataLimitPerDay = dataLimitPerDay
+        self.isPeriodAuto = isNotifOn
         self.unit = unit
+        self.dataPlusStepperValue = dataPlusStepperValue
+        self.dataMinusStepperValue = dataMinusStepperValue
+        self.dataLimitPerDayPlusStepperValue = dataLimitPerDayPlusStepperValue
+        self.dataLimitPerDayMinusStepperValue = dataLimitPerDayMinusStepperValue
+        self.dataLimitPlusStepperValue = dataLimitPlusStepperValue
+        self.dataLimitMinusStepperValue = dataLimitMinusStepperValue
     }
     
+    func loadAllData(
+        unit: Unit?,
+        usageType: ToggleItem?
+    ) {
+        self.unit = unit ?? .gb
+        self.usageType = usageType ?? .daily
+    }
+    
+    /// Setters
     func setUsageType(_ type: String) {
-        usageType = .daily
+        usageType = ToggleItem(rawValue: type) ?? .daily
     }
     
-    func setIsNotification(_ isOn: Bool) {
-        self.isNotifOn = isOn
+    func setIsPeriodAuto(_ isOn: Bool) {
+        self.isPeriodAuto = isOn
     }
     
-    func setDataAmount(_ amount: Double) {
-        dataAmount = amount
+    func setPlusStepperValue(_ amount: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            dataLimitPlusStepperValue = amount
+        case .dailyLimit:
+            dataLimitPerDayPlusStepperValue = amount
+        case .data:
+            dataPlusStepperValue = amount
+        }
     }
     
-    func setStartDate(_ date: Date) {
-        startDate = date
-    }
-    
-    func setEndDate(_ date: Date) {
-        endDate = date
-    }
-    
-    func setDataLimit(_ amount: Double) {
-        dataLimit = amount
-    }
-    
-    func setDataLimitPerDay(_ amount: Double) {
-        dataLimitPerDay = amount
+    func setMinusStepperValue(_ amount: Double, type: StepperValueType) {
+        switch type {
+        case .planLimit:
+            dataLimitMinusStepperValue = amount
+        case .dailyLimit:
+            dataLimitPerDayMinusStepperValue = amount
+        case .data:
+            dataMinusStepperValue = amount
+        }
     }
 }
 

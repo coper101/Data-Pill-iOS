@@ -11,7 +11,6 @@ struct UsageCardView: View {
     // MARK: - Props
     @Binding var selectedItem: ToggleItem
     var width: CGFloat
-    var height: CGFloat?
 
     // MARK: - UI
     var body: some View {
@@ -27,8 +26,8 @@ struct UsageCardView: View {
                 title2: ToggleItem.daily.rawValue
             )
             .padding(.bottom, 5)
-        }
-        .frame(height: height)
+        } //: ItemCardView
+        .accessibilityIdentifier("usage")
     }
     
     // MARK: - Actions
