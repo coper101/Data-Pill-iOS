@@ -37,7 +37,7 @@ final class Stepper_Test_Case: XCTestCase {
         // (1) Given
         // (2) When
         var hasExceeded = false
-        let output = Stepper.plus(
+        let _ = Stepper.plus(
             value: "5.0",
             max: 5.0,
             by: 1.0,

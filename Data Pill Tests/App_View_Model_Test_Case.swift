@@ -346,6 +346,34 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertEqual(appViewModel.dataLimit, 18)
     }
     
+    func test_did_tap_limit_plan_exceeds_will_disable_save() throws {
+        // (1) Given
+        let dataAmount = 5.0
+        let dataPlanLimit = 5.1
+        // (2) When: user edits the value from the Text Field
+        appViewModel.dataAmount = dataAmount
+        appViewModel.didTapLimit()
+        appViewModel.dataLimitValue = "\(dataPlanLimit)"
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataAmount, 5.0)
+        XCTAssertEqual(appViewModel.dataLimitValue, "5.1")
+        XCTAssertTrue(appViewModel.buttonDisabledPlanLimit)
+    }
+    
+    func test_did_tap_limit_plan_below_min_will_disable_save() throws {
+        // (1) Given
+        let dataAmount = 5.0
+        let dataPlanLimit = -0.1
+        // (2) When: user edits the value from the Text Field (no option to tap negative)
+        appViewModel.dataAmount = dataAmount
+        appViewModel.didTapLimit()
+        appViewModel.dataLimitValue = "\(dataPlanLimit)"
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataAmount, 5.0)
+        XCTAssertEqual(appViewModel.dataLimitValue, "-0.1")
+        XCTAssertTrue(appViewModel.buttonDisabledPlanLimit)
+    }
+    
     func test_did_tap_limit_daily() throws {
         // (1) Given
         // (2) When
@@ -368,6 +396,34 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertFalse(appViewModel.isBlurShown)
         XCTAssertFalse(appViewModel.isDataLimitPerDayEditing)
         XCTAssertEqual(appViewModel.dataLimitPerDay, 0.5)
+    }
+    
+    func test_did_tap_limit_daily_exceeds_will_disable_save() throws {
+        // (1) Given
+        let dataAmount = 5.0
+        let dataDailyLimit = 5.1
+        // (2) When: user edits the value from the Text Field (no option to tap negative)
+        appViewModel.dataAmount = dataAmount
+        appViewModel.didTapLimitPerDay()
+        appViewModel.dataLimitPerDayValue = "\(dataDailyLimit)"
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataAmount, 5.0)
+        XCTAssertEqual(appViewModel.dataLimitPerDayValue, "5.1")
+        XCTAssertTrue(appViewModel.buttonDisabledDailyLimit)
+    }
+    
+    func test_did_tap_limit_daily_below_min_will_disable_save() throws {
+        // (1) Given
+        let dataAmount = 5.0
+        let dataDailyLimit = -0.1
+        // (2) When: user edits the value from the Text Field
+        appViewModel.dataAmount = dataAmount
+        appViewModel.didTapLimitPerDay()
+        appViewModel.dataLimitPerDayValue = "\(dataDailyLimit)"
+        // (3) Then
+        XCTAssertEqual(appViewModel.dataAmount, 5.0)
+        XCTAssertEqual(appViewModel.dataLimitPerDayValue, "-0.1")
+        XCTAssertTrue(appViewModel.buttonDisabledDailyLimit)
     }
         
     func test_did_tap_plus_for_daily_limit() throws {

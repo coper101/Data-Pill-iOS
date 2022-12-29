@@ -156,6 +156,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
         
         try edit_value_with_stepper_then_save(editButton, identifier: identifier, title: "Plan Limit")
         try edit_then_show_stepper_values(editButton, identifier: identifier)
+        try edit_value_exceeds_data_amount(editButton, identifier: identifier)
     }
     
     // MARK: - Daily Limit
@@ -180,6 +181,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
         
         try edit_value_with_stepper_then_save(editButton, identifier: identifier, title: "Daily Limit")
         try edit_then_show_stepper_values(editButton, identifier: identifier)
+        try edit_value_exceeds_data_amount(editButton, identifier: identifier)
     }
     
     // MARK: - Reusables
@@ -263,12 +265,12 @@ final class Data_Pill_UI_Tests: XCTestCase {
         editButton.tap()
                         
         let saveButton = app.buttons["Save"]
-        let dailyLimitLabel = getElement(type: .text, identifier: identifier, label: title)
+        let titleLabel = getElement(type: .text, identifier: identifier, label: title)
         let plusButton = getElement(type: .button, identifier: identifier, label: "Plus")
         let minusButton = getElement(type: .button, identifier: identifier, label: "Minus")
 
         XCTAssert(saveButton.waitForExistence(timeout: 0.5))
-        XCTAssert(dailyLimitLabel.exists)
+        XCTAssert(titleLabel.exists)
         XCTAssert(plusButton.exists)
         XCTAssert(minusButton.exists)
         
@@ -288,9 +290,11 @@ final class Data_Pill_UI_Tests: XCTestCase {
         
         editButton.tap()
         
+        let saveButton = app.buttons["Save"]
         let minusButton = getElement(type: .button, identifier: identifier, label: "Minus")
         let plusButton = getElement(type: .button, identifier: identifier, label: "Plus")
         
+        XCTAssert(saveButton.waitForExistence(timeout: 0.5))
         XCTAssert(minusButton.exists)
         XCTAssert(plusButton.exists)
         
@@ -341,8 +345,71 @@ final class Data_Pill_UI_Tests: XCTestCase {
         
         XCTAssertFalse(plusCloseButton.exists)
         XCTAssert(minusCloseButton.exists)
+        
+        // save
+        saveButton.tap()
+        
+        XCTAssertFalse(saveButton.waitForExistence(timeout: 0.5))
+        XCTAssertFalse(plusButton.exists)
+        XCTAssertFalse(minusButton.exists)
     }
+    
+    func edit_value_exceeds_data_amount(_ editButton: XCUIElement, identifier: String) throws {
+        // show edit input
+        if !editButton.isVisible() {
+            app.swipeUp()
+        }
+        
+        editButton.tap()
+        
+        let saveButton = app.buttons["Save"]
+        let plusButton = getElement(type: .button, identifier: identifier, label: "Plus")
+        let minusButton = getElement(type: .button, identifier: identifier, label: "Minus")
 
+        XCTAssert(saveButton.exists)
+        XCTAssert(plusButton.exists)
+        XCTAssert(minusButton.exists)
+        
+        // stepper: increase limit by 1
+        plusButton.tap()
+        
+        // stepper: exceeds displays error
+        let toastLabel = getElement(type: .text, identifier: nil, label: "Exceeds maximum data amount")
+        let toastIcon = getElement(type: .image, identifier: nil, label: "Warning Icon")
+                        
+        XCTAssert(toastLabel.waitForExistence(timeout: 3.0))
+        XCTAssert(toastIcon.exists)
+        
+        // text field: 1
+        let textField = getElement(type: .textField, identifier: identifier, label: "valueInput")
+        
+        XCTAssert(textField.exists)
+        
+        textField.tap()
+        
+        try highlightAndClearTextField(from: textField)
+        try typeNumber(1.0)
+
+        // text field: exceeds disables save button
+        saveButton.tap()
+        
+        XCTAssert(plusButton.exists)
+        XCTAssert(minusButton.exists)
+        
+        // text field: reset and save
+        minusButton.tap()
+        saveButton.tap()
+
+        XCTAssertFalse(plusButton.exists)
+        XCTAssertFalse(minusButton.exists)
+        
+        // check if error is gone
+        editButton.tap()
+        
+        XCTAssertFalse(toastLabel.exists)
+        XCTAssertFalse(toastIcon.exists)
+    }
+    
 }
 
 
@@ -356,6 +423,7 @@ extension Data_Pill_UI_Tests {
         case button
         case text
         case image
+        case textField
     }
     
     func getElement(type: `Type`, identifier: String?, label: String?) -> XCUIElement {
@@ -370,10 +438,14 @@ extension Data_Pill_UI_Tests {
             break
         case .image:
             query = app.images
+            break
+        case .textField:
+            query = app.textFields
         }
             
         if let identifier {
             /// [cd] case and diacritic (glyph added to word for pronounciation) insensitive
+            /// quotes are retained
             query = query.matching(.init(format: "identifier == [cd] %@", identifier))
         }
         if let label {
@@ -389,6 +461,27 @@ extension Data_Pill_UI_Tests {
         return query.count > 0
     }
     
+    /// Type Numbers on Number Pad Keyboard Input
+    /// - Parameter numericalValue : A value to type
+    func typeNumber(_ numericValue: Double) throws {
+        // print(app.keys.debugDescription)
+        let number = "\(numericValue)"
+        
+        for index in number.indices {
+            let char = number[index]
+            let keyButton = app.keys[String(char)]
+            XCTAssert(keyButton.exists)
+            keyButton.tap()
+        }
+    }
+    
+    func highlightAndClearTextField(from element: XCUIElement) throws {
+        printUITree()
+        let deleteButton = app.keys["Delete"]
+        XCTAssert(deleteButton.exists)
+        element.tap(withNumberOfTaps: 2, numberOfTouches: 1)
+        deleteButton.tap()
+    }
 }
 
 extension XCUIElement {
