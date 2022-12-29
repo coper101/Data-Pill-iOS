@@ -1182,7 +1182,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = "Data Pill WidgetExtensionRelease.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = KB9D3Y7M29;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Data Pill Widget/Info.plist";
@@ -1212,7 +1212,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = "Data Pill WidgetExtensionRelease.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = KB9D3Y7M29;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Data Pill Widget/Info.plist";
