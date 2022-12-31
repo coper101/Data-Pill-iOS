@@ -19,6 +19,6 @@ Link: https://www.figma.com/file/j7mJxZn8PUCCOT8YOmPepJ/Data-Pill---Monitor-Data
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/51541224/200107787-4ee15efd-36b2-44fa-8f1d-91cf3cd0f2c0.png" width="500">
-<img src="https://user-images.githubusercontent.com/51541224/200107807-df7a920b-0eb1-43c4-a170-7f98a60c0588.png" width="500">
+<img src="https://user-images.githubusercontent.com/51541224/210128016-73d6d2c6-1ed8-443d-aa21-42a97e0d8f97.png" width="500">
+<img src="https://user-images.githubusercontent.com/51541224/210128023-f7f965ed-b1df-4f7b-bd5c-95f9e9c17bf9.png" width="500">
 <img src="https://user-images.githubusercontent.com/51541224/200107818-15d136d0-30ef-4b9b-a59b-e01a75b5dccf.png" width="500">
