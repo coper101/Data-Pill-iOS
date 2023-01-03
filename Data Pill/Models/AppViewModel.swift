@@ -19,6 +19,8 @@ final class AppViewModel: ObservableObject {
     let toastTimer: ToastTimer
     
     /// [A] App Data
+    @Published var wasGuideShown = false
+
     @Published var unit = Unit.gb
     @Published var usageType: ToggleItem = .daily
     @Published var isPeriodAuto = false
@@ -84,6 +86,7 @@ final class AppViewModel: ObservableObject {
     }
     
     // MARK: - UI
+    @Published var isGuideShown = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
     @Published var isTappedOutside = false
@@ -184,6 +187,10 @@ final class AppViewModel: ObservableObject {
 extension AppViewModel {
     
     func republishAppData() {
+        appDataRepository.wasGuideShownPublisher
+            .sink { [weak self] in self?.wasGuideShown = $0 }
+            .store(in: &cancellables)
+        
         appDataRepository.usageTypePublisher
             .sink { [weak self] in self?.usageType = $0 }
             .store(in: &cancellables)
@@ -675,6 +682,18 @@ extension AppViewModel {
         }
     }
     
+    func showGuide() {
+        isGuideShown = !wasGuideShown
+    }
+    
+    func setGuideShown() {
+        isGuideShown = false
+        // appDataRepository.setWasGuideShown(true)
+    }
+    
+    func toggleDataPlan() {
+        // TODO:
+    }
 }
 
 // MARK: Debugging

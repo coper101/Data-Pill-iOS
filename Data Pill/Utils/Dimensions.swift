@@ -41,6 +41,7 @@ struct Dimensions {
     
     /// Button
     let buttonHeight: CGFloat = 53
+    let buttonHeightTall: CGFloat = 62
     
     let screen: CGSize = UIScreen.main.bounds.size
     

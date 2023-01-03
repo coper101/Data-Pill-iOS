@@ -334,6 +334,8 @@ struct AppView: View {
                 appViewModel.didTapSave()
             case .done:
                 appViewModel.didTapDone()
+            case .start:
+                break
             }
         }
     }
