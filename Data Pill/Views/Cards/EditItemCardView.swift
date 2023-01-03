@@ -78,6 +78,7 @@ struct EditItemCardView_Previews: PreviewProvider {
                     style: .wide,
                     subtitle: "Card",
                     backgroundColor: .background,
+                    isToggleOn: .constant(false),
                     content: {}
                 )
             }
@@ -92,6 +93,7 @@ struct EditItemCardView_Previews: PreviewProvider {
                     style: .wide,
                     subtitle: "Card",
                     backgroundColor: .background,
+                    isToggleOn: .constant(false),
                     content: {}
                 )
             }

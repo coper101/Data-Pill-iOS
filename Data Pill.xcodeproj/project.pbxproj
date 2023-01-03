@@ -140,6 +140,7 @@
 		27FDBCDD2963F7D0008FA32E /* LargeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCDC2963F7D0008FA32E /* LargeButtonView.swift */; };
 		27FDBCDF2963FF8D008FA32E /* NonPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCDE2963FF8D008FA32E /* NonPlanView.swift */; };
 		27FDBCE12963FF96008FA32E /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCE02963FF96008FA32E /* PlanView.swift */; };
+		27FDBCE329646F07008FA32E /* SlideToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCE229646F07008FA32E /* SlideToggleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -284,6 +285,7 @@
 		27FDBCDC2963F7D0008FA32E /* LargeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeButtonView.swift; sourceTree = "<group>"; };
 		27FDBCDE2963FF8D008FA32E /* NonPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonPlanView.swift; sourceTree = "<group>"; };
 		27FDBCE02963FF96008FA32E /* PlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
+		27FDBCE229646F07008FA32E /* SlideToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToggleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -490,6 +492,7 @@
 				27FDBCDC2963F7D0008FA32E /* LargeButtonView.swift */,
 				27BE08282928BD3F00E0781C /* Stepper */,
 				27801DF128D8BDBE00201339 /* ToggleView.swift */,
+				27FDBCE229646F07008FA32E /* SlideToggleView.swift */,
 				27801E1628E82B9100201339 /* TextInputView.swift */,
 				27B10A71295BE714009E910C /* ToastView.swift */,
 			);
@@ -823,6 +826,7 @@
 				27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */,
 				27F47DDF29067C8E00B3F83D /* Button.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
+				27FDBCE329646F07008FA32E /* SlideToggleView.swift in Sources */,
 				27FDBCDD2963F7D0008FA32E /* LargeButtonView.swift in Sources */,
 				27801E0928E054C500201339 /* CloseIconView.swift in Sources */,
 				27801E1E28E98F0D00201339 /* LocalStorage.swift in Sources */,

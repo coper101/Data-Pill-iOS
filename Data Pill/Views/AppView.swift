@@ -97,6 +97,7 @@ struct AppView: View {
                         dataAmountAction: {},
                         startPeriodAction: startPeriodAction,
                         endPeriodAction: endPeriodAction,
+                        isPlanActive: .constant(false),
                         dataAmountValue: $appViewModel.dataValue,
                         plusDataAction: plusDataAction,
                         minusDataAction: minusDataAction,

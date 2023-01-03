@@ -18,6 +18,7 @@ struct AutoPeriodCardView: View {
             style: .mini,
             subtitle: "PERIOD",
             verticalSpacing: 5,
+            isToggleOn: .constant(false),
             width: width
         ) {
             Button(action: didTapToggle) {

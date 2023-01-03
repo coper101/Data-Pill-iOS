@@ -13,6 +13,9 @@ protocol AppDataRepositoryProtocol {
     var wasGuideShown: Bool { get set }
     var wasGuideShownPublisher: Published<Bool>.Publisher { get }
     
+    var isPlanActive: Bool { get set }
+    var isPlanActivePublisher: Published<Bool>.Publisher { get }
+    
     var usageType: ToggleItem { get set }
     var usageTypePublisher: Published<ToggleItem>.Publisher { get }
     
@@ -47,6 +50,7 @@ protocol AppDataRepositoryProtocol {
     
     /// Setters
     func setWasGuideShown(_ wasShown: Bool) -> Void
+    func setIsPlanActive(_ isActive: Bool) -> Void
     func setUsageType(_ type: String) -> Void
     func setIsPeriodAuto(_ isOn: Bool) -> Void
     func setPlusStepperValue(_ amount: Double, type: StepperValueType)
@@ -57,6 +61,7 @@ protocol AppDataRepositoryProtocol {
 enum Keys: String {
     
     case wasGuideShown = "Was_Guide_Shown"
+    case isPlanActive = "Is_Plan_Active"
     
     case usageType = "Usage_Type"
     case autoPeriod = "Auto_Period"
@@ -80,6 +85,9 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     @Published var wasGuideShown = false
     var wasGuideShownPublisher: Published<Bool>.Publisher { $wasGuideShown }
+    
+    @Published var isPlanActive = false
+    var isPlanActivePublisher: Published<Bool>.Publisher { $isPlanActive }
     
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
@@ -122,6 +130,8 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         }
         
         wasGuideShown = LocalStorage.getBoolItem(forKey: .wasGuideShown)
+        
+        isPlanActive = LocalStorage.getBoolItem(forKey: .isPlanActive)
         
         let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
         self.usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
@@ -168,6 +178,10 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     func setWasGuideShown(_ wasShown: Bool) {
         LocalStorage.setItem(wasShown, forKey: .wasGuideShown)
     }
+    
+    func setIsPlanActive(_ isActive: Bool) {
+        LocalStorage.setItem(isActive, forKey: .isPlanActive)
+    }
 
     func setUsageType(_ type: String) {
         LocalStorage.setItem(type, forKey: .usageType)
@@ -205,6 +219,9 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     @Published var wasGuideShown = false
     var wasGuideShownPublisher: Published<Bool>.Publisher { $wasGuideShown }
+    
+    @Published var isPlanActive = false
+    var isPlanActivePublisher: Published<Bool>.Publisher { $isPlanActive }
     
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
@@ -267,6 +284,11 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     func setWasGuideShown(_ wasShown: Bool) {
         wasGuideShown = wasShown
     }
+    
+    func setIsPlanActive(_ isActive: Bool) {
+        isPlanActive = isActive
+    }
+    
     func setUsageType(_ type: String) {
         usageType = ToggleItem(rawValue: type) ?? .daily
     }

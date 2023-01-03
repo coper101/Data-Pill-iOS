@@ -87,6 +87,7 @@ final class AppViewModel: ObservableObject {
     
     // MARK: - UI
     @Published var isGuideShown = false
+    @Published var isPlanActive = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
     @Published var isTappedOutside = false
@@ -191,6 +192,10 @@ extension AppViewModel {
             .sink { [weak self] in self?.wasGuideShown = $0 }
             .store(in: &cancellables)
         
+        appDataRepository.isPlanActivePublisher
+            .sink { [weak self] in self?.isPlanActive = $0 }
+            .store(in: &cancellables)
+        
         appDataRepository.usageTypePublisher
             .sink { [weak self] in self?.usageType = $0 }
             .store(in: &cancellables)
@@ -280,6 +285,13 @@ extension AppViewModel {
     
     func observePlanSettings() {
         /// UI
+        $isPlanActive
+            .sink { [weak self] in
+                self?.appDataRepository.setIsPlanActive($0)
+                print("setting plan active")
+            }
+            .store(in: &cancellables)
+        
         $usageType
             .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
             .store(in: &cancellables)
@@ -688,11 +700,11 @@ extension AppViewModel {
     
     func setGuideShown() {
         isGuideShown = false
-        // appDataRepository.setWasGuideShown(true)
+        appDataRepository.setWasGuideShown(true)
     }
     
-    func toggleDataPlan() {
-        // TODO:
+    func toggleDataPlan(_ isOn: Bool) {
+        isPlanActive = isOn
     }
 }
 

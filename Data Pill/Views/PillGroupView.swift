@@ -98,13 +98,13 @@ struct PillGroupView: View {
                 dataAmountAction: planAmountAction,
                 startPeriodAction: {},
                 endPeriodAction: {},
+                isPlanActive: $appViewModel.isPlanActive,
                 dataAmountValue: $appViewModel.dataValue,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
                 didChangeMinusStepperValue: { _ in }
             )
-            .frame(height: dimensions.planCardHeight)
             
             // MARK: - Row 3: Data Limit
             HStack(spacing: dimensions.spaceInBetween) {
