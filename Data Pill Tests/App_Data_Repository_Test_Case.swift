@@ -21,6 +21,16 @@ final class App_Data_Repository_Test_Case: XCTestCase {
         repository = nil
     }
     
+    func test_set_was_guide_shown_is_correct() throws {
+        // (1) Given
+        let input = true
+        // (2) When
+        repository.setWasGuideShown(input)
+        // (3) Then
+        let output = repository.wasGuideShown
+        XCTAssertEqual(output, true)
+    }
+    
     func test_set_usage_type_is_correct() throws {
         // (1) Given
         let input = ToggleItem.plan.rawValue

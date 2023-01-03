@@ -9,9 +9,18 @@ import SwiftUI
 
 struct LargeButtonView: View {
     // MARK: - Props
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     var title: String
     var disabled: Bool = false
     var action: Action
+    
+    var backgroundColor: Colors {
+        (colorScheme == .light) ? .surface : .tertiary
+    }
+    
+    var color: Colors {
+        (colorScheme == .light) ? .onBackground : .onTertiary
+    }
     
     // MARK: - UI
     var body: some View {
@@ -20,7 +29,7 @@ struct LargeButtonView: View {
                 
                 Text(title)
                     .textStyle(
-                        foregroundColor: .onTertiary,
+                        foregroundColor: color,
                         font: .semibold,
                         size: 20
                     )
@@ -29,7 +38,7 @@ struct LargeButtonView: View {
             } //: ZStack
             .frame(height: 118)
             .fillMaxWidth()
-            .background(Colors.tertiary.color)
+            .background(backgroundColor.color)
             .clipShape(
                 RoundedRectangle(cornerRadius: 15)
             )
