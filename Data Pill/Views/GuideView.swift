@@ -25,6 +25,7 @@ struct GuideView: View {
             spacing: 0
         ) {
             
+            // Row 1: HEADER
             Text("Get Started")
                 .textStyle(
                     foregroundColor: Colors.onBackground,
@@ -34,6 +35,7 @@ struct GuideView: View {
                 .padding(.top, 31)
                 .padding(.bottom, 42)
             
+            // Row 2: CONTENT
             switch step {
             case .selectPlan:
                 SelectPlanTypeView(
@@ -54,13 +56,13 @@ struct GuideView: View {
     
     // MARK: - Actions
     func didTapPlan() {
-        withAnimation {
+        withAnimation(.easeOut(duration: 0.5)) {
             step = .plan
         }
     }
     
     func didTapNonPlan() {
-        withAnimation {
+        withAnimation(.easeOut(duration: 0.5)) {
             step = .nonPlan
         }
     }
