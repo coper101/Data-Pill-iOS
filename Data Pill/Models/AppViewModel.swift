@@ -288,7 +288,7 @@ extension AppViewModel {
         $isPlanActive
             .sink { [weak self] in
                 self?.appDataRepository.setIsPlanActive($0)
-                print("setting plan active")
+                self?.didChangeIsPlanActive($0)
             }
             .store(in: &cancellables)
         
@@ -381,6 +381,18 @@ extension AppViewModel {
         todaysData.hasLastTotal = true
         
         dataUsageRepository.updateData(todaysData)
+    }
+    
+    // MARK: - Data Plan
+    func toggleDataPlan(_ isOn: Bool) {
+        isPlanActive = isOn
+    }
+    
+    func didChangeIsPlanActive(_ isActive: Bool) {
+        if isActive {
+            usageType = .daily
+            isPeriodAuto = false
+        }
     }
     
     // MARK: - Edit Data Plan
@@ -694,6 +706,7 @@ extension AppViewModel {
         }
     }
     
+    // MARK: - Guide
     func showGuide() {
         isGuideShown = !wasGuideShown
     }
@@ -703,9 +716,6 @@ extension AppViewModel {
         appDataRepository.setWasGuideShown(true)
     }
     
-    func toggleDataPlan(_ isOn: Bool) {
-        isPlanActive = isOn
-    }
 }
 
 // MARK: Debugging
