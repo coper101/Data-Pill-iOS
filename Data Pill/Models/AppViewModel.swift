@@ -177,6 +177,7 @@ final class AppViewModel: ObservableObject {
         republishToast()
         
         setInputValues()
+        
         observePlanSettings()
         observeEditPlan()
         observeDataErrors()
@@ -286,42 +287,7 @@ extension AppViewModel {
     func observePlanSettings() {
         /// UI
         $isPlanActive
-            .sink { [weak self] in
-                self?.appDataRepository.setIsPlanActive($0)
-                self?.didChangeIsPlanActive($0)
-            }
-            .store(in: &cancellables)
-        
-        $usageType
-            .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
-            .store(in: &cancellables)
-        
-        $isPeriodAuto
-            .sink { [weak self] in self?.appDataRepository.setIsPeriodAuto($0) }
-            .store(in: &cancellables)
-        
-        $dataPlusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .data) }
-            .store(in: &cancellables)
-        
-        $dataLimitPerDayPlusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .data) }
-            .store(in: &cancellables)
-        
-        $dataLimitPerDayPlusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .dailyLimit) }
-            .store(in: &cancellables)
-        
-        $dataLimitPerDayMinusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .dailyLimit) }
-            .store(in: &cancellables)
-        
-        $dataLimitPlusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .planLimit) }
-            .store(in: &cancellables)
-        
-        $dataLimitMinusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .planLimit) }
+            .sink { [weak self] in self?.didChangeIsPlanActive($0) }
             .store(in: &cancellables)
         
         /// Data Usage
@@ -384,14 +350,20 @@ extension AppViewModel {
     }
     
     // MARK: - Data Plan
-    func toggleDataPlan(_ isOn: Bool) {
-        isPlanActive = isOn
+    func didTapStartPlan() {
+        closeGuide()
+        appDataRepository.setIsPlanActive(true)
+    }
+    
+    func didTapStartNonPlan() {
+        closeGuide()
+        appDataRepository.setIsPlanActive(false)
     }
     
     func didChangeIsPlanActive(_ isActive: Bool) {
         if isActive {
-            usageType = .daily
-            isPeriodAuto = false
+            appDataRepository.setUsageType(ToggleItem.daily.rawValue)
+            appDataRepository.setIsPeriodAuto(false)
         }
     }
     
@@ -476,13 +448,13 @@ extension AppViewModel {
     func didChangePlusStepperValue(value: Double, type: StepperValueType) {
         switch type {
         case .planLimit:
-            dataLimitPlusStepperValue = value
+            appDataRepository.setPlusStepperValue(value, type: .planLimit)
             didTapPlusLimit()
         case .dailyLimit:
-            dataLimitPerDayPlusStepperValue = value
+            appDataRepository.setPlusStepperValue(value, type: .dailyLimit)
             didTapPlusLimit()
         case .data:
-            dataPlusStepperValue = value
+            appDataRepository.setPlusStepperValue(value, type: .data)
             didTapPlusData()
         }
     }
@@ -490,13 +462,13 @@ extension AppViewModel {
     func didChangeMinusStepperValue(value: Double, type: StepperValueType) {
         switch type {
         case .planLimit:
-            dataLimitMinusStepperValue = value
+            appDataRepository.setMinusStepperValue(value, type: .planLimit)
             didTapMinusLimit()
         case .dailyLimit:
-            dataLimitPerDayMinusStepperValue = value
+            appDataRepository.setMinusStepperValue(value, type: .dailyLimit)
             didTapMinusLimit()
         case .data:
-            dataMinusStepperValue = value
+            appDataRepository.setMinusStepperValue(value, type: .data)
             didTapMinusData()
         }
     }
@@ -700,9 +672,9 @@ extension AppViewModel {
     // MARK: - Deep Link
     func didOpenURL(url: URL) {
         if url == ToggleItem.plan.url {
-            usageType = .plan
+            appDataRepository.setUsageType(ToggleItem.plan.rawValue)
         } else if url == ToggleItem.daily.url {
-            usageType = .daily
+            appDataRepository.setUsageType(ToggleItem.daily.rawValue)
         }
     }
     
@@ -711,7 +683,7 @@ extension AppViewModel {
         isGuideShown = !wasGuideShown
     }
     
-    func setGuideShown() {
+    func closeGuide() {
         isGuideShown = false
         appDataRepository.setWasGuideShown(true)
     }

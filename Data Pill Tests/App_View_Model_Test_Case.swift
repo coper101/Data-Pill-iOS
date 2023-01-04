@@ -96,6 +96,32 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertEqual(dailyUsedDataToday, 0)
         XCTAssertEqual(totalUsedDataToday, 100)
     }
+    
+    // MARK: - Data Plan
+    func test_did_tap_start_plan() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.didTapStartPlan()
+        // (3) Then
+        XCTAssertTrue(appViewModel.isPlanActive)
+        XCTAssertFalse(appViewModel.isGuideShown)
+        XCTAssertTrue(appViewModel.wasGuideShown)
+    }
+    
+    func test_did_tap_start_non_plan() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.didTapStartNonPlan()
+        // (3) Then
+        XCTAssertFalse(appViewModel.isPlanActive)
+        XCTAssertFalse(appViewModel.isGuideShown)
+        XCTAssertTrue(appViewModel.wasGuideShown)
+        XCTAssertEqual(appViewModel.usageType, .daily)
+        XCTAssertFalse(appViewModel.isPeriodAuto)
+    }
         
     // MARK: - Edit Data Plan
     /// Period
@@ -307,6 +333,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangePlusStepperValue(value: value, type: .data)
         // (3) Then
         XCTAssertEqual(appViewModel.dataPlusStepperValue, 0.1)
@@ -316,6 +343,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangeMinusStepperValue(value: value, type: .data)
         // (3) Then
         XCTAssertEqual(appViewModel.dataMinusStepperValue, 0.1)
@@ -430,6 +458,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangePlusStepperValue(value: value, type: .dailyLimit)
         // (3) Then
         XCTAssertEqual(appViewModel.dataLimitPerDayPlusStepperValue, 0.1)
@@ -439,6 +468,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangeMinusStepperValue(value: value, type: .dailyLimit)
         // (3) Then
         XCTAssertEqual(appViewModel.dataLimitPerDayMinusStepperValue, 0.1)
@@ -448,6 +478,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangePlusStepperValue(value: value, type: .planLimit)
         // (3) Then
         XCTAssertEqual(appViewModel.dataLimitPlusStepperValue, 0.1)
@@ -457,6 +488,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangeMinusStepperValue(value: value, type: .planLimit)
         // (3) Then
         XCTAssertEqual(appViewModel.dataLimitMinusStepperValue, 0.1)
@@ -550,6 +582,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let url = URL(string: "datapill:///plan")!
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didOpenURL(url: url)
         // (3) Then
         XCTAssertEqual(appViewModel.usageType, ToggleItem.plan)

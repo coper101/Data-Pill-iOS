@@ -129,76 +129,123 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
             return
         }
         
-        wasGuideShown = LocalStorage.getBoolItem(forKey: .wasGuideShown)
+        getWasGuideShown()
+        getIsPlanActive()
         
-        isPlanActive = LocalStorage.getBoolItem(forKey: .isPlanActive)
+        getIsUsageType()
+        getIsPeriodAuto()
         
-        let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
-        self.usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
-        isPeriodAuto = LocalStorage.getBoolItem(forKey: .autoPeriod)
+        getDataPlusStepperValue()
+        getDataMinusStepperValue()
         
-        dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
-        dataMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataMinusStepperValue)
+        getDataLimitPerDayPlusStepperValue()
+        getDataLimitPerDayMinusStepperValue()
         
-        dataLimitPerDayPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayPlusStepperValue)
-        dataLimitPerDayMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayMinusStepperValue)
-        
-        dataLimitPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPlusStepperValue)
-        dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
+        getDataLimitPlusStepperValue()
+        getDataLimitMinusStepperValue()
         
         if dataPlusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataPlusStepperValue)
-            dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
+            getDataPlusStepperValue()
         }
         if dataMinusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataMinusStepperValue)
-            dataMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataMinusStepperValue)
+            getDataMinusStepperValue()
         }
         
         if dataLimitPerDayPlusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataLimitPerDayPlusStepperValue)
-            dataLimitPerDayPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayPlusStepperValue)
+            getDataLimitPerDayPlusStepperValue()
         }
         if dataLimitPerDayMinusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataLimitPerDayMinusStepperValue)
-            dataLimitPerDayMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayMinusStepperValue)
+            getDataLimitPerDayMinusStepperValue()
         }
         
         if dataLimitPlusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataLimitPlusStepperValue)
-            dataLimitPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPlusStepperValue)
+            getDataLimitPlusStepperValue()
         }
         if dataLimitMinusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataLimitMinusStepperValue)
-            dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
+            getDataLimitMinusStepperValue()
         }
+    }
+    
+    /// Getters
+    func getWasGuideShown() {
+        wasGuideShown = LocalStorage.getBoolItem(forKey: .wasGuideShown)
+    }
+    
+    func getIsPlanActive() {
+        isPlanActive = LocalStorage.getBoolItem(forKey: .isPlanActive)
+    }
+    
+    func getIsUsageType() {
+        let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
+        usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
+    }
+    
+    func getIsPeriodAuto() {
+        isPeriodAuto = LocalStorage.getBoolItem(forKey: .autoPeriod)
+    }
+    
+    func getDataPlusStepperValue() {
+        dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
+    }
+    
+    func getDataMinusStepperValue() {
+        dataMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataMinusStepperValue)
+    }
+    
+    func getDataLimitPerDayPlusStepperValue() {
+        dataLimitPerDayPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayPlusStepperValue)
+    }
+    
+    func getDataLimitPerDayMinusStepperValue() {
+        dataLimitPerDayMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayMinusStepperValue)
+    }
+    
+    func getDataLimitPlusStepperValue() {
+        dataLimitPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPlusStepperValue)
+    }
+    
+    func getDataLimitMinusStepperValue() {
+        dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
     }
     
     /// Setters
     func setWasGuideShown(_ wasShown: Bool) {
         LocalStorage.setItem(wasShown, forKey: .wasGuideShown)
+        getWasGuideShown()
     }
     
     func setIsPlanActive(_ isActive: Bool) {
         LocalStorage.setItem(isActive, forKey: .isPlanActive)
+        getIsPlanActive()
     }
 
     func setUsageType(_ type: String) {
         LocalStorage.setItem(type, forKey: .usageType)
+        getIsUsageType()
     }
     
     func setIsPeriodAuto(_ isOn: Bool) {
         LocalStorage.setItem(isOn, forKey: .autoPeriod)
+        getIsPeriodAuto()
     }
     
     func setPlusStepperValue(_ amount: Double, type: StepperValueType) {
         switch type {
         case .planLimit:
             LocalStorage.setItem(amount, forKey: .dataLimitPlusStepperValue)
+            getDataLimitPlusStepperValue()
         case .dailyLimit:
             LocalStorage.setItem(amount, forKey: .dataLimitPerDayPlusStepperValue)
+            getDataLimitPerDayPlusStepperValue()
         case .data:
             LocalStorage.setItem(amount, forKey: .dataPlusStepperValue)
+            getDataPlusStepperValue()
         }
     }
     
@@ -206,10 +253,13 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         switch type {
         case .planLimit:
             LocalStorage.setItem(amount, forKey: .dataLimitMinusStepperValue)
+            getDataLimitMinusStepperValue()
         case .dailyLimit:
             LocalStorage.setItem(amount, forKey: .dataLimitPerDayMinusStepperValue)
+            getDataLimitPerDayMinusStepperValue()
         case .data:
             LocalStorage.setItem(amount, forKey: .dataMinusStepperValue)
+            getDataMinusStepperValue()
         }
     }
 

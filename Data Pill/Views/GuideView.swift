@@ -68,13 +68,11 @@ struct GuideView: View {
     }
     
     func didTapStartPlan() {
-        appViewModel.setGuideShown()
-        appViewModel.toggleDataPlan(true)
+        appViewModel.didTapStartPlan()
     }
     
     func didTapStartNonPlan() {
-        appViewModel.setGuideShown()
-        appViewModel.toggleDataPlan(false)
+        appViewModel.didTapStartNonPlan()
     }
 }
 
