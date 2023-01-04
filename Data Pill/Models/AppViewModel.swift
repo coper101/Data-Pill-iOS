@@ -287,7 +287,24 @@ extension AppViewModel {
     func observePlanSettings() {
         /// UI
         $isPlanActive
-            .sink { [weak self] in self?.didChangeIsPlanActive($0) }
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in
+                self?.didChangeIsPlanActive($0)
+                self?.appDataRepository.setIsPlanActive($0)
+            }
+            .store(in: &cancellables)
+        
+        $usageType
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
+            .store(in: &cancellables)
+        
+        $isPeriodAuto
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in self?.appDataRepository.setIsPeriodAuto($0) }
             .store(in: &cancellables)
         
         /// Data Usage
@@ -360,9 +377,11 @@ extension AppViewModel {
         appDataRepository.setIsPlanActive(false)
     }
     
-    func didChangeIsPlanActive(_ isActive: Bool) {
-        if isActive {
+    func didChangeIsPlanActive(_ isActive: Bool) {        
+        if !isActive && (usageType == .plan) {
             appDataRepository.setUsageType(ToggleItem.daily.rawValue)
+        }
+        if !isActive && isPeriodAuto {
             appDataRepository.setIsPeriodAuto(false)
         }
     }

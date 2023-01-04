@@ -39,6 +39,73 @@ final class App_View_Model_Test_Case: XCTestCase {
         )
     }
     
+    // MARK: - Plan Settings
+    func test_toggle_to_daily_type() throws {
+        // (1) Given
+        let type = ToggleItem.daily
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.usageType = type /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.usageType, .daily)
+    }
+    
+    func test_toggle_to_plan_type() throws {
+        // (1) Given
+        let type = ToggleItem.plan
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.usageType = type /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.usageType, .plan)
+    }
+    
+    func test_toggle_to_auto_period() throws {
+        // (1) Given
+        let isAuto = true
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.isPeriodAuto = isAuto /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.isPeriodAuto, true)
+    }
+    
+    func test_toggle_to_manual_period() throws {
+        // (1) Given
+        let isAuto = false
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.isPeriodAuto = isAuto /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.isPeriodAuto, false)
+    }
+    
+    func test_toggle_to_data_plan() throws {
+        // (1) Given
+        let isPlanActive = true
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.isPlanActive = isPlanActive /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.isPlanActive, true)
+    }
+    
+    func test_toggle_to_non_plan() throws {
+        // (1) Given
+        let isPlanActive = false
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.isPlanActive = isPlanActive /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.isPlanActive, false)
+    }
+    
     // MARK: - Mobile Data
     func test_refresh_used_data_today_with_empty_total_used_data() throws {
         // (1) Given

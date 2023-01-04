@@ -132,7 +132,7 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         getWasGuideShown()
         getIsPlanActive()
         
-        getIsUsageType()
+        getUsageType()
         getIsPeriodAuto()
         
         getDataPlusStepperValue()
@@ -181,7 +181,7 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         isPlanActive = LocalStorage.getBoolItem(forKey: .isPlanActive)
     }
     
-    func getIsUsageType() {
+    func getUsageType() {
         let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
         usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
     }
@@ -227,7 +227,7 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
 
     func setUsageType(_ type: String) {
         LocalStorage.setItem(type, forKey: .usageType)
-        getIsUsageType()
+        getUsageType()
     }
     
     func setIsPeriodAuto(_ isOn: Bool) {
