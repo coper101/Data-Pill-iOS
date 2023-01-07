@@ -21,11 +21,16 @@ struct AppView: View {
     }
 
     var contentHeight: CGFloat {
-        dimensions.maxPillHeight +
-        dimensions.planCardHeight +
-        dimensions.planLimitCardsHeight +
-        (dimensions.spaceInBetween * 2) +
-        (dimensions.horizontalPadding * 2)
+        let planCardHeight = appViewModel.isPlanActive ?
+            dimensions.planCardHeight : dimensions.planCardHeightDisabled
+        
+        return (
+            dimensions.maxPillHeight +
+                planCardHeight +
+            dimensions.planLimitCardsHeight +
+            (dimensions.spaceInBetween * 2) +
+            (dimensions.horizontalPadding * 2)
+        )
     }
     
     var canFitContent: Bool {

@@ -26,7 +26,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
         let identifier = "history"
 
         let pillButton = getElement(type: .button, identifier: "pill", label: "TODAY")
-        XCTAssert(pillButton.exists)
+        XCTAssert(pillButton.waitForExistence(timeout: 1.0))
         
         try open_history_then_close(pillButton, identifier: identifier)
     }
@@ -68,31 +68,50 @@ final class Data_Pill_UI_Tests: XCTestCase {
     
     // MARK: - Usage Card
     func test_usage() throws {
+        try test_usage(isPlan: true)
+    }
+    
+    func test_usage(isPlan: Bool) throws {
+        let planLabel = isPlan ? "Plan" : "NA"
+        
         let usageLabel = getElement(type: .text, identifier: "usage", label: "USAGE")
-        let planToggleButton = getElement(type: .button, identifier: "usage", label: "Plan")
+        let planToggleButton = getElement(type: .button, identifier: "usage", label: planLabel)
         let dailyToggleButton = getElement(type: .button, identifier: "usage", label: "Daily")
         
         XCTAssert(usageLabel.exists)
         XCTAssert(planToggleButton.exists)
         XCTAssert(dailyToggleButton.exists)
         
-        try toggle_usage_type(planToggleButton, dailyToggleButton)
-    }
-    
-    func toggle_usage_type(_ planButton: XCUIElement, _ dailyButton: XCUIElement) throws {
-        planButton.tap()
-        dailyButton.tap()
+        planToggleButton.tap()
+        dailyToggleButton.tap()
     }
     
     // MARK: - Period Card
     func test_period() throws {
+       try test_period(isPlan: true)
+    }
+    
+    func test_period(isPlan: Bool) throws {
+        
         let periodCardLabel = getElement(type: .text, identifier: "period", label: "PERIOD")
-        let manualOptionButton = getElement(type: .button, identifier: "period", label: "Manual")
         
         XCTAssert(periodCardLabel.exists)
+        
+        if !isPlan {
+            let naOptionButton = getElement(type: .button, identifier: "period", label: "NA")
+            
+            XCTAssert(naOptionButton.exists)
+            
+            return
+        }
+
+        let manualOptionButton = getElement(type: .button, identifier: "period", label: "Manual")
+        
         XCTAssert(manualOptionButton.exists)
         
         try toggle_auto_period()
+        
+        return
     }
     
     func toggle_auto_period() throws {
@@ -111,20 +130,22 @@ final class Data_Pill_UI_Tests: XCTestCase {
     // MARK: - Data Plan Card
     func test_data_plan() throws {
         let identifier = "dataPlan"
-        
+
         let dataPlanLabel = getElement(type: .text, identifier: identifier, label: "Data Plan")
-        
+
         XCTAssert(dataPlanLabel.exists)
-                
+        
+        let planToggleButton = getElement(type: .button, identifier: identifier, label: "slideToggle")
         let editPeriodButton = getElement(type: .button, identifier: identifier, label: "period")
         let editPeriodButtonImage = editPeriodButton.images["Right Arrow Icon"]
-        
+
+        XCTAssert(planToggleButton.exists)
         XCTAssert(editPeriodButton.exists)
         XCTAssert(editPeriodButtonImage.exists)
 
         let editAmountButton = getElement(type: .button, identifier: identifier, label: "amount")
         let editAmountButtonImage = editAmountButton.images["Right Arrow Icon"]
-        
+
         XCTAssert(editAmountButton.exists)
         XCTAssert(editAmountButtonImage.exists)
 
@@ -132,10 +153,40 @@ final class Data_Pill_UI_Tests: XCTestCase {
         try edit_period_then_show_date_picker_then_save(editPeriodButton, identifier: identifier)
         try edit_value_with_stepper_then_save(editAmountButton, identifier: identifier, title: "Data Amount")
         try edit_then_show_stepper_values(editAmountButton, identifier: identifier)
+        try toggleDataPlan(planToggleButton, editPeriodButton, editAmountButton)
+    }
+    
+    func toggleDataPlan(
+        _ toggleButton: XCUIElement,
+        _ editPeriodButton: XCUIElement,
+        _ editAmountButton: XCUIElement
+    ) throws {
+        
+        toggleButton.tap()
+                
+        XCTAssertFalse(editPeriodButton.exists)
+        XCTAssertFalse(editAmountButton.exists)
+        
+        try test_usage(isPlan: false)
+        try test_period(isPlan: false)
+        try test_plan_limit(isPlan: false)
+        
+        toggleButton.tap()
+
+        XCTAssert(editPeriodButton.exists)
+        XCTAssert(editAmountButton.exists)
+        
+        try test_usage(isPlan: true)
+        try test_period(isPlan: true)
+        try test_plan_limit(isPlan: true)
     }
     
     // MARK: - Plan Limit
     func test_plan_limit() throws {
+        try test_plan_limit(isPlan: true)
+    }
+    
+    func test_plan_limit(isPlan: Bool) throws {
         let identifier = "planLimit"
         
         let planLimitLabel = app.staticTexts
@@ -144,19 +195,31 @@ final class Data_Pill_UI_Tests: XCTestCase {
             .containing(.init(format: "label ENDSWITH 'Limit'"))
             .element
         
-        XCTAssert(planLimitLabel.exists)
+        if isPlan {
+            XCTAssert(planLimitLabel.exists)
+        } else {
+            XCTAssertFalse(planLimitLabel.exists)
+        }
         
         let limitAmount = getElement(type: .text, identifier: identifier, label: "limitAmount")
         let limitUnit = getElement(type: .text, identifier: identifier, label: "limitUnit")
         let editButton = getElement(type: .button, identifier: identifier, label: "Right Arrow Icon")
 
-        XCTAssert(limitAmount.exists)
-        XCTAssert(limitUnit.exists)
-        XCTAssert(editButton.exists)
+        if isPlan {
+            XCTAssert(limitAmount.exists)
+            XCTAssert(limitUnit.exists)
+            XCTAssert(editButton.exists)
+        } else {
+            XCTAssertFalse(limitAmount.exists)
+            XCTAssertFalse(limitUnit.exists)
+            XCTAssertFalse(editButton.exists)
+        }
         
-        try edit_value_with_stepper_then_save(editButton, identifier: identifier, title: "Plan Limit")
-        try edit_then_show_stepper_values(editButton, identifier: identifier)
-        try edit_value_exceeds_data_amount(editButton, identifier: identifier)
+        if isPlan {
+            try edit_value_with_stepper_then_save(editButton, identifier: identifier, title: "Plan Limit")
+            try edit_then_show_stepper_values(editButton, identifier: identifier)
+            try edit_value_exceeds_data_amount(editButton, identifier: identifier)
+        }
     }
     
     // MARK: - Daily Limit

@@ -24,31 +24,37 @@ struct SlideToggleView: View {
     
     // MARK: - UI
     var body: some View {
-        ZStack(alignment: .leading) {
+        Button(action: didTapToggle) {
             
-            // Layer 1: BACKGROUND
-            background.color
+            ZStack(alignment: .leading) {
+                
+                // Layer 1: BACKGROUND
+                background.color
+                
+                // Layer 2: HANDLE
+                Circle()
+                    .fill(Colors.surface.color)
+                    .frame(width: 21, height: 21)
+                    .cardShadow(scheme: colorScheme)
+                    .offset(x: handleXOffset)
+                
+            } //: ZStack
+            .frame(width: 52, height: 29)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 15)
+            )
             
-            // Layer 2: HANDLE
-            Circle()
-                .fill(Colors.surface.color)
-                .frame(width: 21, height: 21)
-                .cardShadow(scheme: colorScheme)
-                .offset(x: handleXOffset)
-            
-        } //: ZStack
-        .frame(width: 52, height: 29)
-        .clipShape(
-            RoundedRectangle(cornerRadius: 15)
-        )
-        .onTapGesture {
-            withAnimation(.spring()) {
-                isOn.toggle()
-            }
-        }
+        } //: Button
+        .buttonStyle(PlainButtonStyle())
+        .accessibilityLabel("slideToggle")
     }
     
     // MARK: - Actions
+    func didTapToggle() {
+        withAnimation(.spring()) {
+            isOn.toggle()
+        }
+    }
 }
 
 // MARK: - Preview
