@@ -395,7 +395,7 @@ struct AppView_Previews: PreviewProvider {
             date: Calendar.current.date(
                 byAdding: .day, value: -2, to: todaysDate)!,
             totalUsedData: 0,
-            dailyUsedData: 3_000,
+            dailyUsedData: 5_000,
             hasLastTotal: true
         )
         dataRepo.addData(
