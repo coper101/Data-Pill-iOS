@@ -4,19 +4,34 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Data Pill WidgetExtension.xcscheme_^#shared#^_</key>
+		<key>Data Pill Tests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
-		<key>Data Pill.xcscheme_^#shared#^_</key>
+		<key>Data Pill UI Tests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>Data Pill WidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>Data Pill.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>270EC9B92956A898008A27AA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>27801DAB28D6C96800201339</key>
 		<dict>
 			<key>primary</key>
