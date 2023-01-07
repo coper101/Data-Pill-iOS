@@ -11,7 +11,7 @@ import Foundation
 let weeksDataSample: [DataTest] = [
     .init(
         date: "2022-10-09T10:44:00+0000".toDate(),
-        dailyUsedData: 1_500
+        dailyUsedData: 2_500
     ),
     .init(
         date: "2022-10-10T10:44:00+0000".toDate(),

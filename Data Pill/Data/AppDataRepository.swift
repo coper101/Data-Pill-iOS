@@ -10,6 +10,12 @@ import Foundation
 // MARK: - Protocol
 protocol AppDataRepositoryProtocol {
 
+    var wasGuideShown: Bool { get set }
+    var wasGuideShownPublisher: Published<Bool>.Publisher { get }
+    
+    var isPlanActive: Bool { get set }
+    var isPlanActivePublisher: Published<Bool>.Publisher { get }
+    
     var usageType: ToggleItem { get set }
     var usageTypePublisher: Published<ToggleItem>.Publisher { get }
     
@@ -43,6 +49,8 @@ protocol AppDataRepositoryProtocol {
     ) -> Void
     
     /// Setters
+    func setWasGuideShown(_ wasShown: Bool) -> Void
+    func setIsPlanActive(_ isActive: Bool) -> Void
     func setUsageType(_ type: String) -> Void
     func setIsPeriodAuto(_ isOn: Bool) -> Void
     func setPlusStepperValue(_ amount: Double, type: StepperValueType)
@@ -51,6 +59,10 @@ protocol AppDataRepositoryProtocol {
 
 // MARK: - Implementation
 enum Keys: String {
+    
+    case wasGuideShown = "Was_Guide_Shown"
+    case isPlanActive = "Is_Plan_Active"
+    
     case usageType = "Usage_Type"
     case autoPeriod = "Auto_Period"
     case startDatePlan = "Start_Data_Plan"
@@ -70,6 +82,12 @@ enum Keys: String {
 }
 
 final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
+    
+    @Published var wasGuideShown = false
+    var wasGuideShownPublisher: Published<Bool>.Publisher { $wasGuideShown }
+    
+    @Published var isPlanActive = false
+    var isPlanActivePublisher: Published<Bool>.Publisher { $isPlanActive }
     
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
@@ -106,67 +124,128 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         unit: Unit? = nil,
         usageType: ToggleItem? = nil
     ) {
+        /// for testing
         if unit != nil || usageType != nil {
             return
         }
-        let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
-        self.usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
-        isPeriodAuto = LocalStorage.getBoolItem(forKey: .autoPeriod)
         
-        dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
-        dataMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataMinusStepperValue)
+        getWasGuideShown()
+        getIsPlanActive()
         
-        dataLimitPerDayPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayPlusStepperValue)
-        dataLimitPerDayMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayMinusStepperValue)
+        getUsageType()
+        getIsPeriodAuto()
         
-        dataLimitPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPlusStepperValue)
-        dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
+        getDataPlusStepperValue()
+        getDataMinusStepperValue()
+        
+        getDataLimitPerDayPlusStepperValue()
+        getDataLimitPerDayMinusStepperValue()
+        
+        getDataLimitPlusStepperValue()
+        getDataLimitMinusStepperValue()
         
         if dataPlusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataPlusStepperValue)
-            dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
+            getDataPlusStepperValue()
         }
         if dataMinusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataMinusStepperValue)
-            dataMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataMinusStepperValue)
+            getDataMinusStepperValue()
         }
         
         if dataLimitPerDayPlusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataLimitPerDayPlusStepperValue)
-            dataLimitPerDayPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayPlusStepperValue)
+            getDataLimitPerDayPlusStepperValue()
         }
         if dataLimitPerDayMinusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataLimitPerDayMinusStepperValue)
-            dataLimitPerDayMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayMinusStepperValue)
+            getDataLimitPerDayMinusStepperValue()
         }
         
         if dataLimitPlusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataLimitPlusStepperValue)
-            dataLimitPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPlusStepperValue)
+            getDataLimitPlusStepperValue()
         }
         if dataLimitMinusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataLimitMinusStepperValue)
-            dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
+            getDataLimitMinusStepperValue()
         }
     }
     
+    /// Getters
+    func getWasGuideShown() {
+        wasGuideShown = LocalStorage.getBoolItem(forKey: .wasGuideShown)
+    }
+    
+    func getIsPlanActive() {
+        isPlanActive = LocalStorage.getBoolItem(forKey: .isPlanActive)
+    }
+    
+    func getUsageType() {
+        let usageTypeValue = LocalStorage.getItem(forKey: .usageType) ?? ToggleItem.daily.rawValue
+        usageType = ToggleItem(rawValue: usageTypeValue) ?? .daily
+    }
+    
+    func getIsPeriodAuto() {
+        isPeriodAuto = LocalStorage.getBoolItem(forKey: .autoPeriod)
+    }
+    
+    func getDataPlusStepperValue() {
+        dataPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataPlusStepperValue)
+    }
+    
+    func getDataMinusStepperValue() {
+        dataMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataMinusStepperValue)
+    }
+    
+    func getDataLimitPerDayPlusStepperValue() {
+        dataLimitPerDayPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayPlusStepperValue)
+    }
+    
+    func getDataLimitPerDayMinusStepperValue() {
+        dataLimitPerDayMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPerDayMinusStepperValue)
+    }
+    
+    func getDataLimitPlusStepperValue() {
+        dataLimitPlusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitPlusStepperValue)
+    }
+    
+    func getDataLimitMinusStepperValue() {
+        dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
+    }
+    
     /// Setters
+    func setWasGuideShown(_ wasShown: Bool) {
+        LocalStorage.setItem(wasShown, forKey: .wasGuideShown)
+        getWasGuideShown()
+    }
+    
+    func setIsPlanActive(_ isActive: Bool) {
+        LocalStorage.setItem(isActive, forKey: .isPlanActive)
+        getIsPlanActive()
+    }
+
     func setUsageType(_ type: String) {
         LocalStorage.setItem(type, forKey: .usageType)
+        getUsageType()
     }
     
     func setIsPeriodAuto(_ isOn: Bool) {
         LocalStorage.setItem(isOn, forKey: .autoPeriod)
+        getIsPeriodAuto()
     }
     
     func setPlusStepperValue(_ amount: Double, type: StepperValueType) {
         switch type {
         case .planLimit:
             LocalStorage.setItem(amount, forKey: .dataLimitPlusStepperValue)
+            getDataLimitPlusStepperValue()
         case .dailyLimit:
             LocalStorage.setItem(amount, forKey: .dataLimitPerDayPlusStepperValue)
+            getDataLimitPerDayPlusStepperValue()
         case .data:
             LocalStorage.setItem(amount, forKey: .dataPlusStepperValue)
+            getDataPlusStepperValue()
         }
     }
     
@@ -174,16 +253,25 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         switch type {
         case .planLimit:
             LocalStorage.setItem(amount, forKey: .dataLimitMinusStepperValue)
+            getDataLimitMinusStepperValue()
         case .dailyLimit:
             LocalStorage.setItem(amount, forKey: .dataLimitPerDayMinusStepperValue)
+            getDataLimitPerDayMinusStepperValue()
         case .data:
             LocalStorage.setItem(amount, forKey: .dataMinusStepperValue)
+            getDataMinusStepperValue()
         }
     }
 
 }
 
 class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
+    
+    @Published var wasGuideShown = false
+    var wasGuideShownPublisher: Published<Bool>.Publisher { $wasGuideShown }
+    
+    @Published var isPlanActive = false
+    var isPlanActivePublisher: Published<Bool>.Publisher { $isPlanActive }
     
     @Published var usageType: ToggleItem = .daily
     var usageTypePublisher: Published<ToggleItem>.Publisher { $usageType }
@@ -243,6 +331,14 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     }
     
     /// Setters
+    func setWasGuideShown(_ wasShown: Bool) {
+        wasGuideShown = wasShown
+    }
+    
+    func setIsPlanActive(_ isActive: Bool) {
+        isPlanActive = isActive
+    }
+    
     func setUsageType(_ type: String) {
         usageType = ToggleItem(rawValue: type) ?? .daily
     }

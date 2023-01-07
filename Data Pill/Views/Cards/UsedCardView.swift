@@ -28,6 +28,7 @@ struct UsedCardView: View {
             style: .mini,
             subtitle: "USED",
             verticalSpacing: 5,
+            isToggleOn: .constant(false),
             width: width
         ) {
             

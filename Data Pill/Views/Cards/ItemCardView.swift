@@ -64,6 +64,9 @@ struct ItemCardView<Content>: View where Content: View {
     var hasBlur = false
     var backgroundColor = Colors.surface
     
+    @Binding var isToggleOn: Bool
+    var hasToggle = false
+    
     var contentVertPadding: CGFloat = 14
     var contentHorPadding: CGFloat = 20
     
@@ -114,7 +117,12 @@ struct ItemCardView<Content>: View where Content: View {
                     label
                     Spacer()
                     secondaryLabel
-                }
+                    
+                    if hasToggle {
+                        SlideToggleView(isOn: $isToggleOn)
+                    }
+                    
+                } //: HStack
                 
                 // Content
                 content()
@@ -183,6 +191,8 @@ struct ItemCardView_Previews: PreviewProvider {
             style: .wide,
             subtitle: "Subtitle Subtitle Subtitle",
             caption: "Caption",
+            isToggleOn: .constant(false),
+            hasToggle: false,
             width: 150,
             textColor: .onBackground
         ) {
@@ -199,10 +209,33 @@ struct ItemCardView_Previews: PreviewProvider {
         .padding()
         .background(Color.green)
         
+        ItemCardView(
+            style: .wide,
+            subtitle: "Subtitle Subtitle Subtitle",
+            isToggleOn: .constant(false),
+            hasToggle: false,
+            width: 150,
+            textColor: .onBackground
+        ) {
+            Text("").frame(height: 50)
+        }
+        .previewLayout(.sizeThatFits)
+        .previewDisplayName(
+            displayName(
+                "Item Card",
+                ItemCardStyle.wide.id.firstCap(),
+                "Toggle"
+            )
+        )
+        .padding()
+        .background(Color.green)
+        
         ForEach(ItemCardStyle.allCases) { style in
             ItemCardView(
                 style: style,
                 subtitle: "Subtitle Subtitle Subtitle",
+                isToggleOn: .constant(false),
+                hasToggle: false,
                 width: 150
             ) {
                 Text("").frame(height: 50)

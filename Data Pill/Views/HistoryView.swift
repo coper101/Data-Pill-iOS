@@ -80,8 +80,7 @@ struct HistoryView: View {
                 } //: ForEach
                 
             } //: Group
-            .padding(.bottom, 40)
-            .fillMaxSize(alignment: .bottom)
+            .fillMaxSize(alignment: .center)
             
         } //: VStack
         .accessibilityIdentifier("history")

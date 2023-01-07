@@ -8,6 +8,11 @@
 import SwiftUI
 import OSLog
 
+enum Screen {
+    case guide
+    case overview
+}
+
 @main
 struct Data_PillApp: App {
     @StateObject private var appViewModel = AppViewModel()
@@ -17,6 +22,16 @@ struct Data_PillApp: App {
             AppView()
                 .environmentObject(appViewModel)
                 .background(Colors.background.color)
+                .sheet(
+                    isPresented: $appViewModel.isGuideShown,
+                    onDismiss: {}
+                ) {
+                    GuideView()
+                        .environmentObject(appViewModel)
+                }
+                .onAppear {
+                    appViewModel.showGuide()
+                }
         }
     }
 }

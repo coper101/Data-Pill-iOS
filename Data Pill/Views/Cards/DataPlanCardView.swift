@@ -24,6 +24,7 @@ struct DataPlanCardView: View {
     var startPeriodAction: Action
     var endPeriodAction: Action
     
+    @Binding var isPlanActive: Bool
     @Binding var dataAmountValue: String
     var dataUnit: Unit = .gb
     
@@ -94,6 +95,8 @@ struct DataPlanCardView: View {
             subtitle: subtitle,
             caption: caption,
             backgroundColor: editType == nil ? .surface : .background,
+            isToggleOn: $isPlanActive,
+            hasToggle: editType == nil,
             textColor: editType == nil ? .onSurfaceLight2 : .onBackground
         ) {
             
@@ -108,25 +111,33 @@ struct DataPlanCardView: View {
                 
             } else {
                 
-                // Row 1: PERIOD
-                NavRowView(
-                    title: periodTitle,
-                    subtitle: numberOfdays.prefixDay(),
-                    action: periodAction
-                )
-                .accessibilityLabel("period")
-                .padding(.top, 10)
-                
-                DividerView()
-                    .padding(.vertical, 5)
-                
-                // Row 2: DATA AMOUNT
-                NavRowView(
-                    title: "\(dataAmountValue) \(dataUnit.rawValue)",
-                    subtitle: "",
-                    action: dataAmountAction
-                )
-                .accessibilityLabel("amount")
+                if isPlanActive {
+                    
+                    // Row 1: PERIOD
+                    NavRowView(
+                        title: periodTitle,
+                        subtitle: numberOfdays.prefixDay(),
+                        action: periodAction
+                    )
+                    .accessibilityLabel("period")
+                    .padding(.top, 10)
+                    
+                    DividerView()
+                        .padding(.vertical, 5)
+                    
+                    // Row 2: DATA AMOUNT
+                    NavRowView(
+                        title: "\(dataAmountValue) \(dataUnit.rawValue)",
+                        subtitle: "",
+                        action: dataAmountAction
+                    )
+                    .accessibilityLabel("amount")
+                    
+                } else {
+                    
+                    EmptyView()
+                    
+                }
                 
             } // if-else
             
@@ -150,6 +161,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             dataAmountAction: {},
             startPeriodAction: {},
             endPeriodAction: {},
+            isPlanActive: .constant(false),
             dataAmountValue: .constant("10"),
             plusDataAction: {},
             minusDataAction: {},
@@ -157,7 +169,27 @@ struct DataPlanCardView_Previews: PreviewProvider {
             didChangeMinusStepperValue: { _ in }
         )
             .previewLayout(.sizeThatFits)
-            .previewDisplayName("Information")
+            .previewDisplayName("Information / Inactive Plan")
+            .padding()
+            .background(Color.green)
+        
+        DataPlanCardView(
+            startDate: appViewModel.startDate,
+            endDate: appViewModel.endDate,
+            numberOfdays: appViewModel.numOfDaysOfPlan,
+            periodAction: {},
+            dataAmountAction: {},
+            startPeriodAction: {},
+            endPeriodAction: {},
+            isPlanActive: .constant(true),
+            dataAmountValue: .constant("10"),
+            plusDataAction: {},
+            minusDataAction: {},
+            didChangePlusStepperValue: { _ in },
+            didChangeMinusStepperValue: { _ in }
+        )
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName("Information / Active Plan")
             .padding()
             .background(Color.green)
         
@@ -170,6 +202,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             dataAmountAction: {},
             startPeriodAction: {},
             endPeriodAction: {},
+            isPlanActive: .constant(false),
             dataAmountValue: .constant("10"),
             plusDataAction: {},
             minusDataAction: {},
@@ -190,6 +223,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
             dataAmountAction: {},
             startPeriodAction: {},
             endPeriodAction: {},
+            isPlanActive: .constant(false),
             dataAmountValue: .constant("10"),
             plusDataAction: {},
             minusDataAction: {},

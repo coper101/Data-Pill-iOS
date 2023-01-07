@@ -70,7 +70,8 @@ struct PillGroupView: View {
                         // USAGE TOGGLE
                         UsageCardView(
                             selectedItem: $appViewModel.usageType,
-                            width: cardWidth
+                            width: cardWidth,
+                            isPlanActive: appViewModel.isPlanActive
                         )
                         
                         Spacer()
@@ -78,7 +79,8 @@ struct PillGroupView: View {
                         // AUTO DATA PERIOD TOGGLE
                         AutoPeriodCardView(
                             isAuto: $appViewModel.isPeriodAuto,
-                            width: cardWidth
+                            width: cardWidth,
+                            isPlanActive: appViewModel.isPlanActive
                         )
                         
                     } //: VStack
@@ -98,28 +100,30 @@ struct PillGroupView: View {
                 dataAmountAction: planAmountAction,
                 startPeriodAction: {},
                 endPeriodAction: {},
+                isPlanActive: $appViewModel.isPlanActive,
                 dataAmountValue: $appViewModel.dataValue,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
                 didChangeMinusStepperValue: { _ in }
             )
-            .frame(height: dimensions.planCardHeight)
             
             // MARK: - Row 3: Data Limit
             HStack(spacing: dimensions.spaceInBetween) {
                 
-                DataPlanLimitView(
-                    dataLimitValue: $appViewModel.dataLimitValue,
-                    dataAmount: appViewModel.dataLimit,
-                    isEditing: false,
-                    usageType: .plan,
-                    editAction: planLimitAction,
-                    minusDataAction: {},
-                    plusDataAction: {},
-                    didChangePlusStepperValue: { _ in },
-                    didChangeMinusStepperValue: { _ in }
-                )
+                if appViewModel.isPlanActive {
+                    DataPlanLimitView(
+                        dataLimitValue: $appViewModel.dataLimitValue,
+                        dataAmount: appViewModel.dataLimit,
+                        isEditing: false,
+                        usageType: .plan,
+                        editAction: planLimitAction,
+                        minusDataAction: {},
+                        plusDataAction: {},
+                        didChangePlusStepperValue: { _ in },
+                        didChangeMinusStepperValue: { _ in }
+                    )
+                }
                 
                 DataPlanLimitView(
                     dataLimitValue: $appViewModel.dataLimitPerDayValue,
@@ -176,9 +180,30 @@ struct PillGroupView: View {
 
 // MARK: - Preview
 struct PillGroupView_Previews: PreviewProvider {
+    static var appViewModelPlan: AppViewModel {
+        let model = AppViewModel()
+        model.isPlanActive = true
+        return model
+    }
+    
+    static var appViewModelNonPlan: AppViewModel {
+        let model = AppViewModel()
+        model.isPlanActive = false
+        return model
+    }
+    
     static var previews: some View {
-        PillGroupView()
-            .previewLayout(.sizeThatFits)
-            .environmentObject(AppViewModel())
+        Group {
+            
+            PillGroupView()
+                .environmentObject(appViewModelPlan)
+                .previewDisplayName("Plan")
+            
+            PillGroupView()
+                .environmentObject(appViewModelNonPlan)
+                .previewDisplayName("Non-Plan")
+            
+        }
+        .previewLayout(.sizeThatFits)
     }
 }
