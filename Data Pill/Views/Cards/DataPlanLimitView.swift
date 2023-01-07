@@ -79,6 +79,7 @@ struct DataPlanLimitView: View {
             hasBackground: true,
             hasBlur: false,
             backgroundColor: isEditing ? .background : .surface,
+            isToggleOn: .constant(false),
             hasNavigateIcon: !isEditing,
             textColor: textColor
         ) {

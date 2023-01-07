@@ -15,3 +15,8 @@ enum ToggleItem: String {
         .init(string: "datapill:///\(self.rawValue.lowercased())")!
     }
 }
+
+enum SlideToggleItem {
+    case plan
+    case nonPlan
+}

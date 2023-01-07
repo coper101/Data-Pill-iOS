@@ -23,3 +23,11 @@ struct ScaleButtonStyle: ButtonStyle {
             }
     }
 }
+
+struct PlainButtonStyle: ButtonStyle {
+    
+    // MARK: - UI
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+    }
+}

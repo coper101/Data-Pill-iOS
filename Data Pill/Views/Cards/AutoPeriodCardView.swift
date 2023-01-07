@@ -11,6 +11,21 @@ struct AutoPeriodCardView: View {
     // MARK: - Props
     @Binding var isAuto: Bool
     var width: CGFloat
+    var isPlanActive: Bool
+    
+    var title: String {
+        if isPlanActive {
+            return isAuto ? "Auto" : "Manual"
+        }
+        return "NA"
+    }
+    
+    var opacity: Double {
+        if isPlanActive {
+            return isAuto ? 1 : 0.5
+        }
+        return 0.1
+    }
     
     // MARK: - UI
     var body: some View {
@@ -18,23 +33,29 @@ struct AutoPeriodCardView: View {
             style: .mini,
             subtitle: "PERIOD",
             verticalSpacing: 5,
+            isToggleOn: .constant(false),
             width: width
         ) {
+            
             Button(action: didTapToggle) {
-                Text(isAuto ? "Auto" : "Manual")
+                
+                Text(title)
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .bold,
                         size: 20,
                         maxWidth: .infinity
                     )
-                    .opacity(isAuto ? 1 : 0.5)
-                    .id(isAuto ? "Auto" : "Manual")
+                    .opacity(opacity)
+                    .id(title)
                     .transition(.opacity)
                     .padding(.bottom, 10)
-            }
+                
+            } //: Button
             .buttonStyle(ScaleButtonStyle())
             .fillMaxWidth()
+            .disabled(!isPlanActive)
+            
         } //: ItemCardView
         .accessibilityIdentifier("period")
     }
@@ -51,14 +72,29 @@ struct AutoPeriodCardView: View {
 struct AutoPeriodCardView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
+            
             AutoPeriodCardView(
                 isAuto: .constant(true),
-                width: 150
+                width: 150,
+                isPlanActive: true
             )
+            .previewDisplayName("Plan / Auto")
+            
             AutoPeriodCardView(
                 isAuto: .constant(false),
-                width: 150
+                width: 150,
+                isPlanActive: true
             )
+            .previewDisplayName("Plan / Manual")
+
+            
+            AutoPeriodCardView(
+                isAuto: .constant(false),
+                width: 150,
+                isPlanActive: false
+            )
+            .previewDisplayName("Non-Plan")
+
         }
             .previewLayout(.sizeThatFits)
             .padding()

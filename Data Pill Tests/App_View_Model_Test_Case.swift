@@ -39,6 +39,73 @@ final class App_View_Model_Test_Case: XCTestCase {
         )
     }
     
+    // MARK: - Plan Settings
+    func test_toggle_to_daily_type() throws {
+        // (1) Given
+        let type = ToggleItem.daily
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.usageType = type /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.usageType, .daily)
+    }
+    
+    func test_toggle_to_plan_type() throws {
+        // (1) Given
+        let type = ToggleItem.plan
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.usageType = type /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.usageType, .plan)
+    }
+    
+    func test_toggle_to_auto_period() throws {
+        // (1) Given
+        let isAuto = true
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.isPeriodAuto = isAuto /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.isPeriodAuto, true)
+    }
+    
+    func test_toggle_to_manual_period() throws {
+        // (1) Given
+        let isAuto = false
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.isPeriodAuto = isAuto /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.isPeriodAuto, false)
+    }
+    
+    func test_toggle_to_data_plan() throws {
+        // (1) Given
+        let isPlanActive = true
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.isPlanActive = isPlanActive /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.isPlanActive, true)
+    }
+    
+    func test_toggle_to_non_plan() throws {
+        // (1) Given
+        let isPlanActive = false
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.isPlanActive = isPlanActive /// state is binded thus mutate directly
+        // (3) Then
+        XCTAssertEqual(appViewModel.appDataRepository.isPlanActive, false)
+    }
+    
     // MARK: - Mobile Data
     func test_refresh_used_data_today_with_empty_total_used_data() throws {
         // (1) Given
@@ -95,6 +162,32 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertTrue(dateToday!.isToday())
         XCTAssertEqual(dailyUsedDataToday, 0)
         XCTAssertEqual(totalUsedDataToday, 100)
+    }
+    
+    // MARK: - Data Plan
+    func test_did_tap_start_plan() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.didTapStartPlan()
+        // (3) Then
+        XCTAssertTrue(appViewModel.isPlanActive)
+        XCTAssertFalse(appViewModel.isGuideShown)
+        XCTAssertTrue(appViewModel.wasGuideShown)
+    }
+    
+    func test_did_tap_start_non_plan() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.republishAppData()
+        appViewModel.observePlanSettings()
+        appViewModel.didTapStartNonPlan()
+        // (3) Then
+        XCTAssertFalse(appViewModel.isPlanActive)
+        XCTAssertFalse(appViewModel.isGuideShown)
+        XCTAssertTrue(appViewModel.wasGuideShown)
+        XCTAssertEqual(appViewModel.usageType, .daily)
+        XCTAssertFalse(appViewModel.isPeriodAuto)
     }
         
     // MARK: - Edit Data Plan
@@ -307,6 +400,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangePlusStepperValue(value: value, type: .data)
         // (3) Then
         XCTAssertEqual(appViewModel.dataPlusStepperValue, 0.1)
@@ -316,6 +410,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangeMinusStepperValue(value: value, type: .data)
         // (3) Then
         XCTAssertEqual(appViewModel.dataMinusStepperValue, 0.1)
@@ -430,6 +525,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangePlusStepperValue(value: value, type: .dailyLimit)
         // (3) Then
         XCTAssertEqual(appViewModel.dataLimitPerDayPlusStepperValue, 0.1)
@@ -439,6 +535,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangeMinusStepperValue(value: value, type: .dailyLimit)
         // (3) Then
         XCTAssertEqual(appViewModel.dataLimitPerDayMinusStepperValue, 0.1)
@@ -448,6 +545,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangePlusStepperValue(value: value, type: .planLimit)
         // (3) Then
         XCTAssertEqual(appViewModel.dataLimitPlusStepperValue, 0.1)
@@ -457,6 +555,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let value = 0.1
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didChangeMinusStepperValue(value: value, type: .planLimit)
         // (3) Then
         XCTAssertEqual(appViewModel.dataLimitMinusStepperValue, 0.1)
@@ -550,6 +649,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (1) Given
         let url = URL(string: "datapill:///plan")!
         // (2) When
+        appViewModel.republishAppData()
         appViewModel.didOpenURL(url: url)
         // (3) Then
         XCTAssertEqual(appViewModel.usageType, ToggleItem.plan)

@@ -21,12 +21,65 @@ final class Data_Pill_UI_Tests: XCTestCase {
         app = nil
     }
     
+    // MARK: Guide
+    func test_a_guide() throws {
+        try delete_app(app)
+        app.launch()
+        try test_guide(isPlan: false)
+        
+        try delete_app(app)
+        app.launch()
+        try test_guide(isPlan: true)
+    }
+    
+    func test_guide(isPlan: Bool) throws {
+        
+        let headerLabel = app.staticTexts["Get Started"]
+        let titleLabel = app.staticTexts["Do you have a Data Plan?"]
+        let descriptionLabel = app.staticTexts["A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. "]
+        let yepButton = app.buttons["Yep"]
+        let nopeButton = app.buttons["Nope"]
+        
+        XCTAssert(headerLabel.exists)
+        XCTAssert(titleLabel.exists)
+        XCTAssert(descriptionLabel.exists)
+        XCTAssert(yepButton.waitForExistence(timeout: 4.0))
+        XCTAssert(nopeButton.waitForExistence(timeout: 4.0))
+                
+        if isPlan {
+            
+            yepButton.tap()
+            let yepLabel = app.staticTexts["Yep."]
+            let yepDescLabel = app.staticTexts["Set the amount of data in your plan and the period it starts and ends."]
+         
+            XCTAssert(yepLabel.exists)
+            XCTAssert(yepDescLabel.exists)
+            
+        } else {
+            
+            nopeButton.tap()
+            let nopeLabel = app.staticTexts["Nope."]
+            let nopeDesc1Label = app.staticTexts["Data Pill will just monitor and track your daily mobile data."]
+            let nopeDesc2Label = app.staticTexts["If you ever subscribe to a plan in the future, toggle Data Plan."]
+            
+            XCTAssert(nopeLabel.exists)
+            XCTAssert(nopeDesc1Label.exists)
+            XCTAssert(nopeDesc2Label.exists)
+        }
+                
+        let startButton = app.buttons["Start"]
+        
+        XCTAssert(startButton.waitForExistence(timeout: 5.0))
+        
+        startButton.tap()
+    }
+    
     // MARK: - Pill
-    func test_pill() throws {
+    func test_b_pill() throws {
         let identifier = "history"
 
         let pillButton = getElement(type: .button, identifier: "pill", label: "TODAY")
-        XCTAssert(pillButton.exists)
+        XCTAssert(pillButton.waitForExistence(timeout: 1.0))
         
         try open_history_then_close(pillButton, identifier: identifier)
     }
@@ -54,7 +107,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
     }
     
     // MARK: - Used Card
-    func test_used() throws {
+    func test_c_used() throws {
         let usedLabel = getElement(type: .text, identifier: "used", label: "USED")
         let percentageNumberLabel = getElement(type: .text, identifier: "used", label: "percentageUsedNumber")
         let percentageSignLabel = getElement(type: .text, identifier: "used", label: "percentageUsedSign")
@@ -67,32 +120,51 @@ final class Data_Pill_UI_Tests: XCTestCase {
     }
     
     // MARK: - Usage Card
-    func test_usage() throws {
+    func test_d_usage() throws {
+        try test_usage(isPlan: true)
+    }
+    
+    func test_usage(isPlan: Bool) throws {
+        let planLabel = isPlan ? "Plan" : "NA"
+        
         let usageLabel = getElement(type: .text, identifier: "usage", label: "USAGE")
-        let planToggleButton = getElement(type: .button, identifier: "usage", label: "Plan")
+        let planToggleButton = getElement(type: .button, identifier: "usage", label: planLabel)
         let dailyToggleButton = getElement(type: .button, identifier: "usage", label: "Daily")
         
         XCTAssert(usageLabel.exists)
         XCTAssert(planToggleButton.exists)
         XCTAssert(dailyToggleButton.exists)
         
-        try toggle_usage_type(planToggleButton, dailyToggleButton)
-    }
-    
-    func toggle_usage_type(_ planButton: XCUIElement, _ dailyButton: XCUIElement) throws {
-        planButton.tap()
-        dailyButton.tap()
+        planToggleButton.tap()
+        dailyToggleButton.tap()
     }
     
     // MARK: - Period Card
-    func test_period() throws {
+    func test_e_period() throws {
+       try test_period(isPlan: true)
+    }
+    
+    func test_period(isPlan: Bool) throws {
+        
         let periodCardLabel = getElement(type: .text, identifier: "period", label: "PERIOD")
-        let manualOptionButton = getElement(type: .button, identifier: "period", label: "Manual")
         
         XCTAssert(periodCardLabel.exists)
+        
+        if !isPlan {
+            let naOptionButton = getElement(type: .button, identifier: "period", label: "NA")
+            
+            XCTAssert(naOptionButton.exists)
+            
+            return
+        }
+
+        let manualOptionButton = getElement(type: .button, identifier: "period", label: "Manual")
+        
         XCTAssert(manualOptionButton.exists)
         
         try toggle_auto_period()
+        
+        return
     }
     
     func toggle_auto_period() throws {
@@ -109,22 +181,24 @@ final class Data_Pill_UI_Tests: XCTestCase {
     }
     
     // MARK: - Data Plan Card
-    func test_data_plan() throws {
+    func test_f_data_plan() throws {
         let identifier = "dataPlan"
-        
+
         let dataPlanLabel = getElement(type: .text, identifier: identifier, label: "Data Plan")
-        
+
         XCTAssert(dataPlanLabel.exists)
-                
+        
+        let planToggleButton = getElement(type: .button, identifier: identifier, label: "slideToggle")
         let editPeriodButton = getElement(type: .button, identifier: identifier, label: "period")
         let editPeriodButtonImage = editPeriodButton.images["Right Arrow Icon"]
-        
+
+        XCTAssert(planToggleButton.exists)
         XCTAssert(editPeriodButton.exists)
         XCTAssert(editPeriodButtonImage.exists)
 
         let editAmountButton = getElement(type: .button, identifier: identifier, label: "amount")
         let editAmountButtonImage = editAmountButton.images["Right Arrow Icon"]
-        
+
         XCTAssert(editAmountButton.exists)
         XCTAssert(editAmountButtonImage.exists)
 
@@ -132,10 +206,40 @@ final class Data_Pill_UI_Tests: XCTestCase {
         try edit_period_then_show_date_picker_then_save(editPeriodButton, identifier: identifier)
         try edit_value_with_stepper_then_save(editAmountButton, identifier: identifier, title: "Data Amount")
         try edit_then_show_stepper_values(editAmountButton, identifier: identifier)
+        try toggleDataPlan(planToggleButton, editPeriodButton, editAmountButton)
+    }
+    
+    func toggleDataPlan(
+        _ toggleButton: XCUIElement,
+        _ editPeriodButton: XCUIElement,
+        _ editAmountButton: XCUIElement
+    ) throws {
+        
+        toggleButton.tap()
+                
+        XCTAssertFalse(editPeriodButton.exists)
+        XCTAssertFalse(editAmountButton.exists)
+        
+        try test_usage(isPlan: false)
+        try test_period(isPlan: false)
+        try test_plan_limit(isPlan: false)
+        
+        toggleButton.tap()
+
+        XCTAssert(editPeriodButton.exists)
+        XCTAssert(editAmountButton.exists)
+        
+        try test_usage(isPlan: true)
+        try test_period(isPlan: true)
+        try test_plan_limit(isPlan: true)
     }
     
     // MARK: - Plan Limit
-    func test_plan_limit() throws {
+    func test_g_plan_limit() throws {
+        try test_plan_limit(isPlan: true)
+    }
+    
+    func test_plan_limit(isPlan: Bool) throws {
         let identifier = "planLimit"
         
         let planLimitLabel = app.staticTexts
@@ -144,23 +248,35 @@ final class Data_Pill_UI_Tests: XCTestCase {
             .containing(.init(format: "label ENDSWITH 'Limit'"))
             .element
         
-        XCTAssert(planLimitLabel.exists)
+        if isPlan {
+            XCTAssert(planLimitLabel.exists)
+        } else {
+            XCTAssertFalse(planLimitLabel.exists)
+        }
         
         let limitAmount = getElement(type: .text, identifier: identifier, label: "limitAmount")
         let limitUnit = getElement(type: .text, identifier: identifier, label: "limitUnit")
         let editButton = getElement(type: .button, identifier: identifier, label: "Right Arrow Icon")
 
-        XCTAssert(limitAmount.exists)
-        XCTAssert(limitUnit.exists)
-        XCTAssert(editButton.exists)
+        if isPlan {
+            XCTAssert(limitAmount.exists)
+            XCTAssert(limitUnit.exists)
+            XCTAssert(editButton.exists)
+        } else {
+            XCTAssertFalse(limitAmount.exists)
+            XCTAssertFalse(limitUnit.exists)
+            XCTAssertFalse(editButton.exists)
+        }
         
-        try edit_value_with_stepper_then_save(editButton, identifier: identifier, title: "Plan Limit")
-        try edit_then_show_stepper_values(editButton, identifier: identifier)
-        try edit_value_exceeds_data_amount(editButton, identifier: identifier)
+        if isPlan {
+            try edit_value_with_stepper_then_save(editButton, identifier: identifier, title: "Plan Limit")
+            try edit_then_show_stepper_values(editButton, identifier: identifier)
+            try edit_value_exceeds_data_amount(editButton, identifier: identifier)
+        }
     }
     
     // MARK: - Daily Limit
-    func test_daily_limit() throws {
+    func test_h_daily_limit() throws {
         let identifier = "dailyLimit"
         
         let dailyLimitLabel = app.staticTexts
@@ -410,6 +526,45 @@ final class Data_Pill_UI_Tests: XCTestCase {
         XCTAssertFalse(toastIcon.exists)
     }
     
+    func delete_app(_ app: XCUIApplication) throws {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        
+        app.terminate()
+
+        let icon = springboard.icons["Data Pill"]
+                
+        if !icon.exists {
+            return
+        }
+        
+        XCTAssert(icon.exists)
+        
+        let iconFrame = icon.frame
+        let springboardFrame = springboard.frame
+        icon.press(forDuration: 5)
+
+        let minusButton = springboard.coordinate(
+            withNormalizedOffset:
+                CGVector(
+                    dx: (iconFrame.minX + 3) / springboardFrame.maxX,
+                    dy: (iconFrame.minY + 3) / springboardFrame.maxY
+                )
+        )
+        
+        minusButton.tap()
+
+        let deleteAppButton = springboard.alerts.buttons["Delete App"]
+        
+        XCTAssert(deleteAppButton.waitForExistence(timeout: 1.0))
+        
+        deleteAppButton.tap()
+        
+        let deleteButton = springboard.alerts.buttons["Delete"]
+
+        XCTAssert(deleteButton.waitForExistence(timeout: 1.0))
+        
+        deleteButton.tap()
+    }
 }
 
 

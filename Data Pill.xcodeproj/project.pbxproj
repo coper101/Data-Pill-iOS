@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		270B264D2963E516001B316F /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270B264C2963E516001B316F /* GuideView.swift */; };
 		270EC9BD2956A899008A27AA /* Data_Pill_UI_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270EC9BC2956A899008A27AA /* Data_Pill_UI_Tests.swift */; };
 		270EC9BF2956A899008A27AA /* Data_Pill_UI_Tests_Launch_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270EC9BE2956A899008A27AA /* Data_Pill_UI_Tests_Launch_Tests.swift */; };
 		270EC9C629584210008A27AA /* Data_Pill_UI_Tests_Launch_Performance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270EC9C529584210008A27AA /* Data_Pill_UI_Tests_Launch_Performance.swift */; };
@@ -135,6 +136,11 @@
 		27F47DDA2905330D00B3F83D /* App_Data_Repository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DD92905330D00B3F83D /* App_Data_Repository_Test_Case.swift */; };
 		27F47DDC29053AE400B3F83D /* Network_Data_Repository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDB29053AE400B3F83D /* Network_Data_Repository_Test_Case.swift */; };
 		27F47DDF29067C8E00B3F83D /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F47DDE29067C8E00B3F83D /* Button.swift */; };
+		27FDBCDB2963F565008FA32E /* SelectPlanTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCDA2963F565008FA32E /* SelectPlanTypeView.swift */; };
+		27FDBCDD2963F7D0008FA32E /* LargeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCDC2963F7D0008FA32E /* LargeButtonView.swift */; };
+		27FDBCDF2963FF8D008FA32E /* NonPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCDE2963FF8D008FA32E /* NonPlanView.swift */; };
+		27FDBCE12963FF96008FA32E /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCE02963FF96008FA32E /* PlanView.swift */; };
+		27FDBCE329646F07008FA32E /* SlideToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDBCE229646F07008FA32E /* SlideToggleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -176,6 +182,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		270B264C2963E516001B316F /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
 		270EC9BA2956A898008A27AA /* Data Pill UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Data Pill UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		270EC9BC2956A899008A27AA /* Data_Pill_UI_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Pill_UI_Tests.swift; sourceTree = "<group>"; };
 		270EC9BE2956A899008A27AA /* Data_Pill_UI_Tests_Launch_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Pill_UI_Tests_Launch_Tests.swift; sourceTree = "<group>"; };
@@ -274,6 +281,11 @@
 		27F47DD92905330D00B3F83D /* App_Data_Repository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_Data_Repository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDB29053AE400B3F83D /* Network_Data_Repository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network_Data_Repository_Test_Case.swift; sourceTree = "<group>"; };
 		27F47DDE29067C8E00B3F83D /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		27FDBCDA2963F565008FA32E /* SelectPlanTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlanTypeView.swift; sourceTree = "<group>"; };
+		27FDBCDC2963F7D0008FA32E /* LargeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeButtonView.swift; sourceTree = "<group>"; };
+		27FDBCDE2963FF8D008FA32E /* NonPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonPlanView.swift; sourceTree = "<group>"; };
+		27FDBCE02963FF96008FA32E /* PlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
+		27FDBCE229646F07008FA32E /* SlideToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToggleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +322,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		270B264B2963E166001B316F /* Guide */ = {
+			isa = PBXGroup;
+			children = (
+				27FDBCDA2963F565008FA32E /* SelectPlanTypeView.swift */,
+				27FDBCDE2963FF8D008FA32E /* NonPlanView.swift */,
+				27FDBCE02963FF96008FA32E /* PlanView.swift */,
+			);
+			path = Guide;
+			sourceTree = "<group>";
+		};
 		270EC9BB2956A899008A27AA /* Data Pill UI Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -365,9 +387,11 @@
 		27801DAF28D6C96800201339 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				270B264C2963E516001B316F /* GuideView.swift */,
 				27801DB028D6C96800201339 /* AppView.swift */,
 				27801DB328D6C96800201339 /* PillGroupView.swift */,
 				27801E0228DA196E00201339 /* HistoryView.swift */,
+				270B264B2963E166001B316F /* Guide */,
 				27F233AB2945CD2E00E6102D /* Widget */,
 				278FB2D828F5B20400BE78C2 /* Pill */,
 				27801DF728DA0A6B00201339 /* Cards */,
@@ -465,8 +489,10 @@
 				27801E0828E054C400201339 /* CloseIconView.swift */,
 				27801E0C28E0C02200201339 /* DateInputView.swift */,
 				27801E0E28E1E7C500201339 /* ButtonView.swift */,
+				27FDBCDC2963F7D0008FA32E /* LargeButtonView.swift */,
 				27BE08282928BD3F00E0781C /* Stepper */,
 				27801DF128D8BDBE00201339 /* ToggleView.swift */,
+				27FDBCE229646F07008FA32E /* SlideToggleView.swift */,
 				27801E1628E82B9100201339 /* TextInputView.swift */,
 				27B10A71295BE714009E910C /* ToastView.swift */,
 			);
@@ -762,9 +788,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27FDBCE12963FF96008FA32E /* PlanView.swift in Sources */,
 				2761528E293CB5CE00AEA000 /* WidgetModel.swift in Sources */,
 				27801DBA28D6C96800201339 /* Dimensions.swift in Sources */,
 				278FB31328FAA61500BE78C2 /* StepperView.swift in Sources */,
+				27FDBCDB2963F565008FA32E /* SelectPlanTypeView.swift in Sources */,
 				27801E1528E8227500201339 /* StepperButtonView.swift in Sources */,
 				27801E1728E82B9100201339 /* TextInputView.swift in Sources */,
 				27801DFB28DA0B0D00201339 /* NavRowView.swift in Sources */,
@@ -788,6 +816,7 @@
 				278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
 				27E77751293B68D10031456D /* Widget.swift in Sources */,
+				27FDBCDF2963FF8D008FA32E /* NonPlanView.swift in Sources */,
 				278E7344295BFAB20020F84B /* ToastTimer.swift in Sources */,
 				27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
@@ -797,8 +826,11 @@
 				27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */,
 				27F47DDF29067C8E00B3F83D /* Button.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
+				27FDBCE329646F07008FA32E /* SlideToggleView.swift in Sources */,
+				27FDBCDD2963F7D0008FA32E /* LargeButtonView.swift in Sources */,
 				27801E0928E054C500201339 /* CloseIconView.swift in Sources */,
 				27801E1E28E98F0D00201339 /* LocalStorage.swift in Sources */,
+				270B264D2963E516001B316F /* GuideView.swift in Sources */,
 				27801E1928E951A100201339 /* NetworkDataRepository.swift in Sources */,
 				27801E0D28E0C02200201339 /* DateInputView.swift in Sources */,
 				27E7772029336AA10031456D /* Unit.swift in Sources */,

@@ -19,6 +19,7 @@ struct Dimensions {
     
     /// Card
     let planCardHeight: CGFloat = 150
+    let planCardHeightDisabled: CGFloat = 55
     let planLimitCardsHeight: CGFloat = 145
     let limitCardWidth: CGFloat = 286
     var planCardWidth: CGFloat {
@@ -41,6 +42,7 @@ struct Dimensions {
     
     /// Button
     let buttonHeight: CGFloat = 53
+    let buttonHeightTall: CGFloat = 62
     
     let screen: CGSize = UIScreen.main.bounds.size
     

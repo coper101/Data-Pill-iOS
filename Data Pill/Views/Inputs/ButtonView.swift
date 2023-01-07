@@ -10,6 +10,7 @@ import SwiftUI
 enum ButtonType: String, Identifiable, CaseIterable {
     case save = "Save"
     case done = "Done"
+    case start = "Start"
     var id: String {
         self.rawValue
     }
@@ -20,6 +21,7 @@ struct ButtonView: View {
     @Environment(\.dimensions) var dimensions: Dimensions
     var type: ButtonType
     var disabled = false
+    var fullWidth = false
     var action: (ButtonType) -> Void
     
     var backgroundColor: Colors {
@@ -28,6 +30,11 @@ struct ButtonView: View {
     
     var color: Colors {
         !disabled ? Colors.onTertiary : Colors.onTertiaryDisabled
+    }
+    
+    var height: CGFloat {
+        (type == .start ) ?
+        dimensions.buttonHeightTall : dimensions.buttonHeight
     }
     
     // MARK: - UI
@@ -45,8 +52,13 @@ struct ButtonView: View {
                     .transition(.opacity.animation(.linear.delay(0.2)))
                 
             } //: ZStack
-            .frame(height: dimensions.buttonHeight)
-            .padding(.horizontal, 38)
+            .frame(height: height)
+            .`if`(fullWidth) { view in
+                view.fillMaxWidth()
+            }
+            .`if`(!fullWidth) { view in
+                view.padding(.horizontal, 38)
+            }
             .background(backgroundColor.color)
             .clipShape(
                 RoundedRectangle(cornerRadius: 15)

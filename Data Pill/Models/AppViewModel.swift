@@ -19,6 +19,8 @@ final class AppViewModel: ObservableObject {
     let toastTimer: ToastTimer
     
     /// [A] App Data
+    @Published var wasGuideShown = false
+
     @Published var unit = Unit.gb
     @Published var usageType: ToggleItem = .daily
     @Published var isPeriodAuto = false
@@ -84,6 +86,8 @@ final class AppViewModel: ObservableObject {
     }
     
     // MARK: - UI
+    @Published var isGuideShown = false
+    @Published var isPlanActive = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
     @Published var isTappedOutside = false
@@ -173,6 +177,7 @@ final class AppViewModel: ObservableObject {
         republishToast()
         
         setInputValues()
+        
         observePlanSettings()
         observeEditPlan()
         observeDataErrors()
@@ -184,6 +189,14 @@ final class AppViewModel: ObservableObject {
 extension AppViewModel {
     
     func republishAppData() {
+        appDataRepository.wasGuideShownPublisher
+            .sink { [weak self] in self?.wasGuideShown = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.isPlanActivePublisher
+            .sink { [weak self] in self?.isPlanActive = $0 }
+            .store(in: &cancellables)
+        
         appDataRepository.usageTypePublisher
             .sink { [weak self] in self?.usageType = $0 }
             .store(in: &cancellables)
@@ -273,36 +286,25 @@ extension AppViewModel {
     
     func observePlanSettings() {
         /// UI
+        $isPlanActive
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in
+                self?.didChangeIsPlanActive($0)
+                self?.appDataRepository.setIsPlanActive($0)
+            }
+            .store(in: &cancellables)
+        
         $usageType
+            .dropFirst()
+            .removeDuplicates()
             .sink { [weak self] in self?.appDataRepository.setUsageType($0.rawValue) }
             .store(in: &cancellables)
         
         $isPeriodAuto
+            .dropFirst()
+            .removeDuplicates()
             .sink { [weak self] in self?.appDataRepository.setIsPeriodAuto($0) }
-            .store(in: &cancellables)
-        
-        $dataPlusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .data) }
-            .store(in: &cancellables)
-        
-        $dataLimitPerDayPlusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .data) }
-            .store(in: &cancellables)
-        
-        $dataLimitPerDayPlusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .dailyLimit) }
-            .store(in: &cancellables)
-        
-        $dataLimitPerDayMinusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .dailyLimit) }
-            .store(in: &cancellables)
-        
-        $dataLimitPlusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setPlusStepperValue($0, type: .planLimit) }
-            .store(in: &cancellables)
-        
-        $dataLimitMinusStepperValue
-            .sink { [weak self] in self?.appDataRepository.setMinusStepperValue($0, type: .planLimit) }
             .store(in: &cancellables)
         
         /// Data Usage
@@ -362,6 +364,26 @@ extension AppViewModel {
         todaysData.hasLastTotal = true
         
         dataUsageRepository.updateData(todaysData)
+    }
+    
+    // MARK: - Data Plan
+    func didTapStartPlan() {
+        closeGuide()
+        appDataRepository.setIsPlanActive(true)
+    }
+    
+    func didTapStartNonPlan() {
+        closeGuide()
+        appDataRepository.setIsPlanActive(false)
+    }
+    
+    func didChangeIsPlanActive(_ isActive: Bool) {        
+        if !isActive && (usageType == .plan) {
+            appDataRepository.setUsageType(ToggleItem.daily.rawValue)
+        }
+        if !isActive && isPeriodAuto {
+            appDataRepository.setIsPeriodAuto(false)
+        }
     }
     
     // MARK: - Edit Data Plan
@@ -445,13 +467,13 @@ extension AppViewModel {
     func didChangePlusStepperValue(value: Double, type: StepperValueType) {
         switch type {
         case .planLimit:
-            dataLimitPlusStepperValue = value
+            appDataRepository.setPlusStepperValue(value, type: .planLimit)
             didTapPlusLimit()
         case .dailyLimit:
-            dataLimitPerDayPlusStepperValue = value
+            appDataRepository.setPlusStepperValue(value, type: .dailyLimit)
             didTapPlusLimit()
         case .data:
-            dataPlusStepperValue = value
+            appDataRepository.setPlusStepperValue(value, type: .data)
             didTapPlusData()
         }
     }
@@ -459,13 +481,13 @@ extension AppViewModel {
     func didChangeMinusStepperValue(value: Double, type: StepperValueType) {
         switch type {
         case .planLimit:
-            dataLimitMinusStepperValue = value
+            appDataRepository.setMinusStepperValue(value, type: .planLimit)
             didTapMinusLimit()
         case .dailyLimit:
-            dataLimitPerDayMinusStepperValue = value
+            appDataRepository.setMinusStepperValue(value, type: .dailyLimit)
             didTapMinusLimit()
         case .data:
-            dataMinusStepperValue = value
+            appDataRepository.setMinusStepperValue(value, type: .data)
             didTapMinusData()
         }
     }
@@ -669,10 +691,20 @@ extension AppViewModel {
     // MARK: - Deep Link
     func didOpenURL(url: URL) {
         if url == ToggleItem.plan.url {
-            usageType = .plan
+            appDataRepository.setUsageType(ToggleItem.plan.rawValue)
         } else if url == ToggleItem.daily.url {
-            usageType = .daily
+            appDataRepository.setUsageType(ToggleItem.daily.rawValue)
         }
+    }
+    
+    // MARK: - Guide
+    func showGuide() {
+        isGuideShown = !wasGuideShown
+    }
+    
+    func closeGuide() {
+        isGuideShown = false
+        appDataRepository.setWasGuideShown(true)
     }
     
 }

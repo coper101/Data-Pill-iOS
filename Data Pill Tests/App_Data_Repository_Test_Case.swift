@@ -21,84 +21,136 @@ final class App_Data_Repository_Test_Case: XCTestCase {
         repository = nil
     }
     
-    func test_set_usage_type_is_correct() throws {
+    /// setWasGuideShown()
+    func test_set_was_guide_shown() throws {
         // (1) Given
-        let input = ToggleItem.plan.rawValue
+        let wasShown = true
         // (2) When
-        repository.setUsageType(input)
+        repository.setWasGuideShown(wasShown)
         // (3) Then
-        let output = repository.usageType
-        XCTAssertEqual(output, ToggleItem.plan)
+        XCTAssertEqual(repository.wasGuideShown, true)
     }
     
-    func test_set_is_notification_is_correct() throws {
+    func test_set_was_guide_not_shown() throws {
         // (1) Given
-        let input = false
+        let wasShown = false
         // (2) When
-        repository.setIsPeriodAuto(input)
+        repository.setWasGuideShown(wasShown)
         // (3) Then
-        let output = repository.isPeriodAuto
-        XCTAssertEqual(output, false)
+        XCTAssertEqual(repository.wasGuideShown, false)
     }
     
+    /// setIsPlanActive()
+    func test_set_is_plan_active() throws {
+        // (1) Given
+        let isActive = true
+        // (2) When
+        repository.setIsPlanActive(isActive)
+        // (3) Then
+        XCTAssertEqual(repository.isPlanActive, true)
+    }
+    
+    func test_set_is_plan_not_active() throws {
+        // (1) Given
+        let isActive = false
+        // (2) When
+        repository.setIsPlanActive(isActive)
+        // (3) Then
+        XCTAssertEqual(repository.isPlanActive, false)
+    }
+    
+    /// setUsageType()
+    func test_set_plan_usage_type() throws {
+        // (1) Given
+        let type = ToggleItem.plan.rawValue
+        // (2) When
+        repository.setUsageType(type)
+        // (3) Then
+        XCTAssertEqual(repository.usageType, ToggleItem.plan)
+    }
+    
+    func test_set_daily_usage_type() throws {
+        // (1) Given
+        let type = ToggleItem.daily.rawValue
+        // (2) When
+        repository.setUsageType(type)
+        // (3) Then
+        XCTAssertEqual(repository.usageType, ToggleItem.daily)
+    }
+    
+    /// setIsPeriodAuto()
+    func test_set_is_auto_period() throws {
+        // (1) Given
+        let isAuto = true
+        // (2) When
+        repository.setIsPeriodAuto(isAuto)
+        // (3) Then
+        XCTAssertEqual(repository.isPeriodAuto, true)
+    }
+    
+    func test_set_is_not_auto_period() throws {
+        // (1) Given
+        let isAuto = false
+        // (2) When
+        repository.setIsPeriodAuto(isAuto)
+        // (3) Then
+        XCTAssertEqual(repository.isPeriodAuto, false)
+    }
+    
+    /// setPlusStepperValue()
     func test_set_plus_stepper_value_is_data_correct() throws {
         // (1) Given
-        let input = 0.1
+        let value = 0.1
         // (2) When
-        repository.setPlusStepperValue(input, type: .data)
+        repository.setPlusStepperValue(value, type: .data)
         // (3) Then
-        let output = repository.dataPlusStepperValue
-        XCTAssertEqual(output, 0.1)
+        XCTAssertEqual(repository.dataPlusStepperValue, 0.1)
     }
     
     func test_set_plus_stepper_value_is_daily_limit_correct() throws {
         // (1) Given
-        let input = 0.1
+        let value = 0.1
         // (2) When
-        repository.setPlusStepperValue(input, type: .dailyLimit)
+        repository.setPlusStepperValue(value, type: .dailyLimit)
         // (3) Then
-        let output = repository.dataLimitPerDayPlusStepperValue
-        XCTAssertEqual(output, 0.1)
+        XCTAssertEqual(repository.dataLimitPerDayPlusStepperValue, 0.1)
     }
     
     func test_set_plus_stepper_value_is_total_limit_correct() throws {
         // (1) Given
-        let input = 0.1
+        let value = 0.1
         // (2) When
-        repository.setPlusStepperValue(input, type: .planLimit)
+        repository.setPlusStepperValue(value, type: .planLimit)
         // (3) Then
-        let output = repository.dataLimitPlusStepperValue
-        XCTAssertEqual(output, 0.1)
+        XCTAssertEqual(repository.dataLimitPlusStepperValue, 0.1)
     }
     
+    /// setMinusStepperValue()
     func test_set_minus_stepper_value_is_data_correct() throws {
         // (1) Given
-        let input = 0.1
+        let value = 0.1
         // (2) When
-        repository.setMinusStepperValue(input, type: .data)
+        repository.setMinusStepperValue(value, type: .data)
         // (3) Then
-        let output = repository.dataMinusStepperValue
-        XCTAssertEqual(output, 0.1)
+        XCTAssertEqual(repository.dataMinusStepperValue, 0.1)
     }
     
     func test_set_minus_stepper_value_is_daily_limit_correct() throws {
         // (1) Given
-        let input = 0.1
+        let value = 0.1
         // (2) When
-        repository.setMinusStepperValue(input, type: .dailyLimit)
+        repository.setMinusStepperValue(value, type: .dailyLimit)
         // (3) Then
-        let output = repository.dataLimitPerDayMinusStepperValue
-        XCTAssertEqual(output, 0.1)
+        XCTAssertEqual(repository.dataLimitPerDayMinusStepperValue, 0.1)
     }
     
     func test_set_minus_stepper_value_is_total_limit_correct() throws {
         // (1) Given
-        let input = 0.1
+        let value = 0.1
         // (2) When
-        repository.setMinusStepperValue(input, type: .planLimit)
+        repository.setMinusStepperValue(value, type: .planLimit)
         // (3) Then
-        let output = repository.dataLimitMinusStepperValue
-        XCTAssertEqual(output, 0.1)
+        XCTAssertEqual(repository.dataLimitMinusStepperValue, 0.1)
     }
 
 }
