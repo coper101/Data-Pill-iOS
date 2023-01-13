@@ -22,84 +22,36 @@ struct PillView: View {
     
     var isContentShown = true
     var showFillLine = false
+    var hasPillOutline = false /// for tracking pill outline
     var showPercentage = false
     
-    var dailyDisplayedDate: String {
-        date.isToday() ?
-            "TODAY" :
-            date.toWeekdayFormat().uppercased()
-    }
-
-    var displayedDate: String {
-        switch usageType {
-        case .plan:
-            return "TOTAL"
-        case .daily:
-            return dailyDisplayedDate
-        }
-    }
-    
     // MARK: - UI
-    var textLabel: some View {
-        Text(displayedDate)
-            .textStyle(
-                foregroundColor: .onSecondary,
-                font: .semibold,
-                size: 20
-            )
-            .matchedGeometryEffect(id: "usageType", in: animation)
-            .transition(.opacity.animation(.easeOut(duration: 0.7)))
-    }
-    
     var label: some View {
-        HStack(spacing: 0) {
-            
-            // Col 1: PERCENTAGE
-            if showPercentage {
-                
-                Text("\(percentage)%")
-                    .textStyle(
-                        foregroundColor: .onSecondary,
-                        font: .semibold,
-                        size: 20
-                    )
-                    .opacity(0.5)
-                
-            }
-            
-            // Col 2: TODAY or DATE
-            Spacer()
-            
-            Group {
-                
-                if usageType == .plan {
-                    textLabel
-                } else {
-                    textLabel
-                }
-                
-            }
-            .shadow(
-                color: .black.opacity(0.1),
-                radius: 4,
-                x: 0,
-                y: 2
-            )
-            
-        } //: HStack
-        .padding(.horizontal, 18)
+        PillTitleView(
+            date: date,
+            percentage: percentage,
+            showPercentage: showPercentage,
+            usageType: usageType
+        )
     }
     
     var body: some View {
         BasePillView(
             percentage: percentage,
             isContentShown: isContentShown,
-            fillLine: showFillLine ? .init(title: dailyDisplayedDate) : nil,
+            fillLine: showFillLine ?
+                .init(title: getPillTitle(with: usageType, on: date)) : nil,
+            hasPillOutline: hasPillOutline,
             hasBackground: hasBackground,
             color: color,
             widthScale: widthScale,
             customSize: customSize,
-            label: { label }
+            label: {
+                if percentage >= 15 {
+                    label
+                }
+            },
+            faintLabel: {}
         )
     }
     
@@ -109,13 +61,14 @@ struct PillView: View {
 // MARK: - Preview
 struct PillView_Previews: PreviewProvider {
     static var appViewModel: AppViewModel = .init()
+    static var percentage = 100
     
     static var previews: some View {
         Group {
             
             PillView(
                 color: appViewModel.days[0].color,
-                percentage: 20,
+                percentage: percentage,
                 date: Date(),
                 usageType: .daily
             )
@@ -127,7 +80,7 @@ struct PillView_Previews: PreviewProvider {
             
             PillView(
                 color: appViewModel.days[0].color,
-                percentage: 20,
+                percentage: percentage,
                 date: Date(),
                 usageType: .daily,
                 isContentShown: false,
@@ -142,5 +95,18 @@ struct PillView_Previews: PreviewProvider {
         }
         .previewLayout(.sizeThatFits)
         .padding()
+    }
+}
+
+func getPillTitle(with usageType: ToggleItem, on date: Date) -> String {
+    switch usageType {
+    case .plan:
+        return "TOTAL"
+    case .daily:
+        return {
+            date.isToday() ?
+                "TODAY" :
+                date.toWeekdayFormat().uppercased()
+        }()
     }
 }

@@ -20,6 +20,7 @@ struct DraggablePillView: View {
     
     var hasBackground = false
     var showFillLine = false
+    var hasPillOutline = false /// for tracking pill outline
     
     var widthScale: CGFloat = 0.45
     
@@ -70,11 +71,14 @@ struct DraggablePillView: View {
                 usageType: usageType,
                 widthScale: widthScale,
                 showFillLine: showFillLine,
+                hasPillOutline: hasPillOutline,
                 showPercentage: true
             )
             .padding(.horizontal, dimensions.horizontalPadding)
             .offset(cardOffset)
-            .gesture(drag)
+            .`if`(!showFillLine) { view in
+                view.gesture(drag)
+            }
         }
         
     }
@@ -85,7 +89,6 @@ struct DraggablePillView: View {
 // MARK: - Preview
 struct DraggablePillView_Previews: PreviewProvider {
     static var previews: some View {
-        
         Group {
             
             DraggablePillView(

@@ -19,23 +19,25 @@ enum PillOrientation: String, CaseIterable, Identifiable {
     }
 }
 
-struct BasePillView<Label>: View where Label: View {
+struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View {
     // MARK: - Props
     var percentage: Int
     
-    var isContentShown: Bool = true
+    var isContentShown = true
     var fillLine: FillLine? = nil
-    var orientation: PillOrientation = .vertical
+    var hasPillOutline = false /// for tracking pill outline
+    var orientation = PillOrientation.vertical
     
     var hasBackground: Bool
-    var backgroundColor: Colors = .surface
-    var backgroundOpacity: Double = 1
+    var backgroundColor = Colors.surface
+    var backgroundOpacity = 1.0
     var color: Colors
     
     var widthScale: CGFloat = 0.45
     var customSize: CGSize? = nil
     
     @ViewBuilder var label: Label
+    @ViewBuilder var faintLabel: FaintLabel
     
     let screenWidth = UIScreen.main.bounds.size.width
     
@@ -53,14 +55,21 @@ struct BasePillView<Label>: View where Label: View {
         return (screenWidth * widthScale) * 2.26
     }
     
+    var fillLineYOffset: CGFloat {
+        let titleTopPadding: CGFloat = 5
+        return height - ( (CGFloat(percentage) / 100) * height) - titleTopPadding
+    }
+    
     var paddingTop: CGFloat {
-        (percentage > 90) ? 50 : 10
+        // ensure pill title is seen
+        (percentage > 90) ? 80 : 10
     }
     
     var cornerRadius: CGFloat {
         (width < 200) ? 2 : 5
     }
-        
+            
+    // MARK: - UI
     var verticalPill: some View {
         ZStack {
             
@@ -97,15 +106,19 @@ struct BasePillView<Label>: View where Label: View {
             )
     }
     
-    // MARK: - UI
     var body: some View {
-        ZStack(alignment: orientation == .vertical ? .bottom : .leading) {
-            
+        ZStack(alignment: (orientation == .vertical) ? .bottom : .leading) {
+                        
             // Layer 1: PILL SHAPE BACKGROUND
             backgroundColor.color
                 .opacity(hasBackground ? backgroundOpacity : 0)
             
-            // Layer 2: PERCENTAGE FILL
+            // Layer 2: FAINT LABEL (when title gets clipped off)
+            // faintLabel
+            //    .fillMaxHeight(alignment: .bottom)
+            //    .padding(.bottom, 0.07 * height)
+            
+            // Layer 3: PERCENTAGE FILL
             if isContentShown && fillLine == nil {
                 switch orientation {
                 case .horizontal:
@@ -115,25 +128,32 @@ struct BasePillView<Label>: View where Label: View {
                 }
             } //: if
             
+            // Layer 4: FILL LINE
             if let fillLine = fillLine {
-                let titleTopPadding: CGFloat = 5
                 FillLineView(title: fillLine.title)
-                    .offset(y: height - ( (CGFloat(percentage) / 100) * height) - titleTopPadding)
+                    .offset(y: fillLineYOffset)
             }
             
         } //: ZStack
-        .frame(
-            width: width,
-            height: height
-        )
+        .frame(width: width, height: height)
         .clipShape(
             Capsule(style: .circular)
         )
+        .`if`(hasPillOutline) { view in
+            // Layer 5: PILL OUTLINE
+            view
+                .background(
+                    Capsule(style: .circular)
+                        .stroke(Colors.onSurfaceLight2.color, lineWidth: 1)
+                )
+        }
         .`if`(fillLine != nil) { view in
-            view.background(
-                Capsule(style: .circular)
-                    .stroke(Colors.onSurfaceLight2.color, lineWidth: 1)
-            )
+            // Layer 6: FILL LINE (for title that is hidden when get clipped by border)
+            view
+                .overlay(
+                    FillLineView(title: fillLine!.title, isLineShown: false)
+                        .offset(y: fillLineYOffset)
+                )
         }
     }
     
@@ -156,9 +176,10 @@ struct BasePillView_Previews: PreviewProvider {
                     customSize: (orientation == .vertical) ?
                         .init(width: 230, height: 500) :
                         .init(width: 100, height: 30),
-                    label: {}
+                    label: {},
+                    faintLabel: {}
                 )
-                .previewDisplayName("\(orientation.id)")
+                .previewDisplayName("\(orientation.id) Pill")
                 
                 if orientation == .vertical {
                     BasePillView(
@@ -167,7 +188,8 @@ struct BasePillView_Previews: PreviewProvider {
                         orientation: orientation,
                         hasBackground: true,
                         color: .secondaryBlue,
-                        label: {}
+                        label: {},
+                        faintLabel: {}
                     )
                     .previewDisplayName("History Lines")
                 }

@@ -60,7 +60,8 @@ struct SmallWidgetView: View {
                         width: pillWidth(width),
                         height: height * 0.9
                     ),
-                    label: {}
+                    label: {},
+                    faintLabel: {}
                 )
                 
                 Spacer()

@@ -64,16 +64,20 @@ struct HistoryView: View {
                 ForEach(
                     Array(descendingWeeksData.enumerated()),
                     id: \.element
-                ) { index, element in
+                ) { index, data in
+                    
+                    let day = days[index]
+                    let isFirstPill = index == 0
                     
                     DraggablePillView(
-                        date: element.date ?? Date(),
-                        color: days[index].color,
-                        percentage: element.dailyUsedData.toGB()
+                        date: data.date ?? Date(),
+                        color: day.color,
+                        percentage: data.dailyUsedData.toGB()
                             .toPercentage(with: dataLimitPerDay),
                         usageType: usageType,
-                        hasBackground: index == 0 && showFilledLines,
+                        hasBackground: isFirstPill && showFilledLines,
                         showFillLine: showFilledLines,
+                        hasPillOutline: isFirstPill && showFilledLines, /// show for first pill only - Sunday
                         widthScale: 0.65
                     )
                     
@@ -95,29 +99,24 @@ struct HistoryView_Previews: PreviewProvider {
     static var dataLimitPerDay = 2.0
     
     static var previews: some View {
-        Group {
-            
-            HistoryView(
-                days: dayPills,
-                weekData: repo.thisWeeksData,
-                dataLimitPerDay: dataLimitPerDay,
-                usageType: .daily,
-                closeAction: {}
-            )
-            .previewDisplayName("Filled")
-            
-            HistoryView(
-                days: dayPills,
-                weekData: repo.thisWeeksData,
-                dataLimitPerDay: dataLimitPerDay,
-                usageType: .daily,
-                showFilledLines: true,
-                closeAction: {}
-            )
-            .previewDisplayName("Filled Lines")
-            
-        }
-        .previewLayout(.sizeThatFits)
+        HistoryView(
+            days: dayPills,
+            weekData: repo.thisWeeksData,
+            dataLimitPerDay: dataLimitPerDay,
+            usageType: .daily,
+            closeAction: {}
+        )
+        .previewDisplayName("Filled")
+        
+        HistoryView(
+            days: dayPills,
+            weekData: repo.thisWeeksData,
+            dataLimitPerDay: dataLimitPerDay,
+            usageType: .daily,
+            showFilledLines: true,
+            closeAction: {}
+        )
+        .previewDisplayName("Filled Lines")
     }
 }
 

@@ -430,10 +430,9 @@ struct AppView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        NavigationView { /// Adds Top Insets
-            AppView()
-                .previewLayout(.sizeThatFits)
-                .environmentObject(appViewModel)
-        }
+        AppView()
+            .previewLayout(.sizeThatFits)
+            .environmentObject(appViewModel)
+            .padding(.top, 20)
     }
 }

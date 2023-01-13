@@ -70,7 +70,8 @@ struct RectangularWidgetView: View {
                             width: width * 0.6,
                             height: height * 0.7
                         ),
-                        label: {}
+                        label: {},
+                        faintLabel: {}
                     )
                     
                     // Layer 2: Percentage

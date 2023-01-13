@@ -10,6 +10,7 @@ import SwiftUI
 struct FillLineView: View {
     // MARK: - Props
     var title: String
+    var isLineShown = true
     
     var isLongTitle: Bool {
         title.count > 3
@@ -21,6 +22,7 @@ struct FillLineView: View {
             .fill(Colors.onBackgroundLight.color)
             .frame(height: 1)
             .padding(.top, 5)
+            .opacity(isLineShown ? 1 : 0)
     }
     
     var text: some View {
