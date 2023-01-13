@@ -62,26 +62,31 @@ struct BasePillView<Label>: View where Label: View {
     }
         
     var verticalPill: some View {
-        RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(color.color)
-            .frame(
-                height: (CGFloat(percentage) / 100) * height
+        ZStack {
+            
+            // Layer 1: FILL COLOR
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .fill(color.color)
+            
+            // Layer 2: SHINE
+            LinearGradient(
+                colors: [
+                    .white.opacity(0.25),
+                    .white.opacity(0)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
             )
-            .overlay(
-                label
-                    .fillMaxHeight(alignment: .top)
-                    .padding(.top, paddingTop)
-            )
-            .overlay(
-                LinearGradient(
-                    colors: [
-                        .white.opacity(0.25),
-                        .white.opacity(0)
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
+            
+            // Layer 3: LABEL
+            label
+                .fillMaxHeight(alignment: .top)
+                .padding(.top, paddingTop)
+             
+        } //: ZStack
+        .frame(
+            height: (CGFloat(percentage) / 100) * height
+        )
     }
     
     var horizontalPill: some View {
@@ -97,7 +102,8 @@ struct BasePillView<Label>: View where Label: View {
         ZStack(alignment: orientation == .vertical ? .bottom : .leading) {
             
             // Layer 1: PILL SHAPE BACKGROUND
-            backgroundColor.color.opacity(hasBackground ? backgroundOpacity : 0)
+            backgroundColor.color
+                .opacity(hasBackground ? backgroundOpacity : 0)
             
             // Layer 2: PERCENTAGE FILL
             if isContentShown && fillLine == nil {

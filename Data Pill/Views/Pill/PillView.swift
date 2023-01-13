@@ -10,6 +10,7 @@ import SwiftUI
 struct PillView: View {
     // MARK: - Props
     @Environment(\.dimensions) var dimensions: Dimensions
+    @Namespace private var animation
 
     var color: Colors
     var percentage: Int
@@ -39,6 +40,17 @@ struct PillView: View {
     }
     
     // MARK: - UI
+    var textLabel: some View {
+        Text(displayedDate)
+            .textStyle(
+                foregroundColor: .onSecondary,
+                font: .semibold,
+                size: 20
+            )
+            .matchedGeometryEffect(id: "usageType", in: animation)
+            .transition(.opacity.animation(.easeOut(duration: 0.7)))
+    }
+    
     var label: some View {
         HStack(spacing: 0) {
             
@@ -57,18 +69,22 @@ struct PillView: View {
             
             // Col 2: TODAY or DATE
             Spacer()
-            Text(displayedDate)
-                .textStyle(
-                    foregroundColor: .onSecondary,
-                    font: .semibold,
-                    size: 20
-                )
-                .shadow(
-                    color: .black.opacity(0.1),
-                    radius: 4,
-                    x: 0,
-                    y: 2
-                )
+            
+            Group {
+                
+                if usageType == .plan {
+                    textLabel
+                } else {
+                    textLabel
+                }
+                
+            }
+            .shadow(
+                color: .black.opacity(0.1),
+                radius: 4,
+                x: 0,
+                y: 2
+            )
             
         } //: HStack
         .padding(.horizontal, 18)

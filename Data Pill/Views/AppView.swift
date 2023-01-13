@@ -384,6 +384,8 @@ struct AppView_Previews: PreviewProvider {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
         let todaysDate = Date()
+        
+        // 3 Days Ago
         dataRepo.addData(
             date: Calendar.current.date(
                 byAdding: .day, value: -3, to: todaysDate)!,
@@ -391,6 +393,7 @@ struct AppView_Previews: PreviewProvider {
             dailyUsedData: 1_500,
             hasLastTotal: true
         )
+        // 2 Days Ago
         dataRepo.addData(
             date: Calendar.current.date(
                 byAdding: .day, value: -2, to: todaysDate)!,
@@ -398,38 +401,39 @@ struct AppView_Previews: PreviewProvider {
             dailyUsedData: 5_000,
             hasLastTotal: true
         )
+        // Yesterday
         dataRepo.addData(
             date: Calendar.current.date(
                 byAdding: .day, value: -1, to: todaysDate)!,
             totalUsedData: 0,
-            dailyUsedData: 2100,
+            dailyUsedData: 2_100,
             hasLastTotal: true
         )
-        dataRepo.addData(
-            date: Calendar.current.date(
-                byAdding: .day, value: 0, to: todaysDate)!,
-            totalUsedData: 0,
-            dailyUsedData: 1100,
-            hasLastTotal: false
-        )
+       
+        // Update Database
         dataRepo.updatePlan(
             startDate: Calendar.current.date(
                 byAdding: .day, value: -3, to: todaysDate)!,
             endDate: Calendar.current.date(
-                byAdding: .day, value: 1, to: todaysDate)!,
+                byAdding: .day, value: 0, to: todaysDate)!,
             dataAmount: 10,
             dailyLimit: 4,
             planLimit: 9
         )
         
         let viewModel = AppViewModel(dataUsageRepository: dataRepo)
+        
+        // Update created Today's Data (added automatically by app)
+        viewModel.refreshUsedDataToday(200)
+        
         return viewModel
     }
     
     static var previews: some View {
-        AppView()
-            .padding(.top, 1)
-            .previewLayout(.sizeThatFits)
-            .environmentObject(appViewModel)
+        NavigationView { /// Adds Top Insets
+            AppView()
+                .previewLayout(.sizeThatFits)
+                .environmentObject(appViewModel)
+        }
     }
 }
