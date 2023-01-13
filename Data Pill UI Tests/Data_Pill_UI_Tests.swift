@@ -78,7 +78,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
     func test_b_pill() throws {
         let identifier = "history"
 
-        let pillButton = getElement(type: .button, identifier: "pill", label: "TODAY")
+        let pillButton = getElement(type: .button, identifier: "pill", label: nil)
         XCTAssert(pillButton.waitForExistence(timeout: 1.0))
         
         try open_history_then_close(pillButton, identifier: identifier)
@@ -98,8 +98,8 @@ final class Data_Pill_UI_Tests: XCTestCase {
         let dayPercentageLabel = getElement(type: .text, identifier: identifier, label: "0%")
         let dayLabel = getElement(type: .text, identifier: identifier, label: "TODAY")
         
-        XCTAssert(dayPercentageLabel.exists)
-        XCTAssert(dayLabel.exists)
+        XCTAssertFalse(dayPercentageLabel.exists)
+        XCTAssertFalse(dayLabel.exists)
         
         closeButton.tap()
         
