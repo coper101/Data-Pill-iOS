@@ -42,14 +42,23 @@ struct ButtonView: View {
         Button(action: { action(type) }) {
             ZStack {
                 
-                Text(type.rawValue)
-                    .textStyle(
-                        foregroundColor: color,
-                        font: .semibold,
-                        size: 20
-                    )
-                    .id(type.rawValue)
-                    .transition(.opacity.animation(.linear.delay(0.2)))
+                Group {
+                    switch type {
+                    case .save:
+                        Text("Save")
+                    case .done:
+                        Text("Done")
+                    case .start:
+                        Text("Start")
+                    }
+                }
+                .textStyle(
+                    foregroundColor: color,
+                    font: .semibold,
+                    size: 20
+                )
+                .id(type.id)
+                .transition(.opacity.animation(.linear.delay(0.2)))
                 
             } //: ZStack
             .frame(height: height)

@@ -28,13 +28,6 @@ enum ItemCardStyle: String, Identifiable, CaseIterable {
         case .mini2: return 0
         }
     }
-    var allCaps: Bool {
-        switch self {
-        case .wide: return false
-        case .mini: return true
-        case .mini2: return false
-        }
-    }
     var type: SFProText {
         switch self {
         case .wide: return .semibold
@@ -54,8 +47,8 @@ enum ItemCardStyle: String, Identifiable, CaseIterable {
 struct ItemCardView<Content>: View where Content: View {
     // MARK: - Props    
     var style: ItemCardStyle
-    var subtitle: String
-    var caption: String = ""
+    var subtitle: LocalizedStringKey
+    var caption: LocalizedStringKey? = nil
     
     var verticalSpacing: CGFloat = 0
     var navigateAction: () -> Void = {}
@@ -79,7 +72,7 @@ struct ItemCardView<Content>: View where Content: View {
         
     // MARK: - UI
     var label: some View {
-        Text(style.allCaps ? subtitle.uppercased() : subtitle)
+        Text(subtitle)
             .kerning(style.letterSpacing)
             .textStyle(
                 foregroundColor: textColor,
@@ -90,18 +83,22 @@ struct ItemCardView<Content>: View where Content: View {
     }
     
     var secondaryLabel: some View {
-        Text(caption)
-            .kerning(style.letterSpacing)
-            .textStyle(
-                foregroundColor: Colors.onSurfaceLight,
-                font: style.type,
-                size: 18,
-                lineLimit: style.lineLimit
-            )
-            .opacity(0.6)
-            .`if`(caption != "") { view in
-                view.accessibilityLabel("secondaryLabel")
+        Group {
+            if let caption {
+                Text(caption)
+                    .kerning(style.letterSpacing)
+                    .textStyle(
+                        foregroundColor: Colors.onSurfaceLight,
+                        font: style.type,
+                        size: 18,
+                        lineLimit: style.lineLimit
+                    )
+                    .opacity(0.6)
+                    .accessibilityLabel(AccessibilityLabels.secondaryLabel.rawValue)
+            } else {
+                EmptyView()
             }
+        }
     }
     
     var body: some View {
@@ -184,71 +181,72 @@ struct ItemCardView<Content>: View where Content: View {
 }
 
 // MARK: - Preview
-struct ItemCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        ItemCardView(
-            style: .wide,
-            subtitle: "Subtitle Subtitle Subtitle",
-            caption: "Caption",
-            isToggleOn: .constant(false),
-            hasToggle: false,
-            width: 150,
-            textColor: .onBackground
-        ) {
-            Text("").frame(height: 50)
-        }
-        .previewLayout(.sizeThatFits)
-        .previewDisplayName(
-            displayName(
-                "Item Card",
-                ItemCardStyle.wide.id.firstCap(),
-                "Editing"
-            )
-        )
-        .padding()
-        .background(Color.green)
-        
-        ItemCardView(
-            style: .wide,
-            subtitle: "Subtitle Subtitle Subtitle",
-            isToggleOn: .constant(false),
-            hasToggle: false,
-            width: 150,
-            textColor: .onBackground
-        ) {
-            Text("").frame(height: 50)
-        }
-        .previewLayout(.sizeThatFits)
-        .previewDisplayName(
-            displayName(
-                "Item Card",
-                ItemCardStyle.wide.id.firstCap(),
-                "Toggle"
-            )
-        )
-        .padding()
-        .background(Color.green)
-        
-        ForEach(ItemCardStyle.allCases) { style in
-            ItemCardView(
-                style: style,
-                subtitle: "Subtitle Subtitle Subtitle",
-                isToggleOn: .constant(false),
-                hasToggle: false,
-                width: 150
-            ) {
-                Text("").frame(height: 50)
-            }
-            .previewLayout(.sizeThatFits)
-            .previewDisplayName(
-                displayName(
-                    "Item Card",
-                    style.id.firstCap()
-                )
-            )
-            .padding()
-            .background(Color.green)
-        }
-    }
-}
+// export file localizes subtitle
+//struct ItemCardView_Previews: PreviewProvider {
+//    static var previews: some View {
+//
+//        ItemCardView(
+//            style: .wide,
+//            subtitle: "Subtitle Subtitle Subtitle",
+//            caption: "Caption",
+//            isToggleOn: .constant(false),
+//            hasToggle: false,
+//            width: 150,
+//            textColor: .onBackground
+//        ) {
+//            Text("").frame(height: 50)
+//        }
+//        .previewLayout(.sizeThatFits)
+//        .previewDisplayName(
+//            displayName(
+//                "Item Card",
+//                ItemCardStyle.wide.id.firstCap(),
+//                "Editing"
+//            )
+//        )
+//        .padding()
+//        .background(Color.green)
+//
+//        ItemCardView(
+//            style: .wide,
+//            subtitle: "Subtitle Subtitle Subtitle",
+//            isToggleOn: .constant(false),
+//            hasToggle: false,
+//            width: 150,
+//            textColor: .onBackground
+//        ) {
+//            Text("").frame(height: 50)
+//        }
+//        .previewLayout(.sizeThatFits)
+//        .previewDisplayName(
+//            displayName(
+//                "Item Card",
+//                ItemCardStyle.wide.id.firstCap(),
+//                "Toggle"
+//            )
+//        )
+//        .padding()
+//        .background(Color.green)
+//
+//        ForEach(ItemCardStyle.allCases) { style in
+//            ItemCardView(
+//                style: style,
+//                subtitle: "Subtitle Subtitle Subtitle",
+//                isToggleOn: .constant(false),
+//                hasToggle: false,
+//                width: 150
+//            ) {
+//                Text("").frame(height: 50)
+//            }
+//            .previewLayout(.sizeThatFits)
+//            .previewDisplayName(
+//                displayName(
+//                    "Item Card",
+//                    style.id.firstCap()
+//                )
+//            )
+//            .padding()
+//            .background(Color.green)
+//        }
+//    }
+//}

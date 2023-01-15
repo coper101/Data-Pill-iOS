@@ -16,7 +16,7 @@ struct EditItemCardView<Content>: View where Content: View {
     var spaceBetween: CGFloat
     var isCardShown = true
     
-    var toastMessage: String? = nil
+    var toastMessage: LocalizedStringKey? = nil
     
     @ViewBuilder var content: () -> Content
     

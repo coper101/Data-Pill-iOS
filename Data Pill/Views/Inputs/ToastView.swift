@@ -10,7 +10,7 @@ import SwiftUI
 struct ToastView: View {
     // MARK: - Props
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    var message: String
+    var message: LocalizedStringKey
     
     // MARK: - UI
     var body: some View {

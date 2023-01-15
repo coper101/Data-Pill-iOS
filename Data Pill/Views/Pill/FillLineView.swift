@@ -9,11 +9,12 @@ import SwiftUI
 
 struct FillLineView: View {
     // MARK: - Props
-    var title: String
+    var title: LocalizedStringKey
+    var titleCharCount: Int
     var isLineShown = true
     
     var isLongTitle: Bool {
-        title.count > 3
+        titleCharCount > 3
     }
     
     // MARK: - UI
@@ -26,7 +27,7 @@ struct FillLineView: View {
     }
     
     var text: some View {
-        Text(title.uppercased())
+        Text(title)
             .kerning(1)
             .textStyle(
                 foregroundColor: .onBackgroundLight,
@@ -73,16 +74,26 @@ struct FillLineView: View {
 
 // MARK: - Preview
 struct FillLineView_Previews: PreviewProvider {
-    static var titles = ["Today", "Mon"]
     
     static var previews: some View {
-        ForEach(titles, id: \.self) { title in
-            FillLineView(title: title)
-                .previewLayout(.sizeThatFits)
-                .padding()
-                .frame(width: 200, height: 50)
-                .background(Color.green)
-                .previewDisplayName(title)
+        Group {
+            
+            FillLineView(
+                title: "Today",
+                titleCharCount: "Today".count
+            )
+            .previewDisplayName("Today")
+            
+            FillLineView(
+                title: "Mon",
+                titleCharCount: "Mon".count
+            )
+            .previewDisplayName("Mon")
+
         }
+        .previewLayout(.sizeThatFits)
+        .padding()
+        .frame(width: 200, height: 50)
+        .background(Color.green)
     }
 }

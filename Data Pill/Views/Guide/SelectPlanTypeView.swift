@@ -51,12 +51,14 @@ struct SelectPlanTypeView: View {
                 
                 LargeButtonView(
                     title: "Yep",
+                    id: "Yep",
                     action: planAction
                 )
                 .opacity(yepButtonOpacity)
                 
                 LargeButtonView(
                     title: "Nope",
+                    id: "Nope",
                     action: nonPlanAction
                 )
                 .opacity(nopeButtonOpacity)

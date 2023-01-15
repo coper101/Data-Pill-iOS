@@ -11,7 +11,7 @@ struct DateInputView: View {
     // MARK: - Props
     @Environment(\.dimensions) var dimensions: Dimensions
     var date: Date
-    var title: String
+    var title: LocalizedStringKey
     var action: () -> Void
     
     var displayedDate: String {
@@ -31,19 +31,25 @@ struct DateInputView: View {
                     size: 17,
                     maxWidth: .infinity
                 )
-                .accessibilityLabel(title)
+                .accessibilityLabel(AccessibilityLabels.title.rawValue)
             
             // Row 2: INPUT
             Button(action: action) {
                 
                 VStack {
                     
-                    Text(displayedDate)
-                        .textStyle(
-                            foregroundColor: .onSurface,
-                            font: .semibold,
-                            size: 17
-                        )
+                    HStack(spacing: 5) {
+                        
+                        Text(date.toDayMonthFormatLocalizedType())
+
+                        Text(date.toYearFormat(isLongYear: !dimensions.isSmallDevice))
+                        
+                    } //: HStack
+                    .textStyle(
+                        foregroundColor: .onSurface,
+                        font: .semibold,
+                        size: 17
+                    )
                     
                 } //: VStack
                 .fillMaxWidth()
@@ -55,7 +61,7 @@ struct DateInputView: View {
                 
             } //: Button
             .buttonStyle(ScaleButtonStyle())
-            .accessibilityLabel("\(title) Button")
+            .accessibilityLabel(String("\(title) Button"))
 
         } //: VStack
     }

@@ -78,7 +78,7 @@ struct SmallWidgetView: View {
                         spacing: 0.5
                     ) {
                         
-                        Text("\(percentageUsed)")
+                        Text(verbatim: "\(percentageUsed)")
                             .textStyle(
                                 foregroundColor: .onSurface,
                                 font: .semibold,
@@ -86,7 +86,7 @@ struct SmallWidgetView: View {
                                 lineLimit: 1
                             )
                         
-                        Text("%")
+                        Text(verbatim: "%")
                             .textStyle(
                                 foregroundColor: .onSurface,
                                 font: .semibold,
@@ -98,7 +98,7 @@ struct SmallWidgetView: View {
                     .padding(.top, 7)
                                     
                     // Row 2: DATA USED
-                    Text("\(data) \(showUnit ? dataUnit.rawValue : "")")
+                    Text(verbatim: "\(data) \(showUnit ? dataUnit.rawValue : "")")
                         .multilineTextAlignment(.trailing)
                         .textStyle(
                             foregroundColor: .onSurface,

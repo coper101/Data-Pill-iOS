@@ -213,10 +213,9 @@ struct AppView: View {
             // MARK: Layer 7: Error
             if
                 let error = appViewModel.dataError,
-                error == .loadingContainer(),
-                case .loadingContainer(let message) = error
+                error == .loadingContainer()
             {
-                Text(message)
+                Text("Sorry, the data can’t be loaded from the Storage.")
                     .textStyle(
                         foregroundColor: .onBackground,
                         font: .semibold,
@@ -380,6 +379,14 @@ struct AppView: View {
 
 // MARK: - Preview
 struct AppView_Previews: PreviewProvider {
+    static var appViewModelError: AppViewModel {
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        dataRepo.dataError = .loadingContainer()
+        let viewModel = AppViewModel(dataUsageRepository: dataRepo)
+        return viewModel
+    }
+    
     static var appViewModel: AppViewModel {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
@@ -424,7 +431,7 @@ struct AppView_Previews: PreviewProvider {
         let viewModel = AppViewModel(dataUsageRepository: dataRepo)
         
         // Update created Today's Data (added automatically by app)
-        viewModel.refreshUsedDataToday(200)
+        viewModel.refreshUsedDataToday(1000)
         
         return viewModel
     }
@@ -434,5 +441,12 @@ struct AppView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
             .environmentObject(appViewModel)
             .padding(.top, 20)
+            .previewDisplayName("Working App")
+        
+        AppView()
+            .previewLayout(.sizeThatFits)
+            .environmentObject(appViewModelError)
+            .padding(.top, 20)
+            .previewDisplayName("Loading Data Error")
     }
 }

@@ -65,10 +65,10 @@ struct HistoryView: View {
                     Array(descendingWeeksData.enumerated()),
                     id: \.element
                 ) { index, data in
-                    
+
                     let day = days[index]
                     let isFirstPill = index == 0
-                    
+
                     DraggablePillView(
                         date: data.date ?? Date(),
                         color: day.color,
@@ -80,7 +80,7 @@ struct HistoryView: View {
                         hasPillOutline: isFirstPill && showFilledLines, /// show for first pill only - Sunday
                         widthScale: 0.65
                     )
-                    
+
                 } //: ForEach
                 
             } //: Group

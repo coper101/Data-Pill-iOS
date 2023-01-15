@@ -13,7 +13,14 @@ struct AutoPeriodCardView: View {
     var width: CGFloat
     var isPlanActive: Bool
     
-    var title: String {
+    var title: LocalizedStringKey {
+        if isPlanActive {
+            return isAuto ? "Auto" : "Manual"
+        }
+        return "NA"
+    }
+    
+    var id: String {
         if isPlanActive {
             return isAuto ? "Auto" : "Manual"
         }
@@ -47,7 +54,7 @@ struct AutoPeriodCardView: View {
                         maxWidth: .infinity
                     )
                     .opacity(opacity)
-                    .id(title)
+                    .id(id)
                     .transition(.opacity)
                     .padding(.bottom, 10)
                 

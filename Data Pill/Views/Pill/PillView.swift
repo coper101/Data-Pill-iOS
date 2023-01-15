@@ -39,8 +39,8 @@ struct PillView: View {
         BasePillView(
             percentage: percentage,
             isContentShown: isContentShown,
-            fillLine: showFillLine ?
-                .init(title: getPillTitle(with: usageType, on: date)) : nil,
+            fillLineTitle: showFillLine ? getPillTitle(with: usageType, on: date) : nil,
+            fillLineTitleCharCount: showFillLine ? getPillTitleCharCount(with: usageType, on: date) : 0,
             hasPillOutline: hasPillOutline,
             hasBackground: hasBackground,
             color: color,
@@ -73,9 +73,7 @@ struct PillView_Previews: PreviewProvider {
                 usageType: .daily
             )
             .previewDisplayName(
-                displayName(
-                    "Filled"
-                )
+                displayName("Filled")
             )
             
             PillView(
@@ -87,9 +85,7 @@ struct PillView_Previews: PreviewProvider {
                 showFillLine: true
             )
             .previewDisplayName(
-                displayName(
-                    "Fill Line"
-                )
+                displayName("Fill Line")
             )
             
         }
@@ -98,15 +94,25 @@ struct PillView_Previews: PreviewProvider {
     }
 }
 
-func getPillTitle(with usageType: ToggleItem, on date: Date) -> String {
+func getPillTitle(with usageType: ToggleItem, on date: Date) -> LocalizedStringKey {
     switch usageType {
     case .plan:
         return "TOTAL"
     case .daily:
+        return date.isToday() ?
+            "TODAY" : date.getWeekday().toLocalizedWeekdayName()
+    }
+}
+
+func getPillTitleCharCount(with usageType: ToggleItem, on date: Date) -> Int {
+    switch usageType {
+    case .plan:
+        return "TOTAL".count
+    case .daily:
         return {
-            date.isToday() ?
-                "TODAY" :
-                date.toWeekdayFormat().uppercased()
+            let title = date.isToday() ?
+                "TODAY" : date.getWeekday().toWeekdayName()
+            return title.count
         }()
     }
 }

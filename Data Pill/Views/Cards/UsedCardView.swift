@@ -38,7 +38,7 @@ struct UsedCardView: View {
                 spacing: 0
             ) {
                 
-                Text("\(percentageUsed)")
+                Text(verbatim: "\(percentageUsed)")
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .semibold,
@@ -46,20 +46,20 @@ struct UsedCardView: View {
                         lineLimit: 1
                     )
                     .id(percentageUsed)
-                    .accessibilityLabel("percentageUsedNumber")
+                    .accessibilityLabel(AccessibilityLabels.percentageUsedNumber.rawValue)
                 
-                Text("%")
+                Text(verbatim: "%")
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .semibold,
                         size: 28,
                         lineLimit: 1
                     )
-                    .accessibilityLabel("percentageUsedSign")
+                    .accessibilityLabel(AccessibilityLabels.percentageUsedSign.rawValue)
             } //: HStack
             
             // Row 2: DATA
-            Text(data)
+            Text(verbatim: "\(data)")
                 .textStyle(
                     foregroundColor: .onSurface,
                     font: .semibold,
@@ -69,7 +69,7 @@ struct UsedCardView: View {
                 .opacity(0.5)
                 .padding(.bottom, 10)
                 .id(data)
-                .accessibilityLabel("dataUsedAmount")
+                .accessibilityLabel(AccessibilityLabels.dataUsedAmount.rawValue)
             
         } //: ItemCardView
         .accessibilityIdentifier("used")

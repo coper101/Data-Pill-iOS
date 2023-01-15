@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension Int {
     
@@ -13,6 +14,58 @@ extension Int {
     func prefixDay() -> String {
         let s = (self > 1) ? "s" : ""
         return "\(self) Day\(s)"
+    }
+    
+    /// Returns a localized type weekday name of the weekday index
+    /// e.g. 1 = Sun
+    func toLocalizedWeekdayName() -> LocalizedStringKey {
+        let weekday = self
+        if weekday == 1 {
+            return "Sun"
+        }
+        else if weekday == 2 {
+            return "Mon"
+        }
+        else if weekday == 3 {
+            return "Tue"
+        }
+        else if weekday == 4 {
+            return "Wed"
+        }
+        else if weekday == 5 {
+            return "Thu"
+        }
+        else if weekday == 6 {
+            return "Fri"
+        } else {
+            return "Sat"
+        }
+    }
+    
+    /// Returns a non-localized type weekday name of the weekday index
+    /// e.g. 1 = Sun
+    func toWeekdayName() -> String {
+        let weekday = self
+        if weekday == 1 {
+            return "Sun"
+        }
+        else if weekday == 2 {
+            return "Mon"
+        }
+        else if weekday == 3 {
+            return "Tue"
+        }
+        else if weekday == 4 {
+            return "Wed"
+        }
+        else if weekday == 5 {
+            return "Thu"
+        }
+        else if weekday == 6 {
+            return "Fri"
+        } else {
+            return "Sat"
+        }
     }
     
 }
@@ -71,7 +124,7 @@ extension Double {
         return percentage
     }
     
-    /// convert decimal number from MB to GB
+    /// Convert decimal number from MB to GB
     /// no changes for unit that is not MB
     /// - Parameter unit: A value to specify the current unit to convet from
     func toGB(from unit: Unit = .mb) -> Double {

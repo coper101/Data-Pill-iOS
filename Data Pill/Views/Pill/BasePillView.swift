@@ -24,7 +24,8 @@ struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View
     var percentage: Int
     
     var isContentShown = true
-    var fillLine: FillLine? = nil
+    var fillLineTitle: LocalizedStringKey? = nil
+    var fillLineTitleCharCount = 0
     var hasPillOutline = false /// for tracking pill outline
     var orientation = PillOrientation.vertical
     
@@ -119,7 +120,7 @@ struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View
             //    .padding(.bottom, 0.07 * height)
             
             // Layer 3: PERCENTAGE FILL
-            if isContentShown && fillLine == nil {
+            if isContentShown && fillLineTitle == nil {
                 switch orientation {
                 case .horizontal:
                     horizontalPill
@@ -129,8 +130,11 @@ struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View
             } //: if
             
             // Layer 4: FILL LINE
-            if let fillLine = fillLine {
-                FillLineView(title: fillLine.title)
+            if let fillLineTitle {
+                FillLineView(
+                    title: fillLineTitle,
+                    titleCharCount: fillLineTitleCharCount
+                )
                     .offset(y: fillLineYOffset)
             }
             
@@ -147,11 +151,15 @@ struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View
                         .stroke(Colors.onSurfaceLight2.color, lineWidth: 1)
                 )
         }
-        .`if`(fillLine != nil) { view in
+        .`if`(fillLineTitle != nil) { view in
             // Layer 6: FILL LINE (for title that is hidden when get clipped by border)
             view
                 .overlay(
-                    FillLineView(title: fillLine!.title, isLineShown: false)
+                    FillLineView(
+                        title: fillLineTitle!,
+                        titleCharCount: fillLineTitleCharCount,
+                        isLineShown: false
+                    )
                         .offset(y: fillLineYOffset)
                 )
         }
@@ -184,7 +192,8 @@ struct BasePillView_Previews: PreviewProvider {
                 if orientation == .vertical {
                     BasePillView(
                         percentage: 20,
-                        fillLine: .init(title: "Today"),
+                        fillLineTitle: "Today",
+                        fillLineTitleCharCount: "Today".count,
                         orientation: orientation,
                         hasBackground: true,
                         color: .secondaryBlue,

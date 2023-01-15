@@ -7,13 +7,14 @@
 
 import Combine
 import Foundation
+import SwiftUI
 
 final class ToastTimer: ObservableObject {
     
     @Published var timer: AnyCancellable?
-    @Published var message: String?
+    @Published var message: LocalizedStringKey?
     
-    func showToast(message: String) {
+    func showToast(message: LocalizedStringKey) {
         if timer != nil {
             stopTimer()
         }
@@ -21,7 +22,7 @@ final class ToastTimer: ObservableObject {
         scheduleToCancelToast(message)
     }
     
-    func scheduleToCancelToast(_ message: String) {
+    func scheduleToCancelToast(_ message: LocalizedStringKey) {
         self.timer = Timer
             .publish(every: 3, on: .main, in: .default)
             .autoconnect()

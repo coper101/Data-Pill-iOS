@@ -77,6 +77,7 @@
 		27B90B8728F2D31600263983 /* DataUsagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8628F2D31600263983 /* DataUsagePreview.swift */; };
 		27B90B8928F2D43700263983 /* DataTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8828F2D43700263983 /* DataTest.swift */; };
 		27BB19EB2971568800851E14 /* PillTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB19EA2971568800851E14 /* PillTitleView.swift */; };
+		27BB19ED2972D1F500851E14 /* AccessibilityLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB19EC2972D1F400851E14 /* AccessibilityLabels.swift */; };
 		27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE08292928BD6C00E0781C /* StepperValueView.swift */; };
 		27BE082C2928D7BE00E0781C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE082B2928D7BE00E0781C /* Types.swift */; };
 		27E776FD293365410031456D /* WidgetPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E776FC293365410031456D /* WidgetPillView.swift */; };
@@ -254,6 +255,7 @@
 		27B90B8628F2D31600263983 /* DataUsagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsagePreview.swift; sourceTree = "<group>"; };
 		27B90B8828F2D43700263983 /* DataTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTest.swift; sourceTree = "<group>"; };
 		27BB19EA2971568800851E14 /* PillTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillTitleView.swift; sourceTree = "<group>"; };
+		27BB19EC2972D1F400851E14 /* AccessibilityLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityLabels.swift; sourceTree = "<group>"; };
 		27BE08292928BD6C00E0781C /* StepperValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperValueView.swift; sourceTree = "<group>"; };
 		27BE082B2928D7BE00E0781C /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		27E776FC293365410031456D /* WidgetPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPillView.swift; sourceTree = "<group>"; };
@@ -417,6 +419,7 @@
 				27E7772C2933844A0031456D /* ToggleItem.swift */,
 				27E7773D2934B3CB0031456D /* StepperValueTypes.swift */,
 				27E77750293B68D00031456D /* Widget.swift */,
+				27BB19EC2972D1F400851E14 /* AccessibilityLabels.swift */,
 				27801E1F28E9B16E00201339 /* DataUsage.xcdatamodeld */,
 			);
 			path = Models;
@@ -719,6 +722,8 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				fil,
 			);
 			mainGroup = 27801DA328D6C96800201339;
 			productRefGroup = 27801DAD28D6C96800201339 /* Products */;
@@ -808,6 +813,7 @@
 				27E77754293C44080031456D /* FillLineView.swift in Sources */,
 				27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */,
 				27E776FF293365730031456D /* BasePillView.swift in Sources */,
+				27BB19ED2972D1F500851E14 /* AccessibilityLabels.swift in Sources */,
 				27B90B8728F2D31600263983 /* DataUsagePreview.swift in Sources */,
 				278E7348295C57E30020F84B /* Validator.swift in Sources */,
 				27B10A72295BE714009E910C /* ToastView.swift in Sources */,
@@ -1040,6 +1046,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1093,6 +1100,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};

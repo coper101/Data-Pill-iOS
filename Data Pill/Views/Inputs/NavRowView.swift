@@ -9,8 +9,11 @@ import SwiftUI
 
 struct NavRowView: View {
     // MARK: - Props
-    var title: String
-    var subtitle: String
+    var title: String?
+    var subtitle: String?
+    var localizedTitle: LocalizedStringKey?
+    var localizedTitle2: LocalizedStringKey?
+    var localizedSubtitle: LocalizedStringKey?
     var action: () -> Void
     
     // MARK: - UI
@@ -19,23 +22,62 @@ struct NavRowView: View {
             HStack(spacing: 8) {
                 
                 // Col 1: TITLE
-                Text(title)
-                    .textStyle(
-                        foregroundColor: .onSurface,
-                        font: .semibold,
-                        size: 15,
-                        lineLimit: 1
-                    )
-                    .fixedSize()
+                Group {
+                    
+                    if let title {
+                        Text(verbatim: title)
+                           
+                    }
+                    
+                    if let localizedTitle {
+                        
+                        if let localizedTitle2 {
+                            
+                            // Range
+                            HStack(spacing: 5) {
+                                
+                                Text(localizedTitle)
+                                
+                                Text(verbatim: "-")
+                                
+                                Text(localizedTitle2)
+                                 
+                            } //: HStack
+                            
+                        } else {
+                            
+                            // Single
+                            Text(localizedTitle)
+                            
+                        } //: if-else
+                        
+                    } //: if
+                    
+                } //: Group
+                .textStyle(
+                    foregroundColor: .onSurface,
+                    font: .semibold,
+                    size: 15,
+                    lineLimit: 1
+                )
+                .fixedSize()
                 
                 // Col 2: SUBTITLE
-                Text(subtitle)
-                    .textStyle(
-                        foregroundColor: .onSurfaceLight,
-                        font: .semibold,
-                        size: 15,
-                        lineLimit: 1
-                    )
+                Group {
+                    if let subtitle {
+                        Text(verbatim: subtitle)
+                           
+                    }
+                    if let localizedSubtitle {
+                        Text(localizedSubtitle)
+                    }
+                }
+                .textStyle(
+                    foregroundColor: .onSurfaceLight,
+                    font: .semibold,
+                    size: 15,
+                    lineLimit: 1
+                )
                 
                 // Col 3: NAV ICON
                 Spacer(minLength: 0)
@@ -68,5 +110,17 @@ struct NavRowView_Previews: PreviewProvider {
         .background(Colors.surface.color)
         .padding()
         .previewLayout(.sizeThatFits)
+        .previewDisplayName("Non-Localized")
+        
+        NavRowView(
+            localizedTitle: "\(String(12)) SEP",
+            localizedTitle2: "\(String(10)) OCT",
+            localizedSubtitle: "\(String(30)) Days", // crashes when days is in Int
+            action: {}
+        )
+        .background(Colors.surface.color)
+        .padding()
+        .previewLayout(.sizeThatFits)
+        .previewDisplayName("Localized")
     }
 }

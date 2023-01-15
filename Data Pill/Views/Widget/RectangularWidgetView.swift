@@ -75,7 +75,7 @@ struct RectangularWidgetView: View {
                     )
                     
                     // Layer 2: Percentage
-                    Text("\(percentageUsed)")
+                    Text(verbatim: "\(percentageUsed)")
                         .textStyle(
                             foregroundColor: .widgetBackground,
                             font: .bold,
@@ -94,7 +94,7 @@ struct RectangularWidgetView: View {
                 ) {
                     
                     // Row 1: DATA USED
-                    Text("\(usedData.toDp(n: 4))")
+                    Text(verbatim: "\(usedData.toDp(n: 4))")
                         .textStyle(
                             foregroundColor: .widgetTint,
                             font: .bold,
@@ -105,7 +105,7 @@ struct RectangularWidgetView: View {
                     // Row 2: SUBTITLE
                     HStack(spacing: 3) {
                         
-                        Text("\(maxData.toDp(n: 4))")
+                        Text(verbatim: "\(maxData.toDp(n: 4))")
                             
                         Text(dataUnit.rawValue)
                             .kerning(1.0)

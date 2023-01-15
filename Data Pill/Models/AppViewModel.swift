@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 final class AppViewModel: ObservableObject {
     
@@ -105,7 +106,7 @@ final class AppViewModel: ObservableObject {
     @Published var date = Date()
     
     /// Edit Data Limit
-    @Published var toastMessage: String?
+    @Published var toastMessage: LocalizedStringKey?
 
     @Published var isDataLimitEditing = false
     @Published var isDataLimitPerDayEditing = false
@@ -595,8 +596,7 @@ extension AppViewModel {
             max: dataAmount,
             by: plusValue,
             onExceed: { [weak self] in
-                let message = "Exceeds maximum data amount"
-                self?.toastTimer.showToast(message: message)
+                self?.toastTimer.showToast(message: "Exceeds maximum data amount")
             }
         )
         

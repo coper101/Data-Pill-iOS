@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ToggleItemView: View {
     // MARK: - Props
-    var title: String
+    var title: LocalizedStringKey
     var isSelected: Bool
     var action: () -> Void
     
@@ -41,8 +41,8 @@ struct ToggleItemView: View {
 struct ToggleView: View {
     // MARK: - Props
     @Binding var selectedItem: ToggleItem
-    var title1: String
-    var title2: String
+    var title1: LocalizedStringKey
+    var title2: LocalizedStringKey
     
     // MARK: - UI
     var body: some View {

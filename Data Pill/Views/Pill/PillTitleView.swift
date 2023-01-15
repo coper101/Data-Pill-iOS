@@ -20,22 +20,9 @@ struct PillTitleView: View {
     
     var usageType: ToggleItem
     
-    var displayedDate: String {
-        switch usageType {
-        case .plan:
-            return "TOTAL"
-        case .daily:
-            return dailyDisplayedDate
-        }
-    }
-    
-    var dailyDisplayedDate: String {
-        date.isToday() ? "TODAY" : date.toWeekdayFormat().uppercased()
-    }
-    
     // MARK: - UI
     var textLabel: some View {
-        Text(displayedDate)
+        Text(getPillTitle(with: usageType, on: date))
             .textStyle(
                 foregroundColor: color,
                 font: .semibold,
@@ -51,7 +38,7 @@ struct PillTitleView: View {
             // Col 1: PERCENTAGE
             if showPercentage {
                 
-                Text("\(percentage)%")
+                Text(verbatim: "\(percentage)%")
                     .textStyle(
                         foregroundColor: color,
                         font: .semibold,
