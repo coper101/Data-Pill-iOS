@@ -29,12 +29,13 @@ struct ToastView: View {
                     foregroundColor: .onSurface,
                     font: .semibold,
                     size: 14,
+                    lineLimit: 2,
                     textAlignment: .center
                 )
             Spacer()
             
         } //: HStack
-        .frame(height: 48)
+        .padding(.vertical, 8)
         .background(Colors.background.color)
         .clipShape(
             RoundedRectangle(cornerRadius: 15)

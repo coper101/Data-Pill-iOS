@@ -181,72 +181,71 @@ struct ItemCardView<Content>: View where Content: View {
 }
 
 // MARK: - Preview
-// export file localizes subtitle
-//struct ItemCardView_Previews: PreviewProvider {
-//    static var previews: some View {
-//
-//        ItemCardView(
-//            style: .wide,
-//            subtitle: "Subtitle Subtitle Subtitle",
-//            caption: "Caption",
-//            isToggleOn: .constant(false),
-//            hasToggle: false,
-//            width: 150,
-//            textColor: .onBackground
-//        ) {
-//            Text("").frame(height: 50)
-//        }
-//        .previewLayout(.sizeThatFits)
-//        .previewDisplayName(
-//            displayName(
-//                "Item Card",
-//                ItemCardStyle.wide.id.firstCap(),
-//                "Editing"
-//            )
-//        )
-//        .padding()
-//        .background(Color.green)
-//
-//        ItemCardView(
-//            style: .wide,
-//            subtitle: "Subtitle Subtitle Subtitle",
-//            isToggleOn: .constant(false),
-//            hasToggle: false,
-//            width: 150,
-//            textColor: .onBackground
-//        ) {
-//            Text("").frame(height: 50)
-//        }
-//        .previewLayout(.sizeThatFits)
-//        .previewDisplayName(
-//            displayName(
-//                "Item Card",
-//                ItemCardStyle.wide.id.firstCap(),
-//                "Toggle"
-//            )
-//        )
-//        .padding()
-//        .background(Color.green)
-//
-//        ForEach(ItemCardStyle.allCases) { style in
-//            ItemCardView(
-//                style: style,
-//                subtitle: "Subtitle Subtitle Subtitle",
-//                isToggleOn: .constant(false),
-//                hasToggle: false,
-//                width: 150
-//            ) {
-//                Text("").frame(height: 50)
-//            }
-//            .previewLayout(.sizeThatFits)
-//            .previewDisplayName(
-//                displayName(
-//                    "Item Card",
-//                    style.id.firstCap()
-//                )
-//            )
-//            .padding()
-//            .background(Color.green)
-//        }
-//    }
-//}
+struct ItemCardView_Previews: PreviewProvider {
+    static var previews: some View {
+
+        ItemCardView(
+            style: .wide,
+            subtitle: "Subtitle Subtitle Subtitle",
+            caption: "Caption",
+            isToggleOn: .constant(false),
+            hasToggle: false,
+            width: 150,
+            textColor: .onBackground
+        ) {
+            Text("").frame(height: 50)
+        }
+        .previewLayout(.sizeThatFits)
+        .previewDisplayName(
+            displayName(
+                "Item Card",
+                ItemCardStyle.wide.id.firstCap(),
+                "Editing"
+            )
+        )
+        .padding()
+        .background(Color.green)
+
+        ItemCardView(
+            style: .wide,
+            subtitle: "Subtitle Subtitle Subtitle",
+            isToggleOn: .constant(false),
+            hasToggle: false,
+            width: 150,
+            textColor: .onBackground
+        ) {
+            Text("").frame(height: 50)
+        }
+        .previewLayout(.sizeThatFits)
+        .previewDisplayName(
+            displayName(
+                "Item Card",
+                ItemCardStyle.wide.id.firstCap(),
+                "Toggle"
+            )
+        )
+        .padding()
+        .background(Color.green)
+
+        ForEach(ItemCardStyle.allCases) { style in
+            ItemCardView(
+                style: style,
+                subtitle: "Subtitle Subtitle Subtitle",
+                isToggleOn: .constant(false),
+                hasToggle: false,
+                width: 150
+            ) {
+                Text("").frame(height: 50)
+            }
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName(
+                displayName(
+                    "Item Card",
+                    style.id.firstCap()
+                )
+            )
+            .padding()
+            .background(Color.green)
+        }
+    }
+}

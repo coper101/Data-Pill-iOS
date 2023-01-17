@@ -16,7 +16,8 @@ struct EditItemCardView<Content>: View where Content: View {
     var spaceBetween: CGFloat
     var isCardShown = true
     
-    var toastMessage: LocalizedStringKey? = nil
+    var toastMessage: LocalizedStringKey?
+    var maxWidth: CGFloat?
     
     @ViewBuilder var content: () -> Content
     
@@ -27,6 +28,7 @@ struct EditItemCardView<Content>: View where Content: View {
             // Layer 1: Toast
             if let toastMessage {
                 ToastView(message: toastMessage)
+                    .frame(maxWidth: maxWidth)
                     .zIndex(0)
                     .offset(y: -150)
                     .popSlide(endOffsetY: 100)

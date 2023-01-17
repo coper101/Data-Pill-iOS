@@ -91,7 +91,8 @@ struct AppView: View {
                     buttonAction: buttonAction,
                     buttonDisabled: appViewModel.buttonDisabled,
                     spaceBetween: spaceBetweenCardButton,
-                    isCardShown: !appViewModel.isDatePickerShown
+                    isCardShown: !appViewModel.isDatePickerShown,
+                    maxWidth: dimensions.planCardWidth
                 ) {
                     DataPlanCardView(
                         editType: appViewModel.editDataPlanType,
@@ -124,7 +125,8 @@ struct AppView: View {
                     buttonAction: buttonAction,
                     buttonDisabled: appViewModel.buttonDisabledPlanLimit,
                     spaceBetween: spaceBetweenCardButton,
-                    toastMessage: appViewModel.toastMessage
+                    toastMessage: appViewModel.toastMessage,
+                    maxWidth: dimensions.limitCardWidth
                 ) {
                     DataPlanLimitView(
                         dataLimitValue: $appViewModel.dataLimitValue,
@@ -152,7 +154,8 @@ struct AppView: View {
                     buttonAction: buttonAction,
                     buttonDisabled: appViewModel.buttonDisabledDailyLimit,
                     spaceBetween: spaceBetweenCardButton,
-                    toastMessage: appViewModel.toastMessage
+                    toastMessage: appViewModel.toastMessage,
+                    maxWidth: dimensions.limitCardWidth
                 ) {
                     DataPlanLimitView(
                         dataLimitValue: $appViewModel.dataLimitPerDayValue,

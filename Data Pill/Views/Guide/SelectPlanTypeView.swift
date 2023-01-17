@@ -39,13 +39,13 @@ struct SelectPlanTypeView: View {
                     foregroundColor: .onBackground,
                     font: .semibold,
                     size: 20,
-                    lineLimit: 10,
+                    lineLimit: 20,
                     lineSpacing: 3
                 )
                 .opacity(descriptionOpacity)
             
             // Row 3: SELECTION
-            Spacer()
+            Spacer(minLength: 0)
             
             VStack(spacing: 14) {
                 

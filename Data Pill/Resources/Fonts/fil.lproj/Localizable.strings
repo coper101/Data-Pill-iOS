@@ -1,0 +1,180 @@
+/* No comment provided by engineer. */
+"%@ APR" = "%@ Abril";
+
+/* No comment provided by engineer. */
+"%@ AUG" = "%@ Agosto";
+
+/* No comment provided by engineer. */
+"%@ Days" = "%@ Araw";
+
+/* No comment provided by engineer. */
+"%@ DEC" = "%@ Disyembre";
+
+/* No comment provided by engineer. */
+"%@ FEB" = "%@ Pebrero";
+
+/* No comment provided by engineer. */
+"%@ JAN" = "%@ Enero";
+
+/* No comment provided by engineer. */
+"%@ JUL" = "%@ Hulyo";
+
+/* No comment provided by engineer. */
+"%@ JUN" = "%@ Hunyo";
+
+/* No comment provided by engineer. */
+"%@ MAR" = "%@ Marso";
+
+/* No comment provided by engineer. */
+"%@ MAY" = "%@ Mayo";
+
+/* No comment provided by engineer. */
+"%@ NOV" = "%@ Nobyembre";
+
+/* No comment provided by engineer. */
+"%@ OCT" = "%@ Oktubre";
+
+/* No comment provided by engineer. */
+"%@ SEP" = "%@ Setyembre";
+
+/* No comment provided by engineer. */
+"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ang Data Plan ay isang subscription service kung saan nagbabayad ka bawat piryud upang gumamit ng nakapirming halaga ng mobile data.";
+
+/* No comment provided by engineer. */
+"Auto" = "Auto";
+
+/* No comment provided by engineer. */
+"Caption" = "Caption";
+
+/* No comment provided by engineer. */
+"Card" = "Card";
+
+/* No comment provided by engineer. */
+"Daily\nLimit" = "Limit\nKada Araw";
+
+/* No comment provided by engineer. */
+"Daily Limit" = "Limit Kada Araw";
+
+/* No comment provided by engineer. */
+"Data Amount" = "Dami ng Data";
+
+/* No comment provided by engineer. */
+"Data Pill will just monitor and track your daily mobile data." = "Susubaybayan lang ng Data Pill ang iyong pang-araw-araw na mobile data.";
+
+/* No comment provided by engineer. */
+"Data Plan" = "Data Plan";
+
+/* No comment provided by engineer. */
+"Do you have a Data Plan?" = "May Data Plan ka ba?";
+
+/* No comment provided by engineer. */
+"Done" = "Tapos Na";
+
+/* No comment provided by engineer. */
+"Exceeds maximum data amount" = "Lampas sa maximum na halaga ng data";
+
+/* No comment provided by engineer. */
+"Fri" = "Biyernes";
+
+/* No comment provided by engineer. */
+"From" = "Mula Sa";
+
+/* No comment provided by engineer. */
+"Get Started" = "Magsimula";
+
+/* No comment provided by engineer. */
+"If you ever subscribe to a plan in the future, toggle Data Plan." = "Kung sakaling mag-subscribe ka sa isang Plan sa hinaharap, i-toggle ang Data Plan.";
+
+/* No comment provided by engineer. */
+"Manual" = "Manwal";
+
+/* No comment provided by engineer. */
+"Mon" = "Lunes";
+
+/* No comment provided by engineer. */
+"NA" = "NA";
+
+/* No comment provided by engineer. */
+"Nope" = "Wala";
+
+/* No comment provided by engineer. */
+"Nope." = "Wala.";
+
+/* No comment provided by engineer. */
+"Period" = "Piryud";
+
+/* No comment provided by engineer. */
+"PERIOD" = "PIRYUD";
+
+/* No comment provided by engineer. */
+"Plan" = "Plan";
+
+/* No comment provided by engineer. */
+"Plan\nLimit" = "Limit ng Plan";
+
+/* No comment provided by engineer. */
+"Plan Limit" = "Limit ng Plan";
+
+/* No comment provided by engineer. */
+"Sat" = "Sabado";
+
+/* No comment provided by engineer. */
+"Save" = "I-save";
+
+/* No comment provided by engineer. */
+"Set the amount of data in your plan and the period it starts and ends." = "Itakda ang dami ng data sa iyong plano at ang panahon na magsisimula at magtatapos ito.";
+
+/* No comment provided by engineer. */
+"Sorry, the data can’t be loaded from the Storage." = "Paumanhin, hindi ma-load ang data mula sa Storage.";
+
+/* No comment provided by engineer. */
+"Start" = "Magsimula";
+
+/* No comment provided by engineer. */
+"Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
+
+/* No comment provided by engineer. */
+"Sun" = "Linggo";
+
+/* No comment provided by engineer. */
+"This Week" = "Ngayong Linggo";
+
+/* No comment provided by engineer. */
+"Thu" = "Huwebes";
+
+/* No comment provided by engineer. */
+"Title" = "Title";
+
+/* No comment provided by engineer. */
+"TITLE" = "TITLE";
+
+/* No comment provided by engineer. */
+"To" = "Hanggang";
+
+/* No comment provided by engineer. */
+"Today" = "Nagyon";
+
+/* No comment provided by engineer. */
+"TODAY" = "NGAYON";
+
+/* No comment provided by engineer. */
+"TOTAL" = "KABUUAN";
+
+/* No comment provided by engineer. */
+"Tue" = "Martes";
+
+/* No comment provided by engineer. */
+"USAGE" = "PAGGAMIT";
+
+/* No comment provided by engineer. */
+"USED" = "GINAMIT";
+
+/* No comment provided by engineer. */
+"Wed" = "Miyerkules";
+
+/* No comment provided by engineer. */
+"Yep" = "Meron";
+
+/* No comment provided by engineer. */
+"Yep." = "Meron.";
+
