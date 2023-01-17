@@ -41,7 +41,10 @@ struct HistoryView: View {
             HStack(spacing: 0) {
                 
                 // TITLE
-                Text("This Week")
+                Text(
+                    "This Week",
+                    comment: "The title for viewing all the data usage for the week"
+                )
                     .textStyle(
                         foregroundColor: .onBackground,
                         font: .bold,

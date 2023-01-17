@@ -24,7 +24,10 @@ struct DateInputView: View {
         VStack(spacing: 10) {
             
             // Row 1: TITLE
-            Text(title)
+            Text(
+                title,
+                comment: "Title of the date range input"
+            )
                 .textStyle(
                     foregroundColor: .onSurfaceLight,
                     font: .semibold,
@@ -40,7 +43,10 @@ struct DateInputView: View {
                     
                     HStack(spacing: 5) {
                         
-                        Text(date.toDayMonthFormatLocalizedType())
+                        Text(
+                            date.toDayMonthFormatLocalizedType(),
+                            comment: "Selected month"
+                        )
 
                         Text(date.toYearFormat(isLongYear: !dimensions.isSmallDevice))
                         

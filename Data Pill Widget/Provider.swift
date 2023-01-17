@@ -6,6 +6,7 @@
 //
 
 import WidgetKit
+import SwiftUI
 import CoreData
 import OSLog
 
@@ -22,6 +23,7 @@ struct Provider: IntentTimelineProvider {
             usedData: 0,
             maxData: 0,
             dataUnit: .gb,
+            localizedSubtitle: "Day",
             subtitle: "Day",
             color: .surface,
             usageType: .daily
@@ -73,13 +75,16 @@ struct Provider: IntentTimelineProvider {
             let weekday = todaysDate.toDateComp().weekday ?? 1
             return widgetModel.days[weekday - 1].color
         }
-        let subtitle = (usageType == .plan) ? "Plan" : "Today"
+        let isPlan = usageType == .plan
+        let localizedSubtitle: LocalizedStringKey = isPlan ? "PLAN" : "TODAY"
+        let subtitle = isPlan ? "PLAN" : "TODAY"
         
         let newEntry = Entry(
             date: date,
             usedData: widgetModel.usedData,
             maxData: widgetModel.maxData,
             dataUnit: widgetModel.unit,
+            localizedSubtitle: localizedSubtitle,
             subtitle: subtitle,
             color: color,
             usageType: usageType

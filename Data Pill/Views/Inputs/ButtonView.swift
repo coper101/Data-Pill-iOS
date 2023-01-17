@@ -45,11 +45,20 @@ struct ButtonView: View {
                 Group {
                     switch type {
                     case .save:
-                        Text("Save")
+                        Text(
+                            "Save",
+                            comment: "Button title save"
+                        )
                     case .done:
-                        Text("Done")
+                        Text(
+                            "Done",
+                            comment: "Button title done"
+                        )
                     case .start:
-                        Text("Start")
+                        Text(
+                            "Start",
+                            comment: "Button title start"
+                        )
                     }
                 }
                 .textStyle(

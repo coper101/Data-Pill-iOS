@@ -24,7 +24,10 @@ struct ToggleItemView: View {
     // MARK: UI
     var body: some View {
         Button(action: action) {
-            Text(title)
+            Text(
+                title,
+                comment: "Toggle button title"
+            )
                 .textStyle(
                     foregroundColor: .onSurface,
                     font: .bold,

@@ -22,7 +22,10 @@ struct PillTitleView: View {
     
     // MARK: - UI
     var textLabel: some View {
-        Text(getPillTitle(with: usageType, on: date))
+        Text(
+            getPillTitle(with: usageType, on: date),
+            comment: "Title for type of data usage"
+        )
             .textStyle(
                 foregroundColor: color,
                 font: .semibold,

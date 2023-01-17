@@ -1,78 +1,78 @@
 /* No comment provided by engineer. */
-"%@ APR" = "%@ Abril";
+"%@ APR" = "%@ 四月";
 
 /* No comment provided by engineer. */
-"%@ AUG" = "%@ Agosto";
+"%@ AUG" = "%@ 八月";
 
 /* No comment provided by engineer. */
-"%@ DEC" = "%@ Disyembre";
+"%@ DEC" = "%@ 十二月";
 
 /* No comment provided by engineer. */
-"%@ FEB" = "%@ Pebrero";
+"%@ FEB" = "%@ 二月";
 
 /* No comment provided by engineer. */
-"%@ JAN" = "%@ Enero";
+"%@ JAN" = "%@ 一月";
 
 /* No comment provided by engineer. */
-"%@ JUL" = "%@ Hulyo";
+"%@ JUL" = "%@ 七月";
 
 /* No comment provided by engineer. */
-"%@ JUN" = "%@ Hunyo";
+"%@ JUN" = "%@ 六月";
 
 /* No comment provided by engineer. */
-"%@ MAR" = "%@ Marso";
+"%@ MAR" = "%@ 三月";
 
 /* No comment provided by engineer. */
-"%@ MAY" = "%@ Mayo";
+"%@ MAY" = "%@ 五月";
 
 /* No comment provided by engineer. */
-"%@ NOV" = "%@ Nobyembre";
+"%@ NOV" = "%@ 十一月";
 
 /* No comment provided by engineer. */
-"%@ OCT" = "%@ Oktubre";
+"%@ OCT" = "%@ 十月";
 
 /* No comment provided by engineer. */
-"%@ SEP" = "%@ Setyembre";
+"%@ SEP" = "%@ 九月";
 
 /* No comment provided by engineer. */
 "Data Pill" = "Data Pill";
 
 /* No comment provided by engineer. */
-"Day" = "ARAW";
+"Day" = "天";
 
 /* No comment provided by engineer. */
-"Fri" = "Biyernes";
+"Fri" = "周五";
 
 /* No comment provided by engineer. */
-"Mon" = "Lunes";
+"Mon" = "周一";
 
 /* No comment provided by engineer. */
-"Monitor data usage." = "Subaybayan ang paggamit ng data.";
+"Monitor data usage." = "监控数据使用情况。";
 
 /* No comment provided by engineer. */
-"PLAN" = "PLAN";
+"PLAN" = "计划";
 
 /* No comment provided by engineer. */
-"Sat" = "Sabado";
+"Sat" = "周六";
 
 /* No comment provided by engineer. */
-"Sun" = "Linggo";
+"Sun" = "星期日";
 
 /* No comment provided by engineer. */
-"Thu" = "Huwebes";
+"Thu" = "周四";
 
 /* No comment provided by engineer. */
-"Today" = "Nagyon";
+"Today" = "今天";
 
 /* No comment provided by engineer. */
-"TODAY" = "NGAYON";
+"TODAY" = "今天";
 
 /* No comment provided by engineer. */
-"Tue" = "Martes";
+"Tue" = "周二";
 
 /* No comment provided by engineer. */
-"USED" = "GINAMIT";
+"USED" = "用过的";
 
 /* No comment provided by engineer. */
-"Wed" = "Miyerkules";
+"Wed" = "周三";
 

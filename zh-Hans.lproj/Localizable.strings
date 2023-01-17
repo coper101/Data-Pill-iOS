@@ -1,47 +1,47 @@
 /* No comment provided by engineer. */
-"%@ APR" = "%@ Abril";
+"%@ APR" = "四月";
 
 /* No comment provided by engineer. */
-"%@ AUG" = "%@ Agosto";
+"%@ AUG" = "八月";
 
 /* No comment provided by engineer. */
-"%@ Days" = "%@ Araw";
+"%@ Days" = "天";
 
 /* No comment provided by engineer. */
-"%@ DEC" = "%@ Disyembre";
+"%@ DEC" = "十二月";
 
 /* No comment provided by engineer. */
-"%@ FEB" = "%@ Pebrero";
+"%@ FEB" = "二月";
 
 /* No comment provided by engineer. */
-"%@ JAN" = "%@ Enero";
+"%@ JAN" = "一月";
 
 /* No comment provided by engineer. */
-"%@ JUL" = "%@ Hulyo";
+"%@ JUL" = "七月";
 
 /* No comment provided by engineer. */
-"%@ JUN" = "%@ Hunyo";
+"%@ JUN" = "六月";
 
 /* No comment provided by engineer. */
-"%@ MAR" = "%@ Marso";
+"%@ MAR" = "三月";
 
 /* No comment provided by engineer. */
-"%@ MAY" = "%@ Mayo";
+"%@ MAY" = "五月";
 
 /* No comment provided by engineer. */
-"%@ NOV" = "%@ Nobyembre";
+"%@ NOV" = "十一月";
 
 /* No comment provided by engineer. */
-"%@ OCT" = "%@ Oktubre";
+"%@ OCT" = "十月";
 
 /* No comment provided by engineer. */
-"%@ SEP" = "%@ Setyembre";
+"%@ SEP" = "九月";
 
 /* An explanation of the Data Plan */
-"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ang Data Plan ay isang subscription service kung saan nagbabayad ka bawat piryud upang gumamit ng nakapirming halaga ng mobile data.";
+"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "数据计划是一种订阅服务，您每期支付一次费用以使用固定数量的移动数据。";
 
 /* No comment provided by engineer. */
-"Auto" = "Auto";
+"Auto" = "自动的";
 
 /* No comment provided by engineer. */
 "Caption" = "Caption";
@@ -50,97 +50,97 @@
 "Card" = "Card";
 
 /* No comment provided by engineer. */
-"Daily\nLimit" = "Limit\nKada Araw";
+"Daily\nLimit" = "每日\n限额";
 
 /* No comment provided by engineer. */
-"Daily Limit" = "Limit Kada Araw";
+"Daily Limit" = "每日限额";
 
 /* No comment provided by engineer. */
-"Data Amount" = "Dami ng Data";
+"Data Amount" = "数据量";
 
 /* The description for Non Data Plan selection */
-"Data Pill will just monitor and track your daily mobile data." = "Susubaybayan lang ng Data Pill ang iyong pang-araw-araw na mobile data.";
+"Data Pill will just monitor and track your daily mobile data." = "Data Pill 只会监控和跟踪您的日常移动数据。";
 
 /* No comment provided by engineer. */
-"Data Plan" = "Data Plan";
+"Data Plan" = "流量套餐";
 
 /* Prompt user to select if they have a data plan in User Guide */
-"Do you have a Data Plan?" = "May Data Plan ka ba?";
+"Do you have a Data Plan?" = "你有数据计划吗？";
 
 /* Button title done */
-"Done" = "Tapos Na";
+"Done" = "完毕";
 
 /* No comment provided by engineer. */
-"Exceeds maximum data amount" = "Lampas sa maximum na halaga ng data";
+"Exceeds maximum data amount" = "超过最大数据量";
 
 /* No comment provided by engineer. */
-"Fri" = "Biyernes";
+"Fri" = "周五";
 
 /* No comment provided by engineer. */
-"From" = "Mula Sa";
+"From" = "从";
 
 /* Header for user guide for first time users */
-"Get Started" = "Magsimula";
+"Get Started" = "开始";
 
 /* The description for Non Data Plan selection */
-"If you ever subscribe to a plan in the future, toggle Data Plan." = "Kung sakaling mag-subscribe ka sa isang Plan sa hinaharap, i-toggle ang Data Plan.";
+"If you ever subscribe to a plan in the future, toggle Data Plan." = "如果您将来订阅某个计划，请切换数据计划。";
 
 /* No comment provided by engineer. */
-"Manual" = "Manwal";
+"Manual" = "手动的";
 
 /* No comment provided by engineer. */
-"Mon" = "Lunes";
+"Mon" = "周一";
 
 /* No comment provided by engineer. */
 "NA" = "NA";
 
 /* No comment provided by engineer. */
-"Nope" = "Wala";
+"Nope" = "不";
 
 /* Title to indicate the user doesn't have a Data Plan */
-"Nope." = "Wala.";
+"Nope." = "不。";
 
 /* No comment provided by engineer. */
-"Period" = "Piryud";
+"Period" = "时期";
 
 /* No comment provided by engineer. */
-"PERIOD" = "PIRYUD";
+"PERIOD" = "时期";
 
 /* No comment provided by engineer. */
-"Plan" = "Plan";
+"Plan" = "计划";
 
 /* No comment provided by engineer. */
-"Plan\nLimit" = "Limit ng Plan";
+"Plan\nLimit" = "计划\n限制";
 
 /* No comment provided by engineer. */
-"Plan Limit" = "Limit ng Plan";
+"Plan Limit" = "计划限制";
 
 /* No comment provided by engineer. */
-"Sat" = "Sabado";
+"Sat" = "周六";
 
 /* Button title save */
-"Save" = "I-save";
+"Save" = "救";
 
 /* A guide message to user on how to set the data plan and period */
-"Set the amount of data in your plan and the period it starts and ends." = "Itakda ang dami ng data sa iyong plano at ang panahon na magsisimula at magtatapos ito.";
+"Set the amount of data in your plan and the period it starts and ends." = "设置计划中的数据量及其开始和结束的时间段。";
 
 /* Error message when the app can't read the data from the device */
-"Sorry, the data can’t be loaded from the Storage." = "Paumanhin, hindi ma-load ang data mula sa Storage.";
+"Sorry, the data can’t be loaded from the Storage." = "抱歉，无法从存储中加载数据。";
 
 /* Button title start */
-"Start" = "Magsimula";
+"Start" = "开始";
 
 /* No comment provided by engineer. */
 "Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
 
 /* No comment provided by engineer. */
-"Sun" = "Linggo";
+"Sun" = "星期日";
 
 /* The title for viewing all the data usage for the week */
-"This Week" = "Ngayong Linggo";
+"This Week" = "本星期";
 
 /* No comment provided by engineer. */
-"Thu" = "Huwebes";
+"Thu" = "周四";
 
 /* No comment provided by engineer. */
 "Title" = "Title";
@@ -149,32 +149,32 @@
 "TITLE" = "TITLE";
 
 /* No comment provided by engineer. */
-"To" = "Hanggang";
+"To" = "到";
 
 /* No comment provided by engineer. */
-"Today" = "Nagyon";
+"Today" = "今天";
 
 /* No comment provided by engineer. */
-"TODAY" = "NGAYON";
+"TODAY" = "今天";
 
 /* No comment provided by engineer. */
-"TOTAL" = "KABUUAN";
+"TOTAL" = "全部的";
 
 /* No comment provided by engineer. */
-"Tue" = "Martes";
+"Tue" = "周二";
 
 /* No comment provided by engineer. */
-"USAGE" = "PAGGAMIT";
+"USAGE" = "用法";
 
 /* No comment provided by engineer. */
-"USED" = "GINAMIT";
+"USED" = "用过的";
 
 /* No comment provided by engineer. */
-"Wed" = "Miyerkules";
+"Wed" = "周三";
 
 /* No comment provided by engineer. */
-"Yep" = "Meron";
+"Yep" = "是的";
 
 /* Title to indicate the user does have a Data Plan */
-"Yep." = "Meron.";
+"Yep." = "是的";
 

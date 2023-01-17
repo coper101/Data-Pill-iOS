@@ -26,6 +26,7 @@ struct SmallWidgetView: View {
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
+    var localizedSubtitle: LocalizedStringKey
     var subtitle: String
     var color: Colors
     
@@ -112,7 +113,7 @@ struct SmallWidgetView: View {
                     Spacer()
                     
                     // Row 2: SUBTITLE
-                    Text(subtitle.uppercased())
+                    Text(localizedSubtitle)
                         .kerning(2.0)
                         .textStyle(
                             foregroundColor: Colors.onSurfaceLight2,
@@ -168,7 +169,8 @@ struct SmallWidgetView_Previews: PreviewProvider {
                 usedData: 0.09,
                 maxData: 0.9,
                 dataUnit: .gb,
-                subtitle: "Mon",
+                localizedSubtitle: "Today",
+                subtitle: "Today",
                 color: .secondaryBlue
             )
             .previewLayout(.sizeThatFits)

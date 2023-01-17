@@ -36,18 +36,27 @@ struct NavRowView: View {
                             // Range
                             HStack(spacing: 5) {
                                 
-                                Text(localizedTitle)
+                                Text(
+                                    localizedTitle,
+                                    comment: "The starting period of plan"
+                                )
                                 
                                 Text(verbatim: "-")
                                 
-                                Text(localizedTitle2)
+                                Text(
+                                    localizedTitle2,
+                                    comment: "The ending period of plan"
+                                )
                                  
                             } //: HStack
                             
                         } else {
                             
                             // Single
-                            Text(localizedTitle)
+                            Text(
+                                localizedTitle,
+                                comment: "The data amount of plan"
+                            )
                             
                         } //: if-else
                         
@@ -69,7 +78,10 @@ struct NavRowView: View {
                            
                     }
                     if let localizedSubtitle {
-                        Text(localizedSubtitle)
+                        Text(
+                            localizedSubtitle,
+                            comment: "The number of days of the period set for the plan"
+                        )
                     }
                 }
                 .textStyle(

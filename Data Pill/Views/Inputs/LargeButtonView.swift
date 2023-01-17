@@ -28,7 +28,10 @@ struct LargeButtonView: View {
         Button(action: action) {
             ZStack {
                 
-                Text(title)
+                Text(
+                    title,
+                    comment: "Button title for User Guide"
+                )
                     .textStyle(
                         foregroundColor: color,
                         font: .semibold,

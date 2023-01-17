@@ -46,7 +46,10 @@ struct AutoPeriodCardView: View {
             
             Button(action: didTapToggle) {
                 
-                Text(title)
+                Text(
+                    title,
+                    comment: "The auto period toggle"
+                )
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .bold,

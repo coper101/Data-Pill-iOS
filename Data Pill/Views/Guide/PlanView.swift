@@ -24,7 +24,10 @@ struct PlanView: View {
         ) {
             
             // Row 1: TITLE SELECTION
-            Text("Yep.")
+            Text(
+                "Yep.",
+                comment: "Title to indicate the user does have a Data Plan"
+            )
                 .textStyle(
                     foregroundColor: .onBackground,
                     font: .semibold,
@@ -33,7 +36,10 @@ struct PlanView: View {
                 .opacity(titleOpacity)
             
             // Row 2: DESCRIPTION
-            Text("Set the amount of data in your plan and the period it starts and ends.")
+            Text(
+                "Set the amount of data in your plan and the period it starts and ends.",
+                comment: "A guide message to user on how to set the data plan and period"
+            )
             .textStyle(
                 foregroundColor: .onBackground,
                 font: .semibold,

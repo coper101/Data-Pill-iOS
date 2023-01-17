@@ -1,44 +1,44 @@
 /* No comment provided by engineer. */
-"%@ APR" = "%@ Abril";
+"%@ APR" = "%@ APR";
 
 /* No comment provided by engineer. */
-"%@ AUG" = "%@ Agosto";
+"%@ AUG" = "%@ AUG";
 
 /* No comment provided by engineer. */
-"%@ Days" = "%@ Araw";
+"%@ Days" = "%@ Tage";
 
 /* No comment provided by engineer. */
-"%@ DEC" = "%@ Disyembre";
+"%@ DEC" = "%@ DEZ";
 
 /* No comment provided by engineer. */
-"%@ FEB" = "%@ Pebrero";
+"%@ FEB" = "%@ FEB";
 
 /* No comment provided by engineer. */
-"%@ JAN" = "%@ Enero";
+"%@ JAN" = "%@ JAN";
 
 /* No comment provided by engineer. */
-"%@ JUL" = "%@ Hulyo";
+"%@ JUL" = "%@ JULI";
 
 /* No comment provided by engineer. */
-"%@ JUN" = "%@ Hunyo";
+"%@ JUN" = "%@ JUNI";
 
 /* No comment provided by engineer. */
-"%@ MAR" = "%@ Marso";
+"%@ MAR" = "%@ MÄRZ";
 
 /* No comment provided by engineer. */
-"%@ MAY" = "%@ Mayo";
+"%@ MAY" = "%@ MAI";
 
 /* No comment provided by engineer. */
-"%@ NOV" = "%@ Nobyembre";
+"%@ NOV" = "%@ NOV";
 
 /* No comment provided by engineer. */
-"%@ OCT" = "%@ Oktubre";
+"%@ OCT" = "%@ OKT";
 
 /* No comment provided by engineer. */
-"%@ SEP" = "%@ Setyembre";
+"%@ SEP" = "%@ SEPT";
 
 /* An explanation of the Data Plan */
-"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ang Data Plan ay isang subscription service kung saan nagbabayad ka bawat piryud upang gumamit ng nakapirming halaga ng mobile data.";
+"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ein Datenplan ist ein Abonnementdienst, bei dem Sie jeden Zeitraum bezahlen, um eine feste Menge mobiler Daten zu nutzen.";
 
 /* No comment provided by engineer. */
 "Auto" = "Auto";
@@ -50,97 +50,97 @@
 "Card" = "Card";
 
 /* No comment provided by engineer. */
-"Daily\nLimit" = "Limit\nKada Araw";
+"Daily\nLimit" = "Tägliches \nLimit";
 
 /* No comment provided by engineer. */
-"Daily Limit" = "Limit Kada Araw";
+"Daily Limit" = "Tägliches Limit";
 
 /* No comment provided by engineer. */
-"Data Amount" = "Dami ng Data";
+"Data Amount" = "Datenmenge";
 
 /* The description for Non Data Plan selection */
-"Data Pill will just monitor and track your daily mobile data." = "Susubaybayan lang ng Data Pill ang iyong pang-araw-araw na mobile data.";
+"Data Pill will just monitor and track your daily mobile data." = "Data Pill überwacht und verfolgt lediglich Ihre täglichen mobilen Daten.";
 
 /* No comment provided by engineer. */
-"Data Plan" = "Data Plan";
+"Data Plan" = "Datentarif";
 
 /* Prompt user to select if they have a data plan in User Guide */
-"Do you have a Data Plan?" = "May Data Plan ka ba?";
+"Do you have a Data Plan?" = "Haben Sie einen Datenplan?";
 
 /* Button title done */
-"Done" = "Tapos Na";
+"Done" = "Getan";
 
 /* No comment provided by engineer. */
-"Exceeds maximum data amount" = "Lampas sa maximum na halaga ng data";
+"Exceeds maximum data amount" = "Überschreitet die maximale Datenmenge";
 
 /* No comment provided by engineer. */
-"Fri" = "Biyernes";
+"Fri" = "Fr";
 
 /* No comment provided by engineer. */
-"From" = "Mula Sa";
+"From" = "Von";
 
 /* Header for user guide for first time users */
-"Get Started" = "Magsimula";
+"Get Started" = "Loslegen";
 
 /* The description for Non Data Plan selection */
-"If you ever subscribe to a plan in the future, toggle Data Plan." = "Kung sakaling mag-subscribe ka sa isang Plan sa hinaharap, i-toggle ang Data Plan.";
+"If you ever subscribe to a plan in the future, toggle Data Plan." = "Wenn Sie in Zukunft jemals einen Plan abonnieren, schalten Sie den Datenplan um.";
 
 /* No comment provided by engineer. */
-"Manual" = "Manwal";
+"Manual" = "Handbuch";
 
 /* No comment provided by engineer. */
-"Mon" = "Lunes";
+"Mon" = "Mo";
 
 /* No comment provided by engineer. */
 "NA" = "NA";
 
 /* No comment provided by engineer. */
-"Nope" = "Wala";
+"Nope" = "Nö";
 
 /* Title to indicate the user doesn't have a Data Plan */
-"Nope." = "Wala.";
+"Nope." = "Nö.";
 
 /* No comment provided by engineer. */
-"Period" = "Piryud";
+"Period" = "Zeitraum";
 
 /* No comment provided by engineer. */
-"PERIOD" = "PIRYUD";
+"PERIOD" = "ZEITRAUM";
 
 /* No comment provided by engineer. */
-"Plan" = "Plan";
+"Plan" = "Planen";
 
 /* No comment provided by engineer. */
-"Plan\nLimit" = "Limit ng Plan";
+"Plan\nLimit" = "Planlimit";
 
 /* No comment provided by engineer. */
-"Plan Limit" = "Limit ng Plan";
+"Plan Limit" = "Planlimit";
 
 /* No comment provided by engineer. */
-"Sat" = "Sabado";
+"Sat" = "Sa";
 
 /* Button title save */
-"Save" = "I-save";
+"Save" = "Speichern";
 
 /* A guide message to user on how to set the data plan and period */
-"Set the amount of data in your plan and the period it starts and ends." = "Itakda ang dami ng data sa iyong plano at ang panahon na magsisimula at magtatapos ito.";
+"Set the amount of data in your plan and the period it starts and ends." = "Legen Sie die Datenmenge in Ihrem Plan und den Zeitraum fest, in dem er beginnt und endet.";
 
 /* Error message when the app can't read the data from the device */
-"Sorry, the data can’t be loaded from the Storage." = "Paumanhin, hindi ma-load ang data mula sa Storage.";
+"Sorry, the data can’t be loaded from the Storage." = "Entschuldigung, die Daten können nicht aus dem Speicher geladen werden.";
 
 /* Button title start */
-"Start" = "Magsimula";
+"Start" = "Start";
 
 /* No comment provided by engineer. */
 "Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
 
 /* No comment provided by engineer. */
-"Sun" = "Linggo";
+"Sun" = "So";
 
 /* The title for viewing all the data usage for the week */
-"This Week" = "Ngayong Linggo";
+"This Week" = "In dieser Woche";
 
 /* No comment provided by engineer. */
-"Thu" = "Huwebes";
+"Thu" = "Do";
 
 /* No comment provided by engineer. */
 "Title" = "Title";
@@ -149,32 +149,32 @@
 "TITLE" = "TITLE";
 
 /* No comment provided by engineer. */
-"To" = "Hanggang";
+"To" = "Zu";
 
 /* No comment provided by engineer. */
-"Today" = "Nagyon";
+"Today" = "Heute";
 
 /* No comment provided by engineer. */
-"TODAY" = "NGAYON";
+"TODAY" = "HEUTE";
 
 /* No comment provided by engineer. */
-"TOTAL" = "KABUUAN";
+"TOTAL" = "GESAMT";
 
 /* No comment provided by engineer. */
-"Tue" = "Martes";
+"Tue" = "Di";
 
 /* No comment provided by engineer. */
-"USAGE" = "PAGGAMIT";
+"USAGE" = "VERWENDUNG";
 
 /* No comment provided by engineer. */
-"USED" = "GINAMIT";
+"USED" = "GEBRAUCHT";
 
 /* No comment provided by engineer. */
-"Wed" = "Miyerkules";
+"Wed" = "Mi";
 
 /* No comment provided by engineer. */
-"Yep" = "Meron";
+"Yep" = "Ja";
 
 /* Title to indicate the user does have a Data Plan */
-"Yep." = "Meron.";
+"Yep." = "Ja.";
 

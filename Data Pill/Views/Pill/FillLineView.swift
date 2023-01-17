@@ -27,7 +27,10 @@ struct FillLineView: View {
     }
     
     var text: some View {
-        Text(title)
+        Text(
+            title,
+            comment: "The weekday of data usage"
+        )
             .kerning(1)
             .textStyle(
                 foregroundColor: .onBackgroundLight,

@@ -24,7 +24,10 @@ struct ToastView: View {
                 .foregroundColor(Colors.onSurface.color)
             
             // Col 2: MESSAGE
-            Text(message)
+            Text(
+                message,
+                comment: "Toast error message"
+            )
                 .textStyle(
                     foregroundColor: .onSurface,
                     font: .semibold,

@@ -72,7 +72,10 @@ struct ItemCardView<Content>: View where Content: View {
         
     // MARK: - UI
     var label: some View {
-        Text(subtitle)
+        Text(
+            subtitle,
+            comment: "Card title"
+        )
             .kerning(style.letterSpacing)
             .textStyle(
                 foregroundColor: textColor,
@@ -85,7 +88,10 @@ struct ItemCardView<Content>: View where Content: View {
     var secondaryLabel: some View {
         Group {
             if let caption {
-                Text(caption)
+                Text(
+                    caption,
+                    comment: "Card caption. Displays the number of days"
+                )
                     .kerning(style.letterSpacing)
                     .textStyle(
                         foregroundColor: Colors.onSurfaceLight,

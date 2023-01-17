@@ -218,7 +218,10 @@ struct AppView: View {
                 let error = appViewModel.dataError,
                 error == .loadingContainer()
             {
-                Text("Sorry, the data can’t be loaded from the Storage.")
+                Text(
+                    "Sorry, the data can’t be loaded from the Storage.",
+                    comment: "Error message when the app can't read the data from the device"
+                )
                     .textStyle(
                         foregroundColor: .onBackground,
                         font: .semibold,

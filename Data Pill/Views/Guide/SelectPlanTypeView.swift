@@ -25,7 +25,10 @@ struct SelectPlanTypeView: View {
         ) {
             
             // Row 1:
-            Text("Do you have a Data Plan?")
+            Text(
+                "Do you have a Data Plan?",
+                comment: "Prompt user to select if they have a data plan in User Guide"
+            )
                 .textStyle(
                     foregroundColor: .onBackground,
                     font: .semibold,
@@ -34,7 +37,10 @@ struct SelectPlanTypeView: View {
                 .opacity(titleOpacity)
             
             // Row 2:
-            Text("A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. ")
+            Text(
+                "A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. ",
+                comment: "An explanation of the Data Plan"
+            )
                 .textStyle(
                     foregroundColor: .onBackground,
                     font: .semibold,

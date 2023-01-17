@@ -29,6 +29,7 @@ struct Data_Pill_Widget: Widget {
                 usedData: entry.usedData,
                 maxData: entry.maxData,
                 dataUnit: entry.dataUnit,
+                localizedSubtitle: entry.localizedSubtitle,
                 subtitle: entry.subtitle,
                 color: entry.color
             )
@@ -46,6 +47,7 @@ struct Widget_Previews: PreviewProvider {
             usedData: 0.5,
             maxData: 1,
             dataUnit: .gb,
+            localizedSubtitle: "TODAY",
             subtitle: "TODAY",
             color: .secondaryBlue
         )
@@ -57,6 +59,7 @@ struct Widget_Previews: PreviewProvider {
                 usedData: 0.5,
                 maxData: 1,
                 dataUnit: .gb,
+                localizedSubtitle: "USED",
                 subtitle: "USED",
                 color: .secondaryBlue
             )
