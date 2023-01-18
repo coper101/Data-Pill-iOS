@@ -1,41 +1,8 @@
 /* No comment provided by engineer. */
-"%@ APR" = "%@ APR";
-
-/* No comment provided by engineer. */
-"%@ AUG" = "%@ AUG";
-
-/* No comment provided by engineer. */
-"%@ DEC" = "%@ DEZ";
-
-/* No comment provided by engineer. */
-"%@ FEB" = "%@ FEB";
-
-/* No comment provided by engineer. */
-"%@ JAN" = "%@ JAN";
-
-/* No comment provided by engineer. */
-"%@ JUL" = "%@ JULI";
-
-/* No comment provided by engineer. */
-"%@ JUN" = "%@ JUNI";
-
-/* No comment provided by engineer. */
-"%@ MAR" = "%@ MÄRZ";
-
-/* No comment provided by engineer. */
-"%@ MAY" = "%@ MAI";
-
-/* No comment provided by engineer. */
-"%@ NOV" = "%@ NOV";
-
-/* No comment provided by engineer. */
-"%@ OCT" = "%@ OCT";
-
-/* No comment provided by engineer. */
-"%@ SEP" = "%@ SEPT";
-
-/* No comment provided by engineer. */
 "Data Pill" = "Data Pill";
+
+/* No comment provided by engineer. */
+"Day" = "Tag";
 
 /* No comment provided by engineer. */
 "Fri" = "Fr";
@@ -45,6 +12,9 @@
 
 /* No comment provided by engineer. */
 "Monitor data usage." = "Datennutzung überwachen.";
+
+/* No comment provided by engineer. */
+"PLAN" = "PLANEN";
 
 /* No comment provided by engineer. */
 "Sat" = "Sa";
@@ -59,7 +29,13 @@
 "Today" = "Heute";
 
 /* No comment provided by engineer. */
+"TODAY" = "HEUTE";
+
+/* No comment provided by engineer. */
 "Tue" = "Di";
+
+/* No comment provided by engineer. */
+"USED" = "VERBRAUCHT";
 
 /* No comment provided by engineer. */
 "Wed" = "Mi";

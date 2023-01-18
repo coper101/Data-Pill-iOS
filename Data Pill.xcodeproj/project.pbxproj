@@ -745,8 +745,6 @@
 				de,
 				fil,
 				"zh-Hans",
-				ko,
-				ms,
 			);
 			mainGroup = 27801DA328D6C96800201339;
 			productRefGroup = 27801DAD28D6C96800201339 /* Products */;

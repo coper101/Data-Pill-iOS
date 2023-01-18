@@ -9,7 +9,9 @@ import SwiftUI
 
 struct DateInputView: View {
     // MARK: - Props
+    @Environment(\.locale) var locale: Locale
     @Environment(\.dimensions) var dimensions: Dimensions
+    
     var date: Date
     var title: LocalizedStringKey
     var action: () -> Void
@@ -42,13 +44,15 @@ struct DateInputView: View {
                 VStack {
                     
                     HStack(spacing: 5) {
-                        
-                        Text(
-                            date.toDayMonthFormatLocalizedType(),
-                            comment: "Selected month"
-                        )
+                                                
+                        Text(date.toDayMonthFormat(locale: locale.identifier))
 
-                        Text(date.toYearFormat(isLongYear: !dimensions.isSmallDevice))
+                        Text(
+                            date.toYearFormat(
+                                locale: locale.identifier,
+                                isLongYear: !dimensions.isSmallDevice
+                            )
+                        )
                         
                     } //: HStack
                     .textStyle(
@@ -83,9 +87,9 @@ struct DateInputView_Previews: PreviewProvider {
             title: "TITLE",
             action: {}
         )
-            .previewLayout(.sizeThatFits)
-            .padding()
-            .frame(width: 184)
+        .environment(\.locale, .simplifiedChinese)
+        .previewLayout(.sizeThatFits)
+        .padding()
+        .frame(width: 184)
     }
 }
-

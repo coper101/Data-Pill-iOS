@@ -1,44 +1,8 @@
 /* No comment provided by engineer. */
-"%@ APR" = "四月";
-
-/* No comment provided by engineer. */
-"%@ AUG" = "八月";
-
-/* No comment provided by engineer. */
-"%@ Days" = "天";
-
-/* No comment provided by engineer. */
-"%@ DEC" = "十二月";
-
-/* No comment provided by engineer. */
-"%@ FEB" = "二月";
-
-/* No comment provided by engineer. */
-"%@ JAN" = "一月";
-
-/* No comment provided by engineer. */
-"%@ JUL" = "七月";
-
-/* No comment provided by engineer. */
-"%@ JUN" = "六月";
-
-/* No comment provided by engineer. */
-"%@ MAR" = "三月";
-
-/* No comment provided by engineer. */
-"%@ MAY" = "五月";
-
-/* No comment provided by engineer. */
-"%@ NOV" = "十一月";
-
-/* No comment provided by engineer. */
-"%@ OCT" = "十月";
-
-/* No comment provided by engineer. */
-"%@ SEP" = "九月";
+"%@ Days" = "%@ 天";
 
 /* An explanation of the Data Plan */
-"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "数据计划是一种订阅服务，您每期支付一次费用以使用固定数量的移动数据。";
+"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "流量套餐是一种订阅服务，您每期支付一次费用以使用固定数量的移动数据。";
 
 /* No comment provided by engineer. */
 "Auto" = "自动的";
@@ -65,7 +29,7 @@
 "Data Plan" = "流量套餐";
 
 /* Prompt user to select if they have a data plan in User Guide */
-"Do you have a Data Plan?" = "你有数据计划吗？";
+"Do you have a Data Plan?" = "你有流量套餐吗？";
 
 /* Button title done */
 "Done" = "完毕";
@@ -83,10 +47,10 @@
 "Get Started" = "开始";
 
 /* The description for Non Data Plan selection */
-"If you ever subscribe to a plan in the future, toggle Data Plan." = "如果您将来订阅某个计划，请切换数据计划。";
+"If you ever subscribe to a plan in the future, toggle Data Plan." = "如果您将来订阅某个计划，请切换流量套餐。";
 
 /* No comment provided by engineer. */
-"Manual" = "手动的";
+"Manual" = "手册";
 
 /* No comment provided by engineer. */
 "Mon" = "周一";
@@ -119,7 +83,7 @@
 "Sat" = "周六";
 
 /* Button title save */
-"Save" = "救";
+"Save" = "保存";
 
 /* A guide message to user on how to set the data plan and period */
 "Set the amount of data in your plan and the period it starts and ends." = "设置计划中的数据量及其开始和结束的时间段。";
@@ -134,7 +98,7 @@
 "Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
 
 /* No comment provided by engineer. */
-"Sun" = "星期日";
+"Sun" = "周日";
 
 /* The title for viewing all the data usage for the week */
 "This Week" = "本星期";
@@ -158,16 +122,16 @@
 "TODAY" = "今天";
 
 /* No comment provided by engineer. */
-"TOTAL" = "全部的";
+"TOTAL" = "总数";
 
 /* No comment provided by engineer. */
 "Tue" = "周二";
 
 /* No comment provided by engineer. */
-"USAGE" = "用法";
+"USAGE" = "使用";
 
 /* No comment provided by engineer. */
-"USED" = "用过的";
+"USED" = "已用";
 
 /* No comment provided by engineer. */
 "Wed" = "周三";
@@ -176,5 +140,5 @@
 "Yep" = "是的";
 
 /* Title to indicate the user does have a Data Plan */
-"Yep." = "是的";
+"Yep." = "是的。";
 

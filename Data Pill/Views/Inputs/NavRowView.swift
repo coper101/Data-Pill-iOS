@@ -9,68 +9,27 @@ import SwiftUI
 
 struct NavRowView: View {
     // MARK: - Props
-    var title: String?
+    var title: String
     var subtitle: String?
-    var localizedTitle: LocalizedStringKey?
-    var localizedTitle2: LocalizedStringKey?
     var localizedSubtitle: LocalizedStringKey?
     var action: () -> Void
     
     // MARK: - UI
     var body: some View {
         Button(action: action) {
+            
             HStack(spacing: 8) {
                 
                 // Col 1: TITLE
-                Group {
+                Text(verbatim: title)
+                    .textStyle(
+                        foregroundColor: .onSurface,
+                        font: .semibold,
+                        size: 15,
+                        lineLimit: 1
+                    )
+                    .fixedSize()
                     
-                    if let title {
-                        Text(verbatim: title)
-                           
-                    }
-                    
-                    if let localizedTitle {
-                        
-                        if let localizedTitle2 {
-                            
-                            // Range
-                            HStack(spacing: 5) {
-                                
-                                Text(
-                                    localizedTitle,
-                                    comment: "The starting period of plan"
-                                )
-                                
-                                Text(verbatim: "-")
-                                
-                                Text(
-                                    localizedTitle2,
-                                    comment: "The ending period of plan"
-                                )
-                                 
-                            } //: HStack
-                            
-                        } else {
-                            
-                            // Single
-                            Text(
-                                localizedTitle,
-                                comment: "The data amount of plan"
-                            )
-                            
-                        } //: if-else
-                        
-                    } //: if
-                    
-                } //: Group
-                .textStyle(
-                    foregroundColor: .onSurface,
-                    font: .semibold,
-                    size: 15,
-                    lineLimit: 1
-                )
-                .fixedSize()
-                
                 // Col 2: SUBTITLE
                 Group {
                     if let subtitle {
@@ -122,17 +81,6 @@ struct NavRowView_Previews: PreviewProvider {
         .background(Colors.surface.color)
         .padding()
         .previewLayout(.sizeThatFits)
-        .previewDisplayName("Non-Localized")
         
-        NavRowView(
-            localizedTitle: "\(String(12)) SEP",
-            localizedTitle2: "\(String(10)) OCT",
-            localizedSubtitle: "\(String(30)) Days", // crashes when days is in Int
-            action: {}
-        )
-        .background(Colors.surface.color)
-        .padding()
-        .previewLayout(.sizeThatFits)
-        .previewDisplayName("Localized")
     }
 }

@@ -8,6 +8,15 @@
 import Foundation
 import SwiftUI
 
+extension Locale {
+    
+    static let simplifiedChinese = Locale(identifier: "zh-Hans")
+    static let filipino = Locale(identifier: "fil")
+    static let english = Locale(identifier: "en")
+    static let german = Locale(identifier: "de")
+
+}
+
 extension String {
     
     /// Converts ISO String Date to Date
@@ -33,53 +42,11 @@ extension Date {
    
     /// Formats the Date to `dd mm`
     /// e.g. 1 Jan
-    func toDayMonthFormat() -> String {
+    func toDayMonthFormat(locale identifier: String) -> String {
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = .init(identifier: identifier)
         dateFormatter.dateFormat = "d MMM"
         return dateFormatter.string(from: self)
-    }
-    
-    /// Formats the Date to `dd mm` as Localized String Key
-    /// e.g. 1 Jan
-    func toDayMonthFormatLocalizedType() -> LocalizedStringKey {
-        let day = String(self.toDateComp().day!)
-        let month = self.toDateComp().month!
-        if month == 1 {
-            return "\(day) JAN"
-        }
-        else if month == 2 {
-            return "\(day) FEB"
-        }
-        else if month == 3 {
-            return "\(day) MAR"
-        }
-        else if month == 4 {
-            return "\(day) APR"
-        }
-        else if month == 5 {
-            return "\(day) MAY"
-        }
-        else if month == 6 {
-            return "\(day) JUN"
-        }
-        else if month == 7 {
-            return "\(day) JUL"
-        }
-        else if month == 8 {
-            return "\(day) AUG"
-        }
-        else if month == 9 {
-            return "\(day) SEP"
-        }
-        else if month == 10 {
-            return "\(day) OCT"
-        }
-        else if month == 11 {
-            return "\(day) NOV"
-        }
-        else {
-            return "\(day) DEC"
-        }
     }
     
     /// Formats the Date to `dd mm`
@@ -101,15 +68,16 @@ extension Date {
     /// Returns the Year from Date `E`
     /// e.g. 1 Jan  2022 =  2022
     /// - parameter isLongYear: A value to indicate if it will use 4-digit year
-    func toYearFormat(isLongYear: Bool = true) -> String {
+    func toYearFormat(locale identifier: String, isLongYear: Bool = true) -> String {
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = .init(identifier: identifier)
         let longYear = "yyyy"
         let shortYear = "yy"
         let year = isLongYear ? longYear : shortYear
         dateFormatter.dateFormat = "\(year)"
         return dateFormatter.string(from: self)
     }
-    
+        
     /// Returns the weekday index
     /// e.g. 1 Jan 2022, Sat = 7
     func getWeekday() -> Int {

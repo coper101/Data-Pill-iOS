@@ -1,44 +1,8 @@
 /* No comment provided by engineer. */
-"%@ APR" = "%@ APR";
-
-/* No comment provided by engineer. */
-"%@ AUG" = "%@ AUG";
-
-/* No comment provided by engineer. */
 "%@ Days" = "%@ Tage";
 
-/* No comment provided by engineer. */
-"%@ DEC" = "%@ DEZ";
-
-/* No comment provided by engineer. */
-"%@ FEB" = "%@ FEB";
-
-/* No comment provided by engineer. */
-"%@ JAN" = "%@ JAN";
-
-/* No comment provided by engineer. */
-"%@ JUL" = "%@ JULI";
-
-/* No comment provided by engineer. */
-"%@ JUN" = "%@ JUNI";
-
-/* No comment provided by engineer. */
-"%@ MAR" = "%@ MÄRZ";
-
-/* No comment provided by engineer. */
-"%@ MAY" = "%@ MAI";
-
-/* No comment provided by engineer. */
-"%@ NOV" = "%@ NOV";
-
-/* No comment provided by engineer. */
-"%@ OCT" = "%@ OKT";
-
-/* No comment provided by engineer. */
-"%@ SEP" = "%@ SEPT";
-
 /* An explanation of the Data Plan */
-"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ein Datenplan ist ein Abonnementdienst, bei dem Sie jeden Zeitraum bezahlen, um eine feste Menge mobiler Daten zu nutzen.";
+"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ein Datentarif ist ein Abonnementdienst, bei dem Sie jeden Zeitraum bezahlen, um eine feste Menge mobiler Daten zu nutzen.";
 
 /* No comment provided by engineer. */
 "Auto" = "Auto";
@@ -65,7 +29,7 @@
 "Data Plan" = "Datentarif";
 
 /* Prompt user to select if they have a data plan in User Guide */
-"Do you have a Data Plan?" = "Haben Sie einen Datenplan?";
+"Do you have a Data Plan?" = "Haben Sie einen Datentarif?";
 
 /* Button title done */
 "Done" = "Getan";
@@ -83,7 +47,7 @@
 "Get Started" = "Loslegen";
 
 /* The description for Non Data Plan selection */
-"If you ever subscribe to a plan in the future, toggle Data Plan." = "Wenn Sie in Zukunft jemals einen Plan abonnieren, schalten Sie den Datenplan um.";
+"If you ever subscribe to a plan in the future, toggle Data Plan." = "Wenn Sie in Zukunft jemals einen Plan abonnieren, schalten Sie den Datentarif um.";
 
 /* No comment provided by engineer. */
 "Manual" = "Handbuch";
@@ -164,10 +128,10 @@
 "Tue" = "Di";
 
 /* No comment provided by engineer. */
-"USAGE" = "VERWENDUNG";
+"USAGE" = "ART DER NUTZUNG";
 
 /* No comment provided by engineer. */
-"USED" = "GEBRAUCHT";
+"USED" = "VERBRAUCHT";
 
 /* No comment provided by engineer. */
 "Wed" = "Mi";

@@ -14,6 +14,8 @@ enum EditDataPlan {
 
 struct DataPlanCardView: View {
     // MARK: - Props
+    @Environment(\.locale) var locale: Locale
+
     var editType: EditDataPlan? = nil
     var startDate: Date
     var endDate: Date
@@ -52,6 +54,12 @@ struct DataPlanCardView: View {
             }
         }
         return "Data Plan"
+    }
+    
+    var periodTitle: String {
+        let start = "\(startDate.toDayMonthFormat(locale: locale.identifier))"
+        let end = "\(endDate.toDayMonthFormat(locale: locale.identifier))"
+        return "\(start) - \(end)".uppercased()
     }
     
     // MARK: - UI
@@ -115,8 +123,7 @@ struct DataPlanCardView: View {
 
                     // Row 1: PERIOD
                     NavRowView(
-                        localizedTitle: startDate.toDayMonthFormatLocalizedType(),
-                        localizedTitle2: endDate.toDayMonthFormatLocalizedType(),
+                        title: periodTitle,
                         localizedSubtitle: periodSubtitle,
                         action: periodAction
                     )
@@ -154,87 +161,84 @@ struct DataPlanCardView_Previews: PreviewProvider {
     static var appViewModel: AppViewModel = .init()
     
     static var previews: some View {
-        DataPlanCardView(
-            startDate: appViewModel.startDate,
-            endDate: appViewModel.endDate,
-            numberOfdays: appViewModel.numOfDaysOfPlan,
-            periodAction: {},
-            dataAmountAction: {},
-            startPeriodAction: {},
-            endPeriodAction: {},
-            isPlanActive: .constant(false),
-            dataAmountValue: .constant("10"),
-            plusDataAction: {},
-            minusDataAction: {},
-            didChangePlusStepperValue: { _ in },
-            didChangeMinusStepperValue: { _ in }
-        )
-            .previewLayout(.sizeThatFits)
-            .previewDisplayName("Information / Inactive Plan")
-            .padding()
-            .background(Color.green)
-        
-        DataPlanCardView(
-            startDate: appViewModel.startDate,
-            endDate: appViewModel.endDate,
-            numberOfdays: appViewModel.numOfDaysOfPlan,
-            periodAction: {},
-            dataAmountAction: {},
-            startPeriodAction: {},
-            endPeriodAction: {},
-            isPlanActive: .constant(true),
-            dataAmountValue: .constant("10"),
-            plusDataAction: {},
-            minusDataAction: {},
-            didChangePlusStepperValue: { _ in },
-            didChangeMinusStepperValue: { _ in }
-        )
-            .previewLayout(.sizeThatFits)
-            .previewDisplayName("Information / Active Plan")
-            .padding()
-            .background(Color.green)
-        
-        DataPlanCardView(
-            editType: .data,
-            startDate: appViewModel.startDate,
-            endDate: appViewModel.endDate,
-            numberOfdays: appViewModel.numOfDaysOfPlan,
-            periodAction: {},
-            dataAmountAction: {},
-            startPeriodAction: {},
-            endPeriodAction: {},
-            isPlanActive: .constant(false),
-            dataAmountValue: .constant("10"),
-            plusDataAction: {},
-            minusDataAction: {},
-            didChangePlusStepperValue: { _ in },
-            didChangeMinusStepperValue: { _ in }
-        )
-            .previewLayout(.sizeThatFits)
-            .previewDisplayName("Edit Data")
-            .padding()
-            .background(Color.green)
-        
-        DataPlanCardView(
-            editType: .dataPlan,
-            startDate: appViewModel.startDate,
-            endDate: appViewModel.endDate,
-            numberOfdays: appViewModel.numOfDaysOfPlan,
-            periodAction: {},
-            dataAmountAction: {},
-            startPeriodAction: {},
-            endPeriodAction: {},
-            isPlanActive: .constant(false),
-            dataAmountValue: .constant("10"),
-            plusDataAction: {},
-            minusDataAction: {},
-            didChangePlusStepperValue: { _ in },
-            didChangeMinusStepperValue: { _ in }
-        )
-            .previewLayout(.sizeThatFits)
-            .previewDisplayName("Edit Data Plan")
-            .padding()
-            .background(Color.green)
+        Group {
+            
+            DataPlanCardView(
+                startDate: appViewModel.startDate,
+                endDate: appViewModel.endDate,
+                numberOfdays: appViewModel.numOfDaysOfPlan,
+                periodAction: {},
+                dataAmountAction: {},
+                startPeriodAction: {},
+                endPeriodAction: {},
+                isPlanActive: .constant(false),
+                dataAmountValue: .constant("10"),
+                plusDataAction: {},
+                minusDataAction: {},
+                didChangePlusStepperValue: { _ in },
+                didChangeMinusStepperValue: { _ in }
+            )
+                .previewDisplayName("Information / Inactive Plan")
+            
+            DataPlanCardView(
+                startDate: appViewModel.startDate,
+                endDate: appViewModel.endDate,
+                numberOfdays: appViewModel.numOfDaysOfPlan,
+                periodAction: {},
+                dataAmountAction: {},
+                startPeriodAction: {},
+                endPeriodAction: {},
+                isPlanActive: .constant(true),
+                dataAmountValue: .constant("10"),
+                plusDataAction: {},
+                minusDataAction: {},
+                didChangePlusStepperValue: { _ in },
+                didChangeMinusStepperValue: { _ in }
+            )
+                .previewDisplayName("Information / Active Plan")
+            
+            DataPlanCardView(
+                editType: .data,
+                startDate: appViewModel.startDate,
+                endDate: appViewModel.endDate,
+                numberOfdays: appViewModel.numOfDaysOfPlan,
+                periodAction: {},
+                dataAmountAction: {},
+                startPeriodAction: {},
+                endPeriodAction: {},
+                isPlanActive: .constant(false),
+                dataAmountValue: .constant("10"),
+                plusDataAction: {},
+                minusDataAction: {},
+                didChangePlusStepperValue: { _ in },
+                didChangeMinusStepperValue: { _ in }
+            )
+                .previewDisplayName("Edit Data")
+            
+            DataPlanCardView(
+                editType: .dataPlan,
+                startDate: appViewModel.startDate,
+                endDate: appViewModel.endDate,
+                numberOfdays: appViewModel.numOfDaysOfPlan,
+                periodAction: {},
+                dataAmountAction: {},
+                startPeriodAction: {},
+                endPeriodAction: {},
+                isPlanActive: .constant(false),
+                dataAmountValue: .constant("10"),
+                plusDataAction: {},
+                minusDataAction: {},
+                didChangePlusStepperValue: { _ in },
+                didChangeMinusStepperValue: { _ in }
+            )
+                .previewDisplayName("Edit Data Plan")
+            
+        }
+        .previewLayout(.sizeThatFits)
+        .environment(\.locale, .simplifiedChinese)
+        .padding()
+        .background(Color.green)
+       
     }
 }
 

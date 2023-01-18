@@ -102,24 +102,31 @@ struct HistoryView_Previews: PreviewProvider {
     static var dataLimitPerDay = 2.0
     
     static var previews: some View {
-        HistoryView(
-            days: dayPills,
-            weekData: repo.thisWeeksData,
-            dataLimitPerDay: dataLimitPerDay,
-            usageType: .daily,
-            closeAction: {}
-        )
-        .previewDisplayName("Filled")
         
-        HistoryView(
-            days: dayPills,
-            weekData: repo.thisWeeksData,
-            dataLimitPerDay: dataLimitPerDay,
-            usageType: .daily,
-            showFilledLines: true,
-            closeAction: {}
-        )
-        .previewDisplayName("Filled Lines")
+        Group {
+            
+            HistoryView(
+                days: dayPills,
+                weekData: repo.thisWeeksData,
+                dataLimitPerDay: dataLimitPerDay,
+                usageType: .daily,
+                closeAction: {}
+            )
+            .previewDisplayName("Filled")
+            
+            HistoryView(
+                days: dayPills,
+                weekData: repo.thisWeeksData,
+                dataLimitPerDay: dataLimitPerDay,
+                usageType: .daily,
+                showFilledLines: true,
+                closeAction: {}
+            )
+            .previewDisplayName("Filled Lines")
+            
+        }
+        .environment(\.locale, .simplifiedChinese)
+
     }
 }
 

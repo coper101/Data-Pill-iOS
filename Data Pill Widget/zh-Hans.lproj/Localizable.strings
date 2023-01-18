@@ -1,40 +1,4 @@
 /* No comment provided by engineer. */
-"%@ APR" = "%@ 四月";
-
-/* No comment provided by engineer. */
-"%@ AUG" = "%@ 八月";
-
-/* No comment provided by engineer. */
-"%@ DEC" = "%@ 十二月";
-
-/* No comment provided by engineer. */
-"%@ FEB" = "%@ 二月";
-
-/* No comment provided by engineer. */
-"%@ JAN" = "%@ 一月";
-
-/* No comment provided by engineer. */
-"%@ JUL" = "%@ 七月";
-
-/* No comment provided by engineer. */
-"%@ JUN" = "%@ 六月";
-
-/* No comment provided by engineer. */
-"%@ MAR" = "%@ 三月";
-
-/* No comment provided by engineer. */
-"%@ MAY" = "%@ 五月";
-
-/* No comment provided by engineer. */
-"%@ NOV" = "%@ 十一月";
-
-/* No comment provided by engineer. */
-"%@ OCT" = "%@ 十月";
-
-/* No comment provided by engineer. */
-"%@ SEP" = "%@ 九月";
-
-/* No comment provided by engineer. */
 "Data Pill" = "Data Pill";
 
 /* No comment provided by engineer. */
@@ -56,7 +20,7 @@
 "Sat" = "周六";
 
 /* No comment provided by engineer. */
-"Sun" = "星期日";
+"Sun" = "周日";
 
 /* No comment provided by engineer. */
 "Thu" = "周四";
@@ -71,7 +35,7 @@
 "Tue" = "周二";
 
 /* No comment provided by engineer. */
-"USED" = "用过的";
+"USED" = "已用";
 
 /* No comment provided by engineer. */
 "Wed" = "周三";
