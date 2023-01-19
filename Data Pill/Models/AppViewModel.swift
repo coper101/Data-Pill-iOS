@@ -17,7 +17,7 @@ final class AppViewModel: ObservableObject {
     let appDataRepository: AppDataRepositoryProtocol
     let dataUsageRepository: DataUsageRepositoryProtocol
     let networkDataRepository: NetworkDataRepositoryProtocol
-    let toastTimer: ToastTimer
+    let toastTimer: ToastTimer<LocalizedStringKey>
     
     /// [A] App Data
     @Published var wasGuideShown = false
@@ -161,7 +161,7 @@ final class AppViewModel: ObservableObject {
             database: LocalDatabase(container: .dataUsage, appGroup: .dataPill)
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
-        toastTimer: ToastTimer = .init(),
+        toastTimer: ToastTimer<LocalizedStringKey> = .init(),
         setupValues: Bool = true
     ) {
         self.appDataRepository = appDataRepository

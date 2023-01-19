@@ -100,7 +100,7 @@ func getPillTitle(with usageType: ToggleItem, on date: Date) -> LocalizedStringK
         return "TOTAL"
     case .daily:
         return date.isToday() ?
-            "TODAY" : date.getWeekday().toLocalizedWeekdayName()
+            "TODAY" : date.getWeekday().toLocalizedShortWeekdayName()
     }
 }
 
@@ -111,7 +111,7 @@ func getPillTitleCharCount(with usageType: ToggleItem, on date: Date) -> Int {
     case .daily:
         return {
             let title = date.isToday() ?
-                "TODAY" : date.getWeekday().toWeekdayName()
+                "TODAY" : date.getWeekday().toShortWeekdayName()
             return title.count
         }()
     }

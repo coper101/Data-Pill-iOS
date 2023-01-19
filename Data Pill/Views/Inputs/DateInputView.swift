@@ -16,11 +16,6 @@ struct DateInputView: View {
     var title: LocalizedStringKey
     var action: () -> Void
     
-    var displayedDate: String {
-        let isLongYear = !dimensions.isSmallDevice
-        return date.toDayMonthYearFormat(isLongYear: isLongYear).uppercased()
-    }
-    
     // MARK: - UI
     var body: some View {
         VStack(spacing: 10) {

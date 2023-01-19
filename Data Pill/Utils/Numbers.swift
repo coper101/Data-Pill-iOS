@@ -18,7 +18,7 @@ extension Int {
     
     /// Returns a localized type weekday name of the weekday index
     /// e.g. 1 = Sun
-    func toLocalizedWeekdayName() -> LocalizedStringKey {
+    func toLocalizedShortWeekdayName() -> LocalizedStringKey {
         let weekday = self
         if weekday == 1 {
             return "Sun"
@@ -44,7 +44,7 @@ extension Int {
     
     /// Returns a non-localized type weekday name of the weekday index
     /// e.g. 1 = Sun
-    func toWeekdayName() -> String {
+    func toShortWeekdayName() -> String {
         let weekday = self
         if weekday == 1 {
             return "Sun"
@@ -75,7 +75,7 @@ extension Double {
     /// Convert decimal to a whole number.
     /// Negative number is not acceptable
     func toInt() -> Int {
-        return (self.isInfinite || self < 0) ? 0 : Int(self)
+        (self.isInfinite || self < 0) ? 0 : Int(self)
     }
     
     /// Convert decimal to a whole number if the decimals are 0s.

@@ -14,12 +14,12 @@ final class Date_Test_Case: XCTestCase {
 
     override func tearDownWithError() throws {}
     
-    /// toDayMonthFormat
+    /// toDayMonthFormat()
     func test_to_day_month_format() throws {
         // (1) Given
         let date = "2022-10-09T00:00:00+00:00".toDate()
         // (2) When
-        let output = date.toDayMonthFormat()
+        let output = date.toDayMonthFormat(locale: Locale.english.identifier)
         // (3) Then
         XCTAssertEqual(output, "9 Oct")
     }
@@ -28,40 +28,12 @@ final class Date_Test_Case: XCTestCase {
         // (1) Given
         let date = "2022-10-32T00:00:00+00:00".toDate()
         // (2) When
-        let output = date.toDayMonthFormat()
+        let output = date.toDayMonthFormat(locale: Locale.english.identifier)
         // (3) Then
         XCTAssertNotEqual(output, "32 Oct")
     }
-    
-    /// toDayMonthYearFormat
-    func test_to_day_month_year_format() throws {
-        // (1) Given
-        let date = "2022-10-09T00:00:00+00:00".toDate()
-        // (2) When
-        let output = date.toDayMonthYearFormat()
-        // (3) Then
-        XCTAssertEqual(output, "9 Oct 2022")
-    }
-    
-    func test_to_day_month_year_format_has_short_year() throws {
-        // (1) Given
-        let date = "2022-10-09T00:00:00+00:00".toDate()
-        // (2) When
-        let output = date.toDayMonthYearFormat(isLongYear: false)
-        // (3) Then
-        XCTAssertEqual(output, "9 Oct 22")
-    }
-    
-    func test_to_day_month_year_invalid_format() throws {
-        // (1) Given
-        let date = "2022-10-32T00:00:00+00:00".toDate()
-        // (2) When
-        let output = date.toDayMonthYearFormat()
-        // (3) Then
-        XCTAssertNotEqual(output, "32 Oct 2022")
-    }
 
-    /// toDayFormat
+    /// toDayFormat()
     func test_to_day_format() throws {
         // (1) Given
         let date = "2022-10-09T00:00:00+00:00".toDate()
@@ -80,17 +52,48 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertNotEqual(output, "32")
     }
     
-    /// toWeekdayFormat
-    func test_to_weekday_format() throws {
+    /// toYearFormat()
+    func test_to_long_year_format() throws {
         // (1) Given
         let date = "2022-10-31T00:00:00+00:00".toDate()
         // (2) When
-        let output = date.toWeekdayFormat()
+        let output = date.toYearFormat(locale: Locale.english.identifier)
         // (3) Then
-        XCTAssertEqual(output, "Mon")
+        XCTAssertEqual(output, "2022")
     }
     
-    /// isToday
+    func test_to_short_year_format() throws {
+        // (1) Given
+        let date = "2022-10-31T00:00:00+00:00".toDate()
+        // (2) When
+        let output = date.toYearFormat(
+            locale: Locale.english.identifier,
+            isLongYear: false
+        )
+        // (3) Then
+        XCTAssertEqual(output, "22")
+    }
+    
+    /// getWeekday()
+    func test_get_weekday_sunday() throws {
+        // (1) Given
+        let date = "2022-10-01T00:00:00+00:00".toDate()
+        // (2) When
+        let output = date.getWeekday()
+        // (3) Then
+        XCTAssertEqual(output, 7)
+    }
+    
+    func test_get_weekday_saturday() throws {
+        // (1) Given
+        let date = "2022-10-02T00:00:00+00:00".toDate()
+        // (2) When
+        let output = date.getWeekday()
+        // (3) Then
+        XCTAssertEqual(output, 1)
+    }
+    
+    /// isToday()
     func test_date_is_today() throws {
         // (1) Given
         let date = Date()
@@ -110,6 +113,7 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertFalse(output)
     }
     
+    /// fromDateRange()
     func test_from_date_range_in() throws {
         // (1) Given
         let startDate = "2022-10-01T00:00:00+00:00".toDate()
@@ -130,6 +134,7 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertFalse(output)
     }
     
+    /// toDateRange()
     func test_to_date_range_in() throws {
         // (1) Given
         let endDate = "2022-10-30T00:00:00+00:00".toDate()
@@ -150,6 +155,7 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertFalse(output)
     }
     
+    /// isDateInRange()
     func test_date_in_range_is_in_range() throws {
         // (1) Given
         let date = "2022-10-02T00:00:00+00:00".toDate()
@@ -198,6 +204,7 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertFalse(output)
     }
     
+    /// addDay()
     func test_add_a_day() throws {
         // (1) Given
         let date = "2022-10-01T00:00:00+00:00".toDate()
@@ -225,6 +232,7 @@ final class Date_Test_Case: XCTestCase {
         XCTAssertEqual(output, "2022-11-04T00:00:00+00:00".toDate())
     }
     
+    /// toNumOfDays()
     func test_to_num_of_days() throws {
         // (1) Given
         let start = "2022-10-01T00:00:00+00:00".toDate()

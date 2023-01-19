@@ -18,6 +18,7 @@
 		274FCF822978CA870087AC86 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 274FCF802978CA870087AC86 /* Localizable.strings */; };
 		274FCF852978CA870087AC86 /* Data-Pill-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 274FCF832978CA870087AC86 /* Data-Pill-InfoPlist.strings */; };
 		274FCF882978CA870087AC86 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 274FCF862978CA870087AC86 /* Localizable.strings */; };
+		274FCF942978D9860087AC86 /* Toast_Timer_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274FCF932978D9860087AC86 /* Toast_Timer_Test_Case.swift */; };
 		2761528D293CAF7F00AEA000 /* Widget_Model_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528C293CAF7F00AEA000 /* Widget_Model_Test_Case.swift */; };
 		2761528E293CB5CE00AEA000 /* WidgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E777372934AF060031456D /* WidgetModel.swift */; };
 		27615290293E3FCC00AEA000 /* DataPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528F293E3FCC00AEA000 /* DataPlan.swift */; };
@@ -210,6 +211,7 @@
 		274FCF902978CBAC0087AC86 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		274FCF912978CBAC0087AC86 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Data-Pill-InfoPlist.strings"; sourceTree = "<group>"; };
 		274FCF922978CBAC0087AC86 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		274FCF932978D9860087AC86 /* Toast_Timer_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast_Timer_Test_Case.swift; sourceTree = "<group>"; };
 		2761528C293CAF7F00AEA000 /* Widget_Model_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget_Model_Test_Case.swift; sourceTree = "<group>"; };
 		2761528F293E3FCC00AEA000 /* DataPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlan.swift; sourceTree = "<group>"; };
 		27801DAC28D6C96800201339 /* Data Pill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Data Pill.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -556,6 +558,7 @@
 		278FB2CA28F2E55900BE78C2 /* Data Pill Tests */ = {
 			isa = PBXGroup;
 			children = (
+				274FCF932978D9860087AC86 /* Toast_Timer_Test_Case.swift */,
 				278E7349295D4EF10020F84B /* Validator_Test_Case.swift */,
 				2761528C293CAF7F00AEA000 /* Widget_Model_Test_Case.swift */,
 				27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */,
@@ -910,6 +913,7 @@
 				278FB2D328F321EE00BE78C2 /* Date_Test_Case.swift in Sources */,
 				27F47DDA2905330D00B3F83D /* App_Data_Repository_Test_Case.swift in Sources */,
 				2761528D293CAF7F00AEA000 /* Widget_Model_Test_Case.swift in Sources */,
+				274FCF942978D9860087AC86 /* Toast_Timer_Test_Case.swift in Sources */,
 				271D8FEB29004B2800965FC3 /* Data_Usage_Repository_Test_Case.swift in Sources */,
 				27AECC8E2916E5E700AB963E /* App_View_Model_Test_Case.swift in Sources */,
 				278FB2CC28F2E55900BE78C2 /* Numbers_Test_Case.swift in Sources */,
