@@ -14,13 +14,11 @@ struct UsageCardView: View {
     var isPlanActive: Bool
     
     var title1: LocalizedStringKey {
-        // ToggleItem.plan.rawValue
         isPlanActive ? "Plan" : "NA"
     }
     
     var title2: LocalizedStringKey {
-        // ToggleItem.daily.rawValue
-        "Manual"
+        "Daily"
     }
 
     // MARK: - UI
