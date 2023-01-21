@@ -14,6 +14,9 @@
 "Card" = "Card";
 
 /* No comment provided by engineer. */
+"Daily" = "每日";
+
+/* No comment provided by engineer. */
 "Daily\nLimit" = "每日\n限额";
 
 /* No comment provided by engineer. */
@@ -59,10 +62,10 @@
 "NA" = "NA";
 
 /* No comment provided by engineer. */
-"Nope" = "不";
+"Nope" = "没有";
 
 /* Title to indicate the user doesn't have a Data Plan */
-"Nope." = "不。";
+"Nope." = "没有。";
 
 /* No comment provided by engineer. */
 "Period" = "时期";
@@ -137,8 +140,8 @@
 "Wed" = "周三";
 
 /* No comment provided by engineer. */
-"Yep" = "是的";
+"Yep" = "有";
 
 /* Title to indicate the user does have a Data Plan */
-"Yep." = "是的。";
+"Yep." = "有。";
 

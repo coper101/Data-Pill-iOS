@@ -8,7 +8,7 @@
 "IvNlJe" = "使用类型";
 
 /* (No Comment) */
-"kvWuc7-Tnj2fx" = "有 ${count} 个选项匹配“计划”。";
+"kvWuc7-Tnj2fx" = "有 ${count} 个选项匹配“套餐”。";
 
 /* (No Comment) */
 "kvWuc7-U2dnME" = "有 ${count} 个选项匹配“每日”。";
@@ -23,7 +23,7 @@
 "TbM4u3" = "设置使用类型";
 
 /* (No Comment) */
-"Tnj2fx" = "计划";
+"Tnj2fx" = "套餐";
 
 /* (No Comment) */
 "U2dnME" = "每日";

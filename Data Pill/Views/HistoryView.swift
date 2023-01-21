@@ -125,7 +125,8 @@ struct HistoryView_Previews: PreviewProvider {
             .previewDisplayName("Filled Lines")
             
         }
-        .environment(\.locale, .simplifiedChinese)
+        // .environment(\.locale, .simplifiedChinese)
+        // .environment(\.locale, .filipino)
 
     }
 }
