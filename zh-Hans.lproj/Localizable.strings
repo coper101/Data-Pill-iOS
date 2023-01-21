@@ -47,7 +47,7 @@
 "Get Started" = "开始";
 
 /* The description for Non Data Plan selection */
-"If you ever subscribe to a plan in the future, toggle Data Plan." = "如果您将来订阅某个计划，请切换流量套餐。";
+"If you ever subscribe to a plan in the future, toggle Data Plan." = "如果您将来订阅某个套餐，请切换流量套餐。";
 
 /* No comment provided by engineer. */
 "Manual" = "手册";
@@ -71,13 +71,13 @@
 "PERIOD" = "时期";
 
 /* No comment provided by engineer. */
-"Plan" = "计划";
+"Plan" = "套餐";
 
 /* No comment provided by engineer. */
-"Plan\nLimit" = "计划\n限制";
+"Plan\nLimit" = "套餐\n限制";
 
 /* No comment provided by engineer. */
-"Plan Limit" = "计划限制";
+"Plan Limit" = "套餐限制";
 
 /* No comment provided by engineer. */
 "Sat" = "周六";
