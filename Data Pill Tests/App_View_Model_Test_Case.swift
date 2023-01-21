@@ -187,7 +187,60 @@ final class App_View_Model_Test_Case: XCTestCase {
         XCTAssertFalse(appViewModel.isGuideShown)
         XCTAssertTrue(appViewModel.wasGuideShown)
         XCTAssertEqual(appViewModel.usageType, .daily)
-        XCTAssertFalse(appViewModel.isPeriodAuto)
+    }
+    
+    func test_is_plan_active_when_daily_limit_exceeds_data_amount() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.republishDataUsage()
+        appViewModel.observePlanSettings()
+        appViewModel.observeEditPlan()
+        
+        appViewModel.isPlanActive = false
+        appViewModel.didTapLimitPerDay()
+        appViewModel.didTapPlusLimit()
+        appViewModel.didTapSave()
+        
+        XCTAssertFalse(appViewModel.isPlanActive)
+        XCTAssertEqual(appViewModel.dataAmount, 0)
+        XCTAssertEqual(appViewModel.dataLimitPerDay, 1)
+        XCTAssertEqual(appViewModel.dataLimitPerDayValue, "1.0")
+
+        appViewModel.isPlanActive = true
+        // (3) Then
+        XCTAssertTrue(appViewModel.isPlanActive)
+        XCTAssertEqual(appViewModel.dataLimitPerDay, 0)
+        XCTAssertEqual(appViewModel.dataLimitPerDayValue, "0.0")
+    }
+    
+    func test_is_plan_active_daily_limit_less_than_or_equal_data_amount() throws {
+        // (1) Given
+        // (2) When
+        appViewModel.republishDataUsage()
+        appViewModel.observePlanSettings()
+        appViewModel.observeEditPlan()
+        
+        appViewModel.didTapAmount()
+        appViewModel.didTapPlusData()
+        appViewModel.didTapPlusData()
+        appViewModel.didTapSave()
+        
+        XCTAssertEqual(appViewModel.dataAmount, 2)
+        
+        appViewModel.isPlanActive = false
+        appViewModel.didTapLimitPerDay()
+        appViewModel.didTapPlusLimit()
+        appViewModel.didTapSave()
+        
+        XCTAssertFalse(appViewModel.isPlanActive)
+        XCTAssertEqual(appViewModel.dataLimitPerDay, 1)
+        XCTAssertEqual(appViewModel.dataLimitPerDayValue, "1.0")
+
+        appViewModel.isPlanActive = true
+        // (3) Then
+        XCTAssertTrue(appViewModel.isPlanActive)
+        XCTAssertEqual(appViewModel.dataLimitPerDay, 1)
+        XCTAssertEqual(appViewModel.dataLimitPerDayValue, "1.0")
     }
         
     // MARK: - Edit Data Plan
@@ -498,6 +551,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         let dataAmount = 5.0
         let dataDailyLimit = 5.1
         // (2) When: user edits the value from the Text Field (no option to tap negative)
+        appViewModel.isPlanActive = true
         appViewModel.dataAmount = dataAmount
         appViewModel.didTapLimitPerDay()
         appViewModel.dataLimitPerDayValue = "\(dataDailyLimit)"

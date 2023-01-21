@@ -141,9 +141,14 @@ final class AppViewModel: ObservableObject {
     var buttonDisabledDailyLimit: Bool {
         Validator.hasExceededLimit(
             value: dataLimitPerDayValue,
-            max: dataAmount,
+            max: maxDataAmountForLimit,
             min: 0
         )
+    }
+    
+    var maxDataAmountForLimit: Double {
+        /// Max of 100 GB for Non-Plan
+        isPlanActive ? dataAmount : 100
     }
     
     /// Weekday color can be customizable in the future
@@ -386,8 +391,12 @@ extension AppViewModel {
         if !isActive && (usageType == .plan) {
             appDataRepository.setUsageType(ToggleItem.daily.rawValue)
         }
-        if !isActive && isPeriodAuto {
-            appDataRepository.setIsPeriodAuto(false)
+        
+        /// update daily limit if it exceeds max data amount
+        /// when Plan becomes active
+        if isActive && (dataLimitPerDay > dataAmount) {
+            dataLimitPerDay = dataAmount
+            dataLimitPerDayValue = "\(dataAmount)"
         }
     }
     
@@ -597,10 +606,14 @@ extension AppViewModel {
         
         let newValue = Stepper.plus(
             value: value,
-            max: dataAmount,
+            max: maxDataAmountForLimit,
             by: plusValue,
             onExceed: { [weak self] in
-                self?.toastTimer.showToast(message: "Exceeds maximum data amount")
+                if isPlanActive {
+                    self?.toastTimer.showToast(message: "Exceeds maximum data amount")
+                    return
+                }
+                self?.toastTimer.showToast(message: "You have reached the max limit")
             }
         )
         
