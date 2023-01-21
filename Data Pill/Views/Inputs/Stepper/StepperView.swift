@@ -42,7 +42,7 @@ struct StepperView: View {
                 value: $value,
                 unit: unit
             )
-            .accessibilityLabel("valueInput")
+            .accessibilityLabel(AccessibilityLabels.valueInput.rawValue)
             
             // Col 3: PLUS
             StepperButtonView(

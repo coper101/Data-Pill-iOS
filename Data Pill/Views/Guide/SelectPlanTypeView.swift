@@ -25,7 +25,10 @@ struct SelectPlanTypeView: View {
         ) {
             
             // Row 1:
-            Text("Do you have a Data Plan?")
+            Text(
+                "Do you have a Data Plan?",
+                comment: "Prompt user to select if they have a data plan in User Guide"
+            )
                 .textStyle(
                     foregroundColor: .onBackground,
                     font: .semibold,
@@ -34,29 +37,34 @@ struct SelectPlanTypeView: View {
                 .opacity(titleOpacity)
             
             // Row 2:
-            Text("A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. ")
+            Text(
+                "A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. ",
+                comment: "An explanation of the Data Plan"
+            )
                 .textStyle(
                     foregroundColor: .onBackground,
                     font: .semibold,
                     size: 20,
-                    lineLimit: 10,
+                    lineLimit: 20,
                     lineSpacing: 3
                 )
                 .opacity(descriptionOpacity)
             
             // Row 3: SELECTION
-            Spacer()
+            Spacer(minLength: 0)
             
             VStack(spacing: 14) {
                 
                 LargeButtonView(
                     title: "Yep",
+                    id: "Yep",
                     action: planAction
                 )
                 .opacity(yepButtonOpacity)
                 
                 LargeButtonView(
                     title: "Nope",
+                    id: "Nope",
                     action: nonPlanAction
                 )
                 .opacity(nopeButtonOpacity)

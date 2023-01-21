@@ -10,8 +10,9 @@ import SwiftUI
 struct LargeButtonView: View {
     // MARK: - Props
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    var title: String
+    var title: LocalizedStringKey
     var disabled: Bool = false
+    var id: String
     var action: Action
     
     var backgroundColor: Colors {
@@ -27,13 +28,16 @@ struct LargeButtonView: View {
         Button(action: action) {
             ZStack {
                 
-                Text(title)
+                Text(
+                    title,
+                    comment: "Button title for User Guide"
+                )
                     .textStyle(
                         foregroundColor: color,
                         font: .semibold,
                         size: 20
                     )
-                    .id(title)
+                    .id(id)
                 
             } //: ZStack
             .frame(height: 118)
@@ -55,6 +59,7 @@ struct LargeButtonView_Previews: PreviewProvider {
     static var previews: some View {
         LargeButtonView(
             title: "Title",
+            id: "Title",
             action: {}
         )
             .previewLayout(.sizeThatFits)

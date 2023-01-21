@@ -1,0 +1,147 @@
+/* No comment provided by engineer. */
+"%@ Days" = "%@ 天";
+
+/* An explanation of the Data Plan */
+"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "流量套餐是一种订阅服务，您每期支付一次费用以使用固定数量的移动数据。";
+
+/* No comment provided by engineer. */
+"Auto" = "自动的";
+
+/* No comment provided by engineer. */
+"Caption" = "Caption";
+
+/* No comment provided by engineer. */
+"Card" = "Card";
+
+/* No comment provided by engineer. */
+"Daily" = "每日";
+
+/* No comment provided by engineer. */
+"Daily\nLimit" = "每日\n限额";
+
+/* No comment provided by engineer. */
+"Daily Limit" = "每日限额";
+
+/* No comment provided by engineer. */
+"Data Amount" = "数据量";
+
+/* The description for Non Data Plan selection */
+"Data Pill will just monitor and track your daily mobile data." = "Data Pill 只会监控和跟踪您的日常移动数据。";
+
+/* No comment provided by engineer. */
+"Data Plan" = "流量套餐";
+
+/* Prompt user to select if they have a data plan in User Guide */
+"Do you have a Data Plan?" = "你有流量套餐吗？";
+
+/* Button title done */
+"Done" = "完毕";
+
+/* No comment provided by engineer. */
+"Exceeds maximum data amount" = "超过最大数据量";
+
+/* No comment provided by engineer. */
+"Fri" = "周五";
+
+/* No comment provided by engineer. */
+"From" = "从";
+
+/* Header for user guide for first time users */
+"Get Started" = "开始";
+
+/* The description for Non Data Plan selection */
+"If you ever subscribe to a plan in the future, toggle Data Plan." = "如果您将来订阅某个套餐，请切换流量套餐。";
+
+/* No comment provided by engineer. */
+"Manual" = "手册";
+
+/* No comment provided by engineer. */
+"Mon" = "周一";
+
+/* No comment provided by engineer. */
+"NA" = "NA";
+
+/* No comment provided by engineer. */
+"Nope" = "没有";
+
+/* Title to indicate the user doesn't have a Data Plan */
+"Nope." = "没有。";
+
+/* No comment provided by engineer. */
+"Period" = "时期";
+
+/* No comment provided by engineer. */
+"PERIOD" = "时期";
+
+/* No comment provided by engineer. */
+"Plan" = "套餐";
+
+/* No comment provided by engineer. */
+"Plan\nLimit" = "套餐\n限制";
+
+/* No comment provided by engineer. */
+"Plan Limit" = "套餐限制";
+
+/* No comment provided by engineer. */
+"Sat" = "周六";
+
+/* Button title save */
+"Save" = "保存";
+
+/* A guide message to user on how to set the data plan and period */
+"Set the amount of data in your plan and the period it starts and ends." = "设置计划中的数据量及其开始和结束的时间段。";
+
+/* Error message when the app can't read the data from the device */
+"Sorry, the data can’t be loaded from the Storage." = "抱歉，无法从存储中加载数据。";
+
+/* Button title start */
+"Start" = "开始";
+
+/* No comment provided by engineer. */
+"Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
+
+/* No comment provided by engineer. */
+"Sun" = "周日";
+
+/* The title for viewing all the data usage for the week */
+"This Week" = "本星期";
+
+/* No comment provided by engineer. */
+"Thu" = "周四";
+
+/* No comment provided by engineer. */
+"Title" = "Title";
+
+/* No comment provided by engineer. */
+"TITLE" = "TITLE";
+
+/* No comment provided by engineer. */
+"To" = "到";
+
+/* No comment provided by engineer. */
+"Today" = "今天";
+
+/* No comment provided by engineer. */
+"TODAY" = "今天";
+
+/* No comment provided by engineer. */
+"TOTAL" = "总数";
+
+/* No comment provided by engineer. */
+"Tue" = "周二";
+
+/* No comment provided by engineer. */
+"USAGE" = "使用";
+
+/* No comment provided by engineer. */
+"USED" = "已用";
+
+/* No comment provided by engineer. */
+"Wed" = "周三";
+
+/* No comment provided by engineer. */
+"Yep" = "有";
+
+/* Title to indicate the user does have a Data Plan */
+"Yep." = "有。";
+

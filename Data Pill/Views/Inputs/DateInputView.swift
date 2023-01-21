@@ -9,41 +9,52 @@ import SwiftUI
 
 struct DateInputView: View {
     // MARK: - Props
+    @Environment(\.locale) var locale: Locale
     @Environment(\.dimensions) var dimensions: Dimensions
-    var date: Date
-    var title: String
-    var action: () -> Void
     
-    var displayedDate: String {
-        let isLongYear = !dimensions.isSmallDevice
-        return date.toDayMonthYearFormat(isLongYear: isLongYear).uppercased()
-    }
+    var date: Date
+    var title: LocalizedStringKey
+    var action: () -> Void
     
     // MARK: - UI
     var body: some View {
         VStack(spacing: 10) {
             
             // Row 1: TITLE
-            Text(title)
+            Text(
+                title,
+                comment: "Title of the date range input"
+            )
                 .textStyle(
                     foregroundColor: .onSurfaceLight,
                     font: .semibold,
                     size: 17,
                     maxWidth: .infinity
                 )
-                .accessibilityLabel(title)
+                .accessibilityLabel(AccessibilityLabels.title.rawValue)
             
             // Row 2: INPUT
             Button(action: action) {
                 
                 VStack {
                     
-                    Text(displayedDate)
-                        .textStyle(
-                            foregroundColor: .onSurface,
-                            font: .semibold,
-                            size: 17
+                    HStack(spacing: 5) {
+                                                
+                        Text(date.toDayMonthFormat(locale: locale.identifier))
+
+                        Text(
+                            date.toYearFormat(
+                                locale: locale.identifier,
+                                isLongYear: !dimensions.isSmallDevice
+                            )
                         )
+                        
+                    } //: HStack
+                    .textStyle(
+                        foregroundColor: .onSurface,
+                        font: .semibold,
+                        size: 17
+                    )
                     
                 } //: VStack
                 .fillMaxWidth()
@@ -55,7 +66,7 @@ struct DateInputView: View {
                 
             } //: Button
             .buttonStyle(ScaleButtonStyle())
-            .accessibilityLabel("\(title) Button")
+            .accessibilityLabel(String("\(title) Button"))
 
         } //: VStack
     }
@@ -71,9 +82,9 @@ struct DateInputView_Previews: PreviewProvider {
             title: "TITLE",
             action: {}
         )
-            .previewLayout(.sizeThatFits)
-            .padding()
-            .frame(width: 184)
+        .environment(\.locale, .simplifiedChinese)
+        .previewLayout(.sizeThatFits)
+        .padding()
+        .frame(width: 184)
     }
 }
-

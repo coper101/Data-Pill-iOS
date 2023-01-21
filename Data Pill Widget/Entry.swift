@@ -6,12 +6,14 @@
 //
 
 import WidgetKit
+import SwiftUI
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
     let usedData: Double
     let maxData: Double
     let dataUnit: Unit
+    let localizedSubtitle: LocalizedStringKey
     let subtitle: String
     let color: Colors
     let usageType: ToggleItem

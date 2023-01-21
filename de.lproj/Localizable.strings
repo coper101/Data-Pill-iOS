@@ -1,0 +1,147 @@
+/* No comment provided by engineer. */
+"%@ Days" = "%@ Tage";
+
+/* An explanation of the Data Plan */
+"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ein Datentarif ist ein Abonnementdienst, bei dem Sie jeden Zeitraum bezahlen, um eine feste Menge mobiler Daten zu nutzen.";
+
+/* No comment provided by engineer. */
+"Auto" = "Auto";
+
+/* No comment provided by engineer. */
+"Caption" = "Caption";
+
+/* No comment provided by engineer. */
+"Card" = "Card";
+
+/* No comment provided by engineer. */
+"Daily" = "Täglich";
+
+/* No comment provided by engineer. */
+"Daily\nLimit" = "Tägliches \nLimit";
+
+/* No comment provided by engineer. */
+"Daily Limit" = "Tägliches Limit";
+
+/* No comment provided by engineer. */
+"Data Amount" = "Datenmenge";
+
+/* The description for Non Data Plan selection */
+"Data Pill will just monitor and track your daily mobile data." = "Data Pill überwacht und verfolgt lediglich Ihre täglichen mobilen Daten.";
+
+/* No comment provided by engineer. */
+"Data Plan" = "Datentarif";
+
+/* Prompt user to select if they have a data plan in User Guide */
+"Do you have a Data Plan?" = "Haben Sie einen Datentarif?";
+
+/* Button title done */
+"Done" = "Getan";
+
+/* No comment provided by engineer. */
+"Exceeds maximum data amount" = "Überschreitet die maximale Datenmenge";
+
+/* No comment provided by engineer. */
+"Fri" = "Fr";
+
+/* No comment provided by engineer. */
+"From" = "Von";
+
+/* Header for user guide for first time users */
+"Get Started" = "Loslegen";
+
+/* The description for Non Data Plan selection */
+"If you ever subscribe to a plan in the future, toggle Data Plan." = "Wenn Sie in Zukunft jemals einen Plan abonnieren, schalten Sie den Datentarif um.";
+
+/* No comment provided by engineer. */
+"Manual" = "Handbuch";
+
+/* No comment provided by engineer. */
+"Mon" = "Mo";
+
+/* No comment provided by engineer. */
+"NA" = "NA";
+
+/* No comment provided by engineer. */
+"Nope" = "Nö";
+
+/* Title to indicate the user doesn't have a Data Plan */
+"Nope." = "Nö.";
+
+/* No comment provided by engineer. */
+"Period" = "Zeitraum";
+
+/* No comment provided by engineer. */
+"PERIOD" = "ZEITRAUM";
+
+/* No comment provided by engineer. */
+"Plan" = "Planen";
+
+/* No comment provided by engineer. */
+"Plan\nLimit" = "Planlimit";
+
+/* No comment provided by engineer. */
+"Plan Limit" = "Planlimit";
+
+/* No comment provided by engineer. */
+"Sat" = "Sa";
+
+/* Button title save */
+"Save" = "Speichern";
+
+/* A guide message to user on how to set the data plan and period */
+"Set the amount of data in your plan and the period it starts and ends." = "Legen Sie die Datenmenge in Ihrem Plan und den Zeitraum fest, in dem er beginnt und endet.";
+
+/* Error message when the app can't read the data from the device */
+"Sorry, the data can’t be loaded from the Storage." = "Entschuldigung, die Daten können nicht aus dem Speicher geladen werden.";
+
+/* Button title start */
+"Start" = "Start";
+
+/* No comment provided by engineer. */
+"Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
+
+/* No comment provided by engineer. */
+"Sun" = "So";
+
+/* The title for viewing all the data usage for the week */
+"This Week" = "In dieser Woche";
+
+/* No comment provided by engineer. */
+"Thu" = "Do";
+
+/* No comment provided by engineer. */
+"Title" = "Title";
+
+/* No comment provided by engineer. */
+"TITLE" = "TITLE";
+
+/* No comment provided by engineer. */
+"To" = "Zu";
+
+/* No comment provided by engineer. */
+"Today" = "Heute";
+
+/* No comment provided by engineer. */
+"TODAY" = "HEUTE";
+
+/* No comment provided by engineer. */
+"TOTAL" = "GESAMT";
+
+/* No comment provided by engineer. */
+"Tue" = "Di";
+
+/* No comment provided by engineer. */
+"USAGE" = "ART DER NUTZUNG";
+
+/* No comment provided by engineer. */
+"USED" = "VERBRAUCHT";
+
+/* No comment provided by engineer. */
+"Wed" = "Mi";
+
+/* No comment provided by engineer. */
+"Yep" = "Ja";
+
+/* Title to indicate the user does have a Data Plan */
+"Yep." = "Ja.";
+

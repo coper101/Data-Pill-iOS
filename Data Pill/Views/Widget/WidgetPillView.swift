@@ -14,6 +14,7 @@ struct WidgetPillView: View {
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
+    var localizedSubtitle: LocalizedStringKey
     var subtitle: String
     var color: Colors
     
@@ -33,6 +34,7 @@ struct WidgetPillView: View {
                 usedData: usedData,
                 maxData: maxData,
                 dataUnit: dataUnit,
+                localizedSubtitle: localizedSubtitle,
                 subtitle: subtitle,
                 color: color
             )

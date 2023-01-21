@@ -21,7 +21,7 @@ struct DataPlanLimitView: View {
     var didChangePlusStepperValue: StepperValueAction
     var didChangeMinusStepperValue: StepperValueAction
     
-    var subtitle: String {
+    var subtitle: LocalizedStringKey {
         switch usageType {
         case .plan:
             return !isEditing ?
@@ -47,14 +47,14 @@ struct DataPlanLimitView: View {
             spacing: 2
         ) {
             // Col 1: AMOUNT
-            Text(dataAmount.toIntOrDp())
+            Text(verbatim: dataAmount.toIntOrDp())
                 .textStyle(
                     foregroundColor: .onSurface,
                     font: .semibold,
                     size: 30,
                     lineLimit: 1
                 )
-                .accessibilityLabel("limitAmount")
+                .accessibilityLabel(AccessibilityLabels.limitAmount.rawValue)
             
             // Col 2: UNIT
             Text(dataUnit.rawValue)
@@ -65,7 +65,7 @@ struct DataPlanLimitView: View {
                     lineLimit: 1
                 )
                 .alignmentGuide(.bottom) { $0.height + 3 }
-                .accessibilityLabel("limitUnit")
+                .accessibilityLabel(AccessibilityLabels.limitUnit.rawValue)
             
         } //: HStack
         .fillMaxSize()

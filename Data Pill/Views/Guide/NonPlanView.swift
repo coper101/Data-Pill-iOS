@@ -25,7 +25,10 @@ struct NonPlanView: View {
         ) {
             
             // Row 1: TITLE SELECTION
-            Text("Nope.")
+            Text(
+                "Nope.",
+                comment: "Title to indicate the user doesn't have a Data Plan"
+            )
                 .textStyle(
                     foregroundColor: .onBackground,
                     font: .semibold,
@@ -43,9 +46,15 @@ struct NonPlanView: View {
                 spacing: 19
             ) {
                 
-                Text("Data Pill will just monitor and track your daily mobile data.")
+                Text(
+                    "Data Pill will just monitor and track your daily mobile data.",
+                    comment: "The description for Non Data Plan selection"
+                )
                 
-                Text("If you ever subscribe to a plan in the future, toggle Data Plan.")
+                Text(
+                    "If you ever subscribe to a plan in the future, toggle Data Plan.",
+                    comment: "The description for Non Data Plan selection"
+                )
                     
             } //: VStack
             .textStyle(

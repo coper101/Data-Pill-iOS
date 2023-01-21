@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 final class AppViewModel: ObservableObject {
     
@@ -16,7 +17,7 @@ final class AppViewModel: ObservableObject {
     let appDataRepository: AppDataRepositoryProtocol
     let dataUsageRepository: DataUsageRepositoryProtocol
     let networkDataRepository: NetworkDataRepositoryProtocol
-    let toastTimer: ToastTimer
+    let toastTimer: ToastTimer<LocalizedStringKey>
     
     /// [A] App Data
     @Published var wasGuideShown = false
@@ -105,7 +106,7 @@ final class AppViewModel: ObservableObject {
     @Published var date = Date()
     
     /// Edit Data Limit
-    @Published var toastMessage: String?
+    @Published var toastMessage: LocalizedStringKey?
 
     @Published var isDataLimitEditing = false
     @Published var isDataLimitPerDayEditing = false
@@ -160,7 +161,7 @@ final class AppViewModel: ObservableObject {
             database: LocalDatabase(container: .dataUsage, appGroup: .dataPill)
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
-        toastTimer: ToastTimer = .init(),
+        toastTimer: ToastTimer<LocalizedStringKey> = .init(),
         setupValues: Bool = true
     ) {
         self.appDataRepository = appDataRepository
@@ -181,6 +182,10 @@ final class AppViewModel: ObservableObject {
         observePlanSettings()
         observeEditPlan()
         observeDataErrors()
+        
+//        #if DEBUG
+//            addTestData()
+//        #endif
     }
     
 }
@@ -595,8 +600,7 @@ extension AppViewModel {
             max: dataAmount,
             by: plusValue,
             onExceed: { [weak self] in
-                let message = "Exceeds maximum data amount"
-                self?.toastTimer.showToast(message: message)
+                self?.toastTimer.showToast(message: "Exceeds maximum data amount")
             }
         )
         
@@ -705,6 +709,56 @@ extension AppViewModel {
     func closeGuide() {
         isGuideShown = false
         appDataRepository.setWasGuideShown(true)
+    }
+    
+}
+
+extension AppViewModel {
+    
+    func addTestData() {
+        
+        let todaysDate = Date()
+
+        /// 3 Days Ago
+        dataUsageRepository.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -3, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 1_500,
+            hasLastTotal: true
+        )
+        
+        /// 2 Days Ago
+        dataUsageRepository.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -2, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 5_000,
+            hasLastTotal: true
+        )
+        
+        /// Yesterday
+        dataUsageRepository.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -1, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 2_100,
+            hasLastTotal: true
+        )
+       
+        /// Update Database
+        dataUsageRepository.updatePlan(
+            startDate: Calendar.current.date(
+                byAdding: .day, value: -3, to: todaysDate)!,
+            endDate: Calendar.current.date(
+                byAdding: .day, value: 0, to: todaysDate)!,
+            dataAmount: 10,
+            dailyLimit: 4,
+            planLimit: 9
+        )
+        
+        refreshUsedDataToday(1000)
+        
     }
     
 }

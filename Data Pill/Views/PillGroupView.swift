@@ -30,7 +30,7 @@ struct PillGroupView: View {
                 alignment: .center,
                 spacing: dimensions.spaceInBetween
             ) {
-                
+
                 // Col 1: DATA PILL
                 Button(action: dataPillAction) {
                     PillView(
@@ -64,18 +64,18 @@ struct PillGroupView: View {
                             dataUnit: appViewModel.unit,
                             width: cardWidth
                         )
-                        
+
                         Spacer()
-                        
+
                         // USAGE TOGGLE
                         UsageCardView(
                             selectedItem: $appViewModel.usageType,
                             width: cardWidth,
                             isPlanActive: appViewModel.isPlanActive
                         )
-                        
+
                         Spacer()
-                        
+
                         // AUTO DATA PERIOD TOGGLE
                         AutoPeriodCardView(
                             isAuto: $appViewModel.isPeriodAuto,

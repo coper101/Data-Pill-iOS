@@ -91,7 +91,8 @@ struct AppView: View {
                     buttonAction: buttonAction,
                     buttonDisabled: appViewModel.buttonDisabled,
                     spaceBetween: spaceBetweenCardButton,
-                    isCardShown: !appViewModel.isDatePickerShown
+                    isCardShown: !appViewModel.isDatePickerShown,
+                    maxWidth: dimensions.planCardWidth
                 ) {
                     DataPlanCardView(
                         editType: appViewModel.editDataPlanType,
@@ -124,7 +125,8 @@ struct AppView: View {
                     buttonAction: buttonAction,
                     buttonDisabled: appViewModel.buttonDisabledPlanLimit,
                     spaceBetween: spaceBetweenCardButton,
-                    toastMessage: appViewModel.toastMessage
+                    toastMessage: appViewModel.toastMessage,
+                    maxWidth: dimensions.limitCardWidth
                 ) {
                     DataPlanLimitView(
                         dataLimitValue: $appViewModel.dataLimitValue,
@@ -152,7 +154,8 @@ struct AppView: View {
                     buttonAction: buttonAction,
                     buttonDisabled: appViewModel.buttonDisabledDailyLimit,
                     spaceBetween: spaceBetweenCardButton,
-                    toastMessage: appViewModel.toastMessage
+                    toastMessage: appViewModel.toastMessage,
+                    maxWidth: dimensions.limitCardWidth
                 ) {
                     DataPlanLimitView(
                         dataLimitValue: $appViewModel.dataLimitPerDayValue,
@@ -213,10 +216,12 @@ struct AppView: View {
             // MARK: Layer 7: Error
             if
                 let error = appViewModel.dataError,
-                error == .loadingContainer(),
-                case .loadingContainer(let message) = error
+                error == .loadingContainer()
             {
-                Text(message)
+                Text(
+                    "Sorry, the data can’t be loaded from the Storage.",
+                    comment: "Error message when the app can't read the data from the device"
+                )
                     .textStyle(
                         foregroundColor: .onBackground,
                         font: .semibold,
@@ -380,6 +385,14 @@ struct AppView: View {
 
 // MARK: - Preview
 struct AppView_Previews: PreviewProvider {
+    static var appViewModelError: AppViewModel {
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        dataRepo.dataError = .loadingContainer()
+        let viewModel = AppViewModel(dataUsageRepository: dataRepo)
+        return viewModel
+    }
+    
     static var appViewModel: AppViewModel {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
@@ -424,7 +437,7 @@ struct AppView_Previews: PreviewProvider {
         let viewModel = AppViewModel(dataUsageRepository: dataRepo)
         
         // Update created Today's Data (added automatically by app)
-        viewModel.refreshUsedDataToday(200)
+        viewModel.refreshUsedDataToday(1000)
         
         return viewModel
     }
@@ -434,5 +447,12 @@ struct AppView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
             .environmentObject(appViewModel)
             .padding(.top, 20)
+            .previewDisplayName("Working App")
+        
+        AppView()
+            .previewLayout(.sizeThatFits)
+            .environmentObject(appViewModelError)
+            .padding(.top, 20)
+            .previewDisplayName("Loading Data Error")
     }
 }

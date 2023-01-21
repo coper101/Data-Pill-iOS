@@ -41,7 +41,10 @@ struct HistoryView: View {
             HStack(spacing: 0) {
                 
                 // TITLE
-                Text("This Week")
+                Text(
+                    "This Week",
+                    comment: "The title for viewing all the data usage for the week"
+                )
                     .textStyle(
                         foregroundColor: .onBackground,
                         font: .bold,
@@ -65,10 +68,10 @@ struct HistoryView: View {
                     Array(descendingWeeksData.enumerated()),
                     id: \.element
                 ) { index, data in
-                    
+
                     let day = days[index]
                     let isFirstPill = index == 0
-                    
+
                     DraggablePillView(
                         date: data.date ?? Date(),
                         color: day.color,
@@ -80,7 +83,7 @@ struct HistoryView: View {
                         hasPillOutline: isFirstPill && showFilledLines, /// show for first pill only - Sunday
                         widthScale: 0.65
                     )
-                    
+
                 } //: ForEach
                 
             } //: Group
@@ -99,24 +102,32 @@ struct HistoryView_Previews: PreviewProvider {
     static var dataLimitPerDay = 2.0
     
     static var previews: some View {
-        HistoryView(
-            days: dayPills,
-            weekData: repo.thisWeeksData,
-            dataLimitPerDay: dataLimitPerDay,
-            usageType: .daily,
-            closeAction: {}
-        )
-        .previewDisplayName("Filled")
         
-        HistoryView(
-            days: dayPills,
-            weekData: repo.thisWeeksData,
-            dataLimitPerDay: dataLimitPerDay,
-            usageType: .daily,
-            showFilledLines: true,
-            closeAction: {}
-        )
-        .previewDisplayName("Filled Lines")
+        Group {
+            
+            HistoryView(
+                days: dayPills,
+                weekData: repo.thisWeeksData,
+                dataLimitPerDay: dataLimitPerDay,
+                usageType: .daily,
+                closeAction: {}
+            )
+            .previewDisplayName("Filled")
+            
+            HistoryView(
+                days: dayPills,
+                weekData: repo.thisWeeksData,
+                dataLimitPerDay: dataLimitPerDay,
+                usageType: .daily,
+                showFilledLines: true,
+                closeAction: {}
+            )
+            .previewDisplayName("Filled Lines")
+            
+        }
+        // .environment(\.locale, .simplifiedChinese)
+        // .environment(\.locale, .filipino)
+
     }
 }
 

@@ -6,6 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
+
+extension Locale {
+    
+    static let simplifiedChinese = Locale(identifier: "zh-Hans")
+    static let filipino = Locale(identifier: "fil")
+    static let english = Locale(identifier: "en")
+    static let german = Locale(identifier: "de")
+
+}
 
 extension String {
     
@@ -19,21 +29,11 @@ extension String {
 
 extension Date {
     
-    /// Format the Date to `dd mm yyyy` or `dd mm yy`
-    /// e.g. 1 Jan 2022
-    func toDayMonthYearFormat(isLongYear: Bool = true) -> String {
-        let dateFormatter = DateFormatter()
-        let longYear = "yyyy"
-        let shortYear = "yy"
-        let year = isLongYear ? longYear : shortYear
-        dateFormatter.dateFormat = "d MMM \(year)"
-        return dateFormatter.string(from: self)
-    }
-   
     /// Formats the Date to `dd mm`
     /// e.g. 1 Jan
-    func toDayMonthFormat() -> String {
+    func toDayMonthFormat(locale identifier: String) -> String {
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = .init(identifier: identifier)
         dateFormatter.dateFormat = "d MMM"
         return dateFormatter.string(from: self)
     }
@@ -46,12 +46,23 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
-    /// Formats the Date to `E`
-    /// e.g. 1 Jan  2022 =  Sat
-    func toWeekdayFormat() -> String {
+    /// Returns the Year from Date `E`
+    /// e.g. 1 Jan  2022 =  2022
+    /// - parameter isLongYear: A value to indicate if it will use 4-digit year
+    func toYearFormat(locale identifier: String, isLongYear: Bool = true) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E"
+        dateFormatter.locale = .init(identifier: identifier)
+        let longYear = "yyyy"
+        let shortYear = "yy"
+        let year = isLongYear ? longYear : shortYear
+        dateFormatter.dateFormat = "\(year)"
         return dateFormatter.string(from: self)
+    }
+        
+    /// Returns the weekday index
+    /// e.g. 1 Jan 2022, Sat = 7
+    func getWeekday() -> Int {
+        self.toDateComp().weekday!
     }
     
     func toDateComp() -> DateComponents {
@@ -64,12 +75,6 @@ extension Date {
     /// Checks Date is Today's Date
     func isToday() -> Bool {
         Calendar.current.isDateInToday(self)
-    }
-    
-    /// Counts the number of days between two Dates
-    /// - Parameter end: A value to specify the last Date
-    func toNumOfDays(to end: Date) -> Int {
-        Calendar.current.daysBetween(start: self, end: end)
     }
     
     /// Creates a range from the specified Date to Any Date
@@ -102,6 +107,12 @@ extension Date {
     /// - Parameter value: The number of days to add
     func addDay(value: Int) -> Date? {
         Calendar.current.date(byAdding: .day, value: value, to: self)
+    }
+    
+    /// Counts the number of days between two Dates
+    /// - Parameter end: A value to specify the last Date
+    func toNumOfDays(to end: Date) -> Int {
+        Calendar.current.daysBetween(start: self, end: end)
     }
 }
 

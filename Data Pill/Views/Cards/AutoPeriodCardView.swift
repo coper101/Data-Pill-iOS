@@ -13,7 +13,14 @@ struct AutoPeriodCardView: View {
     var width: CGFloat
     var isPlanActive: Bool
     
-    var title: String {
+    var title: LocalizedStringKey {
+        if isPlanActive {
+            return isAuto ? "Auto" : "Manual"
+        }
+        return "NA"
+    }
+    
+    var id: String {
         if isPlanActive {
             return isAuto ? "Auto" : "Manual"
         }
@@ -39,7 +46,10 @@ struct AutoPeriodCardView: View {
             
             Button(action: didTapToggle) {
                 
-                Text(title)
+                Text(
+                    title,
+                    comment: "The auto period toggle"
+                )
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .bold,
@@ -47,7 +57,7 @@ struct AutoPeriodCardView: View {
                         maxWidth: .infinity
                     )
                     .opacity(opacity)
-                    .id(title)
+                    .id(id)
                     .transition(.opacity)
                     .padding(.bottom, 10)
                 

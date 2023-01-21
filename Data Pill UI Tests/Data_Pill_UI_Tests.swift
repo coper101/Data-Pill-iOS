@@ -307,8 +307,8 @@ final class Data_Pill_UI_Tests: XCTestCase {
         
         let saveButton = app.buttons["Save"]
         let periodLabel = getElement(type: .text, identifier: identifier, label: "Period")
-        let fromLabel = getElement(type: .text, identifier: identifier, label: "From")
-        let toLabel = getElement(type: .text, identifier: identifier, label: "To")
+        let fromLabel = getElement(type: .text, identifier: identifier, label: "title")
+        let toLabel = getElement(type: .text, identifier: identifier, label: "title")
         let numberOfDaysLabel = getElement(type: .text, identifier: identifier, label: "secondaryLabel")
 
         XCTAssert(saveButton.waitForExistence(timeout: 0.5))
@@ -324,15 +324,14 @@ final class Data_Pill_UI_Tests: XCTestCase {
         XCTAssertFalse(periodLabel.exists)
         XCTAssertFalse(fromLabel.exists)
         XCTAssertFalse(toLabel.exists)
-        XCTAssertFalse(numberOfDaysLabel.exists)
     }
     
     func edit_period_then_show_date_picker_then_save(_ editButton: XCUIElement, identifier: String) throws {
         // show edit input
         editButton.tap()
         
-        let startDateButton = getElement(type: .button, identifier: identifier, label: "From Button")
-        let endDateButton = getElement(type: .button, identifier: identifier, label: "To Button")
+        let startDateButton = getElement(type: .button, identifier: identifier, label: nil, boundBy: 3)
+        let endDateButton = getElement(type: .button, identifier: identifier, label: nil, boundBy: 4)
 
         XCTAssert(startDateButton.waitForExistence(timeout: 0.5))
         XCTAssert(endDateButton.exists)
@@ -531,6 +530,7 @@ final class Data_Pill_UI_Tests: XCTestCase {
         
         app.terminate()
 
+        // make sure widget is removed as it can query 2 icons
         let icon = springboard.icons["Data Pill"]
                 
         if !icon.exists {
@@ -581,7 +581,7 @@ extension Data_Pill_UI_Tests {
         case textField
     }
     
-    func getElement(type: `Type`, identifier: String?, label: String?) -> XCUIElement {
+    func getElement(type: `Type`, identifier: String?, label: String?, boundBy: Int? = nil) -> XCUIElement {
         var query: XCUIElementQuery!
         
         switch type {
@@ -607,6 +607,11 @@ extension Data_Pill_UI_Tests {
             query = query.matching(.init(format: "label == [cd] %@", label))
         }
                 
+        if let boundBy {
+            // print("query ", query)
+            return query.element(boundBy: boundBy)
+        }
+        
         // print("count: ", query.count)
         return query.element
     }

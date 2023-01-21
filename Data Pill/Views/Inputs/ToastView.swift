@@ -10,7 +10,7 @@ import SwiftUI
 struct ToastView: View {
     // MARK: - Props
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    var message: String
+    var message: LocalizedStringKey
     
     // MARK: - UI
     var body: some View {
@@ -24,17 +24,21 @@ struct ToastView: View {
                 .foregroundColor(Colors.onSurface.color)
             
             // Col 2: MESSAGE
-            Text(message)
+            Text(
+                message,
+                comment: "Toast error message"
+            )
                 .textStyle(
                     foregroundColor: .onSurface,
                     font: .semibold,
                     size: 14,
+                    lineLimit: 2,
                     textAlignment: .center
                 )
             Spacer()
             
         } //: HStack
-        .frame(height: 48)
+        .padding(.vertical, 8)
         .background(Colors.background.color)
         .clipShape(
             RoundedRectangle(cornerRadius: 15)

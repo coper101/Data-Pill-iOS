@@ -10,16 +10,18 @@ import SwiftUI
 struct NavRowView: View {
     // MARK: - Props
     var title: String
-    var subtitle: String
+    var subtitle: String?
+    var localizedSubtitle: LocalizedStringKey?
     var action: () -> Void
     
     // MARK: - UI
     var body: some View {
         Button(action: action) {
+            
             HStack(spacing: 8) {
                 
                 // Col 1: TITLE
-                Text(title)
+                Text(verbatim: title)
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .semibold,
@@ -27,15 +29,26 @@ struct NavRowView: View {
                         lineLimit: 1
                     )
                     .fixedSize()
-                
+                    
                 // Col 2: SUBTITLE
-                Text(subtitle)
-                    .textStyle(
-                        foregroundColor: .onSurfaceLight,
-                        font: .semibold,
-                        size: 15,
-                        lineLimit: 1
-                    )
+                Group {
+                    if let subtitle {
+                        Text(verbatim: subtitle)
+                           
+                    }
+                    if let localizedSubtitle {
+                        Text(
+                            localizedSubtitle,
+                            comment: "The number of days of the period set for the plan"
+                        )
+                    }
+                }
+                .textStyle(
+                    foregroundColor: .onSurfaceLight,
+                    font: .semibold,
+                    size: 15,
+                    lineLimit: 1
+                )
                 
                 // Col 3: NAV ICON
                 Spacer(minLength: 0)
@@ -68,5 +81,6 @@ struct NavRowView_Previews: PreviewProvider {
         .background(Colors.surface.color)
         .padding()
         .previewLayout(.sizeThatFits)
+        
     }
 }

@@ -13,8 +13,12 @@ struct UsageCardView: View {
     var width: CGFloat
     var isPlanActive: Bool
     
-    var title1: String {
-        isPlanActive ? ToggleItem.plan.rawValue : "NA"
+    var title1: LocalizedStringKey {
+        isPlanActive ? "Plan" : "NA"
+    }
+    
+    var title2: LocalizedStringKey {
+        "Daily"
     }
 
     // MARK: - UI
@@ -30,7 +34,7 @@ struct UsageCardView: View {
             ToggleView(
                 selectedItem: $selectedItem,
                 title1: title1,
-                title2: ToggleItem.daily.rawValue
+                title2: title2
             )
             .padding(.bottom, 5)
             

@@ -26,6 +26,7 @@ struct SmallWidgetView: View {
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
+    var localizedSubtitle: LocalizedStringKey
     var subtitle: String
     var color: Colors
     
@@ -78,7 +79,7 @@ struct SmallWidgetView: View {
                         spacing: 0.5
                     ) {
                         
-                        Text("\(percentageUsed)")
+                        Text(verbatim: "\(percentageUsed)")
                             .textStyle(
                                 foregroundColor: .onSurface,
                                 font: .semibold,
@@ -86,7 +87,7 @@ struct SmallWidgetView: View {
                                 lineLimit: 1
                             )
                         
-                        Text("%")
+                        Text(verbatim: "%")
                             .textStyle(
                                 foregroundColor: .onSurface,
                                 font: .semibold,
@@ -98,7 +99,7 @@ struct SmallWidgetView: View {
                     .padding(.top, 7)
                                     
                     // Row 2: DATA USED
-                    Text("\(data) \(showUnit ? dataUnit.rawValue : "")")
+                    Text(verbatim: "\(data) \(showUnit ? dataUnit.rawValue : "")")
                         .multilineTextAlignment(.trailing)
                         .textStyle(
                             foregroundColor: .onSurface,
@@ -112,7 +113,7 @@ struct SmallWidgetView: View {
                     Spacer()
                     
                     // Row 2: SUBTITLE
-                    Text(subtitle.uppercased())
+                    Text(localizedSubtitle)
                         .kerning(2.0)
                         .textStyle(
                             foregroundColor: Colors.onSurfaceLight2,
@@ -168,7 +169,8 @@ struct SmallWidgetView_Previews: PreviewProvider {
                 usedData: 0.09,
                 maxData: 0.9,
                 dataUnit: .gb,
-                subtitle: "Mon",
+                localizedSubtitle: "Today",
+                subtitle: "Today",
                 color: .secondaryBlue
             )
             .previewLayout(.sizeThatFits)

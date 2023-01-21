@@ -46,7 +46,7 @@ struct SlideToggleView: View {
             
         } //: Button
         .buttonStyle(PlainButtonStyle())
-        .accessibilityLabel("slideToggle")
+        .accessibilityLabel(AccessibilityLabels.slideToggle.rawValue)
     }
     
     // MARK: - Actions

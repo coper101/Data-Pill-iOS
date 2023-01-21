@@ -26,7 +26,10 @@ struct GuideView: View {
         ) {
             
             // Row 1: HEADER
-            Text("Get Started")
+            Text(
+                "Get Started",
+                comment: "Header for user guide for first time users"
+            )
                 .textStyle(
                     foregroundColor: Colors.onBackground,
                     font: .semibold,

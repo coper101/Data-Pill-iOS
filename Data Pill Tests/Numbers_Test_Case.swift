@@ -16,7 +16,7 @@ final class Numbers_Test_Case: XCTestCase {
 
     override func tearDownWithError() throws {}
     
-    /// prefixDay
+    /// Int - prefixDay()
     func test_prefix_day_is_1_day() throws {
         // (1) Given
         let input = 1
@@ -43,8 +43,27 @@ final class Numbers_Test_Case: XCTestCase {
         // (3) Then
         XCTAssertEqual(output, "-1 Day")
     }
+    
+    /// Int - toWeekdayName()
+    func test_to_weekday_name_sunday() throws {
+        // (1) Given
+        let input = 1
+        // (2) When
+        let output = input.toShortWeekdayName()
+        // (3) Then
+        XCTAssertEqual(output, "Sun")
+    }
+    
+    func test_to_weekday_name_saturday() throws {
+        // (1) Given
+        let input = 7
+        // (2) When
+        let output = input.toShortWeekdayName()
+        // (3) Then
+        XCTAssertEqual(output, "Sat")
+    }
 
-    /// toInt
+    /// Double - toInt()
     func test_convert_decimal_to_int() throws {
         // (1) Given
         let input = 40.1
@@ -72,7 +91,7 @@ final class Numbers_Test_Case: XCTestCase {
         XCTAssertEqual(output, 0)
     }
     
-    /// toIntOrDp
+    /// Double - toIntOrDp()
     func test_round_decimal_places_to_2_dp() throws {
         // (1) Given
         let input = 1.2345
@@ -109,7 +128,7 @@ final class Numbers_Test_Case: XCTestCase {
         XCTAssertEqual(output, "0")
     }
 
-    /// toDp
+    /// Double - toDp()
     func test_4_decimal_places() throws {
         // (1) Given
         let input = 4.123456
@@ -150,7 +169,7 @@ final class Numbers_Test_Case: XCTestCase {
         XCTAssertEqual(output, "0")
     }
     
-    /// toPerc
+    /// Double - toPercentage()
     func test_to_percentage() throws {
         // (1) Given
         let numerator = 2.0
@@ -181,7 +200,7 @@ final class Numbers_Test_Case: XCTestCase {
         XCTAssertEqual(output, 0)
     }
     
-    /// toGB
+    /// Double - toGB()
     func test_megabyte_to_gigabye() throws {
         // (1) Given
         let input = 1_400.0
@@ -200,7 +219,7 @@ final class Numbers_Test_Case: XCTestCase {
         XCTAssertEqual(output, 0)
     }
     
-    /// toInt64
+    /// toInt64()
 //    func test_unsigned_64_to_int() throws {
 //        let uint64: UInt64 = 1_000_000
 //    }
