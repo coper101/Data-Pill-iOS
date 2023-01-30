@@ -35,7 +35,7 @@
 "Do you have a Data Plan?" = "Haben Sie einen Datentarif?";
 
 /* Button title done */
-"Done" = "Getan";
+"Done" = "Fertig";
 
 /* No comment provided by engineer. */
 "Exceeds maximum data amount" = "Überschreitet die maximale Datenmenge";
@@ -86,7 +86,7 @@
 "Sat" = "Sa";
 
 /* Button title save */
-"Save" = "Speichern";
+"Save" = "Sichern";
 
 /* A guide message to user on how to set the data plan and period */
 "Set the amount of data in your plan and the period it starts and ends." = "Legen Sie die Datenmenge in Ihrem Plan und den Zeitraum fest, in dem er beginnt und endet.";
@@ -134,7 +134,7 @@
 "USAGE" = "ART DER NUTZUNG";
 
 /* No comment provided by engineer. */
-"USED" = "VERBRAUCHT";
+"USED" = "VERBR.";
 
 /* No comment provided by engineer. */
 "Wed" = "Mi";
