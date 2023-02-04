@@ -9,23 +9,11 @@ import Foundation
 import CoreData
 import OSLog
 
+// MARK: Identifiers
 enum AppGroup: String {
     case dataPill = "group.com.penguinworks.Data-Pill"
-    var name: String {
+    var groupIdentifier: String {
         self.rawValue
-    }
-}
-
-extension URL {
-    
-    static func storeURL(for appGroup: AppGroup, of container: Containers) -> URL? {
-        guard let fileContainer = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: appGroup.name
-        ) else {
-            Logger.database.error("failed to get file container \(container.name)")
-            return nil
-        }
-        return fileContainer.appendingPathComponent("\(container.name).sqlite")
     }
 }
 
@@ -36,6 +24,7 @@ enum Containers: String {
     }
 }
 
+// MARK: Types
 enum Entities: String {
     case data = "Data"
     case plan = "Plan"
@@ -47,6 +36,31 @@ enum Entities: String {
 enum StorageType {
     case sql
     case memory
+}
+
+// MARK: Helpers
+extension URL {
+    
+    static func storeURL(for appGroup: AppGroup, of container: Containers) -> URL? {
+        guard let fileContainer = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: appGroup.groupIdentifier
+        ) else {
+            Logger.database.error("failed to get file container \(container.name)")
+            return nil
+        }
+        return fileContainer.appendingPathComponent("\(container.name).sqlite")
+    }
+}
+
+extension NSManagedObjectContext {
+
+    /// Only performs a save if there are changes to commit.
+    /// - Returns: `true` if a save was needed. Otherwise, `false`.
+    @discardableResult public func saveIfNeeded() throws -> Bool {
+        guard hasChanges else { return false }
+        try save()
+        return true
+    }
 }
 
 // MARK: - Protocol
@@ -76,17 +90,6 @@ extension Database {
     }
 }
 
-extension NSManagedObjectContext {
-
-    /// Only performs a save if there are changes to commit.
-    /// - Returns: `true` if a save was needed. Otherwise, `false`.
-    @discardableResult public func saveIfNeeded() throws -> Bool {
-        guard hasChanges else { return false }
-        try save()
-        return true
-    }
-}
-
 // MARK: Implementation
 class LocalDatabase: Database {
 
@@ -97,12 +100,16 @@ class LocalDatabase: Database {
     
     required init(container: Containers, appGroup: AppGroup?) {
         self.container = NSPersistentContainer(name: container.name)
+        // self.container = NSPersistentCloudKitContainer(name: container.name)
         if
-            let appGroup = appGroup,
-            let storeURL = URL.storeURL(for: appGroup, of: container)
+            let appGroup,
+            // let cloudKit,
+            let storeLocation = URL.storeURL(for: appGroup, of: container)
         {
-            let description = NSPersistentStoreDescription(url: storeURL)
-            self.container.persistentStoreDescriptions = [description]
+            let storeDescription = NSPersistentStoreDescription(url: storeLocation)
+            // storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: cloudKit.containerIdentifier)
+            
+            self.container.persistentStoreDescriptions = [storeDescription]
             Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
         }
     }

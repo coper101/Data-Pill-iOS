@@ -16,6 +16,7 @@ final class AppViewModel: ObservableObject {
     // MARK: - Data
     let appDataRepository: AppDataRepositoryProtocol
     let dataUsageRepository: DataUsageRepositoryProtocol
+    let dataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol
     let networkDataRepository: NetworkDataRepositoryProtocol
     let toastTimer: ToastTimer<LocalizedStringKey>
     
@@ -165,12 +166,16 @@ final class AppViewModel: ObservableObject {
         dataUsageRepository: DataUsageRepositoryProtocol = DataUsageRepository(
             database: LocalDatabase(container: .dataUsage, appGroup: .dataPill)
         ),
+        dataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol = DataUsageRemoteRepository(
+            remoteDatabase: CloudDatabase(container: .dataPill)
+        ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
         toastTimer: ToastTimer<LocalizedStringKey> = .init(),
         setupValues: Bool = true
     ) {
         self.appDataRepository = appDataRepository
         self.dataUsageRepository = dataUsageRepository
+        self.dataUsageRemoteRepository = dataUsageRemoteRepository
         self.networkDataRepository = networkDataRepository
         self.toastTimer = toastTimer
         
@@ -191,6 +196,8 @@ final class AppViewModel: ObservableObject {
 //        #if DEBUG
 //            addTestData()
 //        #endif
+        syncPlan()
+        syncData()
     }
     
 }
@@ -722,6 +729,28 @@ extension AppViewModel {
     func closeGuide() {
         isGuideShown = false
         appDataRepository.setWasGuideShown(true)
+    }
+    
+    // MARK: - iCloud
+    func syncPlan() {
+        dataUsageRemoteRepository.isPlanAdded()
+            .flatMap { isPlanAdded in
+                self.dataUsageRemoteRepository.addPlan(
+                    .init(
+                        startDate: self.startDate,
+                        endDate: self.endDate,
+                        dataAmount: self.dataAmount,
+                        dailyLimit: self.dataLimitPerDay,
+                        planLimit: self.dataLimit
+                    )
+                )
+            }
+            .sink { isSaved in print("app view model - new plan saved") }
+            .store(in: &cancellables)
+    }
+    
+    func syncData() {
+        
     }
     
 }

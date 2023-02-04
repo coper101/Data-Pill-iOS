@@ -7,7 +7,9 @@
 
 import Foundation
 import CoreData
+import CloudKit
 
+// MARK: Local
 public class Data: NSManagedObject {
     
     // properties are generated automatically
@@ -56,3 +58,20 @@ func createFakeData(
         hasLastTotal: hasLastTotal
     )
 }
+
+// MARK: Remote
+struct RemoteData {
+    var id: CKRecord.ID? = nil
+    let date: Date
+    let dailyUsedData: Double
+}
+
+extension RemoteData {
+    func toDictionary() -> [String : Any] {
+        [
+            "date": date,
+            "dailyUsedData": dailyUsedData
+        ]
+    }
+}
+

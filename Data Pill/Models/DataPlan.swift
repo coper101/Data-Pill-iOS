@@ -7,7 +7,9 @@
 
 import Foundation
 import CoreData
+import CloudKit
 
+// MARK: Local
 public class Plan: NSManagedObject {
     
     // properties are generated automatically
@@ -56,4 +58,26 @@ func createFakePlan(
         dailyLimit: dailyLimit,
         planLimit: planLimit
     )
+}
+
+// MARK: Remote
+struct RemotePlan {
+    var id: CKRecord.ID? = nil
+    let startDate: Date
+    let endDate: Date
+    let dataAmount: Double
+    let dailyLimit: Double
+    let planLimit: Double
+}
+
+extension RemotePlan {
+    func toDictionary() -> [String : Any] {
+        [
+            "startDate": startDate,
+            "endDate": endDate,
+            "dataAmount": dataAmount,
+            "dailyLimit": dailyLimit,
+            "planLimit": planLimit
+        ]
+    }
 }

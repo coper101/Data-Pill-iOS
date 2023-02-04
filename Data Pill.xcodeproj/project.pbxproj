@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27073017298E561500B05B51 /* DataUsageRemoteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27073016298E561500B05B51 /* DataUsageRemoteRepository.swift */; };
 		270B264D2963E516001B316F /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270B264C2963E516001B316F /* GuideView.swift */; };
 		270EC9BD2956A899008A27AA /* Data_Pill_UI_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270EC9BC2956A899008A27AA /* Data_Pill_UI_Tests.swift */; };
 		270EC9BF2956A899008A27AA /* Data_Pill_UI_Tests_Launch_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270EC9BE2956A899008A27AA /* Data_Pill_UI_Tests_Launch_Tests.swift */; };
@@ -19,6 +20,7 @@
 		274FCF852978CA870087AC86 /* Data-Pill-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 274FCF832978CA870087AC86 /* Data-Pill-InfoPlist.strings */; };
 		274FCF882978CA870087AC86 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 274FCF862978CA870087AC86 /* Localizable.strings */; };
 		274FCF942978D9860087AC86 /* Toast_Timer_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274FCF932978D9860087AC86 /* Toast_Timer_Test_Case.swift */; };
+		275383E6298D1B4000404454 /* RemoteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275383E5298D1B4000404454 /* RemoteDatabase.swift */; };
 		2761528D293CAF7F00AEA000 /* Widget_Model_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528C293CAF7F00AEA000 /* Widget_Model_Test_Case.swift */; };
 		2761528E293CB5CE00AEA000 /* WidgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E777372934AF060031456D /* WidgetModel.swift */; };
 		27615290293E3FCC00AEA000 /* DataPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528F293E3FCC00AEA000 /* DataPlan.swift */; };
@@ -189,6 +191,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		27073016298E561500B05B51 /* DataUsageRemoteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsageRemoteRepository.swift; sourceTree = "<group>"; };
 		270B264C2963E516001B316F /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
 		270EC9BA2956A898008A27AA /* Data Pill UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Data Pill UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		270EC9BC2956A899008A27AA /* Data_Pill_UI_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Pill_UI_Tests.swift; sourceTree = "<group>"; };
@@ -212,6 +215,7 @@
 		274FCF912978CBAC0087AC86 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Data-Pill-InfoPlist.strings"; sourceTree = "<group>"; };
 		274FCF922978CBAC0087AC86 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		274FCF932978D9860087AC86 /* Toast_Timer_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast_Timer_Test_Case.swift; sourceTree = "<group>"; };
+		275383E5298D1B4000404454 /* RemoteDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDatabase.swift; sourceTree = "<group>"; };
 		2761528C293CAF7F00AEA000 /* Widget_Model_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget_Model_Test_Case.swift; sourceTree = "<group>"; };
 		2761528F293E3FCC00AEA000 /* DataPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlan.swift; sourceTree = "<group>"; };
 		27801DAC28D6C96800201339 /* Data Pill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Data Pill.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -546,9 +550,11 @@
 			children = (
 				27801E1828E951A000201339 /* NetworkDataRepository.swift */,
 				27801E3C28E9F72F00201339 /* DataUsageRepository.swift */,
+				27073016298E561500B05B51 /* DataUsageRemoteRepository.swift */,
 				27801E3E28E9FDAA00201339 /* AppDataRepository.swift */,
 				27801E1D28E98F0D00201339 /* LocalStorage.swift */,
 				27801E2228E9B29D00201339 /* LocalDatabase.swift */,
+				275383E5298D1B4000404454 /* RemoteDatabase.swift */,
 				278E7343295BFAB20020F84B /* ToastTimer.swift */,
 				27B90B8428F2D28100263983 /* Constants.swift */,
 			);
@@ -856,6 +862,7 @@
 				278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
 				27E77751293B68D10031456D /* Widget.swift in Sources */,
+				27073017298E561500B05B51 /* DataUsageRemoteRepository.swift in Sources */,
 				27FDBCDF2963FF8D008FA32E /* NonPlanView.swift in Sources */,
 				278E7344295BFAB20020F84B /* ToastTimer.swift in Sources */,
 				27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */,
@@ -866,6 +873,7 @@
 				27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */,
 				27F47DDF29067C8E00B3F83D /* Button.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
+				275383E6298D1B4000404454 /* RemoteDatabase.swift in Sources */,
 				27FDBCE329646F07008FA32E /* SlideToggleView.swift in Sources */,
 				27FDBCDD2963F7D0008FA32E /* LargeButtonView.swift in Sources */,
 				27801E0928E054C500201339 /* CloseIconView.swift in Sources */,
