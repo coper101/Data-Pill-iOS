@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import CloudKit
+import OSLog
 
 // MARK: Types
 protocol CK {
@@ -58,11 +59,11 @@ class CloudDatabase: RemoteDatabase {
         Future { promise in
             self.container.accountStatus { accountStatus, error in
                 guard accountStatus == .available else {
-                    print("checkLoginStatus - is not logged in")
+                    Logger.remoteDatabase.debug("checkLoginStatus - is not logged in")
                     promise(.success(false))
                     return
                 }
-                print("checkLoginStatus - is logged in")
+                Logger.remoteDatabase.debug("checkLoginStatus - is logged in")
                 promise(.success(true))
             }
         } //: Future
@@ -92,10 +93,11 @@ class CloudDatabase: RemoteDatabase {
                                 return nil
                             }
                         }
-                        print("fetch - ")
+                        Logger.remoteDatabase.debug("fetch - records count \(records.count)")
                         promise(.success(records))
                         
                     case .failure(let error):
+                        Logger.remoteDatabase.debug("fetch - error: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription)))
                         
                     } //: switch-case
@@ -107,15 +109,18 @@ class CloudDatabase: RemoteDatabase {
                 self.database.perform(query, inZoneWith: nil) { records, error in
                     
                     if let error {
+                        Logger.remoteDatabase.debug("fetch - error: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription)))
                         return
                     }
                     
                     guard let records else {
+                        Logger.remoteDatabase.debug("fetch - error: records is nil")
                         promise(.failure(RemoteDatabaseError.fetchError("records is nil")))
                         return
                     }
                     
+                    Logger.remoteDatabase.debug("fetch - records count \(records.count)")
                     promise(.success(records))
                     
                 } //: fetch
@@ -134,12 +139,12 @@ class CloudDatabase: RemoteDatabase {
         Future { promise in
             self.database.save(record) { newRecord, error in
                 if let error {
-                    print("saveItem - error: \(error.localizedDescription)")
+                    Logger.remoteDatabase.debug("saveItem - error: \(error.localizedDescription)")
                     promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
                     return
                 }
                 guard newRecord != nil else {
-                    print("saveItem - error: new record is nil")
+                    Logger.remoteDatabase.debug("saveItem - error: new record is nil")
                     promise(.failure(RemoteDatabaseError.saveError("new record is nil")))
                     return
                 }

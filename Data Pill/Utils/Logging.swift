@@ -11,11 +11,13 @@ extension Logger {
     
     enum Category: String {
         case localDatabase = "localdatabase"
+        case remoteDatabase = "remotedatabase"
         case widgetProvider = "widgetprovider"
         case networkRepository = "networkrepository"
     }
     
     static let database = createLogger(of: .localDatabase)
+    static let remoteDatabase = createLogger(of: .remoteDatabase)
     static let widgetProvider = createLogger(of: .widgetProvider)
     static let networkRepository = createLogger(of: .networkRepository)
     

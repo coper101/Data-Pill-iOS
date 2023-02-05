@@ -196,8 +196,6 @@ final class AppViewModel: ObservableObject {
 //        #if DEBUG
 //            addTestData()
 //        #endif
-        syncPlan()
-        syncData()
     }
     
 }
@@ -262,6 +260,8 @@ extension AppViewModel {
                 self.dataAmount = plan.dataAmount
                 self.dataLimit = plan.planLimit
                 self.dataLimitPerDay = plan.dailyLimit
+                                
+                self.syncPlan()
             }
             .store(in: &cancellables)
         
@@ -454,6 +454,7 @@ extension AppViewModel {
         dailyLimit: Double? = nil,
         planLimit: Double? = nil
     ) {
+        print(#function)
         dataUsageRepository.updatePlan(
             startDate: startDate,
             endDate: endDate,
@@ -514,6 +515,8 @@ extension AppViewModel {
     }
     
     func didChangeIsDataPlanEditing(_ isEditing: Bool) {
+        print(#function)
+
         if toastTimer.timer != nil {
             toastTimer.reset()
         }
@@ -570,6 +573,7 @@ extension AppViewModel {
     }
     
     func didChangeIsDataLimitEditing(_ isEditing: Bool) {
+        print(#function)
         /// update data limit only if editing is done
         guard
             let amount = Double(dataLimitValue),
@@ -581,6 +585,8 @@ extension AppViewModel {
     }
     
     func didChangeIsDataLimitPerDayEditing(_ isEditing: Bool) {
+        print(#function)
+
         /// update data limit per day only if editing is done
         guard
             let amount = Double(dataLimitPerDayValue),
@@ -655,13 +661,26 @@ extension AppViewModel {
     // MARK: - Operations
     func didTapSave() {
         isBlurShown = false
-        isDataPlanEditing = false
         
-        isStartDatePickerShown = false
-        isEndDatePickerShown = false
+        if isDataPlanEditing {
+            isDataPlanEditing = false
+        }
         
-        isDataLimitEditing = false
-        isDataLimitPerDayEditing = false
+        if isStartDatePickerShown {
+            isStartDatePickerShown = false
+        }
+        
+        if isEndDatePickerShown {
+            isEndDatePickerShown = false
+        }
+        
+        if isDataLimitEditing {
+            isDataLimitEditing = false
+        }
+        
+        if isDataLimitPerDayEditing {
+            isDataLimitPerDayEditing = false
+        }
     }
     
     func didTapDone() {
@@ -733,9 +752,29 @@ extension AppViewModel {
     
     // MARK: - iCloud
     func syncPlan() {
-        dataUsageRemoteRepository.isPlanAdded()
+        dataUsageRemoteRepository.isLoggedInUser()
+            .flatMap { isLoggedIn in
+                // not logged in
+                guard isLoggedIn else {
+                    return Just(false).eraseToAnyPublisher()
+                }
+                // logged in
+                return self.dataUsageRemoteRepository.isPlanAdded()
+                    .eraseToAnyPublisher()
+            }
             .flatMap { isPlanAdded in
-                self.dataUsageRemoteRepository.addPlan(
+                // update plan
+                guard !isPlanAdded else {
+                    return self.dataUsageRemoteRepository.updatePlan(
+                        startDate: self.startDate,
+                        endDate: self.endDate,
+                        dataAmount: self.dataAmount,
+                        dailyLimit: self.dataLimitPerDay,
+                        planLimit: self.dataLimit
+                    )
+                }
+                // add new plan
+                return self.dataUsageRemoteRepository.addPlan(
                     .init(
                         startDate: self.startDate,
                         endDate: self.endDate,
@@ -744,8 +783,9 @@ extension AppViewModel {
                         planLimit: self.dataLimit
                     )
                 )
+                .eraseToAnyPublisher()
             }
-            .sink { isSaved in print("app view model - new plan saved") }
+            .sink { print("app view model - is plan saved or updated:", $0) }
             .store(in: &cancellables)
     }
     
