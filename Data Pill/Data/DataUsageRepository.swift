@@ -69,6 +69,9 @@ protocol DataUsageRepositoryProtocol {
     var database: any Database { get }
     
     /// [1] Data
+    var todaysData: Data? { get set }
+    var todaysDataPublisher: Published<Data?>.Publisher { get }
+    
     var thisWeeksData: [Data] { get set }
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { get }
     
@@ -121,6 +124,9 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
     let database: Database
     
     /// [1A] Data
+    @Published var todaysData: Data?
+    var todaysDataPublisher: Published<Data?>.Publisher { $todaysData }
+    
     @Published var thisWeeksData: [Data] = .init()
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { $thisWeeksData }
     
@@ -322,6 +328,7 @@ extension DataUsageRepository {
     
     func updateToLatestData() {
         thisWeeksData = getThisWeeksData(from: getTodaysData())
+        todaysData = getTodaysData()
     }
 
 }
@@ -441,6 +448,9 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
     let database: Database = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
     
     /// [1A] Data
+    @Published var todaysData: Data?
+    var todaysDataPublisher: Published<Data?>.Publisher { $todaysData }
+    
     @Published var thisWeeksData: [Data] = []
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { $thisWeeksData }
     
@@ -578,10 +588,13 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
 }
 
 class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
-
+   
     let database: Database
     
     /// [1A] Data
+    @Published var todaysData: Data?
+    var todaysDataPublisher: Published<Data?>.Publisher { $todaysData }
+    
     @Published var thisWeeksData: [Data] = []
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { $thisWeeksData }
     

@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import OSLog
 
 final class AppViewModel: ObservableObject {
     
@@ -43,6 +44,7 @@ final class AppViewModel: ObservableObject {
     @Published var dataLimit = 0.0
     @Published var dataLimitPerDay = 0.0
     
+    @Published var todaysData: Data = createFakeData()
     @Published var thisWeeksData = [Data]()
     
     @Published var totalUsedDataPlan = 0.0
@@ -60,20 +62,6 @@ final class AppViewModel: ObservableObject {
         usageType == .daily ?
             dataLimitPerDay :
             dataLimit
-    }
-    
-    var todaysData: Data {
-        guard let todaysData = dataUsageRepository.getTodaysData() else {
-            /// create a new data if it doesn't exist
-            dataUsageRepository.addData(
-                date: Calendar.current.startOfDay(for: .init()),
-                totalUsedData: 0,
-                dailyUsedData: 0,
-                hasLastTotal: false
-            )
-            return dataUsageRepository.getTodaysData()!
-        }
-        return todaysData
     }
     
     var usedData: Double {
@@ -193,9 +181,11 @@ final class AppViewModel: ObservableObject {
         observeEditPlan()
         observeDataErrors()
         
-//        #if DEBUG
-//            addTestData()
-//        #endif
+        #if DEBUG
+            addTestData()
+        #endif
+        
+        syncOldData()
     }
     
 }
@@ -262,6 +252,25 @@ extension AppViewModel {
                 self.dataLimitPerDay = plan.dailyLimit
                                 
                 self.syncPlan()
+            }
+            .store(in: &cancellables)
+        
+        dataUsageRepository.todaysDataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] todaysData in
+                guard let todaysData else {
+                    /// create a new data if it doesn't exist
+                    self?.dataUsageRepository.addData(
+                        date: Calendar.current.startOfDay(for: .init()),
+                        totalUsedData: 0,
+                        dailyUsedData: 0,
+                        hasLastTotal: false
+                    )
+                    return
+                }
+                self?.todaysData = todaysData
+                
+                self?.syncTodaysData()
             }
             .store(in: &cancellables)
         
@@ -335,14 +344,17 @@ extension AppViewModel {
     func observeEditPlan() {
         
         $isDataPlanEditing
+            .dropFirst()
             .sink(receiveValue: didChangeIsDataPlanEditing)
             .store(in: &cancellables)
         
         $isDataLimitEditing
+            .dropFirst()
             .sink(receiveValue: didChangeIsDataLimitEditing)
             .store(in: &cancellables)
         
         $isDataLimitPerDayEditing
+            .dropFirst()
             .sink(receiveValue: didChangeIsDataLimitPerDayEditing)
             .store(in: &cancellables)
     }
@@ -454,7 +466,6 @@ extension AppViewModel {
         dailyLimit: Double? = nil,
         planLimit: Double? = nil
     ) {
-        print(#function)
         dataUsageRepository.updatePlan(
             startDate: startDate,
             endDate: endDate,
@@ -754,45 +765,138 @@ extension AppViewModel {
     func syncPlan() {
         dataUsageRemoteRepository.isLoggedInUser()
             .flatMap { isLoggedIn in
-                // not logged in
+                /// 1. not logged in
                 guard isLoggedIn else {
                     return Just(false).eraseToAnyPublisher()
                 }
-                // logged in
+                /// 1. logged in
                 return self.dataUsageRemoteRepository.isPlanAdded()
                     .eraseToAnyPublisher()
             }
             .flatMap { isPlanAdded in
-                // update plan
+                /// 2. update existing plan
                 guard !isPlanAdded else {
-                    return self.dataUsageRemoteRepository.updatePlan(
-                        startDate: self.startDate,
-                        endDate: self.endDate,
-                        dataAmount: self.dataAmount,
-                        dailyLimit: self.dataLimitPerDay,
-                        planLimit: self.dataLimit
-                    )
+                    return self.dataUsageRemoteRepository
+                        .updatePlan(
+                            startDate: self.startDate,
+                            endDate: self.endDate,
+                            dataAmount: self.dataAmount,
+                            dailyLimit: self.dataLimitPerDay,
+                            planLimit: self.dataLimit
+                        )
+                        .eraseToAnyPublisher()
                 }
-                // add new plan
-                return self.dataUsageRemoteRepository.addPlan(
-                    .init(
-                        startDate: self.startDate,
-                        endDate: self.endDate,
-                        dataAmount: self.dataAmount,
-                        dailyLimit: self.dataLimitPerDay,
-                        planLimit: self.dataLimit
+                /// 2. add new plan
+                return self.dataUsageRemoteRepository
+                    .addPlan(
+                        .init(
+                            startDate: self.startDate,
+                            endDate: self.endDate,
+                            dataAmount: self.dataAmount,
+                            dailyLimit: self.dataLimitPerDay,
+                            planLimit: self.dataLimit
+                        )
                     )
-                )
-                .eraseToAnyPublisher()
+                    .eraseToAnyPublisher()
             }
-            .sink { print("app view model - is plan saved or updated:", $0) }
+            .eraseToAnyPublisher()
+            .sink { isSavedOrUpdated in
+                Logger.appModel.debug("syncPlan - is plan saved or updated: \(isSavedOrUpdated)")
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    func syncTodaysData() {
+        guard let todaysDate = todaysData.date else {
+            return
+        }
+        let date = Calendar.current.startOfDay(for: todaysDate)
+        let dailyUsedData = todaysData.dailyUsedData
+        
+        dataUsageRemoteRepository.isLoggedInUser()
+            .flatMap { isLoggedIn in
+                /// 1. not logged in
+                guard isLoggedIn else {
+                    return Just(false).eraseToAnyPublisher()
+                }
+                /// 1. logged in
+                return self.dataUsageRemoteRepository.isDataAdded(on: date)
+                    .eraseToAnyPublisher()
+            }
+            .flatMap { isDataAdded in
+                /// 2. update existing data
+                guard !isDataAdded else {
+                    return self.dataUsageRemoteRepository
+                        .updateData(date: date, dailyUsedData: dailyUsedData)
+                        .eraseToAnyPublisher()
+                }
+                /// 2. add new data
+                return self.dataUsageRemoteRepository
+                    .addData(
+                        .init(date: date, dailyUsedData: dailyUsedData)
+                    )
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+            .sink { isSavedOrUpdated in
+                Logger.appModel.debug("syncTodaysData - is todays data saved or updated: \(isSavedOrUpdated)")
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    func syncOldData() {
+        var allDataFromLocal = dataUsageRepository.getAllData()
+        
+        /// exclude todays data
+        allDataFromLocal.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
+        
+        Logger.appModel.debug("syncOldData - all data from local: \(allDataFromLocal)")
+        
+        dataUsageRemoteRepository.isLoggedInUser()
+            .flatMap { isLoggedIn in
+                /// 1. logged in
+                if isLoggedIn {
+                    return self.dataUsageRemoteRepository.getAllExistingDataDates()
+                        .eraseToAnyPublisher()
+                }
+                return Just([Date]()).eraseToAnyPublisher()
+            }
+            .map { dataDatesFromRemote in
+                /// data to update not added to cloud
+                var dataToUpdate = [Data]()
+                
+                allDataFromLocal.forEach { data in
+                    guard let date = data.date else {
+                        return
+                    }
+                    guard dataDatesFromRemote.first(where: { $0 == date }) == nil else {
+                        return
+                    }
+                    dataToUpdate.append(data)
+                }
+                
+                Logger.appModel.debug("syncOldData - data to update: \(dataToUpdate)")
+                return dataToUpdate
+            }
+            .map { (dataToUpdate: [Data]) in
+                /// convert all to cloud data type
+                let remoteData: [RemoteData] = dataToUpdate.compactMap { data in
+                    guard let date = data.date else {
+                        return nil
+                    }
+                    return RemoteData(date: date, dailyUsedData: data.dailyUsedData)
+                }
+                return remoteData
+            }
+            .flatMap {
+                /// save all old data
+                self.dataUsageRemoteRepository.addData($0)
+            }
+            .sink { areAdded in
+                Logger.appModel.debug("syncOldData - are old data added: \(areAdded)")
+            }
             .store(in: &cancellables)
     }
-    
-    func syncData() {
-        
-    }
-    
 }
 
 extension AppViewModel {
@@ -829,17 +933,17 @@ extension AppViewModel {
         )
        
         /// Update Database
-        dataUsageRepository.updatePlan(
-            startDate: Calendar.current.date(
-                byAdding: .day, value: -3, to: todaysDate)!,
-            endDate: Calendar.current.date(
-                byAdding: .day, value: 0, to: todaysDate)!,
-            dataAmount: 10,
-            dailyLimit: 4,
-            planLimit: 9
-        )
+//        dataUsageRepository.updatePlan(
+//            startDate: Calendar.current.date(
+//                byAdding: .day, value: -3, to: todaysDate)!,
+//            endDate: Calendar.current.date(
+//                byAdding: .day, value: 0, to: todaysDate)!,
+//            dataAmount: 10,
+//            dailyLimit: 4,
+//            planLimit: 9
+//        )
         
-        refreshUsedDataToday(1000)
+        // refreshUsedDataToday(1000)
         
     }
     

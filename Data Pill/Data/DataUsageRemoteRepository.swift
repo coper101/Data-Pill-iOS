@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import CloudKit
+import OSLog
 
 // MARK: Protocol
 protocol DataUsageRemoteRepositoryProtocol {
@@ -16,16 +17,19 @@ protocol DataUsageRemoteRepositoryProtocol {
     func isPlanAdded() -> AnyPublisher<Bool, Never>
     func addPlan(_ plan: RemotePlan) ->  AnyPublisher<Bool, Never>
     func updatePlan(
-        startDate: Date?,
-        endDate: Date?,
-        dataAmount: Double?,
-        dailyLimit: Double?,
-        planLimit: Double?
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
     ) -> AnyPublisher<Bool, Never>
     
     /// [B] Data
-    func addData(_ data: RemoteData) -> Void
-    func updateData(data: Date) -> Void
+    func isDataAdded(on date: Date) -> AnyPublisher<Bool, Never>
+    func getAllExistingDataDates() -> AnyPublisher<[Date], Never>
+    func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Never>
+    func addData(_ data: RemoteData) -> AnyPublisher<Bool, Never>
+    func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Never>
     
     /// [C] User
     func isLoggedInUser() -> AnyPublisher<Bool, Never>
@@ -33,11 +37,14 @@ protocol DataUsageRemoteRepositoryProtocol {
 
 
 // MARK: App Implementation
-class DataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol {
+class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProtocol {
     
     var cancellables: Set<AnyCancellable> = .init()
     
     let remoteDatabase: RemoteDatabase
+    
+    @Published var isLoggedIn = false
+    @Published var plan: RemotePlan?
     
     init(remoteDatabase: RemoteDatabase) {
         self.remoteDatabase = remoteDatabase
@@ -52,7 +59,6 @@ class DataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol {
     }
     
     func addPlan(_ plan: RemotePlan) -> AnyPublisher<Bool, Never> {
-        
         let record = CKRecord(recordType: RecordType.plan.rawValue)
         record.setValuesForKeys(plan.toDictionary())
                 
@@ -66,39 +72,58 @@ class DataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol {
     }
     
     func updatePlan(
-        startDate: Date?,
-        endDate: Date?,
-        dataAmount: Double?,
-        dailyLimit: Double?,
-        planLimit: Double?
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
     ) -> AnyPublisher<Bool, Never> {
         remoteDatabase.fetchAll(of: .plan)
             .replaceError(with: [])
             .eraseToAnyPublisher()
             .map(\.first)
             .flatMap {
-                guard let planRecord = $0 else {
+                guard let planRecord: CKRecord = $0 else {
                     return Just(false).eraseToAnyPublisher()
                 }
                 
-                if let startDate {
+                /// compare then update if any real changes
+                var changeCount = 0
+                
+                let planStartDate = planRecord.value(forKey: "startDate") as? Date
+                if planStartDate != startDate {
                     planRecord.setValue(startDate, forKey: "startDate")
+                    changeCount += 1
                 }
-
-                if let endDate {
+                
+                let planEndDate = planRecord.value(forKey: "endDate") as? Date
+                if planEndDate != endDate {
                     planRecord.setValue(endDate, forKey: "endDate")
+                    changeCount += 1
                 }
 
-                if let dataAmount {
+                let planDataAmount = planRecord.value(forKey: "dataAmount") as? Double
+                if planDataAmount != dataAmount {
                     planRecord.setValue(dataAmount, forKey: "dataAmount")
+                    changeCount += 1
                 }
 
-                if let dailyLimit {
+                let planDailyLimit = planRecord.value(forKey: "dailyLimit") as? Double
+                if planDailyLimit != dailyLimit {
                     planRecord.setValue(dailyLimit, forKey: "dailyLimit")
+                    changeCount += 1
                 }
 
-                if let planLimit {
+                let planPlanLimit = planRecord.value(forKey: "planLimit") as? Double
+                if planPlanLimit != planLimit {
                     planRecord.setValue(planLimit, forKey: "planLimit")
+                    changeCount += 1
+                }
+                
+                print("change count: \(changeCount)")
+                
+                guard changeCount > 0 else {
+                    return Just(false).eraseToAnyPublisher()
                 }
                 
                 return self.remoteDatabase.save(record: planRecord)
@@ -109,15 +134,82 @@ class DataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol {
     }
     
     /// [B]
-    // add for today or previous data not found in remote database
-    func addData(_ data: RemoteData) {
-        // let record = CKRecord(recordType: RecordType.data.rawValue)
-
+    func isDataAdded(on date: Date) -> AnyPublisher<Bool, Never> {
+        let predicate = NSPredicate(format: "date == %@", date as NSDate)
+        
+        return remoteDatabase.fetch(with: predicate, of: .data)
+            .map { $0.count > 0 }
+            .replaceError(with: false)
+            .eraseToAnyPublisher()
     }
     
-    // update for today
-    func updateData(data: Date) {
+    func getAllExistingDataDates() -> AnyPublisher<[Date], Never> {
+        remoteDatabase.fetchAll(of: .data)
+            .replaceError(with: [])
+            .map { records in
+                records.compactMap { $0.value(forKey: "date") as? Date }
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Never> {
+        let records = bulkData.map { data in
+            let record = CKRecord(recordType: RecordType.data.rawValue)
+            record.setValuesForKeys(data.toDictionary())
+            return record
+        }
         
+        return remoteDatabase.save(records: records)
+            .replaceError(with: false)
+            .eraseToAnyPublisher()
+    }
+    
+    func addData(_ data: RemoteData) -> AnyPublisher<Bool, Never> {
+        let record = CKRecord(recordType: RecordType.data.rawValue)
+        record.setValuesForKeys(data.toDictionary())
+
+        return remoteDatabase.save(record: record)
+            .flatMap { isSaved in
+                Just(isSaved)
+                    .eraseToAnyPublisher()
+            }
+            .replaceError(with: false)
+            .eraseToAnyPublisher()
+    }
+    
+    func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Never> {
+        let predicate = NSPredicate(format: "date == %@", date as NSDate)
+        
+        return remoteDatabase.fetch(with: predicate, of: .data)
+            .replaceError(with: [])
+            .eraseToAnyPublisher()
+            .map(\.first)
+            .flatMap {
+                guard let dataRecord: CKRecord = $0 else {
+                    return Just(false).eraseToAnyPublisher()
+                }
+                
+                /// compare then update if any real changes
+                var changeCount = 0
+                
+                let dataDailyUsedData = dataRecord.value(forKey: "dailyUsedData") as? Double
+                
+                if dataDailyUsedData != dailyUsedData {
+                    dataRecord.setValue(dailyUsedData, forKey: "dailyUsedData")
+                    changeCount += 1
+                }
+                
+                print("change count: \(changeCount)")
+                
+                guard changeCount > 0 else {
+                    return Just(false).eraseToAnyPublisher()
+                }
+                
+                return self.remoteDatabase.save(record: dataRecord)
+                    .replaceError(with: false)
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
     
     /// [C]

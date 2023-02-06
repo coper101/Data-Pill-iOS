@@ -42,6 +42,7 @@ protocol RemoteDatabase {
     func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error>
     func fetchAll(of recordType: RecordType) -> AnyPublisher<[CKRecord], Error>
     func save(record: CKRecord) -> AnyPublisher<Bool, Error>
+    func save(records: [CKRecord]) -> AnyPublisher<Bool, Error>
 }
 
 // MARK: App Implementation
@@ -139,17 +140,53 @@ class CloudDatabase: RemoteDatabase {
         Future { promise in
             self.database.save(record) { newRecord, error in
                 if let error {
-                    Logger.remoteDatabase.debug("saveItem - error: \(error.localizedDescription)")
+                    Logger.remoteDatabase.debug("save - error: \(error.localizedDescription)")
                     promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
                     return
                 }
                 guard newRecord != nil else {
-                    Logger.remoteDatabase.debug("saveItem - error: new record is nil")
+                    Logger.remoteDatabase.debug("save - error: new record is nil")
                     promise(.failure(RemoteDatabaseError.saveError("new record is nil")))
                     return
                 }
+                Logger.remoteDatabase.debug("save - saved")
                 promise(.success(true))
             } //: save
+        } //: Future
+        .eraseToAnyPublisher()
+    }
+    
+    func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
+        Future { promise in
+            let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+            
+            if #available(iOS 15.0, *) {
+                operation.modifyRecordsResultBlock = { completion in
+                    switch completion {
+                    case .success(_):
+                        Logger.remoteDatabase.debug("save records - saved")
+                        promise(.success(true))
+                    case .failure(let error):
+                        Logger.remoteDatabase.debug("save records - error: \(error.localizedDescription)")
+                        promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
+                    }
+                }
+                
+            } else {
+                operation.modifyRecordsCompletionBlock = { _, _, error in
+                    if let error {
+                        Logger.remoteDatabase.debug("save records - error: \(error.localizedDescription)")
+                        promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
+                        return
+                    }
+                    Logger.remoteDatabase.debug("save records - saved")
+                    promise(.success(true))
+                }
+                
+            } //: if-else
+            
+            self.database.add(operation)
+            
         } //: Future
         .eraseToAnyPublisher()
     }
