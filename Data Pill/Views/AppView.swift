@@ -431,7 +431,8 @@ struct AppView_Previews: PreviewProvider {
                 byAdding: .day, value: 0, to: todaysDate)!,
             dataAmount: 10,
             dailyLimit: 4,
-            planLimit: 9
+            planLimit: 9,
+            updateToLatestPlanAfterwards: true
         )
         
         let viewModel = AppViewModel(dataUsageRepository: dataRepo)

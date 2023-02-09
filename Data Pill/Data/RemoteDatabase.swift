@@ -26,6 +26,7 @@ enum RecordType: String {
 enum RemoteDatabaseError: Error {
     case saveError(String)
     case fetchError(String)
+    case nilProp(String)
 }
 
 // MARK: Identifiers

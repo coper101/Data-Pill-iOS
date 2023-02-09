@@ -137,6 +137,14 @@ extension Double {
         /// no change
         return self
     }
+    
+    /// Convert decimal number from GB to MB
+    func toMB() -> Double {
+        if (self < 0) {
+            return 0
+        }
+        return self * 1_000
+    }
 }
 
 extension Int64 {

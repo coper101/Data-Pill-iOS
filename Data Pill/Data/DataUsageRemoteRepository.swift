@@ -14,22 +14,24 @@ import OSLog
 protocol DataUsageRemoteRepositoryProtocol {
     
     /// [A] Plan
-    func isPlanAdded() -> AnyPublisher<Bool, Never>
-    func addPlan(_ plan: RemotePlan) ->  AnyPublisher<Bool, Never>
+    func isPlanAdded() -> AnyPublisher<Bool, Error>
+    func getPlan() -> AnyPublisher<RemotePlan?, Error>
+    func addPlan(_ plan: RemotePlan) ->  AnyPublisher<Bool, Error>
     func updatePlan(
         startDate: Date,
         endDate: Date,
         dataAmount: Double,
         dailyLimit: Double,
         planLimit: Double
-    ) -> AnyPublisher<Bool, Never>
+    ) -> AnyPublisher<Bool, Error>
     
     /// [B] Data
-    func isDataAdded(on date: Date) -> AnyPublisher<Bool, Never>
+    func isDataAdded(on date: Date) -> AnyPublisher<Bool, Error>
+    func getData(on date: Date) -> AnyPublisher<RemoteData?, Error>
     func getAllExistingDataDates() -> AnyPublisher<[Date], Never>
-    func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Never>
-    func addData(_ data: RemoteData) -> AnyPublisher<Bool, Never>
-    func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Never>
+    func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Error>
+    func addData(_ data: RemoteData) -> AnyPublisher<Bool, Error>
+    func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Error>
     
     /// [C] User
     func isLoggedInUser() -> AnyPublisher<Bool, Never>
@@ -51,14 +53,28 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     }
     
     /// [A]
-    func isPlanAdded() -> AnyPublisher<Bool, Never> {
+    func isPlanAdded() -> AnyPublisher<Bool, Error> {
         remoteDatabase.fetchAll(of: .plan)
             .map { $0.count > 0 }
-            .replaceError(with: false)
             .eraseToAnyPublisher()
     }
     
-    func addPlan(_ plan: RemotePlan) -> AnyPublisher<Bool, Never> {
+    func getPlan() -> AnyPublisher<RemotePlan?, Error> {
+        remoteDatabase.fetchAll(of: .plan)
+            .map(\.first)
+            .map { planRecord in
+                guard
+                    let planRecord,
+                    let remotePlan = RemotePlan.toRemotePlan(planRecord)
+                else {
+                    return nil
+                }
+                return remotePlan
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func addPlan(_ plan: RemotePlan) -> AnyPublisher<Bool, Error> {
         let record = CKRecord(recordType: RecordType.plan.rawValue)
         record.setValuesForKeys(plan.toDictionary())
                 
@@ -67,7 +83,6 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
                 Just(isSaved)
                     .eraseToAnyPublisher()
             }
-            .replaceError(with: false)
             .eraseToAnyPublisher()
     }
     
@@ -77,14 +92,14 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
         dataAmount: Double,
         dailyLimit: Double,
         planLimit: Double
-    ) -> AnyPublisher<Bool, Never> {
+    ) -> AnyPublisher<Bool, Error> {
         remoteDatabase.fetchAll(of: .plan)
-            .replaceError(with: [])
-            .eraseToAnyPublisher()
             .map(\.first)
-            .flatMap {
-                guard let planRecord: CKRecord = $0 else {
-                    return Just(false).eraseToAnyPublisher()
+            .flatMap { (planRecord: CKRecord?) in
+                guard let planRecord else {
+                    return Just(false)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
                 }
                 
                 /// compare then update if any real changes
@@ -120,26 +135,43 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
                     changeCount += 1
                 }
                 
-                print("change count: \(changeCount)")
+                Logger.dataUsageRemoteRepository.debug("updatePlan - changes count \(changeCount)")
                 
                 guard changeCount > 0 else {
-                    return Just(false).eraseToAnyPublisher()
+                    return Just(false)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
                 }
                 
                 return self.remoteDatabase.save(record: planRecord)
-                    .replaceError(with: false)
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
     }
     
     /// [B]
-    func isDataAdded(on date: Date) -> AnyPublisher<Bool, Never> {
+    func isDataAdded(on date: Date) -> AnyPublisher<Bool, Error> {
         let predicate = NSPredicate(format: "date == %@", date as NSDate)
         
         return remoteDatabase.fetch(with: predicate, of: .data)
             .map { $0.count > 0 }
-            .replaceError(with: false)
+            .eraseToAnyPublisher()
+    }
+    
+    func getData(on date: Date) -> AnyPublisher<RemoteData?, Error> {
+        let predicate = NSPredicate(format: "date == %@", date as NSDate)
+
+        return remoteDatabase.fetch(with: predicate, of: .data)
+            .map(\.first)
+            .map { dataRecord in
+                guard
+                    let dataRecord,
+                    let remoteData = RemoteData.toRemoteData(dataRecord)
+                else {
+                    return nil
+                }
+                return remoteData
+            }
             .eraseToAnyPublisher()
     }
     
@@ -152,7 +184,7 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
             .eraseToAnyPublisher()
     }
     
-    func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Never> {
+    func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Error> {
         let records = bulkData.map { data in
             let record = CKRecord(recordType: RecordType.data.rawValue)
             record.setValuesForKeys(data.toDictionary())
@@ -160,33 +192,28 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
         }
         
         return remoteDatabase.save(records: records)
-            .replaceError(with: false)
             .eraseToAnyPublisher()
     }
     
-    func addData(_ data: RemoteData) -> AnyPublisher<Bool, Never> {
+    func addData(_ data: RemoteData) -> AnyPublisher<Bool, Error> {
         let record = CKRecord(recordType: RecordType.data.rawValue)
         record.setValuesForKeys(data.toDictionary())
 
         return remoteDatabase.save(record: record)
-            .flatMap { isSaved in
-                Just(isSaved)
-                    .eraseToAnyPublisher()
-            }
-            .replaceError(with: false)
             .eraseToAnyPublisher()
     }
     
-    func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Never> {
+    func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Error> {
         let predicate = NSPredicate(format: "date == %@", date as NSDate)
         
         return remoteDatabase.fetch(with: predicate, of: .data)
-            .replaceError(with: [])
             .eraseToAnyPublisher()
             .map(\.first)
             .flatMap {
                 guard let dataRecord: CKRecord = $0 else {
-                    return Just(false).eraseToAnyPublisher()
+                    return Just(false)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
                 }
                 
                 /// compare then update if any real changes
@@ -199,14 +226,15 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
                     changeCount += 1
                 }
                 
-                print("change count: \(changeCount)")
-                
+                Logger.dataUsageRemoteRepository.debug("updateData - changes count \(changeCount)")
+
                 guard changeCount > 0 else {
-                    return Just(false).eraseToAnyPublisher()
+                    return Just(false)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
                 }
                 
                 return self.remoteDatabase.save(record: dataRecord)
-                    .replaceError(with: false)
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()

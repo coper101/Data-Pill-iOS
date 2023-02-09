@@ -80,4 +80,23 @@ extension RemotePlan {
             "planLimit": planLimit
         ]
     }
+    static func toRemotePlan(_ record: CKRecord) -> RemotePlan? {
+        guard
+            let startDate = record.value(forKey: "startDate") as? Date,
+            let endDate = record.value(forKey: "endDate") as? Date,
+            let dataAmount = record.value(forKey: "dataAmount") as? Double,
+            let dailyLimit = record.value(forKey: "dailyLimit") as? Double,
+            let planLimit = record.value(forKey: "planLimit") as? Double
+        else {
+            return nil
+        }
+        return .init(
+            startDate: startDate,
+            endDate: endDate,
+            dataAmount: dataAmount,
+            dailyLimit: dailyLimit,
+            planLimit: planLimit
+        )
+    }
 }
+

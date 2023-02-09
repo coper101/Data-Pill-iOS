@@ -104,7 +104,8 @@ protocol DataUsageRepositoryProtocol {
         endDate: Date?,
         dataAmount: Double?,
         dailyLimit: Double?,
-        planLimit: Double?
+        planLimit: Double?,
+        updateToLatestPlanAfterwards: Bool
     ) -> Void
     func getAllPlan() throws -> [Plan]
     func getPlan() -> Plan?
@@ -364,7 +365,8 @@ extension DataUsageRepository {
         endDate: Date?,
         dataAmount: Double?,
         dailyLimit: Double?,
-        planLimit: Double?
+        planLimit: Double?,
+        updateToLatestPlanAfterwards: Bool
     ) {
         do {
             guard let plan = getPlan() else {
@@ -387,7 +389,7 @@ extension DataUsageRepository {
                 plan.planLimit = planLimit
             }
             let isUpdated = try database.context.saveIfNeeded()
-            if isUpdated {
+            if isUpdated && updateToLatestPlanAfterwards {
                 updateToLatestPlan()
             }
         } catch let error {
@@ -569,7 +571,8 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         endDate: Date?,
         dataAmount: Double?,
         dailyLimit: Double?,
-        planLimit: Double?
+        planLimit: Double?,
+        updateToLatestPlanAfterwards: Bool
     ) {}
     
     func getAllPlan() throws -> [Plan] {
@@ -676,7 +679,14 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         dataError = DatabaseError.addingPlan("Adding Plan Error")
     }
     
-    func updatePlan(startDate: Date?, endDate: Date?, dataAmount: Double?, dailyLimit: Double?, planLimit: Double?) {
+    func updatePlan(
+        startDate: Date?,
+        endDate: Date?,
+        dataAmount: Double?,
+        dailyLimit: Double?,
+        planLimit: Double?,
+        updateToLatestPlanAfterwards: Bool
+    ) {
         dataError = DatabaseError.updatingPlan("Updating Plan Error")
     }
     

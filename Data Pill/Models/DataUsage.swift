@@ -73,5 +73,14 @@ extension RemoteData {
             "dailyUsedData": dailyUsedData
         ]
     }
+    static func toRemoteData(_ record: CKRecord) -> RemoteData? {
+        guard
+            let date = record.value(forKey: "date") as? Date,
+            let dailyUsedData = record.value(forKey: "dailyUsedData") as? Double
+        else {
+            return nil
+        }
+        return .init(date: date, dailyUsedData: dailyUsedData)
+    }
 }
 
