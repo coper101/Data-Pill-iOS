@@ -35,12 +35,24 @@ protocol DataUsageRemoteRepositoryProtocol {
     
     /// [C] User
     func isLoggedInUser() -> AnyPublisher<Bool, Never>
+    
+    /// [D] Synchronization
+    func syncPlan(
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
+    ) -> AnyPublisher<Bool, Error>
+    func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error>
+    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error>
+    func syncOldRemoteData() -> AnyPublisher<Bool, Error>
 }
 
 
 // MARK: App Implementation
 class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProtocol {
-    
+
     var cancellables: Set<AnyCancellable> = .init()
     
     let remoteDatabase: RemoteDatabase
@@ -221,6 +233,9 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
                 
                 let dataDailyUsedData = dataRecord.value(forKey: "dailyUsedData") as? Double
                 
+                print("dailyUsedData local:", dailyUsedData)
+                print("dailyUsedData remote:", dataDailyUsedData)
+
                 if dataDailyUsedData != dailyUsedData {
                     dataRecord.setValue(dailyUsedData, forKey: "dailyUsedData")
                     changeCount += 1
@@ -244,4 +259,165 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     func isLoggedInUser() -> AnyPublisher<Bool, Never> {
         remoteDatabase.checkLoginStatus()
     }
+}
+
+/// [D]
+extension DataUsageRemoteRepository {
+    
+    func syncPlan(
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
+    ) -> AnyPublisher<Bool, Error> {
+        self.isLoggedInUser()
+            .flatMap { isLoggedIn in
+                /// 1. not logged in
+                guard isLoggedIn else {
+                    return Just(false)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+                /// 1. logged in
+                return self.isPlanAdded()
+                    .eraseToAnyPublisher()
+            }
+            .flatMap { isPlanAdded in
+                /// 2. update existing plan
+                guard !isPlanAdded else {
+                    return self.updatePlan(
+                        startDate: startDate,
+                        endDate: endDate,
+                        dataAmount: dataAmount,
+                        dailyLimit: dailyLimit,
+                        planLimit: planLimit
+                    )
+                    .eraseToAnyPublisher()
+                }
+                /// 2. add new plan
+                return self
+                    .addPlan(
+                        .init(startDate: startDate,
+                            endDate: endDate,
+                            dataAmount: dataAmount,
+                            dailyLimit: dailyLimit,
+                            planLimit: planLimit
+                        )
+                    )
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error> {
+        guard let todaysDate = todaysData.date else {
+            return Fail(error: RemoteDatabaseError.nilProp("Today's Date is nil"))
+                .eraseToAnyPublisher()
+        }
+        let date = Calendar.current.startOfDay(for: todaysDate)
+        let dailyUsedData = todaysData.dailyUsedData
+        
+        return self.isLoggedInUser()
+            .flatMap { isLoggedIn  in
+                /// 1. not logged in
+                guard isLoggedIn else {
+                    return Just(false)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+                /// 1. logged in
+                return self
+                    .isDataAdded(on: date)
+                    .eraseToAnyPublisher()
+            }
+            .flatMap { isDataAdded in
+                /// 2. update existing data
+                guard !isDataAdded else {
+                    return self
+                        .updateData(date: date, dailyUsedData: dailyUsedData)
+                        .eraseToAnyPublisher()
+                }
+                /// 2. add new data
+                return self
+                    .addData(.init(date: date, dailyUsedData: dailyUsedData))
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    
+    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error> {
+        var allLocalData = localData
+        
+        /// exclude todays data
+        allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
+        
+        guard !allLocalData.isEmpty else {
+            return Just(false)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+                
+        for data in allLocalData {
+            Logger.dataUsageRemoteRepository.debug("syncOldData - data from local: \(data.date.debugDescription)")
+        }
+        
+        return self.isLoggedInUser()
+            .flatMap { isLoggedIn in
+                /// 1. logged in
+                if isLoggedIn {
+                    return self.getAllExistingDataDates()
+                        .eraseToAnyPublisher()
+                }
+                return Just([Date]()).eraseToAnyPublisher()
+            }
+            .map { dataDatesFromRemote in
+                /// data to update not added to cloud
+                var dataToUpdate = [Data]()
+                
+                allLocalData.forEach { data in
+                    guard let date = data.date else {
+                        return
+                    }
+                    guard dataDatesFromRemote.first(where: { $0 == date }) == nil else {
+                        return
+                    }
+                    dataToUpdate.append(data)
+                }
+                
+                /// limit data to update
+                if dataToUpdate.count >= 10 {
+                    dataToUpdate = Array(dataToUpdate[..<10])
+                }
+                
+                for data in dataToUpdate {
+                    Logger.dataUsageRemoteRepository.debug("syncOldData - data to update: \(data.date.debugDescription)")
+                }
+                
+                return dataToUpdate
+            }
+            .map { (dataToUpdate: [Data]) in
+                /// convert all to cloud data type
+                let remoteData: [RemoteData] = dataToUpdate.compactMap { data in
+                    guard let date = data.date else {
+                        return nil
+                    }
+                    return RemoteData(date: date, dailyUsedData: data.dailyUsedData)
+                }
+                return remoteData
+            }
+            .flatMap {
+                /// save all old data
+                self.addData($0)
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func syncOldRemoteData() -> AnyPublisher<Bool, Error> {
+        return Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
 }

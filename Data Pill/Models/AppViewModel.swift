@@ -181,15 +181,9 @@ final class AppViewModel: ObservableObject {
         observeEditPlan()
         observeDataErrors()
         
-//        if !isGuideShown {
-//            print("adding test data")
-//            #if DEBUG
-//                addTestData()
-//            #endif
-//        }
-        
-        syncTodaysData()
-        syncOldData()
+        // #if DEBUG
+        //     addTestData()
+        // #endif
     }
     
 }
@@ -367,6 +361,7 @@ extension AppViewModel {
             .sink(receiveValue: didChangeDataError)
             .store(in: &cancellables)
     }
+    
 }
 
 // MARK: Events
@@ -385,6 +380,7 @@ extension AppViewModel {
             let recentTotalUsedData = recentDataWithHasTotal.totalUsedData
             amountUsed = totalUsedData - recentTotalUsedData
         }
+        
         /// new amount can't be calculated since device was restarted
         if amountUsed < 0 {
             amountUsed = 0
@@ -754,6 +750,14 @@ extension AppViewModel {
         }
     }
     
+    // MARK: - Scene Phase
+    func didChangeActiveScenePhase() {
+        updatePlanPeriod()
+        syncPlan()
+        syncTodaysData()
+        syncOldLocalData()
+    }
+    
     // MARK: - Guide
     func showGuide() {
         isGuideShown = !wasGuideShown
@@ -765,49 +769,6 @@ extension AppViewModel {
     }
     
     // MARK: - iCloud
-    // Sync Plan
-    func doSyncPlan() -> AnyPublisher<Bool, Error> {
-        dataUsageRemoteRepository.isLoggedInUser()
-            .flatMap { isLoggedIn in
-                /// 1. not logged in
-                guard isLoggedIn else {
-                    return Just(false)
-                        .setFailureType(to: Error.self)
-                        .eraseToAnyPublisher()
-                }
-                /// 1. logged in
-                return self.dataUsageRemoteRepository.isPlanAdded()
-                    .eraseToAnyPublisher()
-            }
-            .flatMap { isPlanAdded in
-                /// 2. update existing plan
-                guard !isPlanAdded else {
-                    return self.dataUsageRemoteRepository
-                        .updatePlan(
-                            startDate: self.startDate,
-                            endDate: self.endDate,
-                            dataAmount: self.dataAmount,
-                            dailyLimit: self.dataLimitPerDay,
-                            planLimit: self.dataLimit
-                        )
-                        .eraseToAnyPublisher()
-                }
-                /// 2. add new plan
-                return self.dataUsageRemoteRepository
-                    .addPlan(
-                        .init(
-                            startDate: self.startDate,
-                            endDate: self.endDate,
-                            dataAmount: self.dataAmount,
-                            dailyLimit: self.dataLimitPerDay,
-                            planLimit: self.dataLimit
-                        )
-                    )
-                    .eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
-    }
-    
     func syncPlan() {
         // write existing plan to local (newly installed app)
         guard wasGuideShown else {
@@ -822,6 +783,7 @@ extension AppViewModel {
                     }
                 } receiveValue: { [weak self] remotePlan in
                     guard let self, let remotePlan else {
+                        Logger.appModel.debug("syncPlan - get existing plan doesn't exist")
                         return
                     }
                     Logger.appModel.debug("syncPlan - get existing plan: \(remotePlan.startDate) - \(remotePlan.endDate)")
@@ -841,7 +803,13 @@ extension AppViewModel {
         }
         
         // upload
-        doSyncPlan()
+        dataUsageRemoteRepository.syncPlan(
+            startDate: self.startDate,
+            endDate: self.endDate,
+            dataAmount: self.dataAmount,
+            dailyLimit: self.dataLimitPerDay,
+            planLimit: self.dataLimit
+        )
             .sink { completion in
                 switch completion {
                 case .failure(let error):
@@ -855,42 +823,6 @@ extension AppViewModel {
             .store(in: &self.cancellables)
     }
     
-    // Sync Today's Data
-    func doSyncTodaysData() -> AnyPublisher<Bool, Error> {
-        guard let todaysDate = todaysData.date else {
-            return Fail(error: RemoteDatabaseError.nilProp("Today's Date is nil"))
-                .eraseToAnyPublisher()
-        }
-        let date = Calendar.current.startOfDay(for: todaysDate)
-        let dailyUsedData = todaysData.dailyUsedData
-        
-        return dataUsageRemoteRepository.isLoggedInUser()
-            .flatMap { isLoggedIn  in
-                /// 1. not logged in
-                guard isLoggedIn else {
-                    return Just(false)
-                        .setFailureType(to: Error.self)
-                        .eraseToAnyPublisher()
-                }
-                /// 1. logged in
-                return self.dataUsageRemoteRepository.isDataAdded(on: date)
-                    .eraseToAnyPublisher()
-            }
-            .flatMap { isDataAdded in
-                /// 2. update existing data
-                guard !isDataAdded else {
-                    return self.dataUsageRemoteRepository
-                        .updateData(date: date, dailyUsedData: dailyUsedData)
-                        .eraseToAnyPublisher()
-                }
-                /// 2. add new data
-                return self.dataUsageRemoteRepository
-                    .addData(.init(date: date, dailyUsedData: dailyUsedData))
-                    .eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
-    }
-    
     func syncTodaysData() {
         // write existing todays data to local (newly installed app)
         guard wasGuideShown else {
@@ -900,12 +832,13 @@ extension AppViewModel {
                 .sink { completion in
                     switch completion {
                     case .failure(let error):
-                        Logger.appModel.debug("syncTodaysData - get existing plan error: \(error.localizedDescription)")
+                        Logger.appModel.debug("syncTodaysData - get existing todays data error: \(error.localizedDescription)")
                     case .finished:
                         break
                     }
                 } receiveValue: { [weak self] remoteData in
                     guard let self, let remoteData else {
+                        Logger.appModel.debug("syncTodaysData - get existing todays data doesn't exist")
                         return
                     }
                     Logger.appModel.debug("syncTodaysData - get existing todays data: \(remoteData.dailyUsedData)")
@@ -922,7 +855,7 @@ extension AppViewModel {
         }
         
         // upload
-        doSyncTodaysData()
+        dataUsageRemoteRepository.syncTodaysData(todaysData)
             .sink { completion in
                 switch completion {
                 case .failure(let error):
@@ -936,131 +869,71 @@ extension AppViewModel {
             .store(in: &self.cancellables)
     }
     
-    // Sync Old Data
-    func doSyncOldData() -> AnyPublisher<Bool, Error> {
-        var allDataFromLocal = dataUsageRepository.getAllData()
+    func syncOldLocalData() {
+        let localData = dataUsageRepository.getAllData()
         
-        /// exclude todays data
-        allDataFromLocal.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
-        
-        guard !allDataFromLocal.isEmpty else {
-            return Just(false)
-                .setFailureType(to: Error.self)
-                .eraseToAnyPublisher()
-        }
-        
-        for data in allDataFromLocal {
-            Logger.appModel.debug("syncOldData - data from local: \(data.date.debugDescription)")
-        }
-        
-        return dataUsageRemoteRepository.isLoggedInUser()
-            .flatMap { isLoggedIn in
-                /// 1. logged in
-                if isLoggedIn {
-                    return self.dataUsageRemoteRepository.getAllExistingDataDates()
-                        .eraseToAnyPublisher()
-                }
-                return Just([Date]()).eraseToAnyPublisher()
-            }
-            .map { dataDatesFromRemote in
-                /// data to update not added to cloud
-                var dataToUpdate = [Data]()
-                
-                allDataFromLocal.forEach { data in
-                    guard let date = data.date else {
-                        return
-                    }
-                    guard dataDatesFromRemote.first(where: { $0 == date }) == nil else {
-                        return
-                    }
-                    dataToUpdate.append(data)
-                }
-                
-                for data in dataToUpdate {
-                    Logger.appModel.debug("syncOldData - data to update: \(data.date.debugDescription)")
-                }
-                
-                return dataToUpdate
-            }
-            .map { (dataToUpdate: [Data]) in
-                /// convert all to cloud data type
-                let remoteData: [RemoteData] = dataToUpdate.compactMap { data in
-                    guard let date = data.date else {
-                        return nil
-                    }
-                    return RemoteData(date: date, dailyUsedData: data.dailyUsedData)
-                }
-                return remoteData
-            }
-            .flatMap {
-                /// save all old data
-                self.dataUsageRemoteRepository.addData($0)
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    func syncOldData() {
-        doSyncOldData()
+        dataUsageRemoteRepository.syncOldLocalData(localData)
             .sink { completion in
                 switch completion {
                 case .failure(let error):
-                    Logger.appModel.debug("syncOldData - are old data added error: \(error.localizedDescription)")
+                    Logger.appModel.debug("syncOldLocalData - are old data added error: \(error.localizedDescription)")
                 case .finished:
                     break
                 }
             } receiveValue: { areAdded in
-                Logger.appModel.debug("syncOldData - are old data added: \(areAdded)")
+                Logger.appModel.debug("syncOldLocalData - are old data added: \(areAdded)")
             }
             .store(in: &self.cancellables)
     }
+    
+    
+    func syncOldRemoteData() {
+        dataUsageRemoteRepository.syncOldRemoteData()
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    Logger.appModel.debug("syncOldRemoteData - are old data added error: \(error.localizedDescription)")
+                case .finished:
+                    break
+                }
+            } receiveValue: { areAdded in
+                Logger.appModel.debug("syncOldRemoteData - are old data added: \(areAdded)")
+            }
+            .store(in: &self.cancellables)
+    }
+    
 }
 
 extension AppViewModel {
     
     func addTestData() {
+        Logger.appModel.debug("adding test data")
         
         let todaysDate = Date()
 
-        /// 3 Days Ago
-        dataUsageRepository.addData(
-            date: Calendar.current.date(
-                byAdding: .day, value: -3, to: todaysDate)!,
-            totalUsedData: 0,
-            dailyUsedData: 1_500,
-            hasLastTotal: true
-        )
-        
-        /// 2 Days Ago
-        dataUsageRepository.addData(
-            date: Calendar.current.date(
-                byAdding: .day, value: -2, to: todaysDate)!,
-            totalUsedData: 0,
-            dailyUsedData: 5_000,
-            hasLastTotal: true
-        )
-        
-        /// Yesterday
-        dataUsageRepository.addData(
-            date: Calendar.current.date(
-                byAdding: .day, value: -1, to: todaysDate)!,
-            totalUsedData: 0,
-            dailyUsedData: 2_100,
-            hasLastTotal: true
-        )
-       
+        (1...50).forEach { value in
+            Logger.appModel.debug("adding test data \(value) day ago")
+            dataUsageRepository.addData(
+                date: Calendar.current.date(
+                    byAdding: .day, value: -value, to: todaysDate)!,
+                totalUsedData: 0,
+                dailyUsedData: 1_500,
+                hasLastTotal: true
+            )
+        }
+      
         /// Update Database
-//        dataUsageRepository.updatePlan(
-//            startDate: Calendar.current.date(
-//                byAdding: .day, value: -3, to: todaysDate)!,
-//            endDate: Calendar.current.date(
-//                byAdding: .day, value: 0, to: todaysDate)!,
-//            dataAmount: 10,
-//            dailyLimit: 4,
-//            planLimit: 9
-//        )
+        // dataUsageRepository.updatePlan(
+        //     startDate: Calendar.current.date(
+        //         byAdding: .day, value: -3, to: todaysDate)!,
+        //     endDate: Calendar.current.date(
+        //         byAdding: .day, value: 0, to: todaysDate)!,
+        //     dataAmount: 10,
+        //     dailyLimit: 4,
+        //     planLimit: 9
+        // )
         
         // refreshUsedDataToday(1000)
-        
     }
     
 }
