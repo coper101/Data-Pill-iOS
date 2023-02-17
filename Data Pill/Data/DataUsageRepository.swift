@@ -59,6 +59,8 @@ enum DatabaseError: Error, Equatable {
     
 private enum DataAttribute: String {
     case date
+    case dailyUsedData
+    case totalUsedData
     case hasLastTotal
 }
 
@@ -81,6 +83,7 @@ protocol DataUsageRepositoryProtocol {
         dailyUsedData: Double,
         hasLastTotal: Bool
     ) -> Void
+    func addData(_ remoteData: [RemoteData]) -> Void
     func updateData(_ data: Data) -> Void
     func getAllData() -> [Data]
     func getDataWith(
@@ -182,6 +185,50 @@ extension DataUsageRepository {
             dataError = DatabaseError.adding(error.localizedDescription)
             Logger.database.error("failed to add data: \(error.localizedDescription)")
         }
+    }
+    
+    /// add multiple data
+    func addData(_ remoteData: [RemoteData]) {
+        database.container.performBackgroundTask { [weak self] taskContext in
+            guard let self else {
+                return
+            }
+            
+            taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            // let batchInsert = NSBatchInsertRequest(entityName: Entities.data.name, objects: objects)
+            let batchInsert = self.newBatchInsertRequest(remoteData)
+            
+            do {
+                try taskContext.execute(batchInsert)
+                Logger.database.error("successful adding batch data")
+            } catch let error {
+                Logger.database.error("failed to add batch data: \(error.localizedDescription)")
+            }
+            
+        }
+    }
+    
+    private func newBatchInsertRequest(_ remoteDataList: [RemoteData]) -> NSBatchInsertRequest {
+        var index = 0
+        let totalCount = remoteDataList.count
+        
+        let batchInsert = NSBatchInsertRequest(entityName: Entities.data.rawValue) { (managedObject: NSManagedObject) -> Bool in
+            guard index < totalCount else {
+                return true // done inserting all
+            }
+            
+            if let data = managedObject as? Data {
+                let remoteData = remoteDataList[index]
+                data.date = remoteData.date
+                data.totalUsedData = 0.0
+                data.dailyUsedData = remoteData.dailyUsedData
+                data.hasLastTotal = true
+            }
+            
+            index += 1
+            return false // call the closure again
+        }
+        return batchInsert
     }
     
     /// updates an existing Data from the Database
@@ -501,8 +548,12 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         thisWeeksData.append(uninsertedData)
     }
     
+    func addData(_ remoteData: [RemoteData]) {
+        
+    }
+    
     func updateData(_ item: Data) {
-        // TODO:
+
     }
     
     func getAllData() -> [Data] {
@@ -631,6 +682,10 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         dataError = DatabaseError.adding("Adding Data Error")
     }
         
+    func addData(_ remoteData: [RemoteData]) {
+        
+    }
+    
     func updateData(_ data: Data) {
         dataError = DatabaseError.updatingData("Updating Data Error")
     }

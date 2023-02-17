@@ -46,7 +46,7 @@ protocol DataUsageRemoteRepositoryProtocol {
     ) -> AnyPublisher<Bool, Error>
     func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error>
     func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error>
-    func syncOldRemoteData() -> AnyPublisher<Bool, Error>
+    func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error>
 }
 
 
@@ -196,6 +196,19 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
             .eraseToAnyPublisher()
     }
     
+    func getAllData(excluding date: Date) -> AnyPublisher<[RemoteData], Never> {
+        let predicate = NSPredicate(format: "date != %@", date as NSDate)
+
+        return remoteDatabase.fetch(with: predicate, of: .data)
+            .replaceError(with: [])
+            .map { records in
+                return records.compactMap { dataRecord in
+                    return RemoteData.toRemoteData(dataRecord)
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+    
     func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Error> {
         let records = bulkData.map { data in
             let record = CKRecord(recordType: RecordType.data.rawValue)
@@ -232,9 +245,6 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
                 var changeCount = 0
                 
                 let dataDailyUsedData = dataRecord.value(forKey: "dailyUsedData") as? Double
-                
-                print("dailyUsedData local:", dailyUsedData)
-                print("dailyUsedData remote:", dataDailyUsedData)
 
                 if dataDailyUsedData != dailyUsedData {
                     dataRecord.setValue(dailyUsedData, forKey: "dailyUsedData")
@@ -346,7 +356,6 @@ extension DataUsageRemoteRepository {
             .eraseToAnyPublisher()
     }
     
-    
     func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error> {
         var allLocalData = localData
         
@@ -359,9 +368,7 @@ extension DataUsageRemoteRepository {
                 .eraseToAnyPublisher()
         }
                 
-        for data in allLocalData {
-            Logger.dataUsageRemoteRepository.debug("syncOldData - data from local: \(data.date.debugDescription)")
-        }
+        Logger.dataUsageRemoteRepository.debug("syncOldData - data from local count: \(allLocalData.count)")
         
         return self.isLoggedInUser()
             .flatMap { isLoggedIn in
@@ -370,6 +377,7 @@ extension DataUsageRemoteRepository {
                     return self.getAllExistingDataDates()
                         .eraseToAnyPublisher()
                 }
+                /// 1. not logged in
                 return Just([Date]()).eraseToAnyPublisher()
             }
             .map { dataDatesFromRemote in
@@ -387,13 +395,12 @@ extension DataUsageRemoteRepository {
                 }
                 
                 /// limit data to update
-                if dataToUpdate.count >= 10 {
-                    dataToUpdate = Array(dataToUpdate[..<10])
+                let limit = 100
+                if dataToUpdate.count >= limit {
+                    dataToUpdate = Array(dataToUpdate[..<limit])
                 }
                 
-                for data in dataToUpdate {
-                    Logger.dataUsageRemoteRepository.debug("syncOldData - data to update: \(data.date.debugDescription)")
-                }
+                Logger.dataUsageRemoteRepository.debug("syncOldData - data to update count: \(dataToUpdate.count)")
                 
                 return dataToUpdate
             }
@@ -414,9 +421,46 @@ extension DataUsageRemoteRepository {
             .eraseToAnyPublisher()
     }
     
-    func syncOldRemoteData() -> AnyPublisher<Bool, Error> {
-        return Just(true)
-            .setFailureType(to: Error.self)
+    func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error> {
+        var allLocalData = localData
+        
+        /// exclude todays data
+        allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
+        
+        Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from local count: \(allLocalData.count)")
+
+        // get all local data
+        return self.isLoggedInUser()
+            .flatMap { isLoggedIn in
+                /// 1. logged in
+                if isLoggedIn {
+                    return self.getAllData(excluding: date)
+                        .eraseToAnyPublisher()
+                }
+                /// 1. not logged in
+                return Just([RemoteData]()).eraseToAnyPublisher()
+            }
+            .flatMap { oldRemoteData in
+                
+                var dataToAdd = [RemoteData]()
+                
+                oldRemoteData.forEach { (remoteData: RemoteData) in
+                    
+                    // remote data exists in local, dates saved starts at 00:00
+                    if let _ = allLocalData.first(where: { $0.date == remoteData.date }) {
+                        return
+                    }
+                    
+                    // doesn't exist, need to be added
+                    dataToAdd.append(remoteData)
+                }
+                
+                Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data to add count: \(dataToAdd.count)")
+                
+                return Just(dataToAdd)
+                    .setFailureType(to: Error.self)
+                    .eraseToAnyPublisher()
+            }
             .eraseToAnyPublisher()
     }
     

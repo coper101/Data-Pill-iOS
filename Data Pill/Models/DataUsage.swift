@@ -80,7 +80,8 @@ extension RemoteData {
         else {
             return nil
         }
-        return .init(date: date, dailyUsedData: dailyUsedData)
+        let startDate = Calendar.current.startOfDay(for: date)
+        return .init(date: startDate, dailyUsedData: dailyUsedData)
     }
 }
 

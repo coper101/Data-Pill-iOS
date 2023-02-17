@@ -397,11 +397,15 @@ extension AppViewModel {
     func didTapStartPlan() {
         closeGuide()
         appDataRepository.setIsPlanActive(true)
+        // doesn't update UI?
+        dataUsageRepository.updateToLatestPlan()
     }
     
     func didTapStartNonPlan() {
         closeGuide()
         appDataRepository.setIsPlanActive(false)
+        // doesn't update UI?
+        dataUsageRepository.updateToLatestPlan()
     }
     
     func didChangeIsPlanActive(_ isActive: Bool) {        
@@ -755,7 +759,7 @@ extension AppViewModel {
         updatePlanPeriod()
         syncPlan()
         syncTodaysData()
-        syncOldLocalData()
+        syncOldThenRemoteData()
     }
     
     // MARK: - Guide
@@ -788,6 +792,7 @@ extension AppViewModel {
                     }
                     Logger.appModel.debug("syncPlan - get existing plan: \(remotePlan.startDate) - \(remotePlan.endDate)")
                     
+                    // prevent updating plan after adding to core - can cause this syncPlan to be triggered again
                     self.dataUsageRepository.updatePlan(
                         startDate: remotePlan.startDate,
                         endDate: remotePlan.endDate,
@@ -795,7 +800,6 @@ extension AppViewModel {
                         dailyLimit: remotePlan.dailyLimit,
                         planLimit: remotePlan.planLimit,
                         updateToLatestPlanAfterwards: false
-                        
                     )
                 }
                 .store(in: &self.cancellables)
@@ -869,35 +873,34 @@ extension AppViewModel {
             .store(in: &self.cancellables)
     }
     
-    func syncOldLocalData() {
-        let localData = dataUsageRepository.getAllData()
-        
+    
+    func syncOldThenRemoteData() {
+        var localData = dataUsageRepository.getAllData()
+
         dataUsageRemoteRepository.syncOldLocalData(localData)
-            .sink { completion in
-                switch completion {
-                case .failure(let error):
-                    Logger.appModel.debug("syncOldLocalData - are old data added error: \(error.localizedDescription)")
-                case .finished:
-                    break
-                }
-            } receiveValue: { areAdded in
-                Logger.appModel.debug("syncOldLocalData - are old data added: \(areAdded)")
+            .flatMap { areUploaded in
+                Logger.appModel.debug("syncOldThenRemoteData - are old local data uploaded: \(areUploaded)")
+
+                localData = self.dataUsageRepository.getAllData()
+                let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
+
+                return self.dataUsageRemoteRepository.syncOldRemoteData(localData, excluding: date)
+                    .eraseToAnyPublisher()
             }
-            .store(in: &self.cancellables)
-    }
-    
-    
-    func syncOldRemoteData() {
-        dataUsageRemoteRepository.syncOldRemoteData()
             .sink { completion in
                 switch completion {
                 case .failure(let error):
-                    Logger.appModel.debug("syncOldRemoteData - are old data added error: \(error.localizedDescription)")
+                    Logger.appModel.debug("syncOldThenRemoteData - error: \(error.localizedDescription)")
                 case .finished:
                     break
                 }
-            } receiveValue: { areAdded in
-                Logger.appModel.debug("syncOldRemoteData - are old data added: \(areAdded)")
+            } receiveValue: { [weak self] remoteData in
+                Logger.appModel.debug("syncOldThenRemoteData - remote data to add count: \(remoteData.count)")
+                
+                guard !remoteData.isEmpty, let self else {
+                    return
+                }
+                self.dataUsageRepository.addData(remoteData)
             }
             .store(in: &self.cancellables)
     }
@@ -911,16 +914,12 @@ extension AppViewModel {
         
         let todaysDate = Date()
 
-        (1...50).forEach { value in
-            Logger.appModel.debug("adding test data \(value) day ago")
-            dataUsageRepository.addData(
-                date: Calendar.current.date(
-                    byAdding: .day, value: -value, to: todaysDate)!,
-                totalUsedData: 0,
-                dailyUsedData: 1_500,
-                hasLastTotal: true
-            )
+        let remoteDataToAdd = (1...50).map { value in
+            let date = Calendar.current.date(byAdding: .day, value: Int(-value), to: todaysDate)!
+            let startDate = Calendar.current.startOfDay(for: date)
+            return RemoteData(date: startDate, dailyUsedData: 1_500)
         }
+        self.dataUsageRepository.addData(remoteDataToAdd)
       
         /// Update Database
         // dataUsageRepository.updatePlan(
