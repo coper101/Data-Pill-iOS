@@ -61,6 +61,7 @@ struct PlanView: View {
                 endPeriodAction: {},
                 isPlanActive: .constant(true),
                 dataAmountValue: .constant("20"),
+                dataAmount: 20,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },

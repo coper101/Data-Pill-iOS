@@ -105,6 +105,7 @@ struct AppView: View {
                         endPeriodAction: endPeriodAction,
                         isPlanActive: .constant(false),
                         dataAmountValue: $appViewModel.dataValue,
+                        dataAmount: appViewModel.dataAmount,
                         plusDataAction: plusDataAction,
                         minusDataAction: minusDataAction,
                         didChangePlusStepperValue: changeStepperPlusDataAction,

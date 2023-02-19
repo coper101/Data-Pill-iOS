@@ -78,6 +78,7 @@ struct NonPlanView: View {
                 endPeriodAction: {},
                 isPlanActive: $isPlanActive,
                 dataAmountValue: .constant("20"),
+                dataAmount: 20,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },

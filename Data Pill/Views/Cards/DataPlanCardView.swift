@@ -28,6 +28,7 @@ struct DataPlanCardView: View {
     
     @Binding var isPlanActive: Bool
     @Binding var dataAmountValue: String
+    var dataAmount: Double
     var dataUnit: Unit = .gb
     
     var plusDataAction: Action
@@ -135,7 +136,7 @@ struct DataPlanCardView: View {
 
                     // Row 2: DATA AMOUNT
                     NavRowView(
-                        title: "\(dataAmountValue) \(dataUnit.rawValue)",
+                        title: "\(dataAmount) \(dataUnit.rawValue)",
                         subtitle: "",
                         action: dataAmountAction
                     )
@@ -173,6 +174,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
                 endPeriodAction: {},
                 isPlanActive: .constant(false),
                 dataAmountValue: .constant("10"),
+                dataAmount: 10,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
@@ -190,6 +192,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
                 endPeriodAction: {},
                 isPlanActive: .constant(true),
                 dataAmountValue: .constant("10"),
+                dataAmount: 10,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
@@ -208,6 +211,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
                 endPeriodAction: {},
                 isPlanActive: .constant(false),
                 dataAmountValue: .constant("10"),
+                dataAmount: 10,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
@@ -226,6 +230,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
                 endPeriodAction: {},
                 isPlanActive: .constant(false),
                 dataAmountValue: .constant("10"),
+                dataAmount: 10,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },

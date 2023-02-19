@@ -102,6 +102,7 @@ struct PillGroupView: View {
                 endPeriodAction: {},
                 isPlanActive: $appViewModel.isPlanActive,
                 dataAmountValue: $appViewModel.dataValue,
+                dataAmount: appViewModel.dataAmount,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
