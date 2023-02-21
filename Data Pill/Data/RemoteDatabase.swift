@@ -39,6 +39,7 @@ enum CloudContainer: String {
 
 // MARK: Protocol
 protocol RemoteDatabase {
+    func createOnUpdateRecordSubscription(of recordType: RecordType) -> CKQuerySubscription
     func checkLoginStatus() -> AnyPublisher<Bool, Never>
     func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error>
     func fetchAll(of recordType: RecordType) -> AnyPublisher<[CKRecord], Error>
@@ -57,11 +58,22 @@ class CloudDatabase: RemoteDatabase {
         self.database = self.container.privateCloudDatabase
     }
     
+    func createOnUpdateRecordSubscription(of recordType: RecordType) -> CKQuerySubscription {
+        let subscription = CKQuerySubscription(
+            recordType: recordType.type, predicate: .init(value: true),
+            options: .firesOnRecordUpdate
+        )
+        let notification = CKSubscription.NotificationInfo()
+        notification.shouldSendContentAvailable = true
+        subscription.notificationInfo = notification
+        return subscription
+    }
+    
     func checkLoginStatus() -> AnyPublisher<Bool, Never> {
         Future { promise in
             self.container.accountStatus { accountStatus, error in
                 guard accountStatus == .available else {
-                    Logger.remoteDatabase.debug("checkLoginStatus - is not logged in")
+                    Logger.remoteDatabase.debug("checkLoginStatus - is not logged in or disabled iCloud")
                     promise(.success(false))
                     return
                 }

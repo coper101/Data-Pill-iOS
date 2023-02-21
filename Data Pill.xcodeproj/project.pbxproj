@@ -89,6 +89,7 @@
 		27BB19ED2972D1F500851E14 /* AccessibilityLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB19EC2972D1F400851E14 /* AccessibilityLabels.swift */; };
 		27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE08292928BD6C00E0781C /* StepperValueView.swift */; };
 		27BE082C2928D7BE00E0781C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE082B2928D7BE00E0781C /* Types.swift */; };
+		27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */; };
 		27E776FD293365410031456D /* WidgetPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E776FC293365410031456D /* WidgetPillView.swift */; };
 		27E776FF293365730031456D /* BasePillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E776FE293365730031456D /* BasePillView.swift */; };
 		27E77707293367450031456D /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E77706293367450031456D /* WidgetKit.framework */; };
@@ -284,6 +285,7 @@
 		27BB19EC2972D1F400851E14 /* AccessibilityLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityLabels.swift; sourceTree = "<group>"; };
 		27BE08292928BD6C00E0781C /* StepperValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperValueView.swift; sourceTree = "<group>"; };
 		27BE082B2928D7BE00E0781C /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionRepository.swift; sourceTree = "<group>"; };
 		27E776FC293365410031456D /* WidgetPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPillView.swift; sourceTree = "<group>"; };
 		27E776FE293365730031456D /* BasePillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePillView.swift; sourceTree = "<group>"; };
 		27E77704293367450031456D /* Data Pill WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Data Pill WidgetExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -549,6 +551,7 @@
 			isa = PBXGroup;
 			children = (
 				27801E1828E951A000201339 /* NetworkDataRepository.swift */,
+				27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */,
 				27801E3C28E9F72F00201339 /* DataUsageRepository.swift */,
 				27073016298E561500B05B51 /* DataUsageRemoteRepository.swift */,
 				27801E3E28E9FDAA00201339 /* AppDataRepository.swift */,
@@ -868,6 +871,7 @@
 				27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
 				27F233B32955434B00E6102D /* EditItemCardView.swift in Sources */,
+				27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
 				27801E0F28E1E7C500201339 /* ButtonView.swift in Sources */,
 				27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */,

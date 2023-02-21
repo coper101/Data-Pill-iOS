@@ -241,19 +241,20 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
                         .eraseToAnyPublisher()
                 }
                 
-                /// compare then update if any real changes
-                var changeCount = 0
+                /// compare then update if any real changes (more than the saved remote usage)
+                var hasHigherUsageChange = false
                 
-                let dataDailyUsedData = dataRecord.value(forKey: "dailyUsedData") as? Double
-
-                if dataDailyUsedData != dailyUsedData {
+                if
+                    let dataDailyUsedData = dataRecord.value(forKey: "dailyUsedData") as? Double,
+                    dailyUsedData > dataDailyUsedData
+                {
                     dataRecord.setValue(dailyUsedData, forKey: "dailyUsedData")
-                    changeCount += 1
+                    hasHigherUsageChange = true
                 }
-                
-                Logger.dataUsageRemoteRepository.debug("updateData - changes count \(changeCount)")
+                                
+                Logger.dataUsageRemoteRepository.debug("updateData - has higher usage change: \(hasHigherUsageChange)")
 
-                guard changeCount > 0 else {
+                guard hasHigherUsageChange else {
                     return Just(false)
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()

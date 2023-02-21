@@ -19,6 +19,7 @@ final class AppViewModel: ObservableObject {
     let dataUsageRepository: DataUsageRepositoryProtocol
     let dataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol
     let networkDataRepository: NetworkDataRepositoryProtocol
+    let networkConnectionRepository: NetworkConnectivity
     let toastTimer: ToastTimer<LocalizedStringKey>
     
     /// [A] App Data
@@ -53,6 +54,9 @@ final class AppViewModel: ObservableObject {
     
     /// [3] Network Data
     @Published var totalUsedData = 0.0
+    
+    /// [4] Network Connection
+    @Published var hasInternetConnection: Bool = false
 
     var numOfDaysOfPlan: Int {
         startDate.toNumOfDays(to: endDate)
@@ -158,6 +162,7 @@ final class AppViewModel: ObservableObject {
             remoteDatabase: CloudDatabase(container: .dataPill)
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
+        networkConnectionRepository: NetworkConnectivity = NetworkConnectionRepository(),
         toastTimer: ToastTimer<LocalizedStringKey> = .init(),
         setupValues: Bool = true
     ) {
@@ -165,6 +170,7 @@ final class AppViewModel: ObservableObject {
         self.dataUsageRepository = dataUsageRepository
         self.dataUsageRemoteRepository = dataUsageRemoteRepository
         self.networkDataRepository = networkDataRepository
+        self.networkConnectionRepository = networkConnectionRepository
         self.toastTimer = toastTimer
         
         guard setupValues else {
@@ -173,6 +179,7 @@ final class AppViewModel: ObservableObject {
         republishAppData()
         republishDataUsage()
         republishNetworkData()
+        republishNetworkConnection()
         republishToast()
         
         setInputValues()
@@ -295,6 +302,13 @@ extension AppViewModel {
             .store(in: &cancellables)
     }
     
+    func republishNetworkConnection() {
+        networkConnectionRepository.hasInternetConnectionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.hasInternetConnection = $0 }
+            .store(in: &cancellables)
+    }
+    
     func republishToast() {
         toastTimer.$message
             .receive(on: DispatchQueue.main)
@@ -389,6 +403,8 @@ extension AppViewModel {
         todaysData.dailyUsedData += amountUsed
         todaysData.totalUsedData = totalUsedData
         todaysData.hasLastTotal = true
+        
+        // Logger.appModel.debug("refreshUsedDataToday - todaysData: \(todaysData)")
         
         dataUsageRepository.updateData(todaysData)
     }
@@ -774,6 +790,11 @@ extension AppViewModel {
     
     // MARK: - iCloud
     func syncPlan() {
+        guard hasInternetConnection else {
+            Logger.appModel.debug("syncPlan - no internet connection")
+            return
+        }
+        
         // write existing plan to local (newly installed app)
         guard wasGuideShown else {
             dataUsageRemoteRepository.getPlan()
@@ -828,6 +849,11 @@ extension AppViewModel {
     }
     
     func syncTodaysData() {
+        guard hasInternetConnection else {
+            Logger.appModel.debug("syncPlan - no internet connection")
+            return
+        }
+        
         // write existing todays data to local (newly installed app)
         guard wasGuideShown else {
             let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
@@ -848,9 +874,7 @@ extension AppViewModel {
                     Logger.appModel.debug("syncTodaysData - get existing todays data: \(remoteData.dailyUsedData)")
                     
                     let todaysData = self.todaysData
-                    todaysData.dailyUsedData = remoteData.dailyUsedData.toMB()
-                    todaysData.totalUsedData = 0
-                    todaysData.hasLastTotal = true
+                    todaysData.dailyUsedData += remoteData.dailyUsedData
                     
                     self.dataUsageRepository.updateData(todaysData)
                 }
@@ -875,6 +899,11 @@ extension AppViewModel {
     
     
     func syncOldThenRemoteData() {
+        guard hasInternetConnection else {
+            Logger.appModel.debug("syncPlan - no internet connection")
+            return
+        }
+        
         var localData = dataUsageRepository.getAllData()
 
         dataUsageRemoteRepository.syncOldLocalData(localData)

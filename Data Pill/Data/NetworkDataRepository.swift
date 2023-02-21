@@ -66,8 +66,13 @@ final class NetworkDataRepository:
     /// Data is retrieved from Data Info which is updated by a Timer
     func receiveTotalUsedData() {
         $usedDataInfo
-            // .map { $0.wirelessWanDataReceived + $0.wirelessWanDataSent }
-            .map { $0.wifiReceived + $0.wifiSent }
+            .map {
+                #if targetEnvironment(simulator)
+                    $0.wifiReceived + $0.wifiSent
+                #else
+                    $0.wirelessWanDataReceived + $0.wirelessWanDataSent
+                #endif
+            }
             .map { $0.toInt64().toMB() }
             .sink { [weak self] in
                 self?.totalUsedData = $0
