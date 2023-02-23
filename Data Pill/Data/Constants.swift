@@ -16,3 +16,4 @@ let dayPills: [DayPill] = [
     .init(color: .secondaryPurple, day: .friday),
     .init(color: .secondaryBlue, day: .saturday)
 ]
+

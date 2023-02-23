@@ -47,6 +47,10 @@ protocol DataUsageRemoteRepositoryProtocol {
     func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error>
     func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error>
     func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error>
+    
+    /// [E] Remote Notification
+    func subscribeToRemotePlanChanges() -> AnyPublisher<Bool, Never>
+    func subscribeToRemoteTodaysDataChanges() -> AnyPublisher<Bool, Never>
 }
 
 
@@ -465,4 +469,34 @@ extension DataUsageRemoteRepository {
             .eraseToAnyPublisher()
     }
     
+    /// [E]
+    func subscribeToRemotePlanChanges() -> AnyPublisher<Bool, Never> {
+        let planSubscriptionID = RemoteSubscription.plan.id
+        
+        return remoteDatabase.fetchAllSubscriptions()
+            .flatMap { subscriptionIDs in
+                guard subscriptionIDs.first(where: { $0 == planSubscriptionID }) == nil else {
+                    return Just(true).eraseToAnyPublisher()
+                }
+                return self.remoteDatabase
+                    .createOnUpdateRecordSubscription(of: .plan, id: planSubscriptionID)
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func subscribeToRemoteTodaysDataChanges() -> AnyPublisher<Bool, Never> {
+        let todaysDataSubscriptionID = RemoteSubscription.todaysData.id
+        
+        return remoteDatabase.fetchAllSubscriptions()
+            .flatMap { subscriptionIDs in
+                guard subscriptionIDs.first(where: { $0 == todaysDataSubscriptionID }) == nil else {
+                    return Just(true).eraseToAnyPublisher()
+                }
+                return self.remoteDatabase
+                    .createOnUpdateRecordSubscription(of: .data, id: todaysDataSubscriptionID)
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
 }

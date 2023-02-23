@@ -185,8 +185,11 @@ final class AppViewModel: ObservableObject {
         setInputValues()
         
         observePlanSettings()
+        observeRemoteData()
         observeEditPlan()
         observeDataErrors()
+        
+        syncRemoteOnChange()
         
         // #if DEBUG
         //     addTestData()
@@ -349,6 +352,25 @@ extension AppViewModel {
             .sink { [weak self] in self?.refreshUsedDataToday($0) }
             .store(in: &cancellables)
         
+    }
+    
+    func observeRemoteData() {
+        
+        NotificationCenter.default
+            .publisher(for: .plan)
+            .sink { _ in
+                print("remote plan updated")
+                // TODO: update plan, override all local changes
+            }
+            .store(in: &cancellables)
+        
+        NotificationCenter.default
+            .publisher(for: .todaysData)
+            .sink { _ in
+                print("remote todays data updated")
+                // TODO: update todays daily used data, override all local changes
+            }
+            .store(in: &cancellables)
     }
     
     func observeEditPlan() {
@@ -897,7 +919,6 @@ extension AppViewModel {
             .store(in: &self.cancellables)
     }
     
-    
     func syncOldThenRemoteData() {
         guard hasInternetConnection else {
             Logger.appModel.debug("syncPlan - no internet connection")
@@ -932,6 +953,18 @@ extension AppViewModel {
                 self.dataUsageRepository.addData(remoteData)
             }
             .store(in: &self.cancellables)
+    }
+    
+    func syncRemoteOnChange() {
+        dataUsageRemoteRepository.subscribeToRemotePlanChanges()
+            .flatMap { isPlanSubscribed in
+                Logger.appModel.debug("syncRemoteOnChange - isPlanSubscribed: \(isPlanSubscribed)")
+                return self.dataUsageRemoteRepository.subscribeToRemoteTodaysDataChanges()
+            }
+            .sink { isTodaysDataSubscribed in
+                Logger.appModel.debug("syncRemoteOnChange - isTodaysDataSubscribed: \(isTodaysDataSubscribed)")
+            }
+            .store(in: &cancellables)
     }
     
 }

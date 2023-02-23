@@ -10,6 +10,7 @@ import OSLog
 extension Logger {
     
     enum Category: String {
+        case appDelegate = "appdelegate"
         case appModel = "appmodel"
         case localDatabase = "localdatabase"
         case remoteDatabase = "remotedatabase"
@@ -19,6 +20,7 @@ extension Logger {
     }
     
     // App
+    static let appDelegate = createLogger(of: .appDelegate)
     static let appModel = createLogger(of: .appModel)
     static let networkRepository = createLogger(of: .networkRepository)
     static let dataUsageRemoteRepository = createLogger(of: .dataUsageRemoteRepository)

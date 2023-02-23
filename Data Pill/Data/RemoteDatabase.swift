@@ -39,8 +39,14 @@ enum CloudContainer: String {
 
 // MARK: Protocol
 protocol RemoteDatabase {
-    func createOnUpdateRecordSubscription(of recordType: RecordType) -> CKQuerySubscription
+    /// Subscriptions
+    func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never>
+    func fetchAllSubscriptions() -> AnyPublisher<[String], Never>
+    
+    /// Account
     func checkLoginStatus() -> AnyPublisher<Bool, Never>
+    
+    /// Records
     func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error>
     func fetchAll(of recordType: RecordType) -> AnyPublisher<[CKRecord], Error>
     func save(record: CKRecord) -> AnyPublisher<Bool, Error>
@@ -58,17 +64,49 @@ class CloudDatabase: RemoteDatabase {
         self.database = self.container.privateCloudDatabase
     }
     
-    func createOnUpdateRecordSubscription(of recordType: RecordType) -> CKQuerySubscription {
-        let subscription = CKQuerySubscription(
-            recordType: recordType.type, predicate: .init(value: true),
-            options: .firesOnRecordUpdate
-        )
-        let notification = CKSubscription.NotificationInfo()
-        notification.shouldSendContentAvailable = true
-        subscription.notificationInfo = notification
-        return subscription
+    func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never> {
+        Future { promise in
+            let subscription = CKQuerySubscription(
+                recordType: recordType.type, predicate: .init(value: true),
+                subscriptionID: subscriptionID,
+                options: .firesOnRecordUpdate
+            )
+            let notification = CKSubscription.NotificationInfo()
+            notification.shouldSendContentAvailable = true // silent notification
+            subscription.notificationInfo = notification
+            
+            self.database.save(subscription) { _, error in
+                if let error {
+                    Logger.remoteDatabase.debug("createOnUpdateRecordSubscription - save subscription error: \(error.localizedDescription)")
+                    promise(.success(false))
+                    return
+                }
+                Logger.remoteDatabase.debug("createOnUpdateRecordSubscription - save subscription success")
+                promise(.success(true))
+            }
+        } //: Future
+        .eraseToAnyPublisher()
     }
     
+    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
+        Future { promise in
+            self.database.fetchAllSubscriptions { subscriptions, error in
+                if let error {
+                    Logger.remoteDatabase.debug("fetchAllSubscriptions - fetch error: \(error.localizedDescription)")
+                    promise(.success([]))
+                    return
+                }
+                guard let subscriptions else {
+                    Logger.remoteDatabase.debug("fetchAllSubscriptions - subscriptions is nil")
+                    return
+                }
+                Logger.remoteDatabase.debug("fetchAllSubscriptions - subscription IDs: \(subscriptions.map(\.subscriptionID))")
+                promise(.success(subscriptions.map(\.subscriptionID)))
+            } //: fetchAll
+        }
+        .eraseToAnyPublisher()
+    }
+        
     func checkLoginStatus() -> AnyPublisher<Bool, Never> {
         Future { promise in
             self.container.accountStatus { accountStatus, error in

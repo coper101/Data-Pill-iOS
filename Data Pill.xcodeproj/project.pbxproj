@@ -138,6 +138,8 @@
 		27E77757293C4AAC0031456D /* SFProText-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */; };
 		27E77758293C4AAC0031456D /* SFProText-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */; };
 		27E77759293C50780031456D /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE328D6F01900201339 /* Modifier.swift */; };
+		27EE983429A7638B00D9D343 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EE983329A7638B00D9D343 /* AppDelegate.swift */; };
+		27EE983629A7733B00D9D343 /* RemoteSubscriptionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EE983529A7733B00D9D343 /* RemoteSubscriptionID.swift */; };
 		27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AC2945CD4800E6102D /* SmallWidgetView.swift */; };
 		27F233AE2945CD4800E6102D /* SmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AC2945CD4800E6102D /* SmallWidgetView.swift */; };
 		27F233B02945CD6300E6102D /* RectangularWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AF2945CD6300E6102D /* RectangularWidgetView.swift */; };
@@ -306,6 +308,8 @@
 		27E77750293B68D00031456D /* Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget.swift; sourceTree = "<group>"; };
 		27E77753293C44070031456D /* FillLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillLineView.swift; sourceTree = "<group>"; };
 		27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Heavy.ttf"; sourceTree = "<group>"; };
+		27EE983329A7638B00D9D343 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		27EE983529A7733B00D9D343 /* RemoteSubscriptionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionID.swift; sourceTree = "<group>"; };
 		27F233AC2945CD4800E6102D /* SmallWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidgetView.swift; sourceTree = "<group>"; };
 		27F233AF2945CD6300E6102D /* RectangularWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularWidgetView.swift; sourceTree = "<group>"; };
 		27F233B22955434B00E6102D /* EditItemCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemCardView.swift; sourceTree = "<group>"; };
@@ -491,6 +495,7 @@
 			isa = PBXGroup;
 			children = (
 				27801DC828D6C96800201339 /* Data_PillApp.swift */,
+				27EE983329A7638B00D9D343 /* AppDelegate.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -558,6 +563,7 @@
 				27801E1D28E98F0D00201339 /* LocalStorage.swift */,
 				27801E2228E9B29D00201339 /* LocalDatabase.swift */,
 				275383E5298D1B4000404454 /* RemoteDatabase.swift */,
+				27EE983529A7733B00D9D343 /* RemoteSubscriptionID.swift */,
 				278E7343295BFAB20020F84B /* ToastTimer.swift */,
 				27B90B8428F2D28100263983 /* Constants.swift */,
 			);
@@ -896,6 +902,7 @@
 				278D6B6928F17065006931DA /* DataInfo.swift in Sources */,
 				27BB19EB2971568800851E14 /* PillTitleView.swift in Sources */,
 				27801E2128E9B16E00201339 /* DataUsage.xcdatamodeld in Sources */,
+				27EE983429A7638B00D9D343 /* AppDelegate.swift in Sources */,
 				27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */,
 				27801DC128D6C96800201339 /* Text.swift in Sources */,
 				27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */,
@@ -909,6 +916,7 @@
 				27801DE228D6D15000201339 /* ItemCardView.swift in Sources */,
 				27801DC928D6C96800201339 /* Data_PillApp.swift in Sources */,
 				27801DC728D6C96800201339 /* Color.swift in Sources */,
+				27EE983629A7733B00D9D343 /* RemoteSubscriptionID.swift in Sources */,
 				27801DFD28DA0CF500201339 /* DividerView.swift in Sources */,
 				27801DF228D8BDBE00201339 /* ToggleView.swift in Sources */,
 				27E7773E2934B3CB0031456D /* StepperValueTypes.swift in Sources */,

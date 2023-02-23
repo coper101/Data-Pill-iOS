@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import OSLog
 
 enum Screen {
     case guide
@@ -15,6 +14,7 @@ enum Screen {
 
 @main
 struct Data_PillApp: App {
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject private var appViewModel = AppViewModel()
 
     var body: some Scene {
