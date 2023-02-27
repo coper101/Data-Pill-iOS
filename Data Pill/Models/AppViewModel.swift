@@ -56,7 +56,7 @@ final class AppViewModel: ObservableObject {
     @Published var totalUsedData = 0.0
     
     /// [4] Network Connection
-    @Published var hasInternetConnection: Bool = false
+    @Published var hasInternetConnection: Bool = true
 
     var numOfDaysOfPlan: Int {
         startDate.toNumOfDays(to: endDate)
@@ -358,18 +358,12 @@ extension AppViewModel {
         
         NotificationCenter.default
             .publisher(for: .plan)
-            .sink { _ in
-                print("remote plan updated")
-                // TODO: update plan, override all local changes
-            }
+            .sink { [weak self] _ in self?.syncLocalPlanFromRemote(true) }
             .store(in: &cancellables)
         
         NotificationCenter.default
             .publisher(for: .todaysData)
-            .sink { _ in
-                print("remote todays data updated")
-                // TODO: update todays daily used data, override all local changes
-            }
+            .sink { [weak self] _ in self?.syncLocalTodaysDataFromRemote() }
             .store(in: &cancellables)
     }
     
@@ -435,14 +429,12 @@ extension AppViewModel {
     func didTapStartPlan() {
         closeGuide()
         appDataRepository.setIsPlanActive(true)
-        // doesn't update UI?
         dataUsageRepository.updateToLatestPlan()
     }
     
     func didTapStartNonPlan() {
         closeGuide()
         appDataRepository.setIsPlanActive(false)
-        // doesn't update UI?
         dataUsageRepository.updateToLatestPlan()
     }
     
@@ -567,8 +559,6 @@ extension AppViewModel {
     }
     
     func didChangeIsDataPlanEditing(_ isEditing: Bool) {
-        print(#function)
-
         if toastTimer.timer != nil {
             toastTimer.reset()
         }
@@ -625,7 +615,6 @@ extension AppViewModel {
     }
     
     func didChangeIsDataLimitEditing(_ isEditing: Bool) {
-        print(#function)
         /// update data limit only if editing is done
         guard
             let amount = Double(dataLimitValue),
@@ -637,8 +626,6 @@ extension AppViewModel {
     }
     
     func didChangeIsDataLimitPerDayEditing(_ isEditing: Bool) {
-        print(#function)
-
         /// update data limit per day only if editing is done
         guard
             let amount = Double(dataLimitPerDayValue),
@@ -811,41 +798,64 @@ extension AppViewModel {
     }
     
     // MARK: - iCloud
+    func syncLocalPlanFromRemote(_ updateToLatestPlanAfterwards: Bool) {
+        guard hasInternetConnection else {
+            Logger.appModel.debug("syncLocalPlanFromRemote - no internet connection")
+            return
+        }
+        
+        dataUsageRemoteRepository.getPlan()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan error: \(error.localizedDescription)")
+                case .finished:
+                    break
+                }
+            } receiveValue: { [weak self] remotePlan in
+                guard let self, let remotePlan else {
+                    Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan doesn't exist")
+                    return
+                }
+                Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan: \(remotePlan.startDate) - \(remotePlan.endDate)")
+                
+                // prevent updating plan after adding to core data - can cause this syncPlan to be triggered again
+                self.dataUsageRepository.updatePlan(
+                    startDate: remotePlan.startDate,
+                    endDate: remotePlan.endDate,
+                    dataAmount: remotePlan.dataAmount,
+                    dailyLimit: remotePlan.dailyLimit,
+                    planLimit: remotePlan.planLimit,
+                    updateToLatestPlanAfterwards: updateToLatestPlanAfterwards
+                )
+            }
+            .store(in: &self.cancellables)
+    }
+    
     func syncPlan() {
         guard hasInternetConnection else {
             Logger.appModel.debug("syncPlan - no internet connection")
             return
         }
         
-        // write existing plan to local (newly installed app)
+        // write existing plan to local
+        // for newly installed app or installed app then icloud authenticated with fresh default plan
+        let isFreshPlan = (
+            startDate == Calendar.current.startOfDay(for: .init()) &&
+            endDate == Calendar.current.startOfDay(for: .init()) &&
+            dataAmount == 0 &&
+            dataLimit == 0 &&
+            dataLimitPerDay == 0
+        )
+        
         guard wasGuideShown else {
-            dataUsageRemoteRepository.getPlan()
-                .receive(on: DispatchQueue.main)
-                .sink { completion in
-                    switch completion {
-                    case .failure(let error):
-                        Logger.appModel.debug("syncPlan - get existing plan error: \(error.localizedDescription)")
-                    case .finished:
-                        break
-                    }
-                } receiveValue: { [weak self] remotePlan in
-                    guard let self, let remotePlan else {
-                        Logger.appModel.debug("syncPlan - get existing plan doesn't exist")
-                        return
-                    }
-                    Logger.appModel.debug("syncPlan - get existing plan: \(remotePlan.startDate) - \(remotePlan.endDate)")
-                    
-                    // prevent updating plan after adding to core - can cause this syncPlan to be triggered again
-                    self.dataUsageRepository.updatePlan(
-                        startDate: remotePlan.startDate,
-                        endDate: remotePlan.endDate,
-                        dataAmount: remotePlan.dataAmount,
-                        dailyLimit: remotePlan.dailyLimit,
-                        planLimit: remotePlan.planLimit,
-                        updateToLatestPlanAfterwards: false
-                    )
-                }
-                .store(in: &self.cancellables)
+            syncLocalPlanFromRemote(false)
+            return
+        }
+        
+        guard !isFreshPlan else {
+            syncLocalPlanFromRemote(true)
             return
         }
         
@@ -870,6 +880,41 @@ extension AppViewModel {
             .store(in: &self.cancellables)
     }
     
+    func syncLocalTodaysDataFromRemote() {
+        let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
+        
+        dataUsageRemoteRepository.getData(on: date)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data error: \(error.localizedDescription)")
+                case .finished:
+                    break
+                }
+            } receiveValue: { [weak self] remoteData in
+                guard let self, let remoteData else {
+                    Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data doesn't exist")
+                    return
+                }
+                Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data: \(remoteData.dailyUsedData)")
+                
+                let todaysData = self.todaysData
+                
+                let remoteDailyUsedData = remoteData.dailyUsedData
+                let localDailyUsedData = todaysData.dailyUsedData
+                
+                // udpdate only if remote data is more than locals e.g. (remote: 10 MB > local: 5 MB)
+                if remoteDailyUsedData > localDailyUsedData {
+                    Logger.appModel.debug("syncLocalTodayDataFromRemote - remote: \(remoteDailyUsedData) > local \(localDailyUsedData)")
+                    todaysData.dailyUsedData += remoteData.dailyUsedData
+                }
+                
+                self.dataUsageRepository.updateData(todaysData)
+            }
+            .store(in: &self.cancellables)
+    }
+    
     func syncTodaysData() {
         guard hasInternetConnection else {
             Logger.appModel.debug("syncPlan - no internet connection")
@@ -878,29 +923,7 @@ extension AppViewModel {
         
         // write existing todays data to local (newly installed app)
         guard wasGuideShown else {
-            let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
-            dataUsageRemoteRepository.getData(on: date)
-                .receive(on: DispatchQueue.main)
-                .sink { completion in
-                    switch completion {
-                    case .failure(let error):
-                        Logger.appModel.debug("syncTodaysData - get existing todays data error: \(error.localizedDescription)")
-                    case .finished:
-                        break
-                    }
-                } receiveValue: { [weak self] remoteData in
-                    guard let self, let remoteData else {
-                        Logger.appModel.debug("syncTodaysData - get existing todays data doesn't exist")
-                        return
-                    }
-                    Logger.appModel.debug("syncTodaysData - get existing todays data: \(remoteData.dailyUsedData)")
-                    
-                    let todaysData = self.todaysData
-                    todaysData.dailyUsedData += remoteData.dailyUsedData
-                    
-                    self.dataUsageRepository.updateData(todaysData)
-                }
-                .store(in: &self.cancellables)
+            syncLocalTodaysDataFromRemote()
             return
         }
         

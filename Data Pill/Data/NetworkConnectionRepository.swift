@@ -22,7 +22,7 @@ final class NetworkConnectionRepository: ObservableObject, NetworkConnectivity {
     @Published var wifiStatus: NWPath.Status? = nil
     @Published var celullarStatus: NWPath.Status? = nil
     
-    @Published var hasInternetConnection: Bool = false
+    @Published var hasInternetConnection: Bool = true
     var hasInternetConnectionPublisher: Published<Bool>.Publisher { $hasInternetConnection }
     
     private let monitorWifi = NWPathMonitor(requiredInterfaceType: .wifi)
