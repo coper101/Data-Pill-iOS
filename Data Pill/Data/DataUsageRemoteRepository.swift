@@ -70,13 +70,13 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     
     /// [A]
     func isPlanAdded() -> AnyPublisher<Bool, Error> {
-        remoteDatabase.fetchAll(of: .plan)
+        remoteDatabase.fetchAll(of: .plan, recursively: false)
             .map { $0.count > 0 }
             .eraseToAnyPublisher()
     }
     
     func getPlan() -> AnyPublisher<RemotePlan?, Error> {
-        remoteDatabase.fetchAll(of: .plan)
+        remoteDatabase.fetchAll(of: .plan, recursively: false)
             .map(\.first)
             .map { planRecord in
                 guard
@@ -109,7 +109,7 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
         dailyLimit: Double,
         planLimit: Double
     ) -> AnyPublisher<Bool, Error> {
-        remoteDatabase.fetchAll(of: .plan)
+        remoteDatabase.fetchAll(of: .plan, recursively: false)
             .map(\.first)
             .flatMap { (planRecord: CKRecord?) in
                 guard let planRecord else {
@@ -192,7 +192,7 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     }
     
     func getAllExistingDataDates() -> AnyPublisher<[Date], Never> {
-        remoteDatabase.fetchAll(of: .data)
+        remoteDatabase.fetchAll(of: .data, recursively: true)
             .replaceError(with: [])
             .map { records in
                 records.compactMap { $0.value(forKey: "date") as? Date }
@@ -373,6 +373,7 @@ extension DataUsageRemoteRepository {
                 .eraseToAnyPublisher()
         }
                 
+        Logger.dataUsageRemoteRepository.debug("syncOldData - data from local dates: \(allLocalData.compactMap(\.date).sorted(by: >))")
         Logger.dataUsageRemoteRepository.debug("syncOldData - data from local count: \(allLocalData.count)")
         
         return self.isLoggedInUser()
@@ -386,6 +387,8 @@ extension DataUsageRemoteRepository {
                 return Just([Date]()).eraseToAnyPublisher()
             }
             .map { dataDatesFromRemote in
+                Logger.dataUsageRemoteRepository.debug("syncOldData - dataDatesFromRemote: \(dataDatesFromRemote.sorted(by: >))")
+
                 /// data to update not added to cloud
                 var dataToUpdate = [Data]()
                 
@@ -406,6 +409,8 @@ extension DataUsageRemoteRepository {
                 }
                 
                 Logger.dataUsageRemoteRepository.debug("syncOldData - data to update count: \(dataToUpdate.count)")
+                
+                Logger.dataUsageRemoteRepository.debug("syncOldData - data to update dates: \(dataToUpdate.map(\.debugDescription))")
                 
                 return dataToUpdate
             }
