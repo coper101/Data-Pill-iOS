@@ -17,6 +17,9 @@ struct Dimensions {
     let horizontalPadding: CGFloat = 21
     let spaceInBetween: CGFloat = 21
     
+    /// Top Bar
+    let topBarHeight: CGFloat = 23
+    
     /// Card
     let planCardHeight: CGFloat = 150
     let planCardHeightDisabled: CGFloat = 55

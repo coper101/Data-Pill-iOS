@@ -23,9 +23,13 @@ struct PillGroupView: View {
     
     // MARK: - UI
     var body: some View {
-        VStack(spacing: dimensions.spaceInBetween) {
+        VStack {
             
-            // MARK: - Row 1: Pill Group
+            // MARK: - Row 1: Top Bar
+            TopBarView(isSyncing: appViewModel.isSyncing)
+                .padding(.top, dimensions.insets.top > 0 ? dimensions.spaceInBetween : 0)
+
+            // MARK: - Row 2: Pill Group
             HStack(
                 alignment: .center,
                 spacing: dimensions.spaceInBetween
@@ -91,7 +95,7 @@ struct PillGroupView: View {
             } //: HStack
             .frame(height: dimensions.maxPillHeight)
             
-            // MARK: - Row 2: Data Plan
+            // MARK: - Row 3: Data Plan
             DataPlanCardView(
                 startDate: appViewModel.startDate,
                 endDate: appViewModel.endDate,
@@ -108,8 +112,9 @@ struct PillGroupView: View {
                 didChangePlusStepperValue: { _ in },
                 didChangeMinusStepperValue: { _ in }
             )
+            .padding(.top, dimensions.spaceInBetween)
             
-            // MARK: - Row 3: Data Limit
+            // MARK: - Row 4: Data Limit
             HStack(spacing: dimensions.spaceInBetween) {
                 
                 if appViewModel.isPlanActive {
@@ -140,6 +145,7 @@ struct PillGroupView: View {
                 
             } //: HStack
             .frame(height: dimensions.planLimitCardsHeight)
+            .padding(.top, dimensions.spaceInBetween)
             
         } //: VStack
         .padding(.horizontal, dimensions.horizontalPadding)
@@ -182,13 +188,17 @@ struct PillGroupView: View {
 // MARK: - Preview
 struct PillGroupView_Previews: PreviewProvider {
     static var appViewModelPlan: AppViewModel {
-        let model = AppViewModel()
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        let model = AppViewModel(dataUsageRepository: dataRepo)
         model.isPlanActive = true
         return model
     }
     
     static var appViewModelNonPlan: AppViewModel {
-        let model = AppViewModel()
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        let model = AppViewModel(dataUsageRepository: dataRepo)
         model.isPlanActive = false
         return model
     }

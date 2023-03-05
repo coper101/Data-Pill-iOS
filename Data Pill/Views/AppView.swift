@@ -25,10 +25,12 @@ struct AppView: View {
             dimensions.planCardHeight : dimensions.planCardHeightDisabled
         
         return (
+            dimensions.topBarHeight +
             dimensions.maxPillHeight +
-                planCardHeight +
+            planCardHeight +
             dimensions.planLimitCardsHeight +
-            (dimensions.spaceInBetween * 2) +
+            (dimensions.spaceInBetween * (dimensions.insets.top > 0 ? 3 : 2)) +
+            (dimensions.isSmallDevice ? 12 : 0) +
             (dimensions.horizontalPadding * 2)
         )
     }

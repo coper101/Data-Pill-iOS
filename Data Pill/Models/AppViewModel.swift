@@ -87,6 +87,12 @@ final class AppViewModel: ObservableObject {
     @Published var isTappedOutside = false
     @Published var isLongPressedOutside = false
     
+    @Published var isSyncingPlan = false
+    @Published var isSyncingTodaysData = false
+    @Published var isSyncingOldData = false
+    
+    @Published var isSyncing = false
+    
     /// Edit Data Plan
     @Published var isDataPlanEditing = false
     @Published var editDataPlanType: EditDataPlan = .dataPlan
@@ -184,6 +190,7 @@ final class AppViewModel: ObservableObject {
         
         setInputValues()
         
+        observeSynchronization()
         observePlanSettings()
         observeRemoteData()
         observeEditPlan()
@@ -322,6 +329,14 @@ extension AppViewModel {
 
 // MARK: Observation
 extension AppViewModel {
+    
+    func observeSynchronization() {
+        
+        $isSyncingPlan
+            .combineLatest($isSyncingTodaysData, $isSyncingOldData)
+            .sink { [weak self] in self?.isSyncing = $0 || $1 || $2 }
+            .store(in: &cancellables)
+    }
     
     func observePlanSettings() {
         /// UI
@@ -806,10 +821,11 @@ extension AppViewModel {
         
         dataUsageRemoteRepository.getPlan()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan error: \(error.localizedDescription)")
+                    self?.isSyncingPlan = false
                 case .finished:
                     break
                 }
@@ -829,13 +845,18 @@ extension AppViewModel {
                     planLimit: remotePlan.planLimit,
                     updateToLatestPlanAfterwards: updateToLatestPlanAfterwards
                 )
+                
+                self.isSyncingPlan = false
             }
             .store(in: &self.cancellables)
     }
     
     func syncPlan() {
+        isSyncingPlan = true
+        
         guard hasInternetConnection else {
             Logger.appModel.debug("syncPlan - no internet connection")
+            isSyncingPlan = false
             return
         }
         
@@ -867,17 +888,20 @@ extension AppViewModel {
             dailyLimit: self.dataLimitPerDay,
             planLimit: self.dataLimit
         )
-            .sink { completion in
-                switch completion {
-                case .failure(let error):
-                    Logger.appModel.debug("syncPlan - is plan saved or updated: \(error.localizedDescription)")
-                case .finished:
-                    break
-                }
-            } receiveValue: { isSavedOrUpdated in
-                Logger.appModel.debug("syncPlan - is plan saved or updated: \(isSavedOrUpdated)")
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] completion in
+            switch completion {
+            case .failure(let error):
+                Logger.appModel.debug("syncPlan - is plan saved or updated: \(error.localizedDescription)")
+                self?.isSyncingPlan = false
+            case .finished:
+                break
             }
-            .store(in: &self.cancellables)
+        } receiveValue: { [weak self] isSavedOrUpdated in
+            Logger.appModel.debug("syncPlan - is plan saved or updated: \(isSavedOrUpdated)")
+            self?.isSyncingPlan = false
+        }
+        .store(in: &self.cancellables)
     }
     
     func syncLocalTodaysDataFromRemote() {
@@ -885,10 +909,11 @@ extension AppViewModel {
         
         dataUsageRemoteRepository.getData(on: date)
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data error: \(error.localizedDescription)")
+                    self?.isSyncingTodaysData = false
                 case .finished:
                     break
                 }
@@ -911,13 +936,17 @@ extension AppViewModel {
                 }
                 
                 self.dataUsageRepository.updateData(todaysData)
+                self.isSyncingTodaysData = false
             }
             .store(in: &self.cancellables)
     }
     
     func syncTodaysData() {
+        isSyncingTodaysData = true
+
         guard hasInternetConnection else {
             Logger.appModel.debug("syncPlan - no internet connection")
+            isSyncingTodaysData = false
             return
         }
         
@@ -929,22 +958,28 @@ extension AppViewModel {
         
         // upload
         dataUsageRemoteRepository.syncTodaysData(todaysData)
-            .sink { completion in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     Logger.appModel.debug("syncTodaysData - is plan saved or updated error: \(error.localizedDescription)")
+                    self?.isSyncingTodaysData = false
                 case .finished:
                     break
                 }
-            } receiveValue: { isSavedOrUpdated in
+            } receiveValue: { [weak self] isSavedOrUpdated in
                 Logger.appModel.debug("syncTodaysData - is todays data saved or updated: \(isSavedOrUpdated)")
+                self?.isSyncingTodaysData = false
             }
             .store(in: &self.cancellables)
     }
     
     func syncOldThenRemoteData() {
+        isSyncingOldData = true
+        
         guard hasInternetConnection else {
             Logger.appModel.debug("syncPlan - no internet connection")
+            isSyncingOldData = false
             return
         }
         
@@ -960,21 +995,29 @@ extension AppViewModel {
                 return self.dataUsageRemoteRepository.syncOldRemoteData(localData, excluding: date)
                     .eraseToAnyPublisher()
             }
-            .sink { completion in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     Logger.appModel.debug("syncOldThenRemoteData - error: \(error.localizedDescription)")
+                    self?.isSyncingOldData = false
                 case .finished:
                     break
                 }
             } receiveValue: { [weak self] remoteData in
                 Logger.appModel.debug("syncOldThenRemoteData - remote data to add count: \(remoteData.count)")
                 
-                guard !remoteData.isEmpty, let self else {
+                guard let self else {
+                    return
+                }
+                guard !remoteData.isEmpty else {
+                    self.isSyncingOldData = false
                     return
                 }
                 self.dataUsageRepository.addData(remoteData)
                 Logger.appModel.debug("syncOldThenRemoteData - are old remote data uploaded: true")
+                
+                self.isSyncingOldData = false
             }
             .store(in: &self.cancellables)
     }

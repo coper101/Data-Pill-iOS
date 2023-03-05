@@ -68,6 +68,9 @@
 		27801E3728E9E3D100201339 /* DataUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3628E9E3D100201339 /* DataUsage.swift */; };
 		27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3C28E9F72F00201339 /* DataUsageRepository.swift */; };
 		27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3E28E9FDAA00201339 /* AppDataRepository.swift */; };
+		278D1A6E29B4A61400E6C974 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D1A6D29B4A61400E6C974 /* SpinnerView.swift */; };
+		278D1A7029B4AA0800E6C974 /* SyncIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D1A6F29B4AA0800E6C974 /* SyncIndicatorView.swift */; };
+		278D1A7229B4AA9C00E6C974 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D1A7129B4AA9C00E6C974 /* TopBarView.swift */; };
 		278D6B6928F17065006931DA /* DataInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D6B6828F17065006931DA /* DataInfo.swift */; };
 		278E7344295BFAB20020F84B /* ToastTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E7343295BFAB20020F84B /* ToastTimer.swift */; };
 		278E7348295C57E30020F84B /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E7347295C57E30020F84B /* Validator.swift */; };
@@ -266,6 +269,9 @@
 		27801E3628E9E3D100201339 /* DataUsage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsage.swift; sourceTree = "<group>"; };
 		27801E3C28E9F72F00201339 /* DataUsageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsageRepository.swift; sourceTree = "<group>"; };
 		27801E3E28E9FDAA00201339 /* AppDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository.swift; sourceTree = "<group>"; };
+		278D1A6D29B4A61400E6C974 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		278D1A6F29B4AA0800E6C974 /* SyncIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncIndicatorView.swift; sourceTree = "<group>"; };
+		278D1A7129B4AA9C00E6C974 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 		278D6B6828F17065006931DA /* DataInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInfo.swift; sourceTree = "<group>"; };
 		278E7343295BFAB20020F84B /* ToastTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastTimer.swift; sourceTree = "<group>"; };
 		278E7347295C57E30020F84B /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
@@ -426,6 +432,7 @@
 			children = (
 				270B264C2963E516001B316F /* GuideView.swift */,
 				27801DB028D6C96800201339 /* AppView.swift */,
+				278D1A7129B4AA9C00E6C974 /* TopBarView.swift */,
 				27801DB328D6C96800201339 /* PillGroupView.swift */,
 				27801E0228DA196E00201339 /* HistoryView.swift */,
 				270B264B2963E166001B316F /* Guide */,
@@ -534,6 +541,8 @@
 				27FDBCE229646F07008FA32E /* SlideToggleView.swift */,
 				27801E1628E82B9100201339 /* TextInputView.swift */,
 				27B10A71295BE714009E910C /* ToastView.swift */,
+				278D1A6D29B4A61400E6C974 /* SpinnerView.swift */,
+				278D1A6F29B4AA0800E6C974 /* SyncIndicatorView.swift */,
 			);
 			path = Inputs;
 			sourceTree = "<group>";
@@ -842,12 +851,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				278D1A7229B4AA9C00E6C974 /* TopBarView.swift in Sources */,
 				27FDBCE12963FF96008FA32E /* PlanView.swift in Sources */,
 				2761528E293CB5CE00AEA000 /* WidgetModel.swift in Sources */,
 				27801DBA28D6C96800201339 /* Dimensions.swift in Sources */,
 				278FB31328FAA61500BE78C2 /* StepperView.swift in Sources */,
 				27FDBCDB2963F565008FA32E /* SelectPlanTypeView.swift in Sources */,
 				27801E1528E8227500201339 /* StepperButtonView.swift in Sources */,
+				278D1A6E29B4A61400E6C974 /* SpinnerView.swift in Sources */,
 				27801E1728E82B9100201339 /* TextInputView.swift in Sources */,
 				27801DFB28DA0B0D00201339 /* NavRowView.swift in Sources */,
 				278FB31128FAA00F00BE78C2 /* Animation.swift in Sources */,
@@ -868,6 +879,7 @@
 				27E777422934CD610031456D /* DayPill.swift in Sources */,
 				27E776FD293365410031456D /* WidgetPillView.swift in Sources */,
 				27801E0328DA196E00201339 /* HistoryView.swift in Sources */,
+				278D1A7029B4AA0800E6C974 /* SyncIndicatorView.swift in Sources */,
 				278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
 				27E77751293B68D10031456D /* Widget.swift in Sources */,

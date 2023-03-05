@@ -99,6 +99,23 @@ struct ScrollAndSnap: ViewModifier {
     }
 }
 
+struct FadeInOut: ViewModifier {
+    // MARK: - Props
+    @State private var isAnimating: Bool = false
+    var duration: Double
+    
+    // MARK: - UI
+    func body(content: Content) -> some View {
+        content
+            .opacity(isAnimating ? 1 : 0.5)
+            .onAppear {
+                withAnimation(.easeIn(duration: duration)) {
+                    isAnimating = true
+                }
+            }
+    }
+}
+
 extension View {
     
     /// Applies a bounce animation when the View becomes visible
@@ -128,6 +145,11 @@ extension View {
                 screenHeight: screenHeight
             )
         )
+    }
+    
+    /// Applies a fade in, fade out animation when View becomes visible
+    func fadeInOut(duration: Double = 0.5) -> some View {
+        modifier(FadeInOut(duration: duration))
     }
     
 }
