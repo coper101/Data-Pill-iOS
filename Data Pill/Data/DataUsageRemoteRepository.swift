@@ -368,12 +368,11 @@ extension DataUsageRemoteRepository {
         allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
         
         guard !allLocalData.isEmpty else {
+            Logger.dataUsageRemoteRepository.debug("syncOldData - data from local count: 0")
             return Just(false)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
-                
-        Logger.dataUsageRemoteRepository.debug("syncOldData - data from local dates: \(allLocalData.compactMap(\.date).sorted(by: >))")
         Logger.dataUsageRemoteRepository.debug("syncOldData - data from local count: \(allLocalData.count)")
         
         return self.isLoggedInUser()
@@ -387,6 +386,7 @@ extension DataUsageRemoteRepository {
                 return Just([Date]()).eraseToAnyPublisher()
             }
             .map { dataDatesFromRemote in
+                Logger.dataUsageRemoteRepository.debug("syncOldData - data from remote count: \(dataDatesFromRemote.count)")
                 Logger.dataUsageRemoteRepository.debug("syncOldData - dataDatesFromRemote: \(dataDatesFromRemote.sorted(by: >))")
 
                 /// data to update not added to cloud
@@ -408,9 +408,8 @@ extension DataUsageRemoteRepository {
                     dataToUpdate = Array(dataToUpdate[..<limit])
                 }
                 
-                Logger.dataUsageRemoteRepository.debug("syncOldData - data to update count: \(dataToUpdate.count)")
-                
-                Logger.dataUsageRemoteRepository.debug("syncOldData - data to update dates: \(dataToUpdate.map(\.debugDescription))")
+                Logger.dataUsageRemoteRepository.debug("syncOldData - data to add to remote count: \(dataToUpdate.count)")
+                Logger.dataUsageRemoteRepository.debug("syncOldData - data to add to remote dates: \(dataToUpdate.map(\.debugDescription))")
                 
                 return dataToUpdate
             }
@@ -452,6 +451,8 @@ extension DataUsageRemoteRepository {
             }
             .flatMap { oldRemoteData in
                 
+                Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from remote count: \(oldRemoteData.count)")
+                
                 var dataToAdd = [RemoteData]()
                 
                 oldRemoteData.forEach { (remoteData: RemoteData) in
@@ -465,7 +466,7 @@ extension DataUsageRemoteRepository {
                     dataToAdd.append(remoteData)
                 }
                 
-                Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data to add count: \(dataToAdd.count)")
+                Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data to add to local count: \(dataToAdd.count)")
                 
                 return Just(dataToAdd)
                     .setFailureType(to: Error.self)

@@ -974,6 +974,7 @@ extension AppViewModel {
                     return
                 }
                 self.dataUsageRepository.addData(remoteData)
+                Logger.appModel.debug("syncOldThenRemoteData - are old remote data uploaded: true")
             }
             .store(in: &self.cancellables)
     }
