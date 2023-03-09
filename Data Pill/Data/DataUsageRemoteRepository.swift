@@ -506,3 +506,120 @@ extension DataUsageRemoteRepository {
             .eraseToAnyPublisher()
     }
 }
+
+// MARK: Test Implementation
+class MockDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProtocol {
+    
+    func isPlanAdded() -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func getPlan() -> AnyPublisher<RemotePlan?, Error> {
+        Just(
+            .init(startDate: .init(), endDate: .init(), dataAmount: 0, dailyLimit: 0, planLimit: 0)
+        )
+        .setFailureType(to: Error.self)
+        .eraseToAnyPublisher()
+    }
+    
+    func addPlan(_ plan: RemotePlan) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func updatePlan(
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
+    ) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func isDataAdded(on date: Date) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func getData(on date: Date) -> AnyPublisher<RemoteData?, Error> {
+        Just(nil)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func getAllExistingDataDates() -> AnyPublisher<[Date], Never> {
+        Just([])
+            .eraseToAnyPublisher()
+    }
+    
+    func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func addData(_ data: RemoteData) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func isLoggedInUser() -> AnyPublisher<Bool, Never> {
+        Just(true)
+            .eraseToAnyPublisher()
+    }
+    
+    func syncPlan(
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
+    ) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error> {
+        Just([])
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func subscribeToRemotePlanChanges() -> AnyPublisher<Bool, Never> {
+        Just(true)
+            .eraseToAnyPublisher()
+    }
+    
+    func subscribeToRemoteTodaysDataChanges() -> AnyPublisher<Bool, Never> {
+        Just(true)
+            .eraseToAnyPublisher()
+    }
+    
+}

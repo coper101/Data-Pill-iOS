@@ -25,13 +25,15 @@ struct AppView: View {
             dimensions.planCardHeight : dimensions.planCardHeightDisabled
         
         return (
+            dimensions.horizontalPadding +
             dimensions.topBarHeight +
+            dimensions.spaceBottomTopBar +
             dimensions.maxPillHeight +
+            dimensions.spaceInBetween +
             planCardHeight +
+            dimensions.spaceInBetween +
             dimensions.planLimitCardsHeight +
-            (dimensions.spaceInBetween * (dimensions.insets.top > 0 ? 3 : 2)) +
-            (dimensions.isSmallDevice ? 12 : 0) +
-            (dimensions.horizontalPadding * 2)
+            dimensions.horizontalPadding
         )
     }
     
@@ -392,6 +394,14 @@ struct AppView_Previews: PreviewProvider {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
         dataRepo.dataError = .loadingContainer()
+        
+        dataRepo.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true
+        )
+        
         let viewModel = AppViewModel(dataUsageRepository: dataRepo)
         return viewModel
     }
@@ -400,6 +410,14 @@ struct AppView_Previews: PreviewProvider {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
         let todaysDate = Date()
+        
+        // Today's Data
+        dataRepo.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true
+        )
         
         // 3 Days Ago
         dataRepo.addData(
@@ -438,7 +456,10 @@ struct AppView_Previews: PreviewProvider {
             updateToLatestPlanAfterwards: true
         )
         
-        let viewModel = AppViewModel(dataUsageRepository: dataRepo)
+        let viewModel = AppViewModel(
+            dataUsageRepository: dataRepo,
+            dataUsageRemoteRepository: MockDataUsageRemoteRepository()
+        )
         
         // Update created Today's Data (added automatically by app)
         viewModel.refreshUsedDataToday(1000)
@@ -452,7 +473,7 @@ struct AppView_Previews: PreviewProvider {
             .environmentObject(appViewModel)
             .padding(.top, 20)
             .previewDisplayName("Working App")
-        
+
         AppView()
             .previewLayout(.sizeThatFits)
             .environmentObject(appViewModelError)

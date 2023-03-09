@@ -16,6 +16,7 @@ struct Dimensions {
     /// Padding
     let horizontalPadding: CGFloat = 21
     let spaceInBetween: CGFloat = 21
+    let spaceBottomTopBar: CGFloat = 12
     
     /// Top Bar
     let topBarHeight: CGFloat = 23

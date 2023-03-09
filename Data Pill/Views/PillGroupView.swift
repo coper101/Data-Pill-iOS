@@ -23,11 +23,11 @@ struct PillGroupView: View {
     
     // MARK: - UI
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             
             // MARK: - Row 1: Top Bar
             TopBarView(isSyncing: appViewModel.isSyncing)
-                .padding(.top, dimensions.insets.top > 0 ? dimensions.spaceInBetween : 0)
+                .padding(.bottom, dimensions.spaceBottomTopBar)
 
             // MARK: - Row 2: Pill Group
             HStack(
@@ -149,7 +149,7 @@ struct PillGroupView: View {
             
         } //: VStack
         .padding(.horizontal, dimensions.horizontalPadding)
-        .padding(.vertical, dimensions.horizontalPadding)
+//        .padding(.vertical, dimensions.horizontalPadding)
     }
     
     // MARK: - Actions
@@ -190,16 +190,32 @@ struct PillGroupView_Previews: PreviewProvider {
     static var appViewModelPlan: AppViewModel {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
+        dataRepo.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true
+        )
+        
         let model = AppViewModel(dataUsageRepository: dataRepo)
         model.isPlanActive = true
+        
         return model
     }
     
     static var appViewModelNonPlan: AppViewModel {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
+        dataRepo.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true
+        )
+        
         let model = AppViewModel(dataUsageRepository: dataRepo)
         model.isPlanActive = false
+        
         return model
     }
     

@@ -32,7 +32,6 @@ struct SyncIndicatorView: View {
                     
                 } //: Group
                 .transition(.slide.animation(.easeIn(duration: 0.5)))
-
                                 
             } else {
                 
