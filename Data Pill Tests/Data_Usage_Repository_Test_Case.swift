@@ -453,7 +453,8 @@ final class Data_Usage_Repository_Test_Case: XCTestCase {
             endDate: nil,
             dataAmount: dataAmount,
             dailyLimit: dailyLimit,
-            planLimit: planLimit
+            planLimit: planLimit,
+            updateToLatestPlanAfterwards: true
         )
         // (3) Then
         let thePlan = repository.getPlan()
@@ -608,7 +609,8 @@ final class Data_Usage_Repository_Test_Case: XCTestCase {
             endDate: .init(),
             dataAmount: 0,
             dailyLimit: 0,
-            planLimit: 0
+            planLimit: 0,
+            updateToLatestPlanAfterwards: true
         )
         // (3) Then
         XCTAssertEqual(

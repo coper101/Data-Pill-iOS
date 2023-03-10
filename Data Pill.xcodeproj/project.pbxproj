@@ -13,6 +13,7 @@
 		270EC9BF2956A899008A27AA /* Data_Pill_UI_Tests_Launch_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270EC9BE2956A899008A27AA /* Data_Pill_UI_Tests_Launch_Tests.swift */; };
 		270EC9C629584210008A27AA /* Data_Pill_UI_Tests_Launch_Performance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270EC9C529584210008A27AA /* Data_Pill_UI_Tests_Launch_Performance.swift */; };
 		271D8FEB29004B2800965FC3 /* Data_Usage_Repository_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271D8FEA29004B2800965FC3 /* Data_Usage_Repository_Test_Case.swift */; };
+		272DB10929BB0E7100E9CA93 /* Remote_Database_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272DB10829BB0E7100E9CA93 /* Remote_Database_Test.swift */; };
 		274FCF482978B3E10087AC86 /* UsageType.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 274FCF4B2978B3E10087AC86 /* UsageType.intentdefinition */; };
 		274FCF492978B3E10087AC86 /* UsageType.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 274FCF4B2978B3E10087AC86 /* UsageType.intentdefinition */; };
 		274FCF7F2978CA870087AC86 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 274FCF7D2978CA870087AC86 /* InfoPlist.strings */; };
@@ -204,6 +205,7 @@
 		270EC9BE2956A899008A27AA /* Data_Pill_UI_Tests_Launch_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Pill_UI_Tests_Launch_Tests.swift; sourceTree = "<group>"; };
 		270EC9C529584210008A27AA /* Data_Pill_UI_Tests_Launch_Performance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Pill_UI_Tests_Launch_Performance.swift; sourceTree = "<group>"; };
 		271D8FEA29004B2800965FC3 /* Data_Usage_Repository_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Usage_Repository_Test_Case.swift; sourceTree = "<group>"; };
+		272DB10829BB0E7100E9CA93 /* Remote_Database_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Remote_Database_Test.swift; sourceTree = "<group>"; };
 		274FCF4A2978B3E10087AC86 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/UsageType.intentdefinition; sourceTree = "<group>"; };
 		274FCF7C2978CA870087AC86 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/UsageType.strings"; sourceTree = "<group>"; };
 		274FCF7E2978CA870087AC86 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -582,6 +584,7 @@
 		278FB2CA28F2E55900BE78C2 /* Data Pill Tests */ = {
 			isa = PBXGroup;
 			children = (
+				272DB10829BB0E7100E9CA93 /* Remote_Database_Test.swift */,
 				274FCF932978D9860087AC86 /* Toast_Timer_Test_Case.swift */,
 				278E7349295D4EF10020F84B /* Validator_Test_Case.swift */,
 				2761528C293CAF7F00AEA000 /* Widget_Model_Test_Case.swift */,
@@ -946,6 +949,7 @@
 				27F47DDA2905330D00B3F83D /* App_Data_Repository_Test_Case.swift in Sources */,
 				2761528D293CAF7F00AEA000 /* Widget_Model_Test_Case.swift in Sources */,
 				274FCF942978D9860087AC86 /* Toast_Timer_Test_Case.swift in Sources */,
+				272DB10929BB0E7100E9CA93 /* Remote_Database_Test.swift in Sources */,
 				271D8FEB29004B2800965FC3 /* Data_Usage_Repository_Test_Case.swift in Sources */,
 				27AECC8E2916E5E700AB963E /* App_View_Model_Test_Case.swift in Sources */,
 				278FB2CC28F2E55900BE78C2 /* Numbers_Test_Case.swift in Sources */,
