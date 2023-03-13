@@ -458,7 +458,7 @@ struct AppView_Previews: PreviewProvider {
         
         let viewModel = AppViewModel(
             dataUsageRepository: dataRepo,
-            dataUsageRemoteRepository: MockDataUsageRemoteRepository()
+            dataUsageRemoteRepository: MockSuccessDataUsageRemoteRepository()
         )
         
         // Update created Today's Data (added automatically by app)

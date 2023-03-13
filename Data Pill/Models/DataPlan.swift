@@ -100,3 +100,14 @@ extension RemotePlan {
     }
 }
 
+
+extension RemotePlan: Equatable {
+    static func ==(lhs: RemotePlan, rhs: RemotePlan) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.startDate == rhs.startDate &&
+        lhs.endDate == rhs.endDate &&
+        lhs.dataAmount == rhs.dataAmount &&
+        lhs.dailyLimit == rhs.dailyLimit &&
+        lhs.planLimit == rhs.planLimit
+    }
+}

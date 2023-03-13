@@ -85,3 +85,10 @@ extension RemoteData {
     }
 }
 
+extension RemoteData: Equatable {
+    static func ==(lhs: RemoteData, rhs: RemoteData) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.date == rhs.date &&
+        lhs.dailyUsedData == rhs.dailyUsedData
+    }
+}

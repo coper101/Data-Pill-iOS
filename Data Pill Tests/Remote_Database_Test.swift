@@ -6,41 +6,8 @@
 //
 
 import XCTest
-import Combine
 @testable import Data_Pill
 import CloudKit
-
-extension XCTestCase {
-    
-    func createExpectation<Output, E>(
-        publisher: AnyPublisher<Output, E>,
-        description: String,
-        timeout: TimeInterval = 0.5,
-        onFailure: @escaping (Error) -> Void = { _ in },
-        onSuccess: @escaping (Output) -> Void
-    ) {
-        let expectation = expectation(description: description)
-        var subscriptions = Set<AnyCancellable>()
-        
-        publisher.sink { completion in
-            switch completion {
-            case .failure(let error):
-                onFailure(error)
-                break
-            case .finished:
-                // called when received value
-                break;
-            }
-            
-            expectation.fulfill()
-        } receiveValue: { output in
-            onSuccess(output)
-        }
-        .store(in: &subscriptions)
-
-        waitForExpectations(timeout: timeout)
-    }
-}
 
 final class Remote_Database_Test: XCTestCase {
     
@@ -206,16 +173,7 @@ final class Remote_Database_Test: XCTestCase {
     // MARK: Save Record
     func test_save_record_success() throws {
         // (1) Given
-        let remotePlan = RemotePlan(
-            startDate: .init(),
-            endDate: .init(),
-            dataAmount: 0,
-            dailyLimit: 0,
-            planLimit: 0
-        )
-        
-        let planRecord = CKRecord(recordType: RecordType.plan.rawValue)
-        planRecord.setValuesForKeys(remotePlan.toDictionary())
+        let planRecord = TestData.createPlanRecord()
         
         // (2) When
         createExpectation(
@@ -231,16 +189,7 @@ final class Remote_Database_Test: XCTestCase {
     
     func test_save_record_fail() throws {
         // (1) Given
-        let remotePlan = RemotePlan(
-            startDate: .init(),
-            endDate: .init(),
-            dataAmount: 0,
-            dailyLimit: 0,
-            planLimit: 0
-        )
-        
-        let planRecord = CKRecord(recordType: RecordType.plan.rawValue)
-        planRecord.setValuesForKeys(remotePlan.toDictionary())
+        let planRecord = TestData.createPlanRecord()
         
         // (2) When
         createExpectation(
@@ -256,16 +205,7 @@ final class Remote_Database_Test: XCTestCase {
     // MARK: Save Records
     func test_save_records_success() throws {
         // (1) Given
-        let remotePlan = RemotePlan(
-            startDate: .init(),
-            endDate: .init(),
-            dataAmount: 0,
-            dailyLimit: 0,
-            planLimit: 0
-        )
-        
-        let planRecord = CKRecord(recordType: RecordType.plan.rawValue)
-        planRecord.setValuesForKeys(remotePlan.toDictionary())
+        let planRecord = TestData.createPlanRecord()
         
         // (2) When
         createExpectation(
@@ -281,16 +221,7 @@ final class Remote_Database_Test: XCTestCase {
     
     func test_save_records_fail() throws {
         // (1) Given
-        let remotePlan = RemotePlan(
-            startDate: .init(),
-            endDate: .init(),
-            dataAmount: 0,
-            dailyLimit: 0,
-            planLimit: 0
-        )
-        
-        let planRecord = CKRecord(recordType: RecordType.plan.rawValue)
-        planRecord.setValuesForKeys(remotePlan.toDictionary())
+        let planRecord = TestData.createPlanRecord()
         
         // (2) When
         createExpectation(
