@@ -324,31 +324,40 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
     }
     
     // MARK: Synchronization
-    
-    // Data
+    // Today's Data
     func test_sync_todays_data() throws {
         // (1) Given
-        // (2) When
-        createExpectation(
-            publisher: repository.subscribeToRemoteTodaysDataChanges(),
-            description: "Subscribe to Todays Data Changes"
-        ) { isSubscribed in
+        TestData.createLocalData { data in
+                        
+            XCTAssertNotNil(data)
             
-            // (3) Then
-            XCTAssertTrue(isSubscribed)
+            // (2) When
+            self.createExpectation(
+                publisher: self.repository.syncTodaysData(data!),
+                description: "Sync Today's Data"
+            ) { isSynced in
+                
+                // (3) Then
+                XCTAssertTrue(isSynced)
+            }
         }
     }
     
     func test_sync_todays_data_failed() throws {
         // (1) Given
-        // (2) When
-        createExpectation(
-            publisher: repositoryFail.subscribeToRemoteTodaysDataChanges(),
-            description: "Subscribe to Todays Data Changes"
-        ) { isSubscribed in
+        TestData.createLocalData { data in
+                        
+            XCTAssertNotNil(data)
             
-            // (3) Then
-            XCTAssertFalse(isSubscribed)
+            // (2) When
+            self.createExpectation(
+                publisher: self.repositoryFail.syncTodaysData(data!),
+                description: "Sync Today's Data"
+            ) { isSynced in
+                
+                // (3) Then
+                XCTAssertFalse(isSynced)
+            }
         }
     }
     
@@ -357,12 +366,18 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         createExpectation(
-            publisher: repository.subscribeToRemoteTodaysDataChanges(),
-            description: "Subscribe to Todays Data Changes"
-        ) { isSubscribed in
+            publisher: repository.syncPlan(
+                startDate: .init(),
+                endDate: .init(),
+                dataAmount: 0,
+                dailyLimit: 0,
+                planLimit: 0
+            ),
+            description: "Sync Plan"
+        ) { isSynced in
             
             // (3) Then
-            XCTAssertTrue(isSubscribed)
+            XCTAssertTrue(isSynced)
         }
     }
     
@@ -370,18 +385,95 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         createExpectation(
-            publisher: repositoryFail.subscribeToRemoteTodaysDataChanges(),
-            description: "Subscribe to Todays Data Changes"
-        ) { isSubscribed in
+            publisher: repositoryFail.syncPlan(
+                startDate: .init(),
+                endDate: .init(),
+                dataAmount: 0,
+                dailyLimit: 0,
+                planLimit: 0
+            ),
+            description: "Sync Plan"
+        ) { isSynced in
             
             // (3) Then
-            XCTAssertFalse(isSubscribed)
+            XCTAssertFalse(isSynced)
         }
     }
     
+    // All Data
+    func test_sync_old_local_data() throws {
+        // (1) Given
+        let localData: [Data_Pill.Data] = []
+        
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldLocalData(localData),
+            description: "Sync Old Local Data"
+        ) { areAllSynced in
+            
+            // (3) Then
+            XCTAssertTrue(areAllSynced)
+        }
+    }
+    
+    func test_sync_old_local_data_failed() throws {
+        // (1) Given
+        let localData: [Data_Pill.Data] = []
+
+        // (2) When
+        createExpectation(
+            publisher: repositoryFail.syncOldLocalData(localData),
+            description: "Sync Old Local Data"
+        ) { areAllSynced in
+            
+            // (3) Then
+            XCTAssertFalse(areAllSynced)
+        }
+    }
+    
+    func test_sync_old_remote_data() throws {
+        // (1) Given
+        let localData: [Data_Pill.Data] = []
+        
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldRemoteData(
+                localData,
+                excluding: .init()
+            ),
+            description: "Sync Old Remote Data"
+        ) { remoteData in
+            
+            // (3) Then
+            XCTAssertEqual(
+                remoteData,
+                [
+                    TestData.createEmptyRemoteData(),
+                    TestData.createEmptyRemoteData()
+                ]
+            )
+        }
+    }
+    
+    func test_sync_old_remote_data_failed() throws {
+        // (1) Given
+        let localData: [Data_Pill.Data] = []
+
+        // (2) When
+        createExpectation(
+            publisher: repositoryFail.syncOldRemoteData(
+                localData,
+                excluding: .init()
+            ),
+            description: "Sync Old Remote Data"
+        ) { remoteData in
+            
+            // (3) Then
+            XCTAssertTrue(remoteData.isEmpty)
+        }
+    }
     
     // MARK: Subscription
-    
     // Data
     func test_subscribe_to_remote_todays_data_changes() throws {
         // (1) Given

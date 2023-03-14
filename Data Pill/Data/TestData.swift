@@ -9,6 +9,27 @@ import CloudKit
 
 class TestData {
     
+    // MARK: Local
+    static func createLocalData(completion: @escaping (Data?) -> Void)  {
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
+        database.loadContainer { _ in
+            completion(nil)
+        } onSuccess: {
+            do {
+                let data = Data(context: database.context)
+                data.date = Calendar.current.startOfDay(for: .init())
+                data.totalUsedData = 0
+                data.dailyUsedData = 0
+                data.hasLastTotal = true
+                try database.context.saveIfNeeded()
+                completion(data)
+            } catch {
+                completion(nil)
+            }
+        }
+    }
+    
+    // MARK: Remote
     static func createEmptyRemotePlan() -> RemotePlan {
         RemotePlan(
             startDate: Calendar.current.startOfDay(for: .init()),
@@ -26,6 +47,7 @@ class TestData {
         )
     }
     
+    // MARK: CloudKit Record
     static func createPlanRecord(
         startDate: Date = Calendar.current.startOfDay(for: .init()),
         endDate: Date = Calendar.current.startOfDay(for: .init()),

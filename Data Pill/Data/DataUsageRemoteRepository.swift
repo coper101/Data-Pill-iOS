@@ -608,9 +608,12 @@ class MockSuccessDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRep
     }
     
     func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error> {
-        Just([])
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
+        Just([
+            TestData.createEmptyRemoteData(),
+            TestData.createEmptyRemoteData()
+        ])
+        .setFailureType(to: Error.self)
+        .eraseToAnyPublisher()
     }
     
     func subscribeToRemotePlanChanges() -> AnyPublisher<Bool, Never> {
