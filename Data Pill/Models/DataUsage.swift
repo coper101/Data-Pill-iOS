@@ -9,6 +9,14 @@ import Foundation
 import CoreData
 import CloudKit
 
+public extension NSManagedObject {
+    convenience init(using usedContext: NSManagedObjectContext) {
+        let name = String(describing: type(of: self))
+        let entity = NSEntityDescription.entity(forEntityName: name, in: usedContext)!
+        self.init(entity: entity, insertInto: usedContext)
+    }
+}
+
 // MARK: Local
 public class Data: NSManagedObject {
     

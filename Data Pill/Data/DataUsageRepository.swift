@@ -233,6 +233,7 @@ extension DataUsageRepository {
     
     /// updates an existing Data from the Database
     func updateData(_ data: Data) {
+        print("updating data in \(database.container.persistentStoreDescriptions), with \(data)")
         do {
             let isUpdated = try database.context.saveIfNeeded()
             if isUpdated {

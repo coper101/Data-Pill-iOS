@@ -31,6 +31,14 @@ final class App_View_Model_Test_Case: XCTestCase {
         let defaultDataUsageRepository = DataUsageRepository(
             database: InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         )
+        
+        defaultDataUsageRepository.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true
+        )
+        
         return .init(
             appDataRepository: appDataRepository ?? MockAppDataRepository(),
             dataUsageRepository: dataUsageRepository ?? defaultDataUsageRepository,
@@ -118,8 +126,8 @@ final class App_View_Model_Test_Case: XCTestCase {
         let totalUsedDataToday = appViewModel.todaysData.totalUsedData
         XCTAssertNotNil(dateToday)
         XCTAssertTrue(dateToday!.isToday())
-        XCTAssertEqual(dailyUsedDataToday, 0)
-        XCTAssertEqual(totalUsedDataToday, 100)
+        XCTAssertEqual(dailyUsedDataToday, 100)
+        XCTAssertEqual(totalUsedDataToday, 100) // the accumulated data used by device
     }
     
     func test_refresh_used_data_today_with_has_total_used_data() throws {
@@ -130,17 +138,30 @@ final class App_View_Model_Test_Case: XCTestCase {
         let todaysData = appViewModel.todaysData
         todaysData.totalUsedData = totalUsedData
         todaysData.hasLastTotal = true
+        
         // (2) When
+        appViewModel.republishDataUsage()
         appViewModel.dataUsageRepository.updateData(todaysData)
-        appViewModel.refreshUsedDataToday(newTotalUsedData)
-        // (3) Then
-        let dateToday = appViewModel.todaysData.date
-        let dailyUsedDataToday = appViewModel.todaysData.dailyUsedData
-        let totalUsedDataToday = appViewModel.todaysData.totalUsedData
-        XCTAssertNotNil(dateToday)
-        XCTAssertTrue(dateToday!.isToday())
-        XCTAssertEqual(dailyUsedDataToday, 100)
-        XCTAssertEqual(totalUsedDataToday, 200)
+        
+        let expectation = expectation(description: "Update Todays Data")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            
+            self.appViewModel.refreshUsedDataToday(newTotalUsedData)
+            
+            // (3) Then
+            let dateToday = self.appViewModel.todaysData.date
+            let dailyUsedDataToday = self.appViewModel.todaysData.dailyUsedData
+            let totalUsedDataToday = self.appViewModel.todaysData.totalUsedData
+            XCTAssertNotNil(dateToday)
+            XCTAssertTrue(dateToday!.isToday())
+            XCTAssertEqual(dailyUsedDataToday, 100)
+            XCTAssertEqual(totalUsedDataToday, 200)
+            
+        }
+       
+        waitForExpectations(timeout: 0.5)
+        
     }
     
     func test_refresh_used_data_today_with_has_total_used_data_same() throws {
