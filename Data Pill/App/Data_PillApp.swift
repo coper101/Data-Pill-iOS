@@ -14,24 +14,13 @@ enum Screen {
 
 @main
 struct Data_PillApp: App {
-    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    @StateObject private var appViewModel = AppViewModel()
-
     var body: some Scene {
         WindowGroup {
-            AppView()
-                .environmentObject(appViewModel)
-                .background(Colors.background.color)
-                .sheet(
-                    isPresented: $appViewModel.isGuideShown,
-                    onDismiss: {}
-                ) {
-                    GuideView()
-                        .environmentObject(appViewModel)
-                }
-                .onAppear {
-                    appViewModel.showGuide()
-                }
+            if ProcessInfo.isRunningUnitTests {
+                EmptyView()
+            } else {
+                AppView()
+            }
         }
     }
 }

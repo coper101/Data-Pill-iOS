@@ -7,6 +7,13 @@
 
 import CloudKit
 
+extension ProcessInfo {
+    
+    static var isRunningUnitTests: Bool {
+        ProcessInfo.processInfo.environment["IS_RUNNING_UNIT_TESTS"] == "1"
+    }
+}
+
 class TestData {
     
     // MARK: Local

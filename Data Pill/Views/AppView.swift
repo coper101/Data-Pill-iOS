@@ -10,7 +10,8 @@ import WidgetKit
 
 struct AppView: View {
     // MARK: - Props
-    @EnvironmentObject var appViewModel: AppViewModel
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    @StateObject var appViewModel: AppViewModel = .init()
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.dimensions) var dimensions: Dimensions
     @Environment(\.scenePhase) var scenePhase
@@ -255,6 +256,18 @@ struct AppView: View {
         .background(Colors.background.color)
         .onChange(of: scenePhase, perform: didChangeScenePhase)
         .onOpenURL(perform: appViewModel.didOpenURL)
+        .environmentObject(appViewModel)
+        .background(Colors.background.color)
+        .sheet(
+            isPresented: $appViewModel.isGuideShown,
+            onDismiss: {}
+        ) {
+            GuideView()
+                .environmentObject(appViewModel)
+        }
+        .onAppear {
+            appViewModel.showGuide()
+        }
     }
     
     // MARK: - Actions

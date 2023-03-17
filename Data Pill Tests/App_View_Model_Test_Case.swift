@@ -22,31 +22,6 @@ final class App_View_Model_Test_Case: XCTestCase {
         appViewModel = nil
     }
     
-    func createAppViewModel(
-        appDataRepository: AppDataRepositoryProtocol? = nil,
-        dataUsageRepository: DataUsageRepositoryProtocol? = nil,
-        networkDataRepository: NetworkDataRepositoryProtocol? = nil,
-        setupValues: Bool = false
-    ) -> AppViewModel {
-        let defaultDataUsageRepository = DataUsageRepository(
-            database: InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        )
-        
-        defaultDataUsageRepository.addData(
-            date: Calendar.current.startOfDay(for: .init()),
-            totalUsedData: 0,
-            dailyUsedData: 0,
-            hasLastTotal: true
-        )
-        
-        return .init(
-            appDataRepository: appDataRepository ?? MockAppDataRepository(),
-            dataUsageRepository: dataUsageRepository ?? defaultDataUsageRepository,
-            networkDataRepository: networkDataRepository ?? MockNetworkDataRepository(),
-            setupValues: setupValues
-        )
-    }
-    
     // MARK: - Plan Settings
     func test_toggle_to_daily_type() throws {
         // (1) Given
@@ -112,77 +87,6 @@ final class App_View_Model_Test_Case: XCTestCase {
         appViewModel.isPlanActive = isPlanActive /// state is binded thus mutate directly
         // (3) Then
         XCTAssertEqual(appViewModel.appDataRepository.isPlanActive, false)
-    }
-    
-    // MARK: - Mobile Data
-    func test_refresh_used_data_today_with_empty_total_used_data() throws {
-        // (1) Given
-        let totalUsedData = 100.0
-        // (2) When
-        appViewModel.refreshUsedDataToday(totalUsedData)
-        // (3) Then
-        let dateToday = appViewModel.todaysData.date
-        let dailyUsedDataToday = appViewModel.todaysData.dailyUsedData
-        let totalUsedDataToday = appViewModel.todaysData.totalUsedData
-        XCTAssertNotNil(dateToday)
-        XCTAssertTrue(dateToday!.isToday())
-        XCTAssertEqual(dailyUsedDataToday, 100)
-        XCTAssertEqual(totalUsedDataToday, 100) // the accumulated data used by device
-    }
-    
-    func test_refresh_used_data_today_with_has_total_used_data() throws {
-        // (1) Given
-        let newTotalUsedData = 200.0
-        let totalUsedData = 100.0
-        
-        let todaysData = appViewModel.todaysData
-        todaysData.totalUsedData = totalUsedData
-        todaysData.hasLastTotal = true
-        
-        // (2) When
-        appViewModel.republishDataUsage()
-        appViewModel.dataUsageRepository.updateData(todaysData)
-        
-        let expectation = expectation(description: "Update Todays Data")
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            
-            self.appViewModel.refreshUsedDataToday(newTotalUsedData)
-            
-            // (3) Then
-            let dateToday = self.appViewModel.todaysData.date
-            let dailyUsedDataToday = self.appViewModel.todaysData.dailyUsedData
-            let totalUsedDataToday = self.appViewModel.todaysData.totalUsedData
-            XCTAssertNotNil(dateToday)
-            XCTAssertTrue(dateToday!.isToday())
-            XCTAssertEqual(dailyUsedDataToday, 100)
-            XCTAssertEqual(totalUsedDataToday, 200)
-            
-        }
-       
-        waitForExpectations(timeout: 0.5)
-        
-    }
-    
-    func test_refresh_used_data_today_with_has_total_used_data_same() throws {
-        // (1) Given
-        let newTotalUsedData = 100.0
-        let totalUsedData = 100.0
-
-        let todaysData = appViewModel.todaysData
-        todaysData.totalUsedData = totalUsedData
-        todaysData.hasLastTotal = true
-        // (2) When
-        appViewModel.dataUsageRepository.updateData(todaysData)
-        appViewModel.refreshUsedDataToday(newTotalUsedData)
-        // (3) Then
-        let dateToday = appViewModel.todaysData.date
-        let dailyUsedDataToday = appViewModel.todaysData.dailyUsedData
-        let totalUsedDataToday = appViewModel.todaysData.totalUsedData
-        XCTAssertNotNil(dateToday)
-        XCTAssertTrue(dateToday!.isToday())
-        XCTAssertEqual(dailyUsedDataToday, 0)
-        XCTAssertEqual(totalUsedDataToday, 100)
     }
     
     // MARK: - Data Plan

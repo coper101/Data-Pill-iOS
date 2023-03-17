@@ -273,6 +273,7 @@ extension AppViewModel {
         dataUsageRepository.todaysDataPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] todaysData in
+                
                 guard let todaysData else {
                     /// create a new data if it doesn't exist
                     self?.dataUsageRepository.addData(
@@ -415,6 +416,7 @@ extension AppViewModel {
     // MARK: - Mobile Data
     /// updates the amount used Data today
     func refreshUsedDataToday(_ totalUsedData: Double) {
+        print("todays data in refresh: ", todaysData)
         /// ignore initial value which is exactly zero
         if totalUsedData == 0 {
             return
@@ -435,7 +437,7 @@ extension AppViewModel {
         todaysData.totalUsedData = totalUsedData
         todaysData.hasLastTotal = true
         
-        // Logger.appModel.debug("refreshUsedDataToday - todaysData: \(todaysData)")
+        Logger.appModel.debug("refreshUsedDataToday - todaysData: \(todaysData)")
         
         dataUsageRepository.updateData(todaysData)
     }

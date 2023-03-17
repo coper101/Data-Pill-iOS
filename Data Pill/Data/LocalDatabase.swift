@@ -99,7 +99,7 @@ class LocalDatabase: Database {
     }
     
     required init(container: Containers, appGroup: AppGroup?) {
-        self.container = NSPersistentContainer(name: container.name, managedObjectModel: LocalDatabaseMOM.managedObjectModel)
+        self.container = NSPersistentContainer(name: container.name)
         // self.container = NSPersistentCloudKitContainer(name: container.name)
         if
             let appGroup,
@@ -124,20 +124,12 @@ class InMemoryLocalDatabase: Database {
     }
     
     required init(container: Containers, appGroup: AppGroup?) {
-        self.container = NSPersistentContainer(name: container.name, managedObjectModel: LocalDatabaseMOM.managedObjectModel)
+        self.container = NSPersistentContainer(name: container.name)
         if let storeDescription = self.container.persistentStoreDescriptions.first {
             storeDescription.type = NSInMemoryStoreType
-            // storeDescription.url = URL(fileURLWithPath: "/dev/null")
+            storeDescription.url = URL(fileURLWithPath: "/dev/null")
         }
         Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
     }
     
-}
-
-class LocalDatabaseMOM {
-    // When mulitple containers are being initialized, use a single managed object model to prevent ambiguity
-    static var managedObjectModel: NSManagedObjectModel = {
-        let managedObjectModel = NSManagedObjectModel.mergedModel(from: [Bundle(for: LocalDatabaseMOM.self)])!
-        return managedObjectModel
-    }()
 }

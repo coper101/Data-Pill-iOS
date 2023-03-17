@@ -72,6 +72,7 @@
 		27801E3728E9E3D100201339 /* DataUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3628E9E3D100201339 /* DataUsage.swift */; };
 		27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3C28E9F72F00201339 /* DataUsageRepository.swift */; };
 		27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3E28E9FDAA00201339 /* AppDataRepository.swift */; };
+		278BAB5929C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */; };
 		278D1A6E29B4A61400E6C974 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D1A6D29B4A61400E6C974 /* SpinnerView.swift */; };
 		278D1A7029B4AA0800E6C974 /* SyncIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D1A6F29B4AA0800E6C974 /* SyncIndicatorView.swift */; };
 		278D1A7229B4AA9C00E6C974 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D1A7129B4AA9C00E6C974 /* TopBarView.swift */; };
@@ -277,6 +278,9 @@
 		27801E3628E9E3D100201339 /* DataUsage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsage.swift; sourceTree = "<group>"; };
 		27801E3C28E9F72F00201339 /* DataUsageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsageRepository.swift; sourceTree = "<group>"; };
 		27801E3E28E9FDAA00201339 /* AppDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository.swift; sourceTree = "<group>"; };
+		278BAB5429C47ACD00A5A005 /* Unit_Tests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Unit_Tests.xctestplan; sourceTree = "<group>"; };
+		278BAB5529C47AD500A5A005 /* UI_Tests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UI_Tests.xctestplan; sourceTree = "<group>"; };
+		278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Refresh_Data_Tests.swift; sourceTree = "<group>"; };
 		278D1A6D29B4A61400E6C974 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		278D1A6F29B4AA0800E6C974 /* SyncIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncIndicatorView.swift; sourceTree = "<group>"; };
 		278D1A7129B4AA9C00E6C974 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
@@ -407,6 +411,7 @@
 				27E7770A293367450031456D /* Data Pill Widget */,
 				278FB2CA28F2E55900BE78C2 /* Data Pill Tests */,
 				270EC9BB2956A899008A27AA /* Data Pill UI Tests */,
+				278BAB5629C47AE500A5A005 /* Test Plans */,
 				27E77705293367450031456D /* Frameworks */,
 				27801DAD28D6C96800201339 /* Products */,
 			);
@@ -446,8 +451,8 @@
 		27801DAF28D6C96800201339 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				270B264C2963E516001B316F /* GuideView.swift */,
 				27801DB028D6C96800201339 /* AppView.swift */,
+				270B264C2963E516001B316F /* GuideView.swift */,
 				278D1A7129B4AA9C00E6C974 /* TopBarView.swift */,
 				27801DB328D6C96800201339 /* PillGroupView.swift */,
 				27801E0228DA196E00201339 /* HistoryView.swift */,
@@ -596,9 +601,19 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		278BAB5629C47AE500A5A005 /* Test Plans */ = {
+			isa = PBXGroup;
+			children = (
+				278BAB5529C47AD500A5A005 /* UI_Tests.xctestplan */,
+				278BAB5429C47ACD00A5A005 /* Unit_Tests.xctestplan */,
+			);
+			path = "Test Plans";
+			sourceTree = "<group>";
+		};
 		278FB2CA28F2E55900BE78C2 /* Data Pill Tests */ = {
 			isa = PBXGroup;
 			children = (
+				278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */,
 				276048DF29BF3E3100AB8497 /* Data_Usage_Remote_Repository_Tests.swift */,
 				272DB10829BB0E7100E9CA93 /* Remote_Database_Test.swift */,
 				274FCF932978D9860087AC86 /* Toast_Timer_Test_Case.swift */,
@@ -963,6 +978,7 @@
 			files = (
 				27F47DDC29053AE400B3F83D /* Network_Data_Repository_Test_Case.swift in Sources */,
 				278FB2D728F544C100BE78C2 /* Stepper_Test_Case.swift in Sources */,
+				278BAB5929C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift in Sources */,
 				278FB2D328F321EE00BE78C2 /* Date_Test_Case.swift in Sources */,
 				276048E429BF444700AB8497 /* Test.swift in Sources */,
 				27F47DDA2905330D00B3F83D /* App_Data_Repository_Test_Case.swift in Sources */,

@@ -180,6 +180,7 @@ extension DataUsageRepository {
             guard isAdded else {
                 return
             }
+            print("added data: ", data)
             updateToLatestData()
         } catch let error {
             dataError = DatabaseError.adding(error.localizedDescription)
@@ -378,6 +379,8 @@ extension DataUsageRepository {
     func updateToLatestData() {
         thisWeeksData = getThisWeeksData(from: getTodaysData())
         todaysData = getTodaysData()
+        
+        print("updateToLatestData: ", todaysData)
     }
 
 }
