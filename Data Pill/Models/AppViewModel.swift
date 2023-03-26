@@ -827,10 +827,11 @@ extension AppViewModel {
                 switch completion {
                 case .failure(let error):
                     Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan error: \(error.localizedDescription)")
-                    self?.isSyncingPlan = false
                 case .finished:
                     break
                 }
+                self?.isSyncingPlan = false
+                
             } receiveValue: { [weak self] remotePlan in
                 guard let self, let remotePlan else {
                     Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan doesn't exist")
@@ -847,8 +848,6 @@ extension AppViewModel {
                     planLimit: remotePlan.planLimit,
                     updateToLatestPlanAfterwards: updateToLatestPlanAfterwards
                 )
-                
-                self.isSyncingPlan = false
             }
             .store(in: &self.cancellables)
     }
@@ -872,6 +871,7 @@ extension AppViewModel {
             dataLimitPerDay == 0
         )
         
+        // download (write existing plan to local database)
         guard wasGuideShown else {
             syncLocalPlanFromRemote(false)
             return
@@ -895,13 +895,13 @@ extension AppViewModel {
             switch completion {
             case .failure(let error):
                 Logger.appModel.debug("syncPlan - is plan saved or updated: \(error.localizedDescription)")
-                self?.isSyncingPlan = false
             case .finished:
                 break
             }
-        } receiveValue: { [weak self] isSavedOrUpdated in
-            Logger.appModel.debug("syncPlan - is plan saved or updated: \(isSavedOrUpdated)")
             self?.isSyncingPlan = false
+            
+        } receiveValue: { isSavedOrUpdated in
+            Logger.appModel.debug("syncPlan - is plan saved or updated: \(isSavedOrUpdated)")
         }
         .store(in: &self.cancellables)
     }
@@ -915,10 +915,11 @@ extension AppViewModel {
                 switch completion {
                 case .failure(let error):
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data error: \(error.localizedDescription)")
-                    self?.isSyncingTodaysData = false
                 case .finished:
                     break
                 }
+                self?.isSyncingTodaysData = false
+                
             } receiveValue: { [weak self] remoteData in
                 guard let self, let remoteData else {
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data doesn't exist")
@@ -931,14 +932,13 @@ extension AppViewModel {
                 let remoteDailyUsedData = remoteData.dailyUsedData
                 let localDailyUsedData = todaysData.dailyUsedData
                 
-                // udpdate only if remote data is more than locals e.g. (remote: 10 MB > local: 5 MB)
+                // uddate only if remote data is more than locals e.g. (remote: 10 MB > local: 5 MB)
                 if remoteDailyUsedData > localDailyUsedData {
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - remote: \(remoteDailyUsedData) > local \(localDailyUsedData)")
                     todaysData.dailyUsedData += remoteData.dailyUsedData
                 }
                 
                 self.dataUsageRepository.updateData(todaysData)
-                self.isSyncingTodaysData = false
             }
             .store(in: &self.cancellables)
     }
@@ -947,12 +947,12 @@ extension AppViewModel {
         isSyncingTodaysData = true
 
         guard hasInternetConnection else {
-            Logger.appModel.debug("syncPlan - no internet connection")
+            Logger.appModel.debug("syncTodaysData - no internet connection")
             isSyncingTodaysData = false
             return
         }
         
-        // write existing todays data to local (newly installed app)
+        // download (write existing plan to local database)
         guard wasGuideShown else {
             syncLocalTodaysDataFromRemote()
             return
@@ -980,7 +980,7 @@ extension AppViewModel {
         isSyncingOldData = true
         
         guard hasInternetConnection else {
-            Logger.appModel.debug("syncPlan - no internet connection")
+            Logger.appModel.debug("syncOldThenRemoteData - no internet connection")
             isSyncingOldData = false
             return
         }
