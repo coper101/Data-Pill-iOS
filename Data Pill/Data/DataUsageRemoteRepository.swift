@@ -201,14 +201,14 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     }
     
     func getAllData(excluding date: Date) -> AnyPublisher<[RemoteData], Never> {
-        let predicate = NSPredicate(format: "date != %@", date as NSDate)
-
-        return remoteDatabase.fetch(with: predicate, of: .data)
+        remoteDatabase.fetchAll(of: .data, recursively: true)
             .replaceError(with: [])
-            .map { records in
-                return records.compactMap { dataRecord in
-                    return RemoteData.toRemoteData(dataRecord)
-                }
+            .map { dataRecords in
+                dataRecords
+                    .compactMap { dataRecord in
+                        RemoteData.toRemoteData(dataRecord)
+                    }
+                    .filter { $0.date != date }
             }
             .eraseToAnyPublisher()
     }

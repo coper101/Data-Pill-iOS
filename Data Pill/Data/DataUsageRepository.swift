@@ -198,9 +198,9 @@ extension DataUsageRepository {
             taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             // let batchInsert = NSBatchInsertRequest(entityName: Entities.data.name, objects: objects)
             let batchInsert = self.newBatchInsertRequest(remoteData)
-            
             do {
                 try taskContext.execute(batchInsert)
+                self.updateToLatestData()
                 Logger.database.error("successful adding batch data")
             } catch let error {
                 Logger.database.error("failed to add batch data: \(error.localizedDescription)")

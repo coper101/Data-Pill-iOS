@@ -5,6 +5,11 @@
         <attribute name="date" attributeType="Date" defaultDateTimeInterval="686414940" usesScalarValueType="NO"/>
         <attribute name="hasLastTotal" optional="YES" attributeType="Boolean" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="totalUsedData" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="date"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="Plan" representedClassName=".Plan" syncable="YES" codeGenerationType="category">
         <attribute name="dailyLimit" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>

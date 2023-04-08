@@ -952,7 +952,7 @@ extension AppViewModel {
             return
         }
         
-        // download (write existing plan to local database)
+        // download (write existing data to local database)
         guard wasGuideShown else {
             syncLocalTodaysDataFromRemote()
             return
