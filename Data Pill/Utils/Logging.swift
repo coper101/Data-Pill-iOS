@@ -30,6 +30,7 @@ extension Logger {
     // Widget Extension
     static let widgetProvider = createLogger(of: .widgetProvider)
             
+    // Helpers
     static func createLogger(of category: Category) -> Logger {
         let subsystem = Bundle.main.bundleIdentifier!
         return .init(subsystem: subsystem, category: category.rawValue)

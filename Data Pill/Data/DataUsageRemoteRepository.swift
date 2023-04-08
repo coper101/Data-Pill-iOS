@@ -364,6 +364,9 @@ extension DataUsageRemoteRepository {
     func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error> {
         var allLocalData = localData
         
+        Logger.dataUsageRemoteRepository.debug("syncOldData - data from local: \(allLocalData)")
+        UserDefaults.standard.set(allLocalData.debugDescription, forKey: "syncOldLocalData-local")
+        
         /// exclude todays data
         allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
         
@@ -388,6 +391,8 @@ extension DataUsageRemoteRepository {
             .map { dataDatesFromRemote in
                 Logger.dataUsageRemoteRepository.debug("syncOldData - data from remote count: \(dataDatesFromRemote.count)")
                 Logger.dataUsageRemoteRepository.debug("syncOldData - dataDatesFromRemote: \(dataDatesFromRemote.sorted(by: >))")
+                
+                UserDefaults.standard.set(dataDatesFromRemote.debugDescription, forKey: "syncOldLocalData-existingDates")
 
                 /// data to update not added to cloud
                 var dataToUpdate = [Data]()
@@ -411,6 +416,8 @@ extension DataUsageRemoteRepository {
                 Logger.dataUsageRemoteRepository.debug("syncOldData - data to add to remote count: \(dataToUpdate.count)")
                 Logger.dataUsageRemoteRepository.debug("syncOldData - data to add to remote dates: \(dataToUpdate.map(\.debugDescription))")
                 
+                UserDefaults.standard.set(dataToUpdate.debugDescription, forKey: "syncOldLocalData-dateToUpdate")
+                
                 return dataToUpdate
             }
             .map { (dataToUpdate: [Data]) in
@@ -423,11 +430,27 @@ extension DataUsageRemoteRepository {
                 }
                 return remoteData
             }
-            .flatMap {
-                /// save all old data
-                self.addData($0)
+            .flatMap { (dataToUpdate: [RemoteData]) in
+                self.saveLog(message: dataToUpdate.debugDescription)
+
+                guard !dataToUpdate.isEmpty else {
+                    return Just(false)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+                return self.addData(dataToUpdate)
             }
             .eraseToAnyPublisher()
+    }
+    
+    private func saveLog(message new: String) {
+        let key = "dataToUpdate"
+        var old = UserDefaults.standard.string(forKey: key) ?? ""
+        old.append("date: \(Date().debugDescription) items: \(new)")
+        UserDefaults.standard.set(old, forKey: key)
+        
+        let newOld = UserDefaults.standard.string(forKey: key) ?? ""
+        Logger.dataUsageRemoteRepository.debug("saveLog - dataToUpdate: \(newOld)")
     }
     
     func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error> {

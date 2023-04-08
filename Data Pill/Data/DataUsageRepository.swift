@@ -379,8 +379,6 @@ extension DataUsageRepository {
     func updateToLatestData() {
         thisWeeksData = getThisWeeksData(from: getTodaysData())
         todaysData = getTodaysData()
-        
-        print("updateToLatestData: ", todaysData)
     }
 
 }
