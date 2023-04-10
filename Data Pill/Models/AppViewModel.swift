@@ -379,7 +379,7 @@ extension AppViewModel {
         
         NotificationCenter.default
             .publisher(for: .todaysData)
-            .sink { [weak self] _ in self?.syncLocalTodaysDataFromRemote() }
+            .sink { [weak self] _ in self?.syncTodaysData() }
             .store(in: &cancellables)
     }
     
@@ -906,42 +906,35 @@ extension AppViewModel {
         .store(in: &self.cancellables)
     }
     
-    func syncLocalTodaysDataFromRemote() {
+    func syncLocalTodaysDataFromRemote() -> AnyPublisher<Bool, Never> {
         let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
         
-        dataUsageRemoteRepository.getData(on: date)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data error: \(error.localizedDescription)")
-                case .finished:
-                    break
-                }
-                self?.isSyncingTodaysData = false
-                
-            } receiveValue: { [weak self] remoteData in
+        return dataUsageRemoteRepository.getData(on: date)
+            .replaceError(with: nil)
+            .flatMap { [weak self] (remoteData: RemoteData?) in
                 guard let self, let remoteData else {
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data doesn't exist")
-                    return
+                    return Just(false)
                 }
                 Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data: \(remoteData.dailyUsedData)")
-                
+
                 let todaysData = self.todaysData
-                
+
                 let remoteDailyUsedData = remoteData.dailyUsedData
                 let localDailyUsedData = todaysData.dailyUsedData
-                
+
                 // uddate only if remote data is more than locals e.g. (remote: 10 MB > local: 5 MB)
                 if remoteDailyUsedData > localDailyUsedData {
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - remote: \(remoteDailyUsedData) > local \(localDailyUsedData)")
-                    todaysData.dailyUsedData += remoteData.dailyUsedData
+                    todaysData.dailyUsedData = remoteData.dailyUsedData
+                    self.dataUsageRepository.updateData(todaysData)
+                    return Just(true)
                 }
-                
-                self.dataUsageRepository.updateData(todaysData)
+                return Just(false)
             }
-            .store(in: &self.cancellables)
+            .eraseToAnyPublisher()
     }
+
     
     func syncTodaysData() {
         isSyncingTodaysData = true
@@ -952,25 +945,25 @@ extension AppViewModel {
             return
         }
         
-        // download (write existing data to local database)
-        guard wasGuideShown else {
-            syncLocalTodaysDataFromRemote()
-            return
-        }
-        
-        // upload
-        dataUsageRemoteRepository.syncTodaysData(todaysData)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    Logger.appModel.debug("syncTodaysData - is plan saved or updated error: \(error.localizedDescription)")
-                    self?.isSyncingTodaysData = false
-                case .finished:
-                    break
+        // update latest from remote and write local database
+        // then update remote database if any new changes in local
+        syncLocalTodaysDataFromRemote()
+            .flatMap { [weak self] isLocalUpdated -> AnyPublisher<Bool, Never> in
+                Logger.appModel.debug("syncTodaysData - local today's data updated: \(isLocalUpdated)")
+                guard let self else {
+                    return Just(false).eraseToAnyPublisher()
                 }
-            } receiveValue: { [weak self] isSavedOrUpdated in
-                Logger.appModel.debug("syncTodaysData - is todays data saved or updated: \(isSavedOrUpdated)")
+                if isLocalUpdated {
+                    return Just(false).eraseToAnyPublisher()
+                }
+                return self.dataUsageRemoteRepository
+                    .syncTodaysData(self.todaysData)
+                    .replaceError(with: false)
+                    .eraseToAnyPublisher()
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isRemoteUpdated in
+                Logger.appModel.debug("syncTodaysData - remote today's data updated: \(isRemoteUpdated)")
                 self?.isSyncingTodaysData = false
             }
             .store(in: &self.cancellables)
