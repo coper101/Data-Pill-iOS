@@ -67,11 +67,11 @@ final class NetworkDataRepository:
     func receiveTotalUsedData() {
         $usedDataInfo
             .map {
-                #if targetEnvironment(simulator)
-                    $0.wifiReceived + $0.wifiSent
-                #else
+                // #if targetEnvironment(simulator)
+                //     $0.wifiReceived + $0.wifiSent
+                // #else
                     $0.wirelessWanDataReceived + $0.wirelessWanDataSent
-                #endif
+                // #endif
             }
             .map { $0.toInt64().toMB() }
             .sink { [weak self] in

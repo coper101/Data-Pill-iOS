@@ -83,8 +83,9 @@ protocol DataUsageRepositoryProtocol {
         dailyUsedData: Double,
         hasLastTotal: Bool
     ) -> Void
-    func addData(_ remoteData: [RemoteData]) -> Void
+    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) -> Void
     func updateData(_ data: Data) -> Void
+    func updateData(_ remoteData: [RemoteData]) -> Void
     func getAllData() -> [Data]
     func getDataWith(
         format: String,
@@ -180,7 +181,6 @@ extension DataUsageRepository {
             guard isAdded else {
                 return
             }
-            print("added data: ", data)
             updateToLatestData()
         } catch let error {
             dataError = DatabaseError.adding(error.localizedDescription)
@@ -189,7 +189,7 @@ extension DataUsageRepository {
     }
     
     /// add multiple data
-    func addData(_ remoteData: [RemoteData]) {
+    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) {
         database.container.performBackgroundTask { [weak self] taskContext in
             guard let self else {
                 return
@@ -197,11 +197,11 @@ extension DataUsageRepository {
             
             taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             // let batchInsert = NSBatchInsertRequest(entityName: Entities.data.name, objects: objects)
-            let batchInsert = self.newBatchInsertRequest(remoteData)
+            let batchInsert = self.newBatchInsertRequest(remoteData, isSyncedToRemote: isSyncedToRemote)
             do {
                 try taskContext.execute(batchInsert)
                 self.updateToLatestData()
-                Logger.database.error("successful adding batch data")
+                Logger.database.debug("successful adding batch data")
             } catch let error {
                 Logger.database.error("failed to add batch data: \(error.localizedDescription)")
             }
@@ -209,7 +209,7 @@ extension DataUsageRepository {
         }
     }
     
-    private func newBatchInsertRequest(_ remoteDataList: [RemoteData]) -> NSBatchInsertRequest {
+    private func newBatchInsertRequest(_ remoteDataList: [RemoteData], isSyncedToRemote: Bool) -> NSBatchInsertRequest {
         var index = 0
         let totalCount = remoteDataList.count
         
@@ -224,6 +224,7 @@ extension DataUsageRepository {
                 data.totalUsedData = 0.0
                 data.dailyUsedData = remoteData.dailyUsedData
                 data.hasLastTotal = true
+                data.isSyncedToRemote = isSyncedToRemote
             }
             
             index += 1
@@ -234,7 +235,6 @@ extension DataUsageRepository {
     
     /// updates an existing Data from the Database
     func updateData(_ data: Data) {
-        print("updating data in \(database.container.persistentStoreDescriptions), with \(data)")
         do {
             let isUpdated = try database.context.saveIfNeeded()
             if isUpdated {
@@ -244,6 +244,32 @@ extension DataUsageRepository {
             dataError = DatabaseError.updatingData(error.localizedDescription)
             Logger.database.error("failed to update data: \(error.localizedDescription)")
         }
+    }
+    
+    /// updates multiple Data from Database
+    func updateData(_ remoteData: [RemoteData]) {
+        let dataDatesToUpdate = remoteData.compactMap { $0.date }
+        database.container.performBackgroundTask { [weak self] taskContext in
+            guard let self else {
+                return
+            }
+            taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            let batchUpdate = self.newBatchUpdateRequest(dataDatesToUpdate)
+            do {
+                try taskContext.execute(batchUpdate)
+                Logger.database.debug("successful updating batch data")
+            } catch let error {
+                Logger.database.error("failed to update batch data: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func newBatchUpdateRequest(_ dates: [Date]) -> NSBatchUpdateRequest {
+        let isSyncedToRemoteAttribute = "isSyncedToRemote"
+        let batchUpdate = NSBatchUpdateRequest(entityName: Entities.data.rawValue)
+        batchUpdate.propertiesToUpdate = [isSyncedToRemoteAttribute: true]
+        batchUpdate.predicate = NSPredicate(format: "ANY %K IN %@", #keyPath(Data.date), dates as [NSDate])
+        return batchUpdate
     }
     
     /// fetch all Data Usage records from Database
@@ -550,12 +576,16 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         thisWeeksData.append(uninsertedData)
     }
     
-    func addData(_ remoteData: [RemoteData]) {
+    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) {
         
     }
     
     func updateData(_ item: Data) {
 
+    }
+    
+    func updateData(_ remoteData: [RemoteData]) {
+        
     }
     
     func getAllData() -> [Data] {
@@ -684,12 +714,16 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         dataError = DatabaseError.adding("Adding Data Error")
     }
         
-    func addData(_ remoteData: [RemoteData]) {
+    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) {
         
     }
     
     func updateData(_ data: Data) {
         dataError = DatabaseError.updatingData("Updating Data Error")
+    }
+    
+    func updateData(_ remoteData: [RemoteData]) {
+        
     }
     
     func getAllData() -> [Data] {

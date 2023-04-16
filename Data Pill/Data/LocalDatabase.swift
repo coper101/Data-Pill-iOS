@@ -109,8 +109,13 @@ class LocalDatabase: Database {
             let storeDescription = NSPersistentStoreDescription(url: storeLocation)
             // storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: cloudKit.containerIdentifier)
             
+            // lightweight migration
+            storeDescription.shouldMigrateStoreAutomatically = true
+            storeDescription.shouldInferMappingModelAutomatically = true
+            
             self.container.persistentStoreDescriptions = [storeDescription]
             Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
+            
         }
     }
     

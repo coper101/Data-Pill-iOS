@@ -298,6 +298,7 @@
 		278FB31028FAA00F00BE78C2 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		278FB31228FAA61500BE78C2 /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
 		27A0A8F0295858AD0007C412 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		27A19A0029EAEB03006775E5 /* DataUsage 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "DataUsage 2.xcdatamodel"; sourceTree = "<group>"; };
 		27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Test_Case.swift; sourceTree = "<group>"; };
 		27B10A71295BE714009E910C /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		27B90B8428F2D28100263983 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -1508,9 +1509,10 @@
 		27801E1F28E9B16E00201339 /* DataUsage.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				27A19A0029EAEB03006775E5 /* DataUsage 2.xcdatamodel */,
 				27801E2028E9B16E00201339 /* DataUsage.xcdatamodel */,
 			);
-			currentVersion = 27801E2028E9B16E00201339 /* DataUsage.xcdatamodel */;
+			currentVersion = 27A19A0029EAEB03006775E5 /* DataUsage 2.xcdatamodel */;
 			path = DataUsage.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

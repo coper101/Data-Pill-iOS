@@ -45,7 +45,7 @@ protocol DataUsageRemoteRepositoryProtocol {
         planLimit: Double
     ) -> AnyPublisher<Bool, Error>
     func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error>
-    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error>
+    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error>
     func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error>
     
     /// [E] Remote Notification
@@ -361,51 +361,25 @@ extension DataUsageRemoteRepository {
             .eraseToAnyPublisher()
     }
     
-    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error> {
+    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error> {
         var allLocalData = localData
         
-        Logger.dataUsageRemoteRepository.debug("syncOldData - data from local: \(allLocalData)")
-        UserDefaults.standard.set(allLocalData.debugDescription, forKey: "syncOldLocalData-local")
+        // Logger.dataUsageRemoteRepository.debug("syncOldData - data from local: \(allLocalData)")
         
         /// exclude todays data
         allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
         
+        Logger.dataUsageRemoteRepository.debug("syncOldData - data from local count excluding today's data: \(allLocalData.count)")
+        
         guard !allLocalData.isEmpty else {
-            Logger.dataUsageRemoteRepository.debug("syncOldData - data from local count: 0")
-            return Just(false)
+            return Just((false, []))
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
-        Logger.dataUsageRemoteRepository.debug("syncOldData - data from local count: \(allLocalData.count)")
         
         return self.isLoggedInUser()
             .flatMap { isLoggedIn in
-                /// 1. logged in
-                if isLoggedIn {
-                    return self.getAllExistingDataDates()
-                        .eraseToAnyPublisher()
-                }
-                /// 1. not logged in
-                return Just([Date]()).eraseToAnyPublisher()
-            }
-            .map { dataDatesFromRemote in
-                Logger.dataUsageRemoteRepository.debug("syncOldData - data from remote count: \(dataDatesFromRemote.count)")
-                Logger.dataUsageRemoteRepository.debug("syncOldData - dataDatesFromRemote: \(dataDatesFromRemote.sorted(by: >))")
-                
-                UserDefaults.standard.set(dataDatesFromRemote.debugDescription, forKey: "syncOldLocalData-existingDates")
-
-                /// data to update not added to cloud
-                var dataToUpdate = [Data]()
-                
-                allLocalData.forEach { data in
-                    guard let date = data.date else {
-                        return
-                    }
-                    guard dataDatesFromRemote.first(where: { $0 == date }) == nil else {
-                        return
-                    }
-                    dataToUpdate.append(data)
-                }
+                var dataToUpdate = allLocalData.filter { !$0.isSyncedToRemote }
                 
                 /// limit data to update
                 let limit = 100
@@ -414,11 +388,8 @@ extension DataUsageRemoteRepository {
                 }
                 
                 Logger.dataUsageRemoteRepository.debug("syncOldData - data to add to remote count: \(dataToUpdate.count)")
-                Logger.dataUsageRemoteRepository.debug("syncOldData - data to add to remote dates: \(dataToUpdate.map(\.debugDescription))")
-                
-                UserDefaults.standard.set(dataToUpdate.debugDescription, forKey: "syncOldLocalData-dateToUpdate")
-                
-                return dataToUpdate
+                                
+                return Just(dataToUpdate).eraseToAnyPublisher()
             }
             .map { (dataToUpdate: [Data]) in
                 /// convert all to cloud data type
@@ -430,27 +401,19 @@ extension DataUsageRemoteRepository {
                 }
                 return remoteData
             }
-            .flatMap { (dataToUpdate: [RemoteData]) in
-                self.saveLog(message: dataToUpdate.debugDescription)
-
+            .flatMap { (dataToUpdate: [RemoteData]) -> AnyPublisher<(Bool, [RemoteData]), Error> in
                 guard !dataToUpdate.isEmpty else {
-                    return Just(false)
+                    return Just((false, dataToUpdate))
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
                 return self.addData(dataToUpdate)
+                    .flatMap { isAdded in
+                        Just((isAdded, dataToUpdate))
+                    }
+                    .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
-    }
-    
-    private func saveLog(message new: String) {
-        let key = "dataToUpdate"
-        var old = UserDefaults.standard.string(forKey: key) ?? ""
-        old.append("date: \(Date().debugDescription) items: \(new)")
-        UserDefaults.standard.set(old, forKey: key)
-        
-        let newOld = UserDefaults.standard.string(forKey: key) ?? ""
-        Logger.dataUsageRemoteRepository.debug("saveLog - dataToUpdate: \(newOld)")
     }
     
     func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error> {
@@ -624,8 +587,8 @@ class MockSuccessDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRep
             .eraseToAnyPublisher()
     }
     
-    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error> {
-        Just(true)
+    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error>  {
+        Just((true, []))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
@@ -741,8 +704,8 @@ class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemoteReposi
             .eraseToAnyPublisher()
     }
     
-    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<Bool, Error> {
-        Just(false)
+    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error>  {
+        Just((false, []))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }

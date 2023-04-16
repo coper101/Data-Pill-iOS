@@ -22,7 +22,7 @@ public class Data: NSManagedObject {
     
     // properties are generated automatically
     // matches the properties from the Entity Table
-    // date, totalUsedData, dailyUsedData, hasLastTotal
+    // date, totalUsedData, dailyUsedData, hasLastTotal, isSyncedToRemote
         
     public var id: String {
         (date ?? Date()).toDayFormat()
@@ -34,6 +34,7 @@ public class Data: NSManagedObject {
               Total Used Data: \(totalUsedData) MB
               Daily Used Data: \(dailyUsedData) MB
               Has Last Total: \(hasLastTotal)
+              Is Synced To Remote: \(isSyncedToRemote)
             """
     }
     
@@ -42,6 +43,7 @@ public class Data: NSManagedObject {
         totalUsedData: Double = 0,
         dailyUsedData: Double = 0,
         hasLastTotal: Bool = false,
+        isSyncedToRemote: Bool = false,
         insertInto context: NSManagedObjectContext? = nil
     ) {
         self.init(entity: Data.entity(), insertInto: context)
@@ -49,6 +51,7 @@ public class Data: NSManagedObject {
         self.totalUsedData = totalUsedData
         self.dailyUsedData = dailyUsedData
         self.hasLastTotal = hasLastTotal
+        self.isSyncedToRemote = isSyncedToRemote
     }
 
 }
@@ -57,13 +60,15 @@ func createFakeData(
     date: Date = .init(),
     totalUsedData: Double = 0,
     dailyUsedData: Double = 0,
-    hasLastTotal: Bool = false
+    hasLastTotal: Bool = false,
+    isSyncedToRemote: Bool = false
 ) -> Data {
     .init(
         date: date,
         totalUsedData: totalUsedData,
         dailyUsedData: dailyUsedData,
-        hasLastTotal: hasLastTotal
+        hasLastTotal: hasLastTotal,
+        isSyncedToRemote: isSyncedToRemote
     )
 }
 

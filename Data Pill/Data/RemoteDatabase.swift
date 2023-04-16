@@ -337,29 +337,33 @@ class CloudDatabase: RemoteDatabase {
     }
     
     func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
-        Future { promise in
+        Logger.remoteDatabase.debug("save - records: \(records)")
+
+        return Future { promise in
             let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
             
             if #available(iOS 15.0, *) {
                 operation.modifyRecordsResultBlock = { completion in
                     switch completion {
                     case .success(_):
-                        Logger.remoteDatabase.debug("save records - saved")
+                        Logger.remoteDatabase.debug("save - records saved")
                         promise(.success(true))
+                        return
                     case .failure(let error):
-                        Logger.remoteDatabase.debug("save records - error: \(error.localizedDescription)")
+                        Logger.remoteDatabase.debug("save - records error: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
+                        return
                     }
                 }
                 
             } else {
                 operation.modifyRecordsCompletionBlock = { _, _, error in
                     if let error {
-                        Logger.remoteDatabase.debug("save records - error: \(error.localizedDescription)")
+                        Logger.remoteDatabase.debug("save - records error: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
                         return
                     }
-                    Logger.remoteDatabase.debug("save records - saved")
+                    Logger.remoteDatabase.debug("save - records saved")
                     promise(.success(true))
                 }
                 
