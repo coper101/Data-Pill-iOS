@@ -409,10 +409,10 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         createExpectation(
             publisher: repository.syncOldLocalData(localData),
             description: "Sync Old Local Data"
-        ) { areAllSynced in
+        ) { (areUploaded, uploadedRemoteData) in
             
             // (3) Then
-            XCTAssertTrue(areAllSynced)
+            XCTAssertTrue(areUploaded)
         }
     }
     
@@ -424,10 +424,10 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         createExpectation(
             publisher: repositoryFail.syncOldLocalData(localData),
             description: "Sync Old Local Data"
-        ) { areAllSynced in
+        ) { (areUploaded, uploadedRemoteData) in
             
             // (3) Then
-            XCTAssertFalse(areAllSynced)
+            XCTAssertFalse(areUploaded)
         }
     }
     

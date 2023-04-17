@@ -170,7 +170,11 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
         let predicate = NSPredicate(format: "date == %@", date as NSDate)
         
         return remoteDatabase.fetch(with: predicate, of: .data)
-            .map { $0.count > 0 }
+            .map {
+                Logger.dataUsageRemoteRepository.debug("count - \($0.count)")
+                return $0.count > 0
+                
+            }
             .eraseToAnyPublisher()
     }
     
@@ -364,12 +368,12 @@ extension DataUsageRemoteRepository {
     func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error> {
         var allLocalData = localData
         
-        // Logger.dataUsageRemoteRepository.debug("syncOldData - data from local: \(allLocalData)")
+        // Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data from local: \(allLocalData)")
         
         /// exclude todays data
         allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
         
-        Logger.dataUsageRemoteRepository.debug("syncOldData - data from local count excluding today's data: \(allLocalData.count)")
+        Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data from local count excluding today's data: \(allLocalData.count)")
         
         guard !allLocalData.isEmpty else {
             return Just((false, []))
@@ -387,7 +391,7 @@ extension DataUsageRemoteRepository {
                     dataToUpdate = Array(dataToUpdate[..<limit])
                 }
                 
-                Logger.dataUsageRemoteRepository.debug("syncOldData - data to add to remote count: \(dataToUpdate.count)")
+                Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data to add to remote count: \(dataToUpdate.count)")
                                 
                 return Just(dataToUpdate).eraseToAnyPublisher()
             }
