@@ -31,6 +31,7 @@ protocol DataUsageRemoteRepositoryProtocol {
     func getAllExistingDataDates() -> AnyPublisher<[Date], Never>
     func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Error>
     func addData(_ data: RemoteData) -> AnyPublisher<Bool, Error>
+    func updateData(_ data: [RemoteData]) -> AnyPublisher<Bool, Error>
     func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Error>
     
     /// [C] User
@@ -44,8 +45,8 @@ protocol DataUsageRemoteRepositoryProtocol {
         dailyLimit: Double,
         planLimit: Double
     ) -> AnyPublisher<Bool, Error>
-    func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error>
-    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error>
+    func syncTodaysData(_ todaysData: Data, isSyncedToRemote: Bool) -> AnyPublisher<Bool, Error>
+    func syncOldLocalData(_ localData: [Data], lastSyncedDate: Date?) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error>
     func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error>
     
     /// [E] Remote Notification
@@ -236,11 +237,33 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
             .eraseToAnyPublisher()
     }
     
+    func updateData(_ data: [RemoteData]) -> AnyPublisher<Bool, Error> {
+        let predicate = NSPredicate(format: "ANY date IN %@", data.map(\.date) as [NSDate])
+        
+        return remoteDatabase.fetch(with: predicate, of: .data)
+            .flatMap { (dataRecords: [CKRecord]) in
+                var updateRecords = dataRecords
+                
+                updateRecords.indices.forEach { index in
+                    let record = updateRecords[index]
+                    guard
+                        let date = record.value(forKey: "date") as? Date,
+                        let currentData: RemoteData = data.first(where: { $0.date == date })
+                    else {
+                        return
+                    }
+                    updateRecords[index].setValue(currentData.dailyUsedData, forKey: "dailyUsedData")
+                }
+                
+                return self.remoteDatabase.save(records: updateRecords)
+            }
+            .eraseToAnyPublisher()
+    }
+    
     func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Error> {
         let predicate = NSPredicate(format: "date == %@", date as NSDate)
         
         return remoteDatabase.fetch(with: predicate, of: .data)
-            .eraseToAnyPublisher()
             .map(\.first)
             .flatMap {
                 guard let dataRecord: CKRecord = $0 else {
@@ -329,7 +352,7 @@ extension DataUsageRemoteRepository {
             .eraseToAnyPublisher()
     }
     
-    func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error> {
+    func syncTodaysData(_ todaysData: Data, isSyncedToRemote: Bool) -> AnyPublisher<Bool, Error> {
         guard let todaysDate = todaysData.date else {
             return Fail(error: RemoteDatabaseError.nilProp("Today's Date is nil"))
                 .eraseToAnyPublisher()
@@ -351,69 +374,100 @@ extension DataUsageRemoteRepository {
                     .eraseToAnyPublisher()
             }
             .flatMap { isDataAdded in
-                /// 2. update existing data
-                guard !isDataAdded else {
+                /// 2A. add new data
+                if !isSyncedToRemote && !isDataAdded {
+                    return self
+                        .addData(.init(date: date, dailyUsedData: dailyUsedData))
+                        .eraseToAnyPublisher()
+                }
+                /// 2B. update existing data
+                if isSyncedToRemote && isDataAdded {
                     return self
                         .updateData(date: date, dailyUsedData: dailyUsedData)
                         .eraseToAnyPublisher()
                 }
-                /// 2. add new data
-                return self
-                    .addData(.init(date: date, dailyUsedData: dailyUsedData))
+                /// 2C. data added but not yet reflected in remote
+                return Just(false)
+                    .setFailureType(to: Error.self)
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
     }
     
-    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error> {
+    func syncOldLocalData(_ localData: [Data], lastSyncedDate: Date?) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error> {
         var allLocalData = localData
         
         // Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data from local: \(allLocalData)")
         
         /// exclude todays data
-        allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        allLocalData.removeAll(where: { $0.date == todaysDate })
         
         Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data from local count excluding today's data: \(allLocalData.count)")
         
         guard !allLocalData.isEmpty else {
-            return Just((false, []))
+            return Just((false, false, []))
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
         
         return self.isLoggedInUser()
-            .flatMap { isLoggedIn in
-                var dataToUpdate = allLocalData.filter { !$0.isSyncedToRemote }
+            .flatMap { isLoggedIn -> AnyPublisher<([Data], [Data]), Never> in
                 
-                /// limit data to update
+                // A.
+                var dataToAdd = allLocalData.filter { !$0.isSyncedToRemote }
                 let limit = 100
-                if dataToUpdate.count >= limit {
-                    dataToUpdate = Array(dataToUpdate[..<limit])
+                if dataToAdd.count >= limit {
+                    dataToAdd = Array(dataToAdd[..<limit])
                 }
+                Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data to add to remote count: \(dataToAdd.count)")
                 
-                Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data to add to remote count: \(dataToUpdate.count)")
+                // B.
+                var dataToUpdate = [Data]()
+                if let lastSyncedDate {
+                    dataToUpdate = allLocalData.filter { data in
+                        guard let date = data.date else {
+                            return false
+                        }
+                        return data.isSyncedToRemote && date.isDateInRange(from: lastSyncedDate, to: todaysDate)
+                    }
+                }
+                Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data to update to remote count: \(dataToUpdate.count)")
                                 
-                return Just(dataToUpdate).eraseToAnyPublisher()
+                return Just((dataToAdd, dataToUpdate)).eraseToAnyPublisher()
             }
-            .map { (dataToUpdate: [Data]) in
-                /// convert all to cloud data type
-                let remoteData: [RemoteData] = dataToUpdate.compactMap { data in
+            .map { (dataToAdd: [Data], dataToUpdate: [Data]) in
+                // convert all to remote data types
+                let transform: (Data) -> RemoteData? = { data in
                     guard let date = data.date else {
                         return nil
                     }
                     return RemoteData(date: date, dailyUsedData: data.dailyUsedData)
                 }
-                return remoteData
+                
+                let remoteDataToAdd: [RemoteData] = dataToAdd.compactMap(transform)
+                let remoteDataToUpdate: [RemoteData] = dataToUpdate.compactMap(transform)
+
+                return (remoteDataToAdd, remoteDataToUpdate)
             }
-            .flatMap { (dataToUpdate: [RemoteData]) -> AnyPublisher<(Bool, [RemoteData]), Error> in
-                guard !dataToUpdate.isEmpty else {
-                    return Just((false, dataToUpdate))
-                        .setFailureType(to: Error.self)
+            .flatMap { (remoteDataToAdd: [RemoteData], remoteDataToUpdate: [RemoteData]) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error> in
+                guard !remoteDataToAdd.isEmpty else {
+                    // 2. Update
+                    return self.updateData(remoteDataToUpdate)
+                        .flatMap { isUpdated in
+                            Just((false, true, remoteDataToUpdate))
+                        }
                         .eraseToAnyPublisher()
                 }
-                return self.addData(dataToUpdate)
+                // 1. Add
+                return self.addData(remoteDataToAdd)
                     .flatMap { isAdded in
-                        Just((isAdded, dataToUpdate))
+                        // 2. Update
+                        self.updateData(remoteDataToUpdate)
+                            .flatMap { isUpdated in
+                                Just((isAdded, isUpdated, remoteDataToUpdate + remoteDataToAdd))
+                            }
+                            .eraseToAnyPublisher()
                     }
                     .eraseToAnyPublisher()
             }
@@ -562,6 +616,12 @@ class MockSuccessDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRep
             .eraseToAnyPublisher()
     }
     
+    func updateData(_ data: [RemoteData]) -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
     func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Error> {
         Just(true)
             .setFailureType(to: Error.self)
@@ -585,14 +645,14 @@ class MockSuccessDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRep
             .eraseToAnyPublisher()
     }
     
-    func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error> {
+    func syncTodaysData(_ todaysData: Data, isSyncedToRemote: Bool) -> AnyPublisher<Bool, Error> {
         Just(true)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
     
-    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error>  {
-        Just((true, []))
+    func syncOldLocalData(_ localData: [Data], lastSyncedDate: Date?) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error>   {
+        Just((true, true, []))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
@@ -679,6 +739,12 @@ class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemoteReposi
             .eraseToAnyPublisher()
     }
     
+    func updateData(_ data: [RemoteData]) -> AnyPublisher<Bool, Error> {
+        Just(false)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
     func updateData(date: Date, dailyUsedData: Double) -> AnyPublisher<Bool, Error> {
         Just(false)
             .setFailureType(to: Error.self)
@@ -702,14 +768,14 @@ class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemoteReposi
             .eraseToAnyPublisher()
     }
     
-    func syncTodaysData(_ todaysData: Data) -> AnyPublisher<Bool, Error> {
+    func syncTodaysData(_ todaysData: Data, isSyncedToRemote: Bool) -> AnyPublisher<Bool, Error> {
         Just(false)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
     
-    func syncOldLocalData(_ localData: [Data]) -> AnyPublisher<(Bool, [RemoteData]), Error>  {
-        Just((false, []))
+    func syncOldLocalData(_ localData: [Data], lastSyncedDate: Date?) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error>  {
+        Just((false, false, []))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }

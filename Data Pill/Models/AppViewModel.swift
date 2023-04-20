@@ -38,6 +38,8 @@ final class AppViewModel: ObservableObject {
     @Published var dataLimitPlusStepperValue = 1.0
     @Published var dataLimitMinusStepperValue = 1.0
     
+    @Published var lastSyncedToRemoteDate: Date?
+    
     /// [B] Data Usage
     @Published var startDate = Date()
     @Published var endDate = Date()
@@ -251,6 +253,13 @@ extension AppViewModel {
         
         appDataRepository.dataLimitPerDayMinusStepperValuePublisher
             .sink { [weak self] in self?.dataLimitPerDayMinusStepperValue = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.lastSyncedToRemoteDatePublisher
+            .sink { [weak self] in
+                self?.lastSyncedToRemoteDate = $0
+                Logger.appModel.debug("lastSyncedToRemoteDate: \(String(describing: $0))")
+            }
             .store(in: &cancellables)
     }
     
@@ -908,6 +917,8 @@ extension AppViewModel {
     func syncLocalTodaysDataFromRemote() -> AnyPublisher<Bool, Never> {
         let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
         
+        Logger.appModel.debug("syncLocalTodayDataFromRemote - today's date: \(date)")
+                
         return dataUsageRemoteRepository.getData(on: date)
             .replaceError(with: nil)
             .flatMap { [weak self] (remoteData: RemoteData?) in
@@ -915,12 +926,14 @@ extension AppViewModel {
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data doesn't exist")
                     return Just(false)
                 }
-                Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data: \(remoteData.dailyUsedData)")
 
                 let todaysData = self.todaysData
 
                 let remoteDailyUsedData = remoteData.dailyUsedData
                 let localDailyUsedData = todaysData.dailyUsedData
+                
+                Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data from remote: \(remoteDailyUsedData)")
+                Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data from local: \(localDailyUsedData)")
 
                 // uddate only if remote data is more than locals e.g. (remote: 10 MB > local: 5 MB)
                 if remoteDailyUsedData > localDailyUsedData {
@@ -954,7 +967,7 @@ extension AppViewModel {
                     return Just((isLocalUpdated, false)).eraseToAnyPublisher()
                 }
                 return self.dataUsageRemoteRepository
-                    .syncTodaysData(self.todaysData)
+                    .syncTodaysData(self.todaysData, isSyncedToRemote: self.todaysData.isSyncedToRemote)
                     .replaceError(with: false)
                     .flatMap { isRemoteUpdated in
                         Just((isLocalUpdated, isRemoteUpdated))
@@ -966,11 +979,11 @@ extension AppViewModel {
             .sink { [weak self] (values: (isLocalUpdated: Bool, isRemoteUpdated: Bool)) in
                 Logger.appModel.debug("syncTodaysData - local today's data updated: \(values.isLocalUpdated)")
                 Logger.appModel.debug("syncTodaysData - remote today's data updated: \(values.isRemoteUpdated)")
-                
+
                 guard let self else {
                     return
                 }
-                
+
                 // local today's date is uploaded to remote
                 // update is synced to remote attribute
                 let todaysData = self.todaysData
@@ -978,7 +991,7 @@ extension AppViewModel {
                     todaysData.isSyncedToRemote = true
                     self.dataUsageRepository.updateData(todaysData)
                 }
-                
+
                 self.isSyncingTodaysData = false
             }
             .store(in: &self.cancellables)
@@ -995,16 +1008,15 @@ extension AppViewModel {
         
         var localData = dataUsageRepository.getAllData()
 
-        dataUsageRemoteRepository.syncOldLocalData(localData)
-            .flatMap { (areUploaded, uploadedRemoteData) -> AnyPublisher<(Bool, [RemoteData], [RemoteData]), Error> in
-                Logger.appModel.debug("syncOldThenRemoteData - old local data uploaded to remote database: \(areUploaded)")
-
+        dataUsageRemoteRepository.syncOldLocalData(localData, lastSyncedDate: lastSyncedToRemoteDate)
+            .flatMap { (areOldDataAdded, areOldDataUpdated, addedRemoteData: [RemoteData]) -> AnyPublisher<(Bool, Bool, [RemoteData], [RemoteData]), Error> in
+              
                 localData = self.dataUsageRepository.getAllData()
                 let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
 
                 return self.dataUsageRemoteRepository.syncOldRemoteData(localData, excluding: date)
                     .flatMap { oldRemoteData in
-                        Just((areUploaded, uploadedRemoteData, oldRemoteData))
+                        Just((areOldDataAdded, areOldDataUpdated, addedRemoteData, oldRemoteData))
                             .setFailureType(to: Error.self)
                             .eraseToAnyPublisher()
                     }
@@ -1019,21 +1031,25 @@ extension AppViewModel {
                 case .finished:
                     break
                 }
-            } receiveValue: { [weak self] (values: (areUploaded: Bool, uploadedRemoteData: [RemoteData], oldRemoteData: [RemoteData])) in
+            } receiveValue: { [weak self] (areOldDataAdded: Bool, areOldDataUpdated: Bool, addedRemoteData: [RemoteData], oldRemoteData: [RemoteData]) in
                                 
+                Logger.appModel.debug("syncOldThenRemoteData - old local data added to remote database: \(areOldDataAdded)")
+                Logger.appModel.debug("syncOldThenRemoteData - old local data updated to remote database: \(areOldDataUpdated)")
+                
                 guard let self else {
                     return
                 }
-                
-                if values.areUploaded {
-                    self.dataUsageRepository.updateData(values.uploadedRemoteData)
-                    Logger.appModel.debug("syncOldThenRemoteData - old local data to update count: \(values.uploadedRemoteData.count)")
+                                
+                if areOldDataAdded || areOldDataUpdated {
+                    self.dataUsageRepository.updateData(addedRemoteData)
+                    self.appDataRepository.setLastSyncedToRemoteDate(.init())
+                    Logger.appModel.debug("syncOldThenRemoteData - old local data to update count: \(addedRemoteData.count)")
                     Logger.appModel.debug("syncOldThenRemoteData - old local data to is synced to remote attribute updated")
                 }
                 
-                if !values.oldRemoteData.isEmpty {
-                    self.dataUsageRepository.addData(values.oldRemoteData, isSyncedToRemote: true)
-                    Logger.appModel.debug("syncOldThenRemoteData - old remote data to add count: \(values.oldRemoteData.count)")
+                if !oldRemoteData.isEmpty {
+                    self.dataUsageRepository.addData(oldRemoteData, isSyncedToRemote: true)
+                    Logger.appModel.debug("syncOldThenRemoteData - old remote data to add count: \(oldRemoteData.count)")
                     Logger.appModel.debug("syncOldThenRemoteData - old remote data added to local database: true")
                 }
                 

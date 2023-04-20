@@ -43,6 +43,9 @@ protocol AppDataRepositoryProtocol {
     var dataLimitMinusStepperValue: Double { get set }
     var dataLimitMinusStepperValuePublisher: Published<Double>.Publisher { get }
     
+    var lastSyncedToRemoteDate: Date? { get set }
+    var lastSyncedToRemoteDatePublisher: Published<Date?>.Publisher { get }
+    
     func loadAllData(
         unit: Unit?,
         usageType: ToggleItem?
@@ -55,6 +58,7 @@ protocol AppDataRepositoryProtocol {
     func setIsPeriodAuto(_ isOn: Bool) -> Void
     func setPlusStepperValue(_ amount: Double, type: StepperValueType)
     func setMinusStepperValue(_ amount: Double, type: StepperValueType)
+    func setLastSyncedToRemoteDate(_ date: Date)
 }
 
 // MARK: - Implementation
@@ -79,6 +83,8 @@ enum Keys: String {
     
     case dataLimitPlusStepperValue = "Data_Plus_Total_Limit_Stepper_Value"
     case dataLimitMinusStepperValue = "Data_Minus_Total_Limit_Stepper_Value"
+    
+    case lastSyncToRemoteDate = "Last_Synced_To_Remote_Date"
 }
 
 final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
@@ -116,6 +122,9 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     @Published var dataLimitMinusStepperValue = 1.0
     var dataLimitMinusStepperValuePublisher: Published<Double>.Publisher { $dataLimitMinusStepperValue }
     
+    @Published var lastSyncedToRemoteDate: Date?
+    var lastSyncedToRemoteDatePublisher: Published<Date?>.Publisher { $lastSyncedToRemoteDate }
+    
     init() {
         loadAllData()
     }
@@ -143,6 +152,8 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         
         getDataLimitPlusStepperValue()
         getDataLimitMinusStepperValue()
+        
+        getLastSyncedToRemote()
         
         if dataPlusStepperValue == 0 {
             LocalStorage.setItem(1.0, forKey: .dataPlusStepperValue)
@@ -214,6 +225,10 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         dataLimitMinusStepperValue = LocalStorage.getDoubleItem(forKey: .dataLimitMinusStepperValue)
     }
     
+    func getLastSyncedToRemote() {
+        lastSyncedToRemoteDate = LocalStorage.getDateItem(forKey: .lastSyncToRemoteDate)
+    }
+    
     /// Setters
     func setWasGuideShown(_ wasShown: Bool) {
         LocalStorage.setItem(wasShown, forKey: .wasGuideShown)
@@ -262,7 +277,11 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
             getDataMinusStepperValue()
         }
     }
-
+    
+    func setLastSyncedToRemoteDate(_ date: Date) {
+        LocalStorage.setItem(date, forKey: .lastSyncToRemoteDate)
+        getLastSyncedToRemote()
+    }
 }
 
 class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
@@ -300,6 +319,9 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     @Published var dataLimitMinusStepperValue = 1.0
     var dataLimitMinusStepperValuePublisher: Published<Double>.Publisher { $dataLimitMinusStepperValue }
     
+    @Published var lastSyncedToRemoteDate: Date?
+    var lastSyncedToRemoteDatePublisher: Published<Date?>.Publisher { $lastSyncedToRemoteDate }
+    
     init(
         usageType: ToggleItem = .daily,
         isNotifOn: Bool = false,
@@ -309,7 +331,8 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         dataLimitPerDayPlusStepperValue: Double = 1.0,
         dataLimitPerDayMinusStepperValue: Double = 1.0,
         dataLimitPlusStepperValue: Double = 1.0,
-        dataLimitMinusStepperValue: Double = 1.0
+        dataLimitMinusStepperValue: Double = 1.0,
+        lastSyncedToRemote: Date? = nil
     ) {
         self.usageType = usageType
         self.isPeriodAuto = isNotifOn
@@ -320,6 +343,7 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         self.dataLimitPerDayMinusStepperValue = dataLimitPerDayMinusStepperValue
         self.dataLimitPlusStepperValue = dataLimitPlusStepperValue
         self.dataLimitMinusStepperValue = dataLimitMinusStepperValue
+        self.lastSyncedToRemoteDate = lastSyncedToRemote
     }
     
     func loadAllData(
@@ -367,6 +391,10 @@ class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         case .data:
             dataMinusStepperValue = amount
         }
+    }
+    
+    func setLastSyncedToRemoteDate(_ date: Date) {
+        self.lastSyncedToRemoteDate = date
     }
 }
 

@@ -22,7 +22,7 @@ public class Data: NSManagedObject {
     
     // properties are generated automatically
     // matches the properties from the Entity Table
-    // date, totalUsedData, dailyUsedData, hasLastTotal, isSyncedToRemote
+    // date, totalUsedData, dailyUsedData, hasLastTotal, isSyncedToRemote, lastSyncedToRemoteDate
         
     public var id: String {
         (date ?? Date()).toDayFormat()
@@ -30,11 +30,12 @@ public class Data: NSManagedObject {
     
     public override var description: String {
         """
-              Date: \(date ?? Date())
+              Date: \(String(describing: date))
               Total Used Data: \(totalUsedData) MB
               Daily Used Data: \(dailyUsedData) MB
               Has Last Total: \(hasLastTotal)
               Is Synced To Remote: \(isSyncedToRemote)
+              Last Synced To Remote Date: \(String(describing: lastSyncedToRemoteDate))
             """
     }
     
@@ -44,6 +45,7 @@ public class Data: NSManagedObject {
         dailyUsedData: Double = 0,
         hasLastTotal: Bool = false,
         isSyncedToRemote: Bool = false,
+        lastSyncedToRemoteDate: Date? = nil,
         insertInto context: NSManagedObjectContext? = nil
     ) {
         self.init(entity: Data.entity(), insertInto: context)
@@ -52,6 +54,7 @@ public class Data: NSManagedObject {
         self.dailyUsedData = dailyUsedData
         self.hasLastTotal = hasLastTotal
         self.isSyncedToRemote = isSyncedToRemote
+        self.lastSyncedToRemoteDate = lastSyncedToRemoteDate
     }
 
 }
@@ -61,14 +64,16 @@ func createFakeData(
     totalUsedData: Double = 0,
     dailyUsedData: Double = 0,
     hasLastTotal: Bool = false,
-    isSyncedToRemote: Bool = false
+    isSyncedToRemote: Bool = false,
+    lastSyncedToRemoteDate: Date? = nil
 ) -> Data {
     .init(
         date: date,
         totalUsedData: totalUsedData,
         dailyUsedData: dailyUsedData,
         hasLastTotal: hasLastTotal,
-        isSyncedToRemote: isSyncedToRemote
+        isSyncedToRemote: isSyncedToRemote,
+        lastSyncedToRemoteDate: lastSyncedToRemoteDate
     )
 }
 

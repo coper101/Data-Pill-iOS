@@ -266,8 +266,13 @@ extension DataUsageRepository {
     
     private func newBatchUpdateRequest(_ dates: [Date]) -> NSBatchUpdateRequest {
         let isSyncedToRemoteAttribute = "isSyncedToRemote"
+        let lastSyncedToRemoteDateAttribute = "lastSyncedToRemoteDate"
+
         let batchUpdate = NSBatchUpdateRequest(entityName: Entities.data.rawValue)
-        batchUpdate.propertiesToUpdate = [isSyncedToRemoteAttribute: true]
+        batchUpdate.propertiesToUpdate = [
+            isSyncedToRemoteAttribute: true,
+            lastSyncedToRemoteDateAttribute: Date()
+        ]
         batchUpdate.predicate = NSPredicate(format: "ANY %K IN %@", #keyPath(Data.date), dates as [NSDate])
         return batchUpdate
     }
@@ -374,6 +379,7 @@ extension DataUsageRepository {
                 Calendar.current.startOfDay(for: firstDayOfWeekDate) as NSDate,
                 Calendar.current.startOfDay(for: tomorrowsDate) as NSDate
             )
+            Logger.database.debug("this weeks data: \(thisWeeksData)")
             return thisWeeksData
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
