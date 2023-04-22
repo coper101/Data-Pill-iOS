@@ -238,11 +238,11 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     }
     
     func updateData(_ data: [RemoteData]) -> AnyPublisher<Bool, Error> {
-        let predicate = NSPredicate(format: "ANY date IN %@", data.map(\.date) as [NSDate])
+        let predicate = NSPredicate(format: "ANY %@ = date", data.map(\.date))
         
         return remoteDatabase.fetch(with: predicate, of: .data)
             .flatMap { (dataRecords: [CKRecord]) in
-                var updateRecords = dataRecords
+                let updateRecords = dataRecords
                 
                 updateRecords.indices.forEach { index in
                     let record = updateRecords[index]
