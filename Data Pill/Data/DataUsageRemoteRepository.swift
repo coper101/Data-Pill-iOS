@@ -242,6 +242,10 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
         
         return remoteDatabase.fetch(with: predicate, of: .data)
             .flatMap { (dataRecords: [CKRecord]) in
+                
+                Logger.dataUsageRemoteRepository.debug("updateData - data records count: \(dataRecords.count)")
+                Logger.dataUsageRemoteRepository.debug("updateData - data records: \(dataRecords)")
+
                 let updateRecords = dataRecords
                 
                 updateRecords.indices.forEach { index in
