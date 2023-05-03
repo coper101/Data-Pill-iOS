@@ -984,9 +984,14 @@ extension AppViewModel {
                     return
                 }
 
-                // local today's date is uploaded to remote
-                // update is synced to remote attribute
                 let todaysData = self.todaysData
+                                
+                // update synced date
+                if (values.isRemoteUpdated || values.isLocalUpdated) {
+                    todaysData.lastSyncedToRemoteDate = .init()
+                }
+                
+                // update is synced to remote attribute
                 if (values.isRemoteUpdated || values.isLocalUpdated) && !todaysData.isSyncedToRemote {
                     todaysData.isSyncedToRemote = true
                     self.dataUsageRepository.updateData(todaysData)

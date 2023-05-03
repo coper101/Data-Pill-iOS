@@ -238,6 +238,12 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     }
     
     func updateData(_ data: [RemoteData]) -> AnyPublisher<Bool, Error> {
+        guard !data.isEmpty else {
+            return Just(false)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        
         let predicate = NSPredicate(format: "ANY %@ = date", data.map(\.date))
         
         return remoteDatabase.fetch(with: predicate, of: .data)
@@ -401,6 +407,8 @@ extension DataUsageRemoteRepository {
     func syncOldLocalData(_ localData: [Data], lastSyncedDate: Date?) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error> {
         var allLocalData = localData
         
+        Logger.dataUsageRemoteRepository.debug("lastSyncedDate - data from local: \(allLocalData)")
+
         // Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data from local: \(allLocalData)")
         
         /// exclude todays data
