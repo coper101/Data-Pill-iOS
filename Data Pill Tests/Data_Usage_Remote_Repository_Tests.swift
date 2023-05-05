@@ -333,7 +333,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
             
             // (2) When
             self.createExpectation(
-                publisher: self.repository.syncTodaysData(data!),
+                publisher: self.repository.syncTodaysData(data!, isSyncedToRemote: true),
                 description: "Sync Today's Data"
             ) { isSynced in
                 
@@ -351,7 +351,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
             
             // (2) When
             self.createExpectation(
-                publisher: self.repositoryFail.syncTodaysData(data!),
+                publisher: self.repositoryFail.syncTodaysData(data!, isSyncedToRemote: true),
                 description: "Sync Today's Data"
             ) { isSynced in
                 
@@ -404,30 +404,36 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
     func test_sync_old_local_data() throws {
         // (1) Given
         let localData: [Data_Pill.Data] = []
+        let lastSyncedDate = Date()
         
         // (2) When
         createExpectation(
-            publisher: repository.syncOldLocalData(localData),
+            publisher: repository.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
             description: "Sync Old Local Data"
-        ) { (areUploaded, uploadedRemoteData) in
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
             
             // (3) Then
-            XCTAssertTrue(areUploaded)
+            XCTAssertTrue(areOldDataAdded)
+            XCTAssertTrue(areOldDataUpdated)
+            XCTAssertTrue(addedRemoteData.isEmpty)
         }
     }
     
     func test_sync_old_local_data_failed() throws {
         // (1) Given
         let localData: [Data_Pill.Data] = []
+        let lastSyncedDate = Date()
 
         // (2) When
         createExpectation(
-            publisher: repositoryFail.syncOldLocalData(localData),
+            publisher: repositoryFail.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
             description: "Sync Old Local Data"
-        ) { (areUploaded, uploadedRemoteData) in
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
             
             // (3) Then
-            XCTAssertFalse(areUploaded)
+            XCTAssertFalse(areOldDataAdded)
+            XCTAssertFalse(areOldDataUpdated)
+            XCTAssertTrue(addedRemoteData.isEmpty)
         }
     }
     

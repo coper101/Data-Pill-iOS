@@ -178,6 +178,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     // MARK: Old Local Data
     func test_sync_more_than_one_old_local() throws {
         // (1) Given
+        let lastSyncedDate = Date()
         let database = MockRemoteDatabase()
         let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         let repository = DataUsageRemoteRepository(remoteDatabase: database)
@@ -221,18 +222,19 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         
         // (2) When
         createExpectation(
-            publisher: repository.syncOldLocalData(localData),
+            publisher: repository.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
             description: "Sync Old Local Data"
-        ) { (areUploaded, uploadedRemoteData) in
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
             
             // (3) Then - excludes today's data
-            XCTAssertTrue(areUploaded)
-            XCTAssertEqual(uploadedRemoteData.count, 2)
+            XCTAssertTrue(areOldDataAdded)
+            XCTAssertEqual(addedRemoteData.count, 2)
         }
     }
     
     func test_sync_zero_old_local_data_has_uploaded() throws {
         // (1) Given
+        let lastSyncedDate = Date()
         let database = MockRemoteDatabase()
         let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         let repository = DataUsageRemoteRepository(remoteDatabase: database)
@@ -276,18 +278,19 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         
         // (2) When
         createExpectation(
-            publisher: repository.syncOldLocalData(localData),
+            publisher: repository.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
             description: "Sync Old Local Data"
-        ) { (areUploaded, uploadedRemoteData) in
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
             
             // (3) Then - excludes today's data
-            XCTAssertFalse(areUploaded)
-            XCTAssertTrue(uploadedRemoteData.isEmpty)
+            XCTAssertFalse(areOldDataAdded)
+            XCTAssertTrue(addedRemoteData.isEmpty)
         }
     }
     
     func test_sync_zero_old_local_data() throws {
         // (1) Given
+        let lastSyncedDate = Date()
         let database = MockRemoteDatabase()
         let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         let repository = DataUsageRemoteRepository(remoteDatabase: database)
@@ -311,13 +314,13 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         
         // (2) When
         createExpectation(
-            publisher: repository.syncOldLocalData(localData),
+            publisher: repository.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
             description: "Sync Old Local Data"
-        ) { (areUploaded, uploadedRemoteData) in
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
             
             // (3) Then
-            XCTAssertFalse(areUploaded)
-            XCTAssertTrue(uploadedRemoteData.isEmpty)
+            XCTAssertFalse(areOldDataAdded)
+            XCTAssertTrue(addedRemoteData.isEmpty)
         }
     }
     
@@ -326,6 +329,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     // MARK: Today's Data
     func test_sync_todays_data_with_non_existent_data_from_remote() throws {
         // (1) Given
+        let isSyncedToRemote = false
         let database = MockRemoteDatabase()
         let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         let repository = DataUsageRemoteRepository(remoteDatabase: database)
@@ -349,7 +353,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         
         // (2) When
         createExpectation(
-            publisher: repository.syncTodaysData(todaysData),
+            publisher: repository.syncTodaysData(todaysData, isSyncedToRemote: isSyncedToRemote),
             description: "Sync Today's Data"
         ) { isUploaded in
             
@@ -360,6 +364,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_todays_data_with_existing_data_from_remote_has_change_in_usage() throws {
         // (1) Given
+        let isSyncedToRemote = true
         let database = MockRemoteDatabaseTodaysData()
         let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         let repository = DataUsageRemoteRepository(remoteDatabase: database)
@@ -383,7 +388,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         
         // (2) When
         createExpectation(
-            publisher: repository.syncTodaysData(todaysData),
+            publisher: repository.syncTodaysData(todaysData, isSyncedToRemote: isSyncedToRemote),
             description: "Sync Today's Data"
         ) { isUploaded in
             
@@ -394,6 +399,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
 
     func test_sync_todays_data_with_existing_data_from_remote_has_no_change_in_usage() throws {
         // (1) Given
+        let isSyncedToRemote = true
         let database = MockRemoteDatabaseTodaysData()
         let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         let repository = DataUsageRemoteRepository(remoteDatabase: database)
@@ -417,7 +423,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         
         // (2) When
         createExpectation(
-            publisher: repository.syncTodaysData(todaysData),
+            publisher: repository.syncTodaysData(todaysData, isSyncedToRemote: isSyncedToRemote),
             description: "Sync Today's Data"
         ) { isUploaded in
             
