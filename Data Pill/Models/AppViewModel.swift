@@ -1045,7 +1045,7 @@ extension AppViewModel {
                     return
                 }
                                 
-                if (areOldDataAdded || areOldDataUpdated) {
+                if !addedRemoteData.isEmpty && (areOldDataAdded || areOldDataUpdated) {
                     self.dataUsageRepository.updateData(addedRemoteData)
                     self.appDataRepository.setLastSyncedToRemoteDate(.init())
                     Logger.appModel.debug("syncOldThenRemoteData - old local data to update count: \(addedRemoteData.count)")

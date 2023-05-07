@@ -467,7 +467,7 @@ extension DataUsageRemoteRepository {
                     // 2. Update
                     return self.updateData(remoteDataToUpdate)
                         .flatMap { isUpdated in
-                            Just((false, true, remoteDataToUpdate))
+                            Just((false, isUpdated, remoteDataToUpdate))
                         }
                         .eraseToAnyPublisher()
                 }
