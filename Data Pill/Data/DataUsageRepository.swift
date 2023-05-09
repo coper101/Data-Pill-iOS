@@ -154,6 +154,7 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
             }
             Logger.database.debug("successfully loaded DataUsage container")
             self.database.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            self.database.context.automaticallyMergesChangesFromParent = true
             self.updateToLatestData()
             self.updateToLatestPlan()
         }
