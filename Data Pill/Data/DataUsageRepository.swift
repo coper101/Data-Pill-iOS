@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import CoreData
 import OSLog
 
@@ -85,7 +86,7 @@ protocol DataUsageRepositoryProtocol {
     ) -> Void
     func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) -> Void
     func updateData(_ data: Data) -> Void
-    func updateData(_ remoteData: [RemoteData]) -> Void
+    func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never>
     func getAllData() -> [Data]
     func getDataWith(
         format: String,
@@ -248,21 +249,27 @@ extension DataUsageRepository {
     }
     
     /// updates multiple Data from Database
-    func updateData(_ remoteData: [RemoteData]) {
-        let dataDatesToUpdate = remoteData.compactMap { $0.date }
-        database.container.performBackgroundTask { [weak self] taskContext in
-            guard let self else {
-                return
-            }
-            taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            let batchUpdate = self.newBatchUpdateRequest(dataDatesToUpdate)
-            do {
-                try taskContext.execute(batchUpdate)
-                Logger.database.debug("successful updating batch data")
-            } catch let error {
-                Logger.database.error("failed to update batch data: \(error.localizedDescription)")
+    func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never> {
+        Future { promise in
+            let dataDatesToUpdate = remoteData.compactMap { $0.date }
+            self.database.container.performBackgroundTask { [weak self] taskContext in
+                guard let self else {
+                    promise(.success(false))
+                    return
+                }
+                taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+                let batchUpdate = self.newBatchUpdateRequest(dataDatesToUpdate)
+                do {
+                    let result = try taskContext.execute(batchUpdate)
+                    Logger.database.debug("successful updating batch data result: \(result)")
+                    promise(.success(true))
+                } catch let error {
+                    Logger.database.error("failed to update batch data: \(error.localizedDescription)")
+                    promise(.success(false))
+                }
             }
         }
+        .eraseToAnyPublisher()
     }
     
     private func newBatchUpdateRequest(_ dates: [Date]) -> NSBatchUpdateRequest {
@@ -591,8 +598,8 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
 
     }
     
-    func updateData(_ remoteData: [RemoteData]) {
-        
+    func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never> {
+        Just(true).eraseToAnyPublisher()
     }
     
     func getAllData() -> [Data] {
@@ -729,8 +736,8 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         dataError = DatabaseError.updatingData("Updating Data Error")
     }
     
-    func updateData(_ remoteData: [RemoteData]) {
-        
+    func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never> {
+        Just(false).eraseToAnyPublisher()
     }
     
     func getAllData() -> [Data] {

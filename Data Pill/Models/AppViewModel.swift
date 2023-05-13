@@ -94,6 +94,7 @@ final class AppViewModel: ObservableObject {
     @Published var isSyncingOldData = false
     
     @Published var isSyncing = false
+    @Published var isUpdatingOldLocalData = false
     
     /// Edit Data Plan
     @Published var isDataPlanEditing = false
@@ -1011,6 +1012,11 @@ extension AppViewModel {
             return
         }
         
+        guard !isUpdatingOldLocalData else {
+            Logger.appModel.debug("syncOldThenRemoteData - is updating local data")
+            return
+        }
+        
         var localData = dataUsageRepository.getAllData()
 
         dataUsageRemoteRepository.syncOldLocalData(localData, lastSyncedDate: lastSyncedToRemoteDate)
@@ -1046,10 +1052,15 @@ extension AppViewModel {
                 }
                                 
                 if !addedRemoteData.isEmpty && (areOldDataAdded || areOldDataUpdated) {
+                    self.isUpdatingOldLocalData = true
                     self.dataUsageRepository.updateData(addedRemoteData)
-                    self.appDataRepository.setLastSyncedToRemoteDate(.init())
-                    Logger.appModel.debug("syncOldThenRemoteData - old local data to update count: \(addedRemoteData.count)")
-                    Logger.appModel.debug("syncOldThenRemoteData - old local data to is synced to remote attribute updated")
+                        .sink { [weak self] areUpdated in
+                            self?.appDataRepository.setLastSyncedToRemoteDate(.init())
+                            Logger.appModel.debug("syncOldThenRemoteData - old local data to update count: \(addedRemoteData.count)")
+                            Logger.appModel.debug("syncOldThenRemoteData - old local data are synced to remote attribute updated: \(areUpdated)")
+                            self?.isUpdatingOldLocalData = false
+                        }
+                        .store(in: &self.cancellables)
                 }
                 
                 if !oldRemoteData.isEmpty {
