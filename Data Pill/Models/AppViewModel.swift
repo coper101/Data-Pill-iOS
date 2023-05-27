@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import WidgetKit
 import OSLog
 
 final class AppViewModel: ObservableObject {
@@ -94,7 +95,9 @@ final class AppViewModel: ObservableObject {
     @Published var isSyncingOldData = false
     
     @Published var isSyncing = false
-    @Published var isUpdatingOldLocalData = false
+    
+    /// Background iCloud Syncing
+    @Published var backgroundTaskID: UIBackgroundTaskIdentifier?
     
     /// Edit Data Plan
     @Published var isDataPlanEditing = false
@@ -810,7 +813,31 @@ extension AppViewModel {
         updatePlanPeriod()
         syncPlan()
         syncTodaysData()
+        
+        setupBackgroundTask()
         syncOldThenRemoteData()
+    }
+
+    func didChangeBackgroundScenePhase() {
+        WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.main.name)
+    }
+    
+    // MARK: - Background Task
+    func setupBackgroundTask() {
+        backgroundTaskID = UIApplication.shared.beginBackgroundTask(withName: "Sync Old And Remote Data") { [weak self] in
+            /// when background task runs out of time (30 sec starting from entering background)
+            /// invalidate background task
+            self?.endBackgroundTask()
+        }
+        Logger.appModel.debug("setupBackgroundTask - \(String(describing: self.backgroundTaskID))")
+    }
+    
+    func endBackgroundTask() {
+        if let taskID = self.backgroundTaskID {
+            UIApplication.shared.endBackgroundTask(taskID)
+            backgroundTaskID = .invalid
+            Logger.appModel.debug("endBackgroundTask - \(String(describing: self.backgroundTaskID))")
+        }
     }
     
     // MARK: - Guide
@@ -1009,11 +1036,7 @@ extension AppViewModel {
         guard hasInternetConnection else {
             Logger.appModel.debug("syncOldThenRemoteData - no internet connection")
             isSyncingOldData = false
-            return
-        }
-        
-        guard !isUpdatingOldLocalData else {
-            Logger.appModel.debug("syncOldThenRemoteData - is updating local data")
+            endBackgroundTask()
             return
         }
         
@@ -1038,7 +1061,9 @@ extension AppViewModel {
                 switch completion {
                 case .failure(let error):
                     Logger.appModel.debug("syncOldThenRemoteData - error: \(error.localizedDescription)")
+                    
                     self?.isSyncingOldData = false
+                    self?.endBackgroundTask()
                 case .finished:
                     break
                 }
@@ -1052,24 +1077,38 @@ extension AppViewModel {
                 }
                                 
                 if !addedRemoteData.isEmpty && (areOldDataAdded || areOldDataUpdated) {
-                    self.isUpdatingOldLocalData = true
                     self.dataUsageRepository.updateData(addedRemoteData)
-                        .sink { [weak self] areUpdated in
-                            self?.appDataRepository.setLastSyncedToRemoteDate(.init())
-                            Logger.appModel.debug("syncOldThenRemoteData - old local data to update count: \(addedRemoteData.count)")
-                            Logger.appModel.debug("syncOldThenRemoteData - old local data are synced to remote attribute updated: \(areUpdated)")
-                            self?.isUpdatingOldLocalData = false
+                        .flatMap { areUpdated in
+                            Logger.appModel.debug("syncOldThenRemoteData - old remote data to update count: \(addedRemoteData.count)")
+                            Logger.appModel.debug("syncOldThenRemoteData - old remote data updated to local database: \(areUpdated)")
+                            return self.dataUsageRepository.addData(oldRemoteData, isSyncedToRemote: true)
+                        }
+                        .sink { areAdded in
+                            Logger.appModel.debug("syncOldThenRemoteData - old remote data to add count: \(oldRemoteData.count)")
+                            Logger.appModel.debug("syncOldThenRemoteData - old remote data added to local database: \(areAdded)")
+                            
+                            self.isSyncingOldData = false
+                            self.endBackgroundTask()
                         }
                         .store(in: &self.cancellables)
+                    return
                 }
                 
                 if !oldRemoteData.isEmpty {
                     self.dataUsageRepository.addData(oldRemoteData, isSyncedToRemote: true)
-                    Logger.appModel.debug("syncOldThenRemoteData - old remote data to add count: \(oldRemoteData.count)")
-                    Logger.appModel.debug("syncOldThenRemoteData - old remote data added to local database: true")
+                        .sink { areAdded in
+                            Logger.appModel.debug("syncOldThenRemoteData - old remote data to add count: \(oldRemoteData.count)")
+                            Logger.appModel.debug("syncOldThenRemoteData - old remote data added to local database: \(areAdded)")
+                            
+                            self.isSyncingOldData = false
+                            self.endBackgroundTask()
+                        }
+                        .store(in: &self.cancellables)
+                    return
                 }
                 
                 self.isSyncingOldData = false
+                self.endBackgroundTask()
             }
             .store(in: &self.cancellables)
     }

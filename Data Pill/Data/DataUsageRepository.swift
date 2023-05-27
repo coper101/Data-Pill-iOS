@@ -84,7 +84,7 @@ protocol DataUsageRepositoryProtocol {
         dailyUsedData: Double,
         hasLastTotal: Bool
     ) -> Void
-    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) -> Void
+    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) -> AnyPublisher<Bool, Never>
     func updateData(_ data: Data) -> Void
     func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never>
     func getAllData() -> [Data]
@@ -191,24 +191,30 @@ extension DataUsageRepository {
     }
     
     /// add multiple data
-    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) {
-        database.container.performBackgroundTask { [weak self] taskContext in
-            guard let self else {
-                return
-            }
+    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) -> AnyPublisher<Bool, Never> {
+        Future { promise in
+            let backgroundContext = self.database.container.newBackgroundContext()
+            backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             
-            taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            // let batchInsert = NSBatchInsertRequest(entityName: Entities.data.name, objects: objects)
-            let batchInsert = self.newBatchInsertRequest(remoteData, isSyncedToRemote: isSyncedToRemote)
-            do {
-                try taskContext.execute(batchInsert)
-                self.updateToLatestData()
-                Logger.database.debug("successful adding batch data")
-            } catch let error {
-                Logger.database.error("failed to add batch data: \(error.localizedDescription)")
+            backgroundContext.performAndWait {
+                let request = self.newBatchInsertRequest(remoteData, isSyncedToRemote: isSyncedToRemote)
+                
+                do {
+                    let batchInsertResult = try backgroundContext.execute(request) as! NSBatchInsertResult
+                    let addedIDs = batchInsertResult.result as! [NSManagedObjectID]
+                    let changes = [NSUpdatedObjectsKey: addedIDs]
+                    
+                    Logger.database.debug("successful adding batch data result count: \(addedIDs.count)")
+                    self.updateToLatestData()
+                    promise(.success(true))
+                    
+                } catch let error {
+                    Logger.database.error("failed to add batch data: \(error.localizedDescription)")
+                    promise(.success(false))
+                }
             }
-            
         }
+        .eraseToAnyPublisher()
     }
     
     private func newBatchInsertRequest(_ remoteDataList: [RemoteData], isSyncedToRemote: Bool) -> NSBatchInsertRequest {
@@ -232,6 +238,7 @@ extension DataUsageRepository {
             index += 1
             return false // call the closure again
         }
+        batchInsert.resultType = .objectIDs
         return batchInsert
     }
     
@@ -252,17 +259,22 @@ extension DataUsageRepository {
     func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never> {
         Future { promise in
             let dataDatesToUpdate = remoteData.compactMap { $0.date }
-            self.database.container.performBackgroundTask { [weak self] taskContext in
-                guard let self else {
-                    promise(.success(false))
-                    return
-                }
-                taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-                let batchUpdate = self.newBatchUpdateRequest(dataDatesToUpdate)
+            let backgroundContext = self.database.container.newBackgroundContext()
+            backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
+            backgroundContext.performAndWait {
+                let request = self.newBatchUpdateRequest(dataDatesToUpdate)
+                
                 do {
-                    let result = try taskContext.execute(batchUpdate)
-                    Logger.database.debug("successful updating batch data result: \(result)")
+                    let batchUpdateResult = try backgroundContext.execute(request) as! NSBatchUpdateResult
+                    let updatedIDs = batchUpdateResult.result as! [NSManagedObjectID]
+                    let changes = [NSUpdatedObjectsKey: updatedIDs]
+                    
+                    NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [self.database.context])
+                    
+                    Logger.database.debug("successful updating batch data result count: \(updatedIDs.count)")
                     promise(.success(true))
+                    
                 } catch let error {
                     Logger.database.error("failed to update batch data: \(error.localizedDescription)")
                     promise(.success(false))
@@ -282,6 +294,7 @@ extension DataUsageRepository {
             lastSyncedToRemoteDateAttribute: Date()
         ]
         batchUpdate.predicate = NSPredicate(format: "ANY %K IN %@", #keyPath(Data.date), dates as [NSDate])
+        batchUpdate.resultType = .updatedObjectIDsResultType
         return batchUpdate
     }
     
@@ -590,8 +603,8 @@ class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtocol {
         thisWeeksData.append(uninsertedData)
     }
     
-    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) {
-        
+    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) -> AnyPublisher<Bool, Never> {
+        Just(true).eraseToAnyPublisher()
     }
     
     func updateData(_ item: Data) {
@@ -728,8 +741,8 @@ class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         dataError = DatabaseError.adding("Adding Data Error")
     }
         
-    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) {
-        
+    func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) -> AnyPublisher<Bool, Never>{
+        Just(false).eraseToAnyPublisher()
     }
     
     func updateData(_ data: Data) {

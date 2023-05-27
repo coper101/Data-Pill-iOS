@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import WidgetKit
 
 struct AppView: View {
     // MARK: - Props
@@ -392,10 +391,13 @@ struct AppView: View {
     }
     
     func didChangeScenePhase(phase: ScenePhase) {
-        if phase == .active {
+        switch phase {
+        case .background:
+            appViewModel.didChangeBackgroundScenePhase()
+        case .active:
             appViewModel.didChangeActiveScenePhase()
-        } else if phase == .background {
-            WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.main.name)
+        default:
+            break
         }
     }
 
