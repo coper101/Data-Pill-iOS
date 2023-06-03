@@ -407,7 +407,7 @@ extension DataUsageRemoteRepository {
     func syncOldLocalData(_ localData: [Data], lastSyncedDate: Date?) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error> {
         var allLocalData = localData
         
-        Logger.dataUsageRemoteRepository.debug("lastSyncedDate - data from local: \(allLocalData)")
+        Logger.dataUsageRemoteRepository.debug("syncOldLocalData - last synced date: \(String(describing: lastSyncedDate))")
 
         // Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data from local: \(allLocalData)")
         

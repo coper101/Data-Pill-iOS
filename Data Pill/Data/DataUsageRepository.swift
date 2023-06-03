@@ -202,7 +202,7 @@ extension DataUsageRepository {
                 do {
                     let batchInsertResult = try backgroundContext.execute(request) as! NSBatchInsertResult
                     let addedIDs = batchInsertResult.result as! [NSManagedObjectID]
-                    let changes = [NSUpdatedObjectsKey: addedIDs]
+                    // let changes = [NSUpdatedObjectsKey: addedIDs]
                     
                     Logger.database.debug("successful adding batch data result count: \(addedIDs.count)")
                     self.updateToLatestData()

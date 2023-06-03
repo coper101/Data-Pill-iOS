@@ -1087,6 +1087,7 @@ extension AppViewModel {
                             Logger.appModel.debug("syncOldThenRemoteData - old remote data to add count: \(oldRemoteData.count)")
                             Logger.appModel.debug("syncOldThenRemoteData - old remote data added to local database: \(areAdded)")
                             
+                            self.appDataRepository.setLastSyncedToRemoteDate(.init())
                             self.isSyncingOldData = false
                             self.endBackgroundTask()
                         }
@@ -1100,6 +1101,7 @@ extension AppViewModel {
                             Logger.appModel.debug("syncOldThenRemoteData - old remote data to add count: \(oldRemoteData.count)")
                             Logger.appModel.debug("syncOldThenRemoteData - old remote data added to local database: \(areAdded)")
                             
+                            self.appDataRepository.setLastSyncedToRemoteDate(.init())
                             self.isSyncingOldData = false
                             self.endBackgroundTask()
                         }
@@ -1107,6 +1109,7 @@ extension AppViewModel {
                     return
                 }
                 
+                self.appDataRepository.setLastSyncedToRemoteDate(.init())
                 self.isSyncingOldData = false
                 self.endBackgroundTask()
             }
@@ -1139,9 +1142,8 @@ extension AppViewModel {
             let startDate = Calendar.current.startOfDay(for: date)
             return RemoteData(date: startDate, dailyUsedData: 1_500)
         }
-        self.dataUsageRepository.addData(remoteDataToAdd, isSyncedToRemote: false)
-      
-        /// Update Database
+        // self.dataUsageRepository.addData(remoteDataToAdd, isSyncedToRemote: false)
+        // Update Database
         // dataUsageRepository.updatePlan(
         //     startDate: Calendar.current.date(
         //         byAdding: .day, value: -3, to: todaysDate)!,
