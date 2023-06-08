@@ -1041,6 +1041,7 @@ extension AppViewModel {
         }
         
         var localData = dataUsageRepository.getAllData()
+        Logger.appModel.debug("syncOldThenRemoteData - all local data dates: \(localData.compactMap(\.date))")
 
         dataUsageRemoteRepository.syncOldLocalData(localData, lastSyncedDate: lastSyncedToRemoteDate)
             .flatMap { (areOldDataAdded, areOldDataUpdated, addedRemoteData: [RemoteData]) -> AnyPublisher<(Bool, Bool, [RemoteData], [RemoteData]), Error> in

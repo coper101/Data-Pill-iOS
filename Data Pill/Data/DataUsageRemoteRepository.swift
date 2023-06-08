@@ -492,7 +492,7 @@ extension DataUsageRemoteRepository {
         /// exclude todays data
         allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
         
-        Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from local count: \(allLocalData.count)")
+        Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from local count excluding today: \(allLocalData.count)")
 
         // get all local data
         return self.isLoggedInUser()
