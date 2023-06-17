@@ -1134,15 +1134,15 @@ extension AppViewModel {
 extension AppViewModel {
     
     func addTestData() {
-        Logger.appModel.debug("adding test data")
+        // Logger.appModel.debug("adding test data")
         
-        let todaysDate = Date()
+        // let todaysDate = Date()
 
-        let remoteDataToAdd = (1...50).map { value in
-            let date = Calendar.current.date(byAdding: .day, value: Int(-value), to: todaysDate)!
-            let startDate = Calendar.current.startOfDay(for: date)
-            return RemoteData(date: startDate, dailyUsedData: 1_500)
-        }
+        // let remoteDataToAdd = (1...50).map { value in
+        //     let date = Calendar.current.date(byAdding: .day, value: Int(-value), to: todaysDate)!
+        //     let startDate = Calendar.current.startOfDay(for: date)
+        //     return RemoteData(date: startDate, dailyUsedData: 1_500)
+        // }
         // self.dataUsageRepository.addData(remoteDataToAdd, isSyncedToRemote: false)
         // Update Database
         // dataUsageRepository.updatePlan(
