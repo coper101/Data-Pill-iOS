@@ -258,11 +258,22 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
                     let record = updateRecords[index]
                     guard
                         let date = record.value(forKey: "date") as? Date,
-                        let currentData: RemoteData = data.first(where: { $0.date == date })
+                        let newData: RemoteData = data.first(where: { $0.date == date })
                     else {
                         return
                     }
-                    updateRecords[index].setValue(currentData.dailyUsedData, forKey: "dailyUsedData")
+                    /// compare then update if any real changes (more than the saved remote usage)
+                    let newDailyUsedData = newData.dailyUsedData
+                    guard
+                        let currentDailyUsedData = record.value(forKey: "dailyUsedData") as? Double,
+                        newDailyUsedData > currentDailyUsedData
+                    else {
+                        Logger.dataUsageRemoteRepository.debug("updateData - has higher usage change: false, skipping \(newData.date)")
+                        return
+                    }
+                    updateRecords[index].setValue(newDailyUsedData, forKey: "dailyUsedData")
+                    
+                    Logger.dataUsageRemoteRepository.debug("updateData - has higher usage change: true")
                 }
                 
                 return self.remoteDatabase.save(records: updateRecords)
