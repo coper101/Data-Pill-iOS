@@ -109,7 +109,7 @@ final class Data_Usage_Repository_Test_Case: XCTestCase {
         let remoteData2 = RemoteData(date: date2, dailyUsedData: 100)
         
         // (2) When
-        repository.updateData([remoteData1, remoteData2])
+        let _ = repository.updateData([remoteData1, remoteData2])
         
         // (3) Then
         let allData = repository.getAllData()

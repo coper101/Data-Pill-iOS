@@ -239,6 +239,7 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     
     func updateData(_ data: [RemoteData]) -> AnyPublisher<Bool, Error> {
         guard !data.isEmpty else {
+            Logger.dataUsageRemoteRepository.debug("updateMultipleData - nothing to update")
             return Just(false)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
@@ -249,34 +250,34 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
         return remoteDatabase.fetch(with: predicate, of: .data)
             .flatMap { (dataRecords: [CKRecord]) in
                 
-                Logger.dataUsageRemoteRepository.debug("updateData - data records count: \(dataRecords.count)")
-                Logger.dataUsageRemoteRepository.debug("updateData - data records: \(dataRecords)")
-
-                let updateRecords = dataRecords
+                Logger.dataUsageRemoteRepository.debug("updateMultipleData - data records count: \(dataRecords.count)")
+                Logger.dataUsageRemoteRepository.debug("updateMultipleData - data records: \(dataRecords)")
                 
-                updateRecords.indices.forEach { index in
-                    let record = updateRecords[index]
-                    guard
-                        let date = record.value(forKey: "date") as? Date,
-                        let newData: RemoteData = data.first(where: { $0.date == date })
-                    else {
-                        return
+                let recordsToUpdate = zip(dataRecords, data)
+                    .compactMap { (remoteData: CKRecord, localData: RemoteData) -> (record: CKRecord, data: RemoteData)? in
+                        let localDailyUsedData = localData.dailyUsedData
+                        let remoteDailyUsedData = remoteData.value(forKey: "dailyUsedData") as? Double
+                        guard let remoteDailyUsedData else {
+                            return nil
+                        }
+                        guard localDailyUsedData > remoteDailyUsedData else {
+                            return nil
+                        }
+                        let newRemoteData = remoteData
+                        newRemoteData.setValue(localDailyUsedData, forKey: "dailyUsedData")
+                        return (newRemoteData, localData)
                     }
-                    /// compare then update if any real changes (more than the saved remote usage)
-                    let newDailyUsedData = newData.dailyUsedData
-                    guard
-                        let currentDailyUsedData = record.value(forKey: "dailyUsedData") as? Double,
-                        newDailyUsedData > currentDailyUsedData
-                    else {
-                        Logger.dataUsageRemoteRepository.debug("updateData - has higher usage change: false, skipping \(newData.date)")
-                        return
-                    }
-                    updateRecords[index].setValue(newDailyUsedData, forKey: "dailyUsedData")
-                    
-                    Logger.dataUsageRemoteRepository.debug("updateData - has higher usage change: true")
+                    .map { $0.record }
+                
+                Logger.dataUsageRemoteRepository.debug("updateMultipleData - data to update records: \(recordsToUpdate)")
+                
+                guard !recordsToUpdate.isEmpty else {
+                    return Just(false)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
                 }
                 
-                return self.remoteDatabase.save(records: updateRecords)
+                return self.remoteDatabase.save(records: recordsToUpdate)
             }
             .eraseToAnyPublisher()
     }
@@ -478,7 +479,8 @@ extension DataUsageRemoteRepository {
                     // 2. Update
                     return self.updateData(remoteDataToUpdate)
                         .flatMap { isUpdated in
-                            Just((false, isUpdated, remoteDataToUpdate))
+                            let updatedRemoteData = isUpdated ? remoteDataToUpdate : []
+                            return Just((false, isUpdated, updatedRemoteData))
                         }
                         .eraseToAnyPublisher()
                 }
@@ -488,7 +490,8 @@ extension DataUsageRemoteRepository {
                         // 2. Update
                         self.updateData(remoteDataToUpdate)
                             .flatMap { isUpdated in
-                                Just((isAdded, isUpdated, remoteDataToUpdate + remoteDataToAdd))
+                                let updatedRemoteData = isUpdated ? remoteDataToUpdate : []
+                                return Just((isAdded, isUpdated, updatedRemoteData + remoteDataToAdd))
                             }
                             .eraseToAnyPublisher()
                     }

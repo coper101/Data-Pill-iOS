@@ -10,163 +10,6 @@ import Combine
 import CloudKit
 @testable import Data_Pill
 
-// MARK: Mock Implementation
-class MockRemoteDatabase: RemoteDatabase {
-    
-    func createOnUpdateRecordSubscription(
-        of recordType: Data_Pill.RecordType,
-        id subscriptionID: String
-    ) -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
-        Just([])
-            .eraseToAnyPublisher()
-    }
-    
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetch(with predicate: NSPredicate, of recordType: Data_Pill.RecordType) -> AnyPublisher<[CKRecord], Error> {
-        Just([])
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetchAll(of recordType: Data_Pill.RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
-        Just([
-            TestData.createDataRecord(
-                date: createDate(offset: -1),
-                dailyUsedData: 100
-            )
-        ])
-        .setFailureType(to: Error.self)
-        .eraseToAnyPublisher()
-    }
-    
-    func save(record: CKRecord) -> AnyPublisher<Bool, Error> {
-        Just(true)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-    
-    func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
-        Just(records.count == 2)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-    
-}
-
-class MockRemoteDatabaseTodaysData: RemoteDatabase {
-    
-    func createOnUpdateRecordSubscription(
-        of recordType: Data_Pill.RecordType,
-        id subscriptionID: String
-    ) -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
-        Just([])
-            .eraseToAnyPublisher()
-    }
-    
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetch(with predicate: NSPredicate, of recordType: Data_Pill.RecordType) -> AnyPublisher<[CKRecord], Error> {
-        let todaysDataRecord = TestData.createDataRecord(
-            date: Calendar.current.startOfDay(for: .init()),
-            dailyUsedData: 0
-        )
-                
-        return Just([todaysDataRecord])
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetchAll(of recordType: Data_Pill.RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
-        Just([])
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-    
-    func save(record: CKRecord) -> AnyPublisher<Bool, Error> {
-        Just(true)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-    
-    func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
-        Just(false)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-}
-
-class MockRemoteDatabasePlan: RemoteDatabase {
-    
-    func createOnUpdateRecordSubscription(
-        of recordType: Data_Pill.RecordType,
-        id subscriptionID: String
-    ) -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
-        Just([])
-            .eraseToAnyPublisher()
-    }
-    
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetch(with predicate: NSPredicate, of recordType: Data_Pill.RecordType) -> AnyPublisher<[CKRecord], Error> {
-        let startDate = Calendar.current.startOfDay(for: .init())
-        let planRecord = TestData.createPlanRecord(
-            startDate: startDate,
-            endDate: Calendar.current.date(byAdding: .day, value: 1, to: startDate)!,
-            dataAmount: 17,
-            dailyLimit: 0.5,
-            planLimit: 16.7
-        )
-                
-        return Just([planRecord])
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetchAll(of recordType: Data_Pill.RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
-        let predicate = NSPredicate(value: true)
-        return fetch(with: predicate, of: .plan)
-    }
-    
-    func save(record: CKRecord) -> AnyPublisher<Bool, Error> {
-        Just(true)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-    
-    func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
-        Just(false)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-}
-
-
-// MARK: Test
 final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -320,6 +163,141 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
             
             // (3) Then
             XCTAssertFalse(areOldDataAdded)
+            XCTAssertTrue(addedRemoteData.isEmpty)
+        }
+    }
+    
+    func test_sync_one_old_local_data_to_update_higher_than_remotes() throws {
+        // (1) Given
+        let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
+        let database = MockRemoteDatabase()
+        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
+        let repository = DataUsageRemoteRepository(remoteDatabase: database)
+        
+        let expectation = self.expectation(description: "Load Container")
+        localDatabase.loadContainer { _ in
+        } onSuccess: {
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 2.0)
+         
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = "2023-06-21T00:00:00+00:00".toDate()
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = true
+        
+        let yesterdaysData = Data(context: localDatabase.context)
+        yesterdaysData.date = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.totalUsedData = 1500
+        yesterdaysData.dailyUsedData = 200
+        yesterdaysData.hasLastTotal = true
+        yesterdaysData.lastSyncedToRemoteDate = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.isSyncedToRemote = true
+
+        let localData = [todaysData, yesterdaysData]
+        
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
+            description: "Sync Old Local Data"
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
+            
+            // (3) Then
+            XCTAssertFalse(areOldDataAdded)
+            XCTAssertTrue(areOldDataUpdated)
+            XCTAssertEqual(addedRemoteData.count, 1)
+        }
+    }
+    
+    func test_sync_one_old_local_data_to_update_equal_to_remotes() throws {
+        // (1) Given
+        let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
+        let database = MockRemoteDatabase()
+        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
+        let repository = DataUsageRemoteRepository(remoteDatabase: database)
+
+        let expectation = self.expectation(description: "Load Container")
+        localDatabase.loadContainer { _ in
+        } onSuccess: {
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 2.0)
+
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = "2023-06-21T00:00:00+00:00".toDate()
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = true
+
+        let yesterdaysData = Data(context: localDatabase.context)
+        yesterdaysData.date = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.totalUsedData = 1500
+        yesterdaysData.dailyUsedData = 100
+        yesterdaysData.hasLastTotal = true
+        yesterdaysData.lastSyncedToRemoteDate = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.isSyncedToRemote = true
+
+        let localData = [todaysData, yesterdaysData]
+
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
+            description: "Sync Old Local Data"
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
+
+            // (3) Then
+            XCTAssertFalse(areOldDataAdded)
+            XCTAssertFalse(areOldDataUpdated)
+            XCTAssertTrue(addedRemoteData.isEmpty)
+        }
+    }
+    
+    func test_sync_one_old_local_data_to_update_is_lower_than_remotes() throws {
+        // (1) Given
+        let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
+        let database = MockRemoteDatabase()
+        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
+        let repository = DataUsageRemoteRepository(remoteDatabase: database)
+
+        let expectation = self.expectation(description: "Load Container")
+        localDatabase.loadContainer { _ in
+        } onSuccess: {
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 2.0)
+
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = "2023-06-21T00:00:00+00:00".toDate()
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = true
+
+        let yesterdaysData = Data(context: localDatabase.context)
+        yesterdaysData.date = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.totalUsedData = 1500
+        yesterdaysData.dailyUsedData = 50
+        yesterdaysData.hasLastTotal = true
+        yesterdaysData.lastSyncedToRemoteDate = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.isSyncedToRemote = true
+
+        let localData = [todaysData, yesterdaysData]
+
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
+            description: "Sync Old Local Data"
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
+
+            // (3) Then
+            XCTAssertFalse(areOldDataAdded)
+            XCTAssertFalse(areOldDataUpdated)
             XCTAssertTrue(addedRemoteData.isEmpty)
         }
     }
