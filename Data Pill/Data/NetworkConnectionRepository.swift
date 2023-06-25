@@ -8,13 +8,15 @@
 import Combine
 import Network
 
-// MARK: Protocol
+// MARK: - Protocol
 protocol NetworkConnectivity {
     var hasInternetConnection: Bool { get set }
     var hasInternetConnectionPublisher: Published<Bool>.Publisher { get }
 }
 
-// MARK: App Implementation
+
+
+// MARK: - App Implementation
 final class NetworkConnectionRepository: ObservableObject, NetworkConnectivity {
     
     var cancellables: Set<AnyCancellable> = .init()
@@ -53,5 +55,4 @@ final class NetworkConnectionRepository: ObservableObject, NetworkConnectivity {
             }
             .store(in: &cancellables)
     }
-    
 }

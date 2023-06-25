@@ -11,28 +11,41 @@ import CloudKit
 @testable import Data_Pill
 
 final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
+    
+    private var localDatabase: Database!
+    private var remoteDatabase: RemoteDatabase!
+    private var repository: DataUsageRemoteRepository!
 
     override func setUpWithError() throws {
+        remoteDatabase = MockRemoteDatabase()
+        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
     }
 
     override func tearDownWithError() throws {
+        localDatabase = nil
+        remoteDatabase = nil
+        repository = nil
+    }
+    
+    func load_local_database() throws {
+        localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
+
+        let loadContainer = self.expectation(description: "Load Container")
+        
+        localDatabase.loadContainer { _ in
+        } onSuccess: {
+            loadContainer.fulfill()
+        }
+        
+        wait(for: [loadContainer], timeout: 2.0)
     }
 
     // MARK: Old Local Data
     func test_sync_more_than_one_old_local() throws {
         // (1) Given
+        try load_local_database()
+        
         let lastSyncedDate = Date()
-        let database = MockRemoteDatabase()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-        
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 2.0)
          
         let data1 = Data(context: localDatabase.context)
         data1.date = Calendar.current.startOfDay(for: .init())
@@ -77,18 +90,9 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_zero_old_local_data_has_uploaded() throws {
         // (1) Given
+        try load_local_database()
+        
         let lastSyncedDate = Date()
-        let database = MockRemoteDatabase()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-        
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 2.0)
          
         let data1 = Data(context: localDatabase.context)
         data1.date = Calendar.current.startOfDay(for: .init())
@@ -133,18 +137,9 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_zero_old_local_data() throws {
         // (1) Given
+        try load_local_database()
+
         let lastSyncedDate = Date()
-        let database = MockRemoteDatabase()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-        
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 2.0)
          
         let todaysData = Data(context: localDatabase.context)
         todaysData.date = Calendar.current.startOfDay(for: .init())
@@ -169,21 +164,12 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_one_old_local_data_to_update_higher_than_remotes() throws {
         // (1) Given
+        try load_local_database()
+
         let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
-        let database = MockRemoteDatabase()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
         
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 2.0)
-         
         let todaysData = Data(context: localDatabase.context)
-        todaysData.date = "2023-06-21T00:00:00+00:00".toDate()
+        todaysData.date = Calendar.current.startOfDay(for: .init())
         todaysData.totalUsedData = 1500
         todaysData.dailyUsedData = 100
         todaysData.hasLastTotal = true
@@ -194,7 +180,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         yesterdaysData.totalUsedData = 1500
         yesterdaysData.dailyUsedData = 200
         yesterdaysData.hasLastTotal = true
-        yesterdaysData.lastSyncedToRemoteDate = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.lastSyncedToRemoteDate = "2023-06-20T00:00:01+00:00".toDate()
         yesterdaysData.isSyncedToRemote = true
 
         let localData = [todaysData, yesterdaysData]
@@ -214,21 +200,12 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_one_old_local_data_to_update_equal_to_remotes() throws {
         // (1) Given
+        try load_local_database()
+
         let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
-        let database = MockRemoteDatabase()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 2.0)
 
         let todaysData = Data(context: localDatabase.context)
-        todaysData.date = "2023-06-21T00:00:00+00:00".toDate()
+        todaysData.date = Calendar.current.startOfDay(for: .init())
         todaysData.totalUsedData = 1500
         todaysData.dailyUsedData = 100
         todaysData.hasLastTotal = true
@@ -259,21 +236,12 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_one_old_local_data_to_update_is_lower_than_remotes() throws {
         // (1) Given
+        try load_local_database()
+
         let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
-        let database = MockRemoteDatabase()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 2.0)
 
         let todaysData = Data(context: localDatabase.context)
-        todaysData.date = "2023-06-21T00:00:00+00:00".toDate()
+        todaysData.date = Calendar.current.startOfDay(for: .init())
         todaysData.totalUsedData = 1500
         todaysData.dailyUsedData = 100
         todaysData.hasLastTotal = true
@@ -307,18 +275,9 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     // MARK: Today's Data
     func test_sync_todays_data_with_non_existent_data_from_remote() throws {
         // (1) Given
+        try load_local_database()
+
         let isSyncedToRemote = false
-        let database = MockRemoteDatabase()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-        
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 2.0)
          
         let todaysData = Data(context: localDatabase.context)
         todaysData.date = Calendar.current.startOfDay(for: .init())
@@ -342,20 +301,14 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_todays_data_with_existing_data_from_remote_has_change_in_usage() throws {
         // (1) Given
+        try load_local_database()
+        
+        remoteDatabase = MockRemoteDatabaseTodaysData()
+        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
+
         let isSyncedToRemote = true
-        let database = MockRemoteDatabaseTodaysData()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-        
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 2.0)
-         
         let todaysData = Data(context: localDatabase.context)
+        
         todaysData.date = Calendar.current.startOfDay(for: .init())
         todaysData.totalUsedData = 1500
         todaysData.dailyUsedData = 100
@@ -377,18 +330,9 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
 
     func test_sync_todays_data_with_existing_data_from_remote_has_no_change_in_usage() throws {
         // (1) Given
+        try load_local_database()
+
         let isSyncedToRemote = true
-        let database = MockRemoteDatabaseTodaysData()
-        let localDatabase = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-        
-        let expectation = self.expectation(description: "Load Container")
-        localDatabase.loadContainer { _ in
-        } onSuccess: {
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 2.0)
          
         let todaysData = Data(context: localDatabase.context)
         todaysData.date = Calendar.current.startOfDay(for: .init())
@@ -413,9 +357,6 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     // MARK: Plan
     func test_sync_plan_with_non_existent_plan_from_remote() throws {
         // (1) Given
-        let database = MockRemoteDatabase()
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-        
         // (2) When
         createExpectation(
             publisher: repository.syncPlan(
@@ -435,9 +376,6 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_plan_with_existing_plan_from_remote_has_changes() throws {
         // (1) Given
-        let database = MockRemoteDatabasePlan()
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
-        
         // (2) When
         createExpectation(
             publisher: repository.syncPlan(
@@ -457,8 +395,8 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     
     func test_sync_plan_with_existing_plan_from_remote_has_no_changes() throws {
         // (1) Given
-        let database = MockRemoteDatabasePlan()
-        let repository = DataUsageRemoteRepository(remoteDatabase: database)
+        remoteDatabase = MockRemoteDatabasePlan()
+        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
         
         // (2) When
         let startDate = Calendar.current.startOfDay(for: .init())

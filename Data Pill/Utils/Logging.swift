@@ -10,16 +10,16 @@ import OSLog
 extension Logger {
     
     enum Category: String {
-        case appDelegate = "appdelegate"
-        case appModel = "appmodel"
-        case localDatabase = "localdatabase"
-        case remoteDatabase = "remotedatabase"
-        case networkRepository = "networkrepository"
-        case dataUsageRemoteRepository = "datausageremoterespository"
-        case widgetProvider = "widgetprovider"
+        case appDelegate = "App_Delegate"
+        case appModel = "App_View_Model"
+        case localDatabase = "Local_Database"
+        case remoteDatabase = "Remote_Database"
+        case networkRepository = "Network_Repository"
+        case dataUsageRemoteRepository = "Data_Usage_Remote_Repository"
+        case widgetProvider = "Widget_Provider"
     }
     
-    // App
+    /// App
     static let appDelegate = createLogger(of: .appDelegate)
     static let appModel = createLogger(of: .appModel)
     static let networkRepository = createLogger(of: .networkRepository)
@@ -27,10 +27,10 @@ extension Logger {
     static let database = createLogger(of: .localDatabase)
     static let remoteDatabase = createLogger(of: .remoteDatabase)
     
-    // Widget Extension
+    /// Widget Extension
     static let widgetProvider = createLogger(of: .widgetProvider)
             
-    // Helpers
+    /// Helpers
     static func createLogger(of category: Category) -> Logger {
         let subsystem = Bundle.main.bundleIdentifier!
         return .init(subsystem: subsystem, category: category.rawValue)

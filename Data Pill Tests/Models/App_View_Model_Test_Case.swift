@@ -11,7 +11,7 @@ import CoreData
 
 final class App_View_Model_Test_Case: XCTestCase {
     
-    var appViewModel: AppViewModel!
+    private var appViewModel: AppViewModel!
     
     override func setUpWithError() throws {
         try super.setUpWithError()

@@ -1,5 +1,5 @@
 //
-//  App_Data_Repository_Test_Case.swift
+//  App_Data_Repository_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 23/10/22.
@@ -8,9 +8,9 @@
 import XCTest
 @testable import Data_Pill
 
-final class App_Data_Repository_Test_Case: XCTestCase {
+final class App_Data_Repository_Tests: XCTestCase {
 
-    var repository: MockAppDataRepository!
+    private var repository: MockAppDataRepository!
 
     override func setUpWithError() throws {
         try super.setUpWithError()

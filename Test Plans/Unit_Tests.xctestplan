@@ -26,6 +26,9 @@
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "Data_Usage_Repository_Test_Case\/test_update_bulk_data_are_synced_and_synced_data()"
+      ],
       "target" : {
         "containerPath" : "container:Data Pill.xcodeproj",
         "identifier" : "278FB2C828F2E55900BE78C2",

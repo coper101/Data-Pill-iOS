@@ -6,7 +6,6 @@
 //
 
 import Combine
-import Foundation
 import SwiftUI
 
 final class ToastTimer<Message>: ObservableObject {
@@ -41,5 +40,4 @@ final class ToastTimer<Message>: ObservableObject {
         stopTimer()
         self.message = nil
     }
-    
 }

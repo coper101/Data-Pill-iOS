@@ -1,5 +1,5 @@
 //
-//  Stepper_Test_Case.swift
+//  Stepper_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 11/10/22.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import Data_Pill
 
-final class Stepper_Test_Case: XCTestCase {
+final class Stepper_Tests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()

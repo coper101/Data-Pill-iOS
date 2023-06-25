@@ -16,7 +16,7 @@ extension ProcessInfo {
 
 class TestData {
     
-    // MARK: Local
+    // MARK: - Local
     static func createLocalData(completion: @escaping (Data?) -> Void)  {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)
         database.loadContainer { _ in
@@ -36,7 +36,7 @@ class TestData {
         }
     }
     
-    // MARK: Remote
+    // MARK: - Remote
     static func createEmptyRemotePlan() -> RemotePlan {
         RemotePlan(
             startDate: Calendar.current.startOfDay(for: .init()),
@@ -54,7 +54,7 @@ class TestData {
         )
     }
     
-    // MARK: CloudKit Record
+    // MARK: - CloudKit Record
     static func createPlanRecord(
         startDate: Date = Calendar.current.startOfDay(for: .init()),
         endDate: Date = Calendar.current.startOfDay(for: .init()),

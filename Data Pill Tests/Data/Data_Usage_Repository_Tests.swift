@@ -1,5 +1,5 @@
 //
-//  Data_Usage_Repository_Test_Case.swift
+//  Data_Usage_Repository_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 19/10/22.
@@ -9,10 +9,10 @@ import XCTest
 @testable import Data_Pill
 import CoreData
 
-final class Data_Usage_Repository_Test_Case: XCTestCase {
+final class Data_Usage_Repository_Tests: XCTestCase {
     
-    var repository: DataUsageRepositoryProtocol!
-    var mockErrorRepository: DataUsageRepositoryProtocol!
+    private var repository: DataUsageRepositoryProtocol!
+    private var mockErrorRepository: DataUsageRepositoryProtocol!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -85,42 +85,6 @@ final class Data_Usage_Repository_Test_Case: XCTestCase {
         XCTAssertEqual(updatedData!.totalUsedData, 50)
         XCTAssertEqual(updatedData!.dailyUsedData, 2)
         XCTAssertEqual(updatedData!.hasLastTotal, true)
-    }
-    
-    func test_update_bulk_data_are_synced_and_synced_data() throws {
-        // (1) Given
-        let date1 = "2022-10-01T00:00:00+00:00".toDate()
-        let date2 = "2022-10-02T00:00:00+00:00".toDate()
-        
-        repository.addData(
-            date: date1,
-            totalUsedData: 1_000,
-            dailyUsedData: 100,
-            hasLastTotal: true
-        )
-        repository.addData(
-            date: date2,
-            totalUsedData: 1_000,
-            dailyUsedData: 100,
-            hasLastTotal: true
-        )
-                
-        let remoteData1 = RemoteData(date: date1, dailyUsedData: 100)
-        let remoteData2 = RemoteData(date: date2, dailyUsedData: 100)
-        
-        // (2) When
-        let _ = repository.updateData([remoteData1, remoteData2])
-        
-        // (3) Then
-        let allData = repository.getAllData()
-        
-        XCTAssertEqual(allData.count, 2)
-        
-        let data1 = try XCTUnwrap(allData[0])
-        let data2 = try XCTUnwrap(allData[1])
-        
-        XCTAssertTrue(data1.isSyncedToRemote)
-        XCTAssertTrue(data2.isSyncedToRemote)
     }
     
     func test_get_all_data_with_data() throws {

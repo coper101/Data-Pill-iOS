@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import OSLog
 
-// MARK: Identifiers
+// MARK: - Identifiers
 enum AppGroup: String {
     case dataPill = "group.com.penguinworks.Data-Pill"
     var groupIdentifier: String {
@@ -24,7 +24,7 @@ enum Containers: String {
     }
 }
 
-// MARK: Types
+// MARK: - Types
 enum Entities: String {
     case data = "Data"
     case plan = "Plan"
@@ -38,7 +38,7 @@ enum StorageType {
     case memory
 }
 
-// MARK: Helpers
+// MARK: - Helpers
 extension URL {
     
     static func storeURL(for appGroup: AppGroup, of container: Containers) -> URL? {
@@ -62,6 +62,8 @@ extension NSManagedObjectContext {
         return true
     }
 }
+
+
 
 // MARK: - Protocol
 protocol Database {
@@ -90,7 +92,9 @@ extension Database {
     }
 }
 
-// MARK: Implementation
+
+
+// MARK: - App Implementation
 class LocalDatabase: Database {
 
     let container: NSPersistentContainer
@@ -118,9 +122,11 @@ class LocalDatabase: Database {
             
         }
     }
-    
 }
 
+
+
+// MARK: - Test Implementation
 class InMemoryLocalDatabase: Database {
 
     let container: NSPersistentContainer
@@ -136,5 +142,4 @@ class InMemoryLocalDatabase: Database {
         }
         Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
     }
-    
 }

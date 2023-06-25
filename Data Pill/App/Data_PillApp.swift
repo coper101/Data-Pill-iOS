@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-enum Screen {
-    case guide
-    case overview
-}
-
 @main
 struct Data_PillApp: App {
     var body: some Scene {

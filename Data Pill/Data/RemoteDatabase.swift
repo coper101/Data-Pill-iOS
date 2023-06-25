@@ -10,7 +10,7 @@ import Combine
 import CloudKit
 import OSLog
 
-// MARK: Types
+// MARK: - Types
 protocol CK {
     func toDictionary() -> [String: Any]
 }
@@ -40,7 +40,7 @@ enum RemoteDatabaseError: Error, Equatable {
     }
 }
 
-// MARK: Identifiers
+// MARK: - Identifiers
 enum CloudContainer: String {
     case dataPill = "iCloud.com.penguinworks.Data-Pill"
     var identifier: String {
@@ -48,7 +48,9 @@ enum CloudContainer: String {
     }
 }
 
-// MARK: Protocol
+
+
+// MARK: - Protocol
 protocol RemoteDatabase {
     /// Subscriptions
     func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never>
@@ -64,7 +66,9 @@ protocol RemoteDatabase {
     func save(records: [CKRecord]) -> AnyPublisher<Bool, Error>
 }
 
-// MARK: App Implementation
+
+
+// MARK: - App Implementation
 class CloudDatabase: RemoteDatabase {
     
     let database: CKDatabase
@@ -374,7 +378,6 @@ class CloudDatabase: RemoteDatabase {
         } //: Future
         .eraseToAnyPublisher()
     }
-    
 }
 
 
@@ -443,10 +446,11 @@ class MockSuccessCloudDatabase: RemoteDatabase {
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
-    
 }
 
-// MARK: Test Implementation
+
+
+// MARK: - Test Implementation
 class MockFailCloudDatabase: RemoteDatabase {
     
     func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never> {
@@ -485,5 +489,4 @@ class MockFailCloudDatabase: RemoteDatabase {
         Fail(error: RemoteDatabaseError.saveError("Save Error"))
             .eraseToAnyPublisher()
     }
-    
 }

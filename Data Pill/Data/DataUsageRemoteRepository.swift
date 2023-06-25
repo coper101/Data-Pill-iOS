@@ -10,7 +10,7 @@ import Combine
 import CloudKit
 import OSLog
 
-// MARK: Protocol
+// MARK: - Protocol
 protocol DataUsageRemoteRepositoryProtocol {
     
     /// [A] Plan
@@ -55,7 +55,8 @@ protocol DataUsageRemoteRepositoryProtocol {
 }
 
 
-// MARK: App Implementation
+
+// MARK: - App Implementation
 class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProtocol {
 
     var cancellables: Set<AnyCancellable> = .init()
@@ -438,7 +439,7 @@ extension DataUsageRemoteRepository {
         return self.isLoggedInUser()
             .flatMap { isLoggedIn -> AnyPublisher<([Data], [Data]), Never> in
                 
-                // A.
+                /// A.
                 var dataToAdd = allLocalData.filter { !$0.isSyncedToRemote }
                 let limit = 100
                 if dataToAdd.count >= limit {
@@ -446,13 +447,15 @@ extension DataUsageRemoteRepository {
                 }
                 Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data to add to remote count: \(dataToAdd.count)")
                 
-                // B.
+                /// B.
                 var dataToUpdate = [Data]()
                 if let lastSyncedDate {
                     dataToUpdate = allLocalData.filter { data in
                         guard let date = data.date else {
+                            Logger.dataUsageRemoteRepository.debug("syncOldLocalData - false date")
                             return false
                         }
+                        Logger.dataUsageRemoteRepository.debug("syncOldLocalData - in range: \(date.isDateInRange(from: lastSyncedDate, to: todaysDate))")
                         return data.isSyncedToRemote && date.isDateInRange(from: lastSyncedDate, to: todaysDate)
                     }
                 }
@@ -461,7 +464,7 @@ extension DataUsageRemoteRepository {
                 return Just((dataToAdd, dataToUpdate)).eraseToAnyPublisher()
             }
             .map { (dataToAdd: [Data], dataToUpdate: [Data]) in
-                // convert all to remote data types
+                /// convert all to remote data types
                 let transform: (Data) -> RemoteData? = { data in
                     guard let date = data.date else {
                         return nil
@@ -476,7 +479,7 @@ extension DataUsageRemoteRepository {
             }
             .flatMap { (remoteDataToAdd: [RemoteData], remoteDataToUpdate: [RemoteData]) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error> in
                 guard !remoteDataToAdd.isEmpty else {
-                    // 2. Update
+                    /// 2. Update
                     return self.updateData(remoteDataToUpdate)
                         .flatMap { isUpdated in
                             let updatedRemoteData = isUpdated ? remoteDataToUpdate : []
@@ -484,10 +487,10 @@ extension DataUsageRemoteRepository {
                         }
                         .eraseToAnyPublisher()
                 }
-                // 1. Add
+                /// 1. Add
                 return self.addData(remoteDataToAdd)
                     .flatMap { isAdded in
-                        // 2. Update
+                        /// 2. Update
                         self.updateData(remoteDataToUpdate)
                             .flatMap { isUpdated in
                                 let updatedRemoteData = isUpdated ? remoteDataToUpdate : []
@@ -577,7 +580,9 @@ extension DataUsageRemoteRepository {
     }
 }
 
-// MARK: Test Implementation
+
+
+// MARK: - Test Implementation
 class MockSuccessDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProtocol {
     
     func isPlanAdded() -> AnyPublisher<Bool, Error> {
@@ -701,7 +706,6 @@ class MockSuccessDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRep
         Just(true)
             .eraseToAnyPublisher()
     }
-    
 }
 
 class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProtocol {
@@ -821,5 +825,4 @@ class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemoteReposi
         Just(false)
             .eraseToAnyPublisher()
     }
-    
 }

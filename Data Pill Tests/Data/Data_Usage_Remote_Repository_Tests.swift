@@ -10,8 +10,8 @@ import XCTest
 
 final class Data_Usage_Remote_Repository_Tests: XCTestCase {
 
-    var repository: DataUsageRemoteRepositoryProtocol!
-    var repositoryFail: DataUsageRemoteRepositoryProtocol!
+    private var repository: DataUsageRemoteRepositoryProtocol!
+    private var repositoryFail: DataUsageRemoteRepositoryProtocol!
     
     override func setUpWithError() throws {
         repository = MockSuccessDataUsageRemoteRepository()

@@ -1,5 +1,5 @@
 //
-//  Toast_Timer_Test_Case.swift
+//  Toast_Timer_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 19/1/23.
@@ -8,9 +8,9 @@
 import XCTest
 @testable import Data_Pill
 
-final class Toast_Timer_Test_Case: XCTestCase {
+final class Toast_Timer_Tests: XCTestCase {
     
-    var toastTimer: ToastTimer<String>!
+    private var toastTimer: ToastTimer<String>!
 
     override func setUpWithError() throws {
         toastTimer = .init()

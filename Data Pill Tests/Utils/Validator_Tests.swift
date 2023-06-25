@@ -1,5 +1,5 @@
 //
-//  Validator_Test_Case.swift
+//  Validator_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 29/12/22.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import Data_Pill
 
-final class Validator_Test_Case: XCTestCase {
+final class Validator_Tests: XCTestCase {
 
     override func setUpWithError() throws {}
 

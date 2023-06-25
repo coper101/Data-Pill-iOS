@@ -1,5 +1,5 @@
 //
-//  Widget_Model_Test_Case.swift
+//  Widget_Model_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 4/12/22.
@@ -8,12 +8,12 @@
 import XCTest
 @testable import Data_Pill
 
-final class Widget_Model_Test_Case: XCTestCase {
+final class Widget_Model_Tests: XCTestCase {
     
-    var widgetModel: WidgetModel!
-    var appDataRepository: AppDataRepositoryProtocol!
-    var dataUsageRepository: DataUsageRepositoryProtocol!
-    var networkDataRepository: NetworkDataRepositoryProtocol!
+    private var widgetModel: WidgetModel!
+    private var appDataRepository: AppDataRepositoryProtocol!
+    private var dataUsageRepository: DataUsageRepositoryProtocol!
+    private var networkDataRepository: NetworkDataRepositoryProtocol!
 
     override func setUpWithError() throws {
         try super.setUpWithError()

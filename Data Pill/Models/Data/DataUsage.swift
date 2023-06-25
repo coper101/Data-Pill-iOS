@@ -17,12 +17,12 @@ public extension NSManagedObject {
     }
 }
 
-// MARK: Local
+// MARK: - Local
 public class Data: NSManagedObject {
     
-    // properties are generated automatically
-    // matches the properties from the Entity Table
-    // date, totalUsedData, dailyUsedData, hasLastTotal, isSyncedToRemote, lastSyncedToRemoteDate
+    /// properties are generated automatically
+    /// matches the properties from the Entity Table
+    /// `date`, `totalUsedData`, `dailyUsedData`, `hasLastTotal`, `isSyncedToRemote`, `lastSyncedToRemoteDate`
         
     public var id: String {
         (date ?? Date()).toDayFormat()
@@ -77,7 +77,9 @@ func createFakeData(
     )
 }
 
-// MARK: Remote
+
+
+// MARK: - Remote
 struct RemoteData {
     var id: CKRecord.ID? = nil
     let date: Date

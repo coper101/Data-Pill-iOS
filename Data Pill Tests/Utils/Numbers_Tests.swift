@@ -1,5 +1,5 @@
 //
-//  Numbers_Test_Case.swift
+//  Numbers_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 9/10/22.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import Data_Pill
 
-final class Numbers_Test_Case: XCTestCase {
+final class Numbers_Tests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()

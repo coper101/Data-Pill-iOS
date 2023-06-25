@@ -61,7 +61,9 @@ protocol AppDataRepositoryProtocol {
     func setLastSyncedToRemoteDate(_ date: Date)
 }
 
-// MARK: - Implementation
+
+
+// MARK: - App Implementation
 enum Keys: String {
     
     case wasGuideShown = "Was_Guide_Shown"
@@ -284,6 +286,9 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     }
 }
 
+
+
+// MARK: - Test Implementation
 class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     @Published var wasGuideShown = false

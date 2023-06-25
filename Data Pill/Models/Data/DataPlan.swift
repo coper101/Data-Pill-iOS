@@ -9,12 +9,12 @@ import Foundation
 import CoreData
 import CloudKit
 
-// MARK: Local
+// MARK: - Local
 public class Plan: NSManagedObject {
     
-    // properties are generated automatically
-    // matches the properties from the Entity Table
-    // startDate, endDate, dataAmount, dailyLimit, planLimit
+    /// properties are generated automatically
+    /// matches the properties from the Entity Table
+    /// `startDate`, `endDate`, `dataAmount`, `dailyLimit`, `planLimit`
         
     public override var description: String {
         """
@@ -60,7 +60,9 @@ func createFakePlan(
     )
 }
 
-// MARK: Remote
+
+
+// MARK: - Remote
 struct RemotePlan {
     var id: CKRecord.ID? = nil
     let startDate: Date
@@ -99,7 +101,6 @@ extension RemotePlan {
         )
     }
 }
-
 
 extension RemotePlan: Equatable {
     static func ==(lhs: RemotePlan, rhs: RemotePlan) -> Bool {

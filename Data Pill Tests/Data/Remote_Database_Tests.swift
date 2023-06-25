@@ -1,5 +1,5 @@
 //
-//  Remote_Database_Test.swift
+//  Remote_Database_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 10/3/23.
@@ -9,10 +9,10 @@ import XCTest
 @testable import Data_Pill
 import CloudKit
 
-final class Remote_Database_Test: XCTestCase {
+final class Remote_Database_Tests: XCTestCase {
     
-    var successRemoteDatabase: RemoteDatabase!
-    var failRemoteDatabase: RemoteDatabase!
+    private var successRemoteDatabase: RemoteDatabase!
+    private var failRemoteDatabase: RemoteDatabase!
     
     override func setUpWithError() throws {
         successRemoteDatabase = MockSuccessCloudDatabase()

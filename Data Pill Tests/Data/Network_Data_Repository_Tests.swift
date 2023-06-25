@@ -1,5 +1,5 @@
 //
-//  Network_Data_Repository_Test_Case.swift
+//  Network_Data_Repository_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 23/10/22.
@@ -8,9 +8,9 @@
 import XCTest
 @testable import Data_Pill
 
-final class Network_Data_Repository_Test_Case: XCTestCase {
+final class Network_Data_Repository_Tests: XCTestCase {
 
-    var repository: NetworkDataRepositoryProtocol!
+    private var repository: NetworkDataRepositoryProtocol!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
