@@ -5,10 +5,10 @@
 //  Created by Wind Versi on 26/3/23.
 //
 
+@testable import Data_Pill
 import XCTest
 import Combine
 import CloudKit
-@testable import Data_Pill
 
 final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     

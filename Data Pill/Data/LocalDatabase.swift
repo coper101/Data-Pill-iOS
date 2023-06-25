@@ -95,7 +95,7 @@ extension Database {
 
 
 // MARK: - App Implementation
-class LocalDatabase: Database {
+final class LocalDatabase: Database {
 
     let container: NSPersistentContainer
     var context: NSManagedObjectContext {
@@ -127,7 +127,7 @@ class LocalDatabase: Database {
 
 
 // MARK: - Test Implementation
-class InMemoryLocalDatabase: Database {
+final class InMemoryLocalDatabase: Database {
 
     let container: NSPersistentContainer
     var context: NSManagedObjectContext {

@@ -5,8 +5,8 @@
 //  Created by Wind Versi on 13/3/23.
 //
 
-import XCTest
 @testable import Data_Pill
+import XCTest
 
 final class Data_Usage_Remote_Repository_Tests: XCTestCase {
 

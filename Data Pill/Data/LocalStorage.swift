@@ -7,7 +7,7 @@
 
 import Foundation
 
-class LocalStorage {
+final class LocalStorage {
     
     static func getUserDefaults() -> UserDefaults? {
         .init(suiteName: AppGroup.dataPill.groupIdentifier)
