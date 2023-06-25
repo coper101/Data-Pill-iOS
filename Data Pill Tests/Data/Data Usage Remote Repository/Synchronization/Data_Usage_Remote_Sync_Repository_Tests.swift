@@ -40,7 +40,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         wait(for: [loadContainer], timeout: 2.0)
     }
 
-    // MARK: Old Local Data
+    // MARK: - Old Local Data
     func test_sync_more_than_one_old_local() throws {
         // (1) Given
         try load_local_database()
@@ -270,9 +270,187 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         }
     }
     
-    // MARK: Old Remote Data
+    // MARK: - Old Remote Data
+//    func test_sync_all_remote_data_but_has_error_getting_all_remote_data() throws {
+//        // (1) Given
+//        try load_local_database()
+//
+//        remoteDatabase = MockFailToFetchAllDataRemoteDatabase()
+//        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
+//
+//        let excludingTodaysDate = Calendar.current.startOfDay(for: .init())
+//
+//        let todaysData = Data(context: localDatabase.context)
+//        todaysData.date = Calendar.current.startOfDay(for: .init())
+//        todaysData.totalUsedData = 1500
+//        todaysData.dailyUsedData = 100
+//        todaysData.hasLastTotal = true
+//        todaysData.isSyncedToRemote = true
+//
+//        let _ = try? localDatabase.context.saveIfNeeded()
+//
+//        let allLocalData = [todaysData]
+//
+//        // (2) When
+//        createExpectation(
+//            publisher: repository.syncOldRemoteData(allLocalData, excluding: excludingTodaysDate),
+//            description: "Sync Old Remote Data"
+//        ) { error in
+//
+//            // (3) Then
+//            XCTAssertEqual(error as? RemoteDatabaseError, .fetchError("Fetch Error"))
+//
+//        } onSuccess: { _ in }
+//    }
     
-    // MARK: Today's Data
+    func test_sync_all_remote_data_but_has_no_access_to_remote_database() throws {
+        // (1) Given
+        try load_local_database()
+        
+        remoteDatabase = MockFailCloudDatabase()
+        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
+        
+        let excludingTodaysDate = Calendar.current.startOfDay(for: .init())
+         
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = Calendar.current.startOfDay(for: .init())
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = true
+    
+        let _ = try? localDatabase.context.saveIfNeeded()
+
+        let allLocalData = [todaysData]
+        
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldRemoteData(allLocalData, excluding: excludingTodaysDate),
+            description: "Sync Old Remote Data"
+        ) { oldRemoteData in
+            
+            // (3) Then
+            XCTAssertTrue(oldRemoteData.isEmpty)
+        }
+    }
+    
+    func test_sync_all_remote_data_as_old_local_data_is_empty() throws {
+        // (1) Given
+        try load_local_database()
+        
+        remoteDatabase = MockTwoExistingDataRemoteDatabase()
+        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
+        
+        let excludingTodaysDate = Calendar.current.startOfDay(for: .init())
+         
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = Calendar.current.startOfDay(for: .init())
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = true
+    
+        let _ = try? localDatabase.context.saveIfNeeded()
+
+        let allLocalData = [todaysData]
+        
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldRemoteData(allLocalData, excluding: excludingTodaysDate),
+            description: "Sync Old Remote Data"
+        ) { oldRemoteData in
+            
+            // (3) Then
+            XCTAssertEqual(oldRemoteData.count, 2)
+        }
+    }
+    
+    func test_sync_one_remote_data_that_does_not_exist_in_local() throws {
+        // (1) Given
+        try load_local_database()
+        
+        remoteDatabase = MockTwoExistingDataRemoteDatabase()
+        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
+        
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let excludingTodaysDate = todaysDate
+         
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = todaysDate
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = true
+        
+        let yesterdaysData = Data(context: localDatabase.context)
+        yesterdaysData.date = Calendar.current.date(byAdding: .day, value: -1, to: todaysDate)
+        yesterdaysData.totalUsedData = 1500
+        yesterdaysData.dailyUsedData = 100
+        yesterdaysData.hasLastTotal = true
+        yesterdaysData.isSyncedToRemote = true
+    
+        let _ = try? localDatabase.context.saveIfNeeded()
+
+        let allLocalData = [todaysData, yesterdaysData]
+        
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldRemoteData(allLocalData, excluding: excludingTodaysDate),
+            description: "Sync Old Remote Data"
+        ) { oldRemoteData in
+            
+            // (3) Then
+            XCTAssertEqual(oldRemoteData.count, 1)
+        }
+    }
+    
+    func test_sync_zero_remote_data_as_all_exists_in_local() throws {
+        // (1) Given
+        try load_local_database()
+        
+        remoteDatabase = MockTwoExistingDataRemoteDatabase()
+        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
+        
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let excludingTodaysDate = todaysDate
+         
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = todaysDate
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = true
+        
+        let yesterdaysData = Data(context: localDatabase.context)
+        yesterdaysData.date = Calendar.current.date(byAdding: .day, value: -1, to: todaysDate)
+        yesterdaysData.totalUsedData = 1500
+        yesterdaysData.dailyUsedData = 100
+        yesterdaysData.hasLastTotal = true
+        yesterdaysData.isSyncedToRemote = true
+        
+        let yesterdaysData2 = Data(context: localDatabase.context)
+        yesterdaysData2.date = Calendar.current.date(byAdding: .day, value: -2, to: todaysDate)
+        yesterdaysData2.totalUsedData = 1500
+        yesterdaysData2.dailyUsedData = 200
+        yesterdaysData2.hasLastTotal = true
+        yesterdaysData2.isSyncedToRemote = true
+    
+        let _ = try? localDatabase.context.saveIfNeeded()
+
+        let allLocalData = [todaysData, yesterdaysData, yesterdaysData2]
+        
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldRemoteData(allLocalData, excluding: excludingTodaysDate),
+            description: "Sync Old Remote Data"
+        ) { oldRemoteData in
+            
+            // (3) Then
+            XCTAssertTrue(oldRemoteData.isEmpty)
+        }
+    }
+    
+    // MARK: - Today's Data
     func test_sync_todays_data_with_non_existent_data_from_remote() throws {
         // (1) Given
         try load_local_database()
@@ -354,7 +532,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         }
     }
 
-    // MARK: Plan
+    // MARK: - Plan
     func test_sync_plan_with_non_existent_plan_from_remote() throws {
         // (1) Given
         // (2) When

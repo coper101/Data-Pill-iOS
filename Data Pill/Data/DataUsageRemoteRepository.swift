@@ -506,36 +506,34 @@ extension DataUsageRemoteRepository {
     func syncOldRemoteData(_ localData: [Data], excluding date: Date) -> AnyPublisher<[RemoteData], Error> {
         var allLocalData = localData
         
-        /// exclude todays data
+        /// 1. Exclude `Data` with Date (Today's Date)
         allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
-        
         Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from local count excluding today: \(allLocalData.count)")
 
-        // get all local data
+        /// 2. Has Access to iCloud?
         return self.isLoggedInUser()
             .flatMap { isLoggedIn in
-                /// 1. logged in
+                /// 2A. Yep: Get All Existing `RemoteData` from `RemoteDatabase
                 if isLoggedIn {
                     return self.getAllData(excluding: date)
                         .eraseToAnyPublisher()
                 }
-                /// 1. not logged in
+                /// 2B. Nope: Empty
                 return Just([RemoteData]()).eraseToAnyPublisher()
             }
             .flatMap { oldRemoteData in
                 
                 Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from remote count: \(oldRemoteData.count)")
                 
+                /// 3. Get All `RemoteData` that Doesn't Exist in `LocalDatabase`
                 var dataToAdd = [RemoteData]()
                 
                 oldRemoteData.forEach { (remoteData: RemoteData) in
-                    
-                    // remote data exists in local, dates saved starts at 00:00
+                    /// remote data exists in local, dates saved starts at 00:00 time
                     if let _ = allLocalData.first(where: { $0.date == remoteData.date }) {
                         return
                     }
-                    
-                    // doesn't exist, need to be added
+                    /// doesn't exist, need to be added
                     dataToAdd.append(remoteData)
                 }
                 
