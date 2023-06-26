@@ -31,11 +31,13 @@ final class MockRemoteDatabase: RemoteDatabase {
     }
     
     func fetch(with predicate: NSPredicate, of recordType: Data_Pill.RecordType) -> AnyPublisher<[CKRecord], Error> {
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let yesterdaysDate = TestData.createDate(offset: -1, from: todaysDate)
         if
             recordType == .data,
-            predicate.description == "ANY {2023-06-20 00:00:00 +0000} == date"
+            predicate.description == "ANY {\(yesterdaysDate)} == date"
         {
-            let remoteData = RemoteData(date: "2023-06-20T00:00:00+00:00".toDate(), dailyUsedData: 100)
+            let remoteData = RemoteData(date: yesterdaysDate, dailyUsedData: 100)
             let records = [remoteData].map { data in
                 let record = CKRecord(recordType: RecordType.data.rawValue)
                 record.setValuesForKeys(data.toDictionary())
@@ -45,6 +47,7 @@ final class MockRemoteDatabase: RemoteDatabase {
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
+        
         return Just([])
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
@@ -53,7 +56,7 @@ final class MockRemoteDatabase: RemoteDatabase {
     func fetchAll(of recordType: Data_Pill.RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
         Just([
             TestData.createDataRecord(
-                date: createDate(offset: -1),
+                date: TestData.createDate(offset: -1, from: .init()),
                 dailyUsedData: 100
             )
         ])
@@ -68,10 +71,12 @@ final class MockRemoteDatabase: RemoteDatabase {
     }
     
     func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let yesterdaysDate = TestData.createDate(offset: -1, from: todaysDate)
         if
             let firstRecord = records.first,
             let date = firstRecord.value(forKey: "date") as? Date,
-            date.description == "2023-06-20 00:00:00 +0000",
+            date.description == yesterdaysDate.description,
             let dailyUsedData = firstRecord.value(forKey: "dailyUsedData") as? Double,
             dailyUsedData == 200
         {

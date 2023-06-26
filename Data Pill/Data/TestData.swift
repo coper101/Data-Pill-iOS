@@ -86,4 +86,11 @@ class TestData {
         dataRecord.setValuesForKeys(remoteData.toDictionary())
         return dataRecord
     }
+    
+    // MARK: - Date
+    static func createDate(offset: Int, secondsOffset: Int = 0, from date: Date) -> Date {
+        var date = Calendar.current.date(byAdding: .day, value: offset, to: date)!
+        date = Calendar.current.date(byAdding: .second, value: secondsOffset, to: date)!
+        return Calendar.current.startOfDay(for: date)
+    }
 }

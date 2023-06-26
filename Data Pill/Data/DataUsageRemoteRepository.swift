@@ -439,6 +439,11 @@ extension DataUsageRemoteRepository {
         return self.isLoggedInUser()
             .flatMap { isLoggedIn -> AnyPublisher<([Data], [Data]), Never> in
                 
+                /// 1A.
+                guard isLoggedIn else {
+                    return Just(([], [])).eraseToAnyPublisher()
+                }
+                
                 /// A.
                 var dataToAdd = allLocalData.filter { !$0.isSyncedToRemote }
                 let limit = 100
@@ -452,10 +457,8 @@ extension DataUsageRemoteRepository {
                 if let lastSyncedDate {
                     dataToUpdate = allLocalData.filter { data in
                         guard let date = data.date else {
-                            Logger.dataUsageRemoteRepository.debug("syncOldLocalData - false date")
                             return false
                         }
-                        Logger.dataUsageRemoteRepository.debug("syncOldLocalData - in range: \(date.isDateInRange(from: lastSyncedDate, to: todaysDate))")
                         return data.isSyncedToRemote && date.isDateInRange(from: lastSyncedDate, to: todaysDate)
                     }
                 }

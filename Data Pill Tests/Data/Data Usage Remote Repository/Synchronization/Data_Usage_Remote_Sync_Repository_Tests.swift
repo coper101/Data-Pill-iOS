@@ -41,40 +41,40 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     }
 
     // MARK: - Old Local Data
-    func test_sync_more_than_one_old_local() throws {
+    func test_sync_old_local_data_but_has_no_access_to_remote_database() throws {
         // (1) Given
         try load_local_database()
         
-        let lastSyncedDate = Date()
+        remoteDatabase = MockFailCloudDatabase()
+        repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
+        
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let lastSyncedDate = todaysDate
          
-        let data1 = Data(context: localDatabase.context)
-        data1.date = Calendar.current.startOfDay(for: .init())
-        data1.totalUsedData = 1500
-        data1.dailyUsedData = 100
-        data1.hasLastTotal = true
-        data1.isSyncedToRemote = false
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = todaysDate
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = false
         
-        let data2 = Data(context: localDatabase.context)
-        data2.date = createDate(offset: -1)
-        data2.totalUsedData = 1500
-        data2.dailyUsedData = 100
-        data2.hasLastTotal = true
-        data1.isSyncedToRemote = false
+        let yesterdaysData = Data(context: localDatabase.context)
+        yesterdaysData.date = TestData.createDate(offset: -1, from: todaysDate)
+        yesterdaysData.totalUsedData = 1500
+        yesterdaysData.dailyUsedData = 100
+        yesterdaysData.hasLastTotal = true
+        yesterdaysData.isSyncedToRemote = false
         
-        let data3 = Data(context: localDatabase.context)
-        data3.date = createDate(offset: -2)
-        data3.totalUsedData = 1500
-        data3.dailyUsedData = 100
-        data3.hasLastTotal = true
-        data1.isSyncedToRemote = false
+        let yesterdaysData2 = Data(context: localDatabase.context)
+        yesterdaysData2.date = TestData.createDate(offset: -2, from: todaysDate)
+        yesterdaysData2.totalUsedData = 1500
+        yesterdaysData2.dailyUsedData = 100
+        yesterdaysData2.hasLastTotal = true
+        yesterdaysData2.isSyncedToRemote = false
     
         let _ = try? localDatabase.context.saveIfNeeded()
 
-        let localData = [
-            data1,
-            data2,
-            data3
-        ]
+        let localData = [todaysData, yesterdaysData, yesterdaysData2]
         
         // (2) When
         createExpectation(
@@ -82,46 +82,87 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
             description: "Sync Old Local Data"
         ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
             
-            // (3) Then - excludes today's data
+            // (3) Then
+            XCTAssertFalse(areOldDataAdded)
+            XCTAssertTrue(addedRemoteData.isEmpty)
+        }
+    }
+
+    func test_sync_old_local_data_that_were_not_synced_to_remote() throws {
+        // (1) Given
+        try load_local_database()
+        
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let lastSyncedDate = todaysDate
+         
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = todaysDate
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = false
+        
+        let yesterdaysData = Data(context: localDatabase.context)
+        yesterdaysData.date = TestData.createDate(offset: -1, from: todaysDate)
+        yesterdaysData.totalUsedData = 1500
+        yesterdaysData.dailyUsedData = 100
+        yesterdaysData.hasLastTotal = true
+        yesterdaysData.isSyncedToRemote = false
+        
+        let yesterdaysData2 = Data(context: localDatabase.context)
+        yesterdaysData2.date = TestData.createDate(offset: -2, from: todaysDate)
+        yesterdaysData2.totalUsedData = 1500
+        yesterdaysData2.dailyUsedData = 100
+        yesterdaysData2.hasLastTotal = true
+        yesterdaysData2.isSyncedToRemote = false
+    
+        let _ = try? localDatabase.context.saveIfNeeded()
+
+        let localData = [todaysData, yesterdaysData, yesterdaysData2]
+        
+        // (2) When
+        createExpectation(
+            publisher: repository.syncOldLocalData(localData, lastSyncedDate: lastSyncedDate),
+            description: "Sync Old Local Data"
+        ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
+            
+            // (3) Then
             XCTAssertTrue(areOldDataAdded)
             XCTAssertEqual(addedRemoteData.count, 2)
         }
     }
     
-    func test_sync_zero_old_local_data_has_uploaded() throws {
+    func test_sync_old_local_data_that_were_synced_remote() throws {
         // (1) Given
         try load_local_database()
         
-        let lastSyncedDate = Date()
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let lastSyncedDate = todaysDate
          
-        let data1 = Data(context: localDatabase.context)
-        data1.date = Calendar.current.startOfDay(for: .init())
-        data1.totalUsedData = 1500
-        data1.dailyUsedData = 100
-        data1.hasLastTotal = true
-        data1.isSyncedToRemote = true
+        let todaysData = Data(context: localDatabase.context)
+        todaysData.date = Calendar.current.startOfDay(for: .init())
+        todaysData.totalUsedData = 1500
+        todaysData.dailyUsedData = 100
+        todaysData.hasLastTotal = true
+        todaysData.isSyncedToRemote = true
         
-        let data2 = Data(context: localDatabase.context)
-        data2.date = createDate(offset: -1)
-        data2.totalUsedData = 1500
-        data2.dailyUsedData = 100
-        data2.hasLastTotal = true
-        data2.isSyncedToRemote = true
+        let yesterdaysData = Data(context: localDatabase.context)
+        yesterdaysData.date = TestData.createDate(offset: -1, from: todaysDate)
+        yesterdaysData.totalUsedData = 1500
+        yesterdaysData.dailyUsedData = 100
+        yesterdaysData.hasLastTotal = true
+        yesterdaysData.isSyncedToRemote = true
         
-        let data3 = Data(context: localDatabase.context)
-        data3.date = createDate(offset: -2)
-        data3.totalUsedData = 1500
-        data3.dailyUsedData = 100
-        data3.hasLastTotal = true
-        data3.isSyncedToRemote = true
-    
+        let yesterdaysData2 = Data(context: localDatabase.context)
+        yesterdaysData2.date = TestData.createDate(offset: -2, from: todaysDate)
+        yesterdaysData2.totalUsedData = 1500
+        yesterdaysData2.dailyUsedData = 100
+        yesterdaysData2.hasLastTotal = true
+        yesterdaysData2.isSyncedToRemote = true
+
         let _ = try? localDatabase.context.saveIfNeeded()
 
-        let localData = [
-            data1,
-            data2,
-            data3
-        ]
+        let localData = [todaysData, yesterdaysData, yesterdaysData2]
         
         // (2) When
         createExpectation(
@@ -129,20 +170,21 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
             description: "Sync Old Local Data"
         ) { (areOldDataAdded, areOldDataUpdated, addedRemoteData) in
             
-            // (3) Then - excludes today's data
+            // (3) Then
             XCTAssertFalse(areOldDataAdded)
             XCTAssertTrue(addedRemoteData.isEmpty)
         }
     }
     
-    func test_sync_zero_old_local_data() throws {
+    func test_sync_empty_old_local_data() throws {
         // (1) Given
         try load_local_database()
 
-        let lastSyncedDate = Date()
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let lastSyncedDate = todaysDate
          
         let todaysData = Data(context: localDatabase.context)
-        todaysData.date = Calendar.current.startOfDay(for: .init())
+        todaysData.date = todaysDate
         todaysData.totalUsedData = 1500
         todaysData.dailyUsedData = 100
         todaysData.hasLastTotal = true
@@ -162,25 +204,27 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         }
     }
     
-    func test_sync_one_old_local_data_to_update_higher_than_remotes() throws {
+    func test_sync_old_local_data_that_were_synced_to_remote_but_outdated_with_daily_used_data_higher_than_remotes() throws {
         // (1) Given
         try load_local_database()
 
-        let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let yesterdaysDate = TestData.createDate(offset: -1, from: todaysDate)
+        let lastSyncedDate = yesterdaysDate
         
         let todaysData = Data(context: localDatabase.context)
-        todaysData.date = Calendar.current.startOfDay(for: .init())
+        todaysData.date = todaysDate
         todaysData.totalUsedData = 1500
         todaysData.dailyUsedData = 100
         todaysData.hasLastTotal = true
         todaysData.isSyncedToRemote = true
         
         let yesterdaysData = Data(context: localDatabase.context)
-        yesterdaysData.date = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.date = yesterdaysDate
         yesterdaysData.totalUsedData = 1500
-        yesterdaysData.dailyUsedData = 200
+        yesterdaysData.dailyUsedData = 200 /// > 100 (Remote)
         yesterdaysData.hasLastTotal = true
-        yesterdaysData.lastSyncedToRemoteDate = "2023-06-20T00:00:01+00:00".toDate()
+        yesterdaysData.lastSyncedToRemoteDate = TestData.createDate(offset: -1, secondsOffset: 1, from: todaysDate)
         yesterdaysData.isSyncedToRemote = true
 
         let localData = [todaysData, yesterdaysData]
@@ -198,11 +242,13 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         }
     }
     
-    func test_sync_one_old_local_data_to_update_equal_to_remotes() throws {
+    func test_sync_old_local_data_that_were_synced_to_remote_but_outdated_with_daily_used_data_same_to_remotes() throws {
         // (1) Given
         try load_local_database()
 
-        let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let yesterdaysDate = TestData.createDate(offset: -1, from: todaysDate)
+        let lastSyncedDate = yesterdaysDate
 
         let todaysData = Data(context: localDatabase.context)
         todaysData.date = Calendar.current.startOfDay(for: .init())
@@ -212,11 +258,11 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         todaysData.isSyncedToRemote = true
 
         let yesterdaysData = Data(context: localDatabase.context)
-        yesterdaysData.date = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.date = yesterdaysDate
         yesterdaysData.totalUsedData = 1500
-        yesterdaysData.dailyUsedData = 100
+        yesterdaysData.dailyUsedData = 100 /// = 100 (Remote)
         yesterdaysData.hasLastTotal = true
-        yesterdaysData.lastSyncedToRemoteDate = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.lastSyncedToRemoteDate = TestData.createDate(offset: -1, secondsOffset: 1, from: todaysDate)
         yesterdaysData.isSyncedToRemote = true
 
         let localData = [todaysData, yesterdaysData]
@@ -234,25 +280,27 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
         }
     }
     
-    func test_sync_one_old_local_data_to_update_is_lower_than_remotes() throws {
+    func test_sync_old_local_data_that_were_synced_to_remote_but_outdated_with_daily_used_data_lower_than_remotes() throws {
         // (1) Given
         try load_local_database()
 
-        let lastSyncedDate = "2023-06-20T00:00:00+00:00".toDate()
-
+        let todaysDate = Calendar.current.startOfDay(for: .init())
+        let yesterdaysDate = TestData.createDate(offset: -1, from: todaysDate)
+        let lastSyncedDate = yesterdaysDate
+        
         let todaysData = Data(context: localDatabase.context)
-        todaysData.date = Calendar.current.startOfDay(for: .init())
+        todaysData.date = todaysDate
         todaysData.totalUsedData = 1500
         todaysData.dailyUsedData = 100
         todaysData.hasLastTotal = true
         todaysData.isSyncedToRemote = true
 
         let yesterdaysData = Data(context: localDatabase.context)
-        yesterdaysData.date = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.date = yesterdaysDate
         yesterdaysData.totalUsedData = 1500
-        yesterdaysData.dailyUsedData = 50
+        yesterdaysData.dailyUsedData = 50 /// < 100 (Remote)
         yesterdaysData.hasLastTotal = true
-        yesterdaysData.lastSyncedToRemoteDate = "2023-06-20T00:00:00+00:00".toDate()
+        yesterdaysData.lastSyncedToRemoteDate = TestData.createDate(offset: -1, secondsOffset: 1, from: todaysDate)
         yesterdaysData.isSyncedToRemote = true
 
         let localData = [todaysData, yesterdaysData]
@@ -594,9 +642,4 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
             XCTAssertFalse(isUploaded)
         }
     }
-}
-
-internal func createDate(offset: Int) -> Date {
-    let date = Calendar.current.date(byAdding: .day, value: offset, to: .init())!
-    return Calendar.current.startOfDay(for: date)
 }
