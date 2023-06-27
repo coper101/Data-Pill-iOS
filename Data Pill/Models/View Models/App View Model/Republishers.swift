@@ -88,7 +88,9 @@ extension AppViewModel {
                         date: Calendar.current.startOfDay(for: .init()),
                         totalUsedData: 0,
                         dailyUsedData: 0,
-                        hasLastTotal: false
+                        hasLastTotal: false,
+                        isSyncedToRemote: false,
+                        lastSyncedToRemoteDate: nil
                     )
                     return
                 }

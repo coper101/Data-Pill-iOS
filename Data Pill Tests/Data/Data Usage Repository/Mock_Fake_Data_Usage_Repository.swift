@@ -52,7 +52,9 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
         date: Date,
         totalUsedData: Double,
         dailyUsedData: Double,
-        hasLastTotal: Bool
+        hasLastTotal: Bool,
+        isSyncedToRemote: Bool,
+        lastSyncedToRemoteDate: Date?
     ) {
         let dataEntity = NSEntityDescription.entity(
             forEntityName: Entities.data.rawValue,
@@ -63,6 +65,8 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
         uninsertedData.totalUsedData = totalUsedData
         uninsertedData.dailyUsedData = dailyUsedData
         uninsertedData.hasLastTotal = hasLastTotal
+        uninsertedData.isSyncedToRemote = isSyncedToRemote
+        uninsertedData.lastSyncedToRemoteDate = lastSyncedToRemoteDate
         thisWeeksData.append(uninsertedData)
     }
     
@@ -97,7 +101,9 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
             date: todaysDataSample.date,
             totalUsedData: todaysDataSample.totalUsedData,
             dailyUsedData: todaysDataSample.dailyUsedData,
-            hasLastTotal: todaysDataSample.hasLastTotal
+            hasLastTotal: todaysDataSample.hasLastTotal,
+            isSyncedToRemote: todaysDataSample.isSyncedToRemote,
+            lastSyncedToRemoteDate: todaysDataSample.lastSyncedDateToRemote
         )
         return thisWeeksData.first!
     }
@@ -123,7 +129,9 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
                 date: data.date,
                 totalUsedData: data.totalUsedData,
                 dailyUsedData: data.dailyUsedData,
-                hasLastTotal: data.hasLastTotal
+                hasLastTotal: data.hasLastTotal,
+                isSyncedToRemote: data.isSyncedToRemote,
+                lastSyncedToRemoteDate: data.lastSyncedDateToRemote
             )
         }
     }

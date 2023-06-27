@@ -47,7 +47,9 @@ final class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         date: Date,
         totalUsedData: Double,
         dailyUsedData: Double,
-        hasLastTotal: Bool
+        hasLastTotal: Bool,
+        isSyncedToRemote: Bool,
+        lastSyncedToRemoteDate: Date?
     ) {
         dataError = DatabaseError.adding("Adding Data Error")
     }

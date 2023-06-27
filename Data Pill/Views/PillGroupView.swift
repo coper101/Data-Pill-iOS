@@ -194,7 +194,9 @@ struct PillGroupView_Previews: PreviewProvider {
             date: Calendar.current.startOfDay(for: .init()),
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         let model = AppViewModel(dataUsageRepository: dataRepo)
@@ -210,7 +212,9 @@ struct PillGroupView_Previews: PreviewProvider {
             date: Calendar.current.startOfDay(for: .init()),
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         let model = AppViewModel(dataUsageRepository: dataRepo)

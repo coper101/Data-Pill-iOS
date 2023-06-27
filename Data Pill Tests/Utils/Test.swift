@@ -31,7 +31,9 @@ extension XCTestCase {
             date: Calendar.current.startOfDay(for: .init()),
             totalUsedData: totalUsedData,
             dailyUsedData: 0,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         let defaultDataUsageRemoteRepository = DataUsageRemoteRepository(
             remoteDatabase: MockSuccessCloudDatabase()

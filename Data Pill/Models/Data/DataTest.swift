@@ -14,4 +14,6 @@ struct DataTest {
     var totalUsedData = 0.0
     var dailyUsedData = 0.0
     var hasLastTotal = false
+    var isSyncedToRemote = false
+    var lastSyncedDateToRemote: Date? = nil
 }

@@ -38,13 +38,19 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         let totalUsedData = 0.0
         let dailyUsedData = 0.0
         let hasLastTotal = false
+        let isSyncedToRemote = false
+        let lastSyncedDateToRemote: Date? = nil
+        
         // (2) When
         repository.addData(
             date: date,
             totalUsedData: totalUsedData,
             dailyUsedData: dailyUsedData,
-            hasLastTotal: hasLastTotal
+            hasLastTotal: hasLastTotal,
+            isSyncedToRemote: isSyncedToRemote,
+            lastSyncedToRemoteDate: lastSyncedDateToRemote
         )
+        
         // (3) Then
         let allData = repository.getAllData()
         let theData = allData.first
@@ -53,38 +59,49 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         XCTAssertEqual(theData!.totalUsedData, 0)
         XCTAssertEqual(theData!.dailyUsedData, 0)
         XCTAssertEqual(theData!.hasLastTotal, false)
+        XCTAssertEqual(theData!.isSyncedToRemote, false)
+        XCTAssertEqual(theData!.lastSyncedToRemoteDate, nil)
     }
     
     func test_update_data() throws {
         // (1) Given
+        let todaysDate = Calendar.current.startOfDay(for: .init())
         let date = "2022-10-02T00:00:00+00:00".toDate()
         let totalUsedData = 50.0
         let dailyUsedData = 2.0
         let hasLastTotal = true
+        let isSyncedToRemote = true
+        let lastSyncedDateToRemote: Date? = todaysDate
         
         repository.addData(
             date: "2022-10-01T00:00:00+00:00".toDate(),
             totalUsedData: 0.0,
             dailyUsedData: 0.0,
-            hasLastTotal: false
+            hasLastTotal: false,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         let data = repository.getAllData().first
-        XCTAssertNotNil(data)
-        data!.date = date
-        data!.totalUsedData = totalUsedData
-        data!.dailyUsedData = dailyUsedData
-        data!.hasLastTotal = hasLastTotal
+        let firstData = try XCTUnwrap(data)
+        firstData.date = date
+        firstData.totalUsedData = totalUsedData
+        firstData.dailyUsedData = dailyUsedData
+        firstData.hasLastTotal = hasLastTotal
+        firstData.isSyncedToRemote = isSyncedToRemote
+        firstData.lastSyncedToRemoteDate = lastSyncedDateToRemote
         
         // (2) When
         repository.updateData(data!)
         
         // (3) Then
-        let updatedData = repository.getAllData().first
+        let updatedData = try XCTUnwrap(repository.getAllData().first)
         XCTAssertNotNil(updatedData)
-        XCTAssertEqual(updatedData!.date, "2022-10-02T00:00:00+00:00".toDate())
-        XCTAssertEqual(updatedData!.totalUsedData, 50)
-        XCTAssertEqual(updatedData!.dailyUsedData, 2)
-        XCTAssertEqual(updatedData!.hasLastTotal, true)
+        XCTAssertEqual(updatedData.date, "2022-10-02T00:00:00+00:00".toDate())
+        XCTAssertEqual(updatedData.totalUsedData, 50)
+        XCTAssertEqual(updatedData.dailyUsedData, 2)
+        XCTAssertEqual(updatedData.hasLastTotal, true)
+        XCTAssertEqual(updatedData.isSyncedToRemote, true)
+        XCTAssertEqual(updatedData.lastSyncedToRemoteDate, todaysDate)
     }
     
     func test_get_all_data_with_data() throws {
@@ -93,50 +110,63 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date:  "2022-10-01T00:00:00+00:00".toDate(),
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: false
+            hasLastTotal: false,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
+        
         // (2) When
         let allData = repository.getAllData()
-        let data = allData.first
+        let firstData = try XCTUnwrap(allData.first)
+        
         // (3) Then
         XCTAssertNotEqual(allData, [])
-        XCTAssertNotNil(data)
-        XCTAssertEqual(data!.date, "2022-10-01T00:00:00+00:00".toDate())
-        XCTAssertEqual(data!.totalUsedData, 0)
-        XCTAssertEqual(data!.dailyUsedData, 0)
-        XCTAssertEqual(data!.hasLastTotal, false)
+        XCTAssertEqual(firstData.date, "2022-10-01T00:00:00+00:00".toDate())
+        XCTAssertEqual(firstData.totalUsedData, 0)
+        XCTAssertEqual(firstData.dailyUsedData, 0)
+        XCTAssertEqual(firstData.hasLastTotal, false)
+        XCTAssertEqual(firstData.isSyncedToRemote, false)
+        XCTAssertEqual(firstData.lastSyncedToRemoteDate, nil)
     }
     
     func test_get_all_data_empty() throws {
         // (1) Given
         // (2) When
         let allData = repository.getAllData()
+        
         // (3) Then
         XCTAssertEqual(allData, [])
     }
     
     func test_get_todays_data_exists() throws {
         // (1) Given
+        let todaysDate = Calendar.current.startOfDay(for: .init())
         repository.addData(
-            date: Calendar.current.startOfDay(for: .init()),
+            date: todaysDate,
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: false
+            hasLastTotal: false,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
+        
         // (2) When
-        let todaysData = repository.getTodaysData()
+        let todaysData = try XCTUnwrap(repository.getTodaysData())
+        
         // (3) Then
-        XCTAssertNotNil(todaysData)
-        XCTAssertEqual(todaysData!.date, Calendar.current.startOfDay(for: .init()))
-        XCTAssertEqual(todaysData!.totalUsedData, 0)
-        XCTAssertEqual(todaysData!.dailyUsedData, 0)
-        XCTAssertEqual(todaysData!.hasLastTotal, false)
+        XCTAssertEqual(todaysData.date, todaysDate)
+        XCTAssertEqual(todaysData.totalUsedData, 0)
+        XCTAssertEqual(todaysData.dailyUsedData, 0)
+        XCTAssertEqual(todaysData.hasLastTotal, false)
+        XCTAssertEqual(todaysData.isSyncedToRemote, false)
+        XCTAssertEqual(todaysData.lastSyncedToRemoteDate, nil)
     }
     
     func test_get_todays_data_empty() throws {
         // (1) Given
         // (2) When
         let todaysData = repository.getTodaysData()
+        
         // (3) Then
         XCTAssertNil(todaysData)
     }
@@ -148,25 +178,30 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date: "2022-10-02T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Monday
         repository.addData(
             date: "2022-10-03T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: false
+            hasLastTotal: false,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // (2) When
-        let dataWithHasTotal = repository.getDataWithHasTotal()
+        let dataWithHasTotal = try XCTUnwrap(repository.getDataWithHasTotal())
 
         // (3) Then
-        XCTAssertNotNil(dataWithHasTotal)
-        XCTAssertEqual(dataWithHasTotal!.date, "2022-10-02T00:00:00+00:00".toDate())
-        XCTAssertEqual(dataWithHasTotal!.totalUsedData, 100)
-        XCTAssertEqual(dataWithHasTotal!.dailyUsedData, 100)
-        XCTAssertEqual(dataWithHasTotal!.hasLastTotal, true)
+        XCTAssertEqual(dataWithHasTotal.date, "2022-10-02T00:00:00+00:00".toDate())
+        XCTAssertEqual(dataWithHasTotal.totalUsedData, 100)
+        XCTAssertEqual(dataWithHasTotal.dailyUsedData, 100)
+        XCTAssertEqual(dataWithHasTotal.hasLastTotal, true)
+        XCTAssertEqual(dataWithHasTotal.isSyncedToRemote, false)
+        XCTAssertEqual(dataWithHasTotal.lastSyncedToRemoteDate, nil)
     }
     
     func test_data_with_has_total_empty() throws {
@@ -176,7 +211,9 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date: "2022-10-02T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: false
+            hasLastTotal: false,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // (2) When
@@ -193,7 +230,9 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date: "2022-10-01T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // (2) When
@@ -214,28 +253,36 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date: "2022-10-01T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Sunday
         repository.addData(
             date: "2022-10-02T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Monday
         repository.addData(
             date: "2022-10-03T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Tuesday
         repository.addData(
             date: "2022-10-04T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // (2) When
@@ -256,7 +303,9 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date: "2022-10-02T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // (2) When
@@ -277,49 +326,63 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date: "2022-10-02T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Monday
         repository.addData(
             date: "2022-10-03T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Tuesday
         repository.addData(
             date: "2022-10-04T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Wednesday
         repository.addData(
             date: "2022-10-05T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Thursday
         repository.addData(
             date: "2022-10-06T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Friday
         repository.addData(
             date: "2022-10-07T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Saturday
         repository.addData(
             date: "2022-10-08T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // (2) When
@@ -340,21 +403,27 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date: "2022-10-02T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 300.1,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Monday
         repository.addData(
             date: "2022-10-03T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 400.2,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Tuesday
         repository.addData(
             date: "2022-10-04T00:00:00+00:00".toDate(),
             totalUsedData: 100,
             dailyUsedData: 200.3,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // (2) When
@@ -374,21 +443,27 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             date: "2022-10-02T00:00:00+00:00".toDate(),
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Monday
         repository.addData(
             date: "2022-10-03T00:00:00+00:00".toDate(),
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         /// Tuesday
         repository.addData(
             date: "2022-10-04T00:00:00+00:00".toDate(),
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // (2) When
@@ -406,6 +481,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         let plan = repository.getPlan()
+        
         // (3) Then
         XCTAssertNotNil(plan)
         XCTAssertEqual(plan!.startDate, Calendar.current.startOfDay(for: .init()))
@@ -424,6 +500,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             dailyLimit: 1,
             planLimit: 9
         )
+        
         // (2) When
         repository.addPlan(
             startDate: plan.startDate!,
@@ -432,6 +509,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             dailyLimit: plan.dailyLimit,
             planLimit: plan.planLimit
         )
+        
         // (3) Then
         let thePlan = repository.getPlan()
         XCTAssertNotNil(thePlan)
@@ -447,6 +525,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         let dataAmount = 10.0
         let dailyLimit = 1.0
         let planLimit = 9.0
+        
         // (2) When
         repository.updatePlan(
             startDate: nil,
@@ -456,6 +535,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             planLimit: planLimit,
             updateToLatestPlanAfterwards: true
         )
+        
         // (3) Then
         let thePlan = repository.getPlan()
         XCTAssertNotNil(thePlan)
@@ -475,13 +555,17 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         let totalUsedData = 0.0
         let dailUsedData = 0.0
         let hasLastTotal = false
+        
         // (2) When
         mockErrorRepository.addData(
             date: date,
             totalUsedData: totalUsedData,
             dailyUsedData: dailUsedData,
-            hasLastTotal: hasLastTotal
+            hasLastTotal: hasLastTotal,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -496,6 +580,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         mockErrorRepository.updateData(
             Data(context: mockErrorRepository.database.context)
         )
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -508,6 +593,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         let allData = mockErrorRepository.getAllData()
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -521,6 +607,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         let data = mockErrorRepository.getTodaysData()
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -534,6 +621,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         let data = mockErrorRepository.getDataWithHasTotal()
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -547,6 +635,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         let totalUsedData = mockErrorRepository.getTotalUsedData(from: .init(), to: .init())
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -560,6 +649,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         let data = mockErrorRepository.getThisWeeksData(from: .init())
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -574,6 +664,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         // (1) Given
         // (2) When
         let plan = mockErrorRepository.getPlan()
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -593,6 +684,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             dailyLimit: 0,
             planLimit: 0
         )
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,
@@ -612,6 +704,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
             planLimit: 0,
             updateToLatestPlanAfterwards: true
         )
+        
         // (3) Then
         XCTAssertEqual(
             mockErrorRepository.dataError,

@@ -82,7 +82,9 @@ protocol DataUsageRepositoryProtocol {
         date: Date,
         totalUsedData: Double,
         dailyUsedData: Double,
-        hasLastTotal: Bool
+        hasLastTotal: Bool,
+        isSyncedToRemote: Bool,
+        lastSyncedToRemoteDate: Date?
     ) -> Void
     func addData(_ remoteData: [RemoteData], isSyncedToRemote: Bool) -> AnyPublisher<Bool, Never>
     func updateData(_ data: Data) -> Void
@@ -171,7 +173,9 @@ extension DataUsageRepository {
         date: Date,
         totalUsedData: Double,
         dailyUsedData: Double,
-        hasLastTotal: Bool
+        hasLastTotal: Bool,
+        isSyncedToRemote: Bool,
+        lastSyncedToRemoteDate: Date?
     ) {
         do {
             let data = Data(context: database.context)
@@ -179,6 +183,12 @@ extension DataUsageRepository {
             data.totalUsedData = totalUsedData
             data.dailyUsedData = dailyUsedData
             data.hasLastTotal = hasLastTotal
+            if data.isSyncedToRemote != isSyncedToRemote {
+                data.isSyncedToRemote = isSyncedToRemote
+            }
+            if data.lastSyncedToRemoteDate != lastSyncedToRemoteDate {
+                data.lastSyncedToRemoteDate = lastSyncedToRemoteDate
+            }
             let isAdded = try database.context.saveIfNeeded()
             guard isAdded else {
                 return

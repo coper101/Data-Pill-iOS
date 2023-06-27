@@ -1,5 +1,5 @@
 //
-//  App_View_Model_Test_Case.swift
+//  App_View_Model_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 6/11/22.
@@ -9,7 +9,7 @@ import XCTest
 @testable import Data_Pill
 import CoreData
 
-final class App_View_Model_Test_Case: XCTestCase {
+final class App_View_Model_Tests: XCTestCase {
     
     private var appViewModel: AppViewModel!
     
@@ -633,6 +633,7 @@ final class App_View_Model_Test_Case: XCTestCase {
         // (3) Then
         XCTAssertEqual(appViewModel.usageType, ToggleItem.plan)
     }
+    
 }
 
 

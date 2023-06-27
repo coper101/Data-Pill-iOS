@@ -414,7 +414,9 @@ struct AppView_Previews: PreviewProvider {
             date: Calendar.current.startOfDay(for: .init()),
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         let viewModel = AppViewModel(dataUsageRepository: dataRepo)
@@ -431,7 +433,9 @@ struct AppView_Previews: PreviewProvider {
             date: Calendar.current.startOfDay(for: .init()),
             totalUsedData: 0,
             dailyUsedData: 0,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         
         // 3 Days Ago
@@ -440,7 +444,9 @@ struct AppView_Previews: PreviewProvider {
                 byAdding: .day, value: -3, to: todaysDate)!,
             totalUsedData: 0,
             dailyUsedData: 1_500,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         // 2 Days Ago
         dataRepo.addData(
@@ -448,7 +454,9 @@ struct AppView_Previews: PreviewProvider {
                 byAdding: .day, value: -2, to: todaysDate)!,
             totalUsedData: 0,
             dailyUsedData: 5_000,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
         // Yesterday
         dataRepo.addData(
@@ -456,7 +464,9 @@ struct AppView_Previews: PreviewProvider {
                 byAdding: .day, value: -1, to: todaysDate)!,
             totalUsedData: 0,
             dailyUsedData: 2_100,
-            hasLastTotal: true
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
         )
        
         // Update Database

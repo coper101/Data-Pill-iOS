@@ -99,7 +99,7 @@
 		278FB31328FAA61500BE78C2 /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB31228FAA61500BE78C2 /* StepperView.swift */; };
 		27A0A8F1295858AD0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
 		27A0A8F2295858EF0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
-		27AECC8E2916E5E700AB963E /* App_View_Model_Test_Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */; };
+		27AECC8E2916E5E700AB963E /* App_View_Model_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */; };
 		27B10A72295BE714009E910C /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B10A71295BE714009E910C /* ToastView.swift */; };
 		27B90B8528F2D28100263983 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8428F2D28100263983 /* Constants.swift */; };
 		27B90B8728F2D31600263983 /* DataUsagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B90B8628F2D31600263983 /* DataUsagePreview.swift */; };
@@ -169,6 +169,9 @@
 		27E77759293C50780031456D /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DE328D6F01900201339 /* Modifier.swift */; };
 		27EE983429A7638B00D9D343 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EE983329A7638B00D9D343 /* AppDelegate.swift */; };
 		27EE983629A7733B00D9D343 /* RemoteSubscriptionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EE983529A7733B00D9D343 /* RemoteSubscriptionID.swift */; };
+		27EFEBB12A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFEBB02A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift */; };
+		27EFEBB42A4AAA5300F73DD5 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFEBB32A4AAA5300F73DD5 /* ProcessInfo.swift */; };
+		27EFEBB52A4AAA5B00F73DD5 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFEBB32A4AAA5300F73DD5 /* ProcessInfo.swift */; };
 		27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AC2945CD4800E6102D /* SmallWidgetView.swift */; };
 		27F233AE2945CD4800E6102D /* SmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AC2945CD4800E6102D /* SmallWidgetView.swift */; };
 		27F233B02945CD6300E6102D /* RectangularWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F233AF2945CD6300E6102D /* RectangularWidgetView.swift */; };
@@ -329,7 +332,7 @@
 		278FB31228FAA61500BE78C2 /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
 		27A0A8F0295858AD0007C412 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		27A19A0029EAEB03006775E5 /* DataUsage 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "DataUsage 2.xcdatamodel"; sourceTree = "<group>"; };
-		27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Test_Case.swift; sourceTree = "<group>"; };
+		27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Tests.swift; sourceTree = "<group>"; };
 		27B10A71295BE714009E910C /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		27B90B8428F2D28100263983 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		27B90B8628F2D31600263983 /* DataUsagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUsagePreview.swift; sourceTree = "<group>"; };
@@ -369,6 +372,8 @@
 		27E77756293C4AAB0031456D /* SFProText-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Heavy.ttf"; sourceTree = "<group>"; };
 		27EE983329A7638B00D9D343 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27EE983529A7733B00D9D343 /* RemoteSubscriptionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionID.swift; sourceTree = "<group>"; };
+		27EFEBB02A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Sync_Tests.swift; sourceTree = "<group>"; };
+		27EFEBB32A4AAA5300F73DD5 /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
 		27F233AC2945CD4800E6102D /* SmallWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidgetView.swift; sourceTree = "<group>"; };
 		27F233AF2945CD6300E6102D /* RectangularWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularWidgetView.swift; sourceTree = "<group>"; };
 		27F233B22955434B00E6102D /* EditItemCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemCardView.swift; sourceTree = "<group>"; };
@@ -439,7 +444,8 @@
 		27382DAA2A4831DE0001E3FA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				27AECC8D2916E5E600AB963E /* App_View_Model_Test_Case.swift */,
+				27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */,
+				27EFEBB02A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift */,
 				278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */,
 				2761528C293CAF7F00AEA000 /* Widget_Model_Tests.swift */,
 			);
@@ -603,6 +609,7 @@
 				27801DE928D72A6600201339 /* Date.swift */,
 				27801DED28D8B7FA00201339 /* Numbers.swift */,
 				27A0A8F0295858AD0007C412 /* Logging.swift */,
+				27EFEBB32A4AAA5300F73DD5 /* ProcessInfo.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1123,6 +1130,7 @@
 				27801DC128D6C96800201339 /* Text.swift in Sources */,
 				27D4CA2B2A46EB67008989B1 /* Observers.swift in Sources */,
 				27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */,
+				27EFEBB42A4AAA5300F73DD5 /* ProcessInfo.swift in Sources */,
 				27B90B8928F2D43700263983 /* DataTest.swift in Sources */,
 				27801DEE28D8B7FA00201339 /* Numbers.swift in Sources */,
 				27801DEA28D72A6600201339 /* Date.swift in Sources */,
@@ -1158,6 +1166,7 @@
 				278FB2D328F321EE00BE78C2 /* Date_Tests.swift in Sources */,
 				27382DB22A4834B40001E3FA /* Mock_Network_Data_Repository.swift in Sources */,
 				276048E429BF444700AB8497 /* Test.swift in Sources */,
+				27EFEBB12A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift in Sources */,
 				27382DC32A48389E0001E3FA /* Mock_Todays_Data_Remote_Database.swift in Sources */,
 				27F47DDA2905330D00B3F83D /* App_Data_Repository_Tests.swift in Sources */,
 				2761528D293CAF7F00AEA000 /* Widget_Model_Tests.swift in Sources */,
@@ -1165,7 +1174,7 @@
 				274FCF942978D9860087AC86 /* Toast_Timer_Tests.swift in Sources */,
 				272DB10929BB0E7100E9CA93 /* Remote_Database_Tests.swift in Sources */,
 				271D8FEB29004B2800965FC3 /* Data_Usage_Repository_Tests.swift in Sources */,
-				27AECC8E2916E5E700AB963E /* App_View_Model_Test_Case.swift in Sources */,
+				27AECC8E2916E5E700AB963E /* App_View_Model_Tests.swift in Sources */,
 				278FB2CC28F2E55900BE78C2 /* Numbers_Tests.swift in Sources */,
 				27382DC52A4838C10001E3FA /* Mock_Plan_Remote_Database.swift in Sources */,
 				278E734A295D4EF10020F84B /* Validator_Tests.swift in Sources */,
@@ -1215,6 +1224,7 @@
 				27E7771E29336A420031456D /* WidgetPillView.swift in Sources */,
 				27A0A8F2295858EF0007C412 /* Logging.swift in Sources */,
 				27E777402934CCFF0031456D /* Date.swift in Sources */,
+				27EFEBB52A4AAA5B00F73DD5 /* ProcessInfo.swift in Sources */,
 				27E777362934AEB80031456D /* DataUsage.xcdatamodeld in Sources */,
 				27E7773B2934B3440031456D /* LocalStorage.swift in Sources */,
 			);
