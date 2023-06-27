@@ -110,6 +110,7 @@
 		27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE08292928BD6C00E0781C /* StepperValueView.swift */; };
 		27BE082C2928D7BE00E0781C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE082B2928D7BE00E0781C /* Types.swift */; };
 		27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */; };
+		27D0567D2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D0567C2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift */; };
 		27D4CA292A46EB60008989B1 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA282A46EB60008989B1 /* Events.swift */; };
 		27D4CA2B2A46EB67008989B1 /* Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2A2A46EB67008989B1 /* Observers.swift */; };
 		27D4CA2D2A46EB70008989B1 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2C2A46EB70008989B1 /* Synchronization.swift */; };
@@ -343,6 +344,7 @@
 		27BE08292928BD6C00E0781C /* StepperValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperValueView.swift; sourceTree = "<group>"; };
 		27BE082B2928D7BE00E0781C /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionRepository.swift; sourceTree = "<group>"; };
+		27D0567C2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Sync_Remote_Database.swift; sourceTree = "<group>"; };
 		27D4CA282A46EB60008989B1 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		27D4CA2A2A46EB67008989B1 /* Observers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observers.swift; sourceTree = "<group>"; };
 		27D4CA2C2A46EB70008989B1 /* Synchronization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
@@ -444,10 +446,8 @@
 		27382DAA2A4831DE0001E3FA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */,
-				27EFEBB02A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift */,
-				278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */,
-				2761528C293CAF7F00AEA000 /* Widget_Model_Tests.swift */,
+				27D056792A4B2A5600A6EC04 /* App View Model */,
+				27D0567A2A4B2A6100A6EC04 /* Widget Model */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -767,6 +767,25 @@
 				27BE08292928BD6C00E0781C /* StepperValueView.swift */,
 			);
 			path = Stepper;
+			sourceTree = "<group>";
+		};
+		27D056792A4B2A5600A6EC04 /* App View Model */ = {
+			isa = PBXGroup;
+			children = (
+				27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */,
+				27EFEBB02A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift */,
+				278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */,
+				27D0567C2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift */,
+			);
+			path = "App View Model";
+			sourceTree = "<group>";
+		};
+		27D0567A2A4B2A6100A6EC04 /* Widget Model */ = {
+			isa = PBXGroup;
+			children = (
+				2761528C293CAF7F00AEA000 /* Widget_Model_Tests.swift */,
+			);
+			path = "Widget Model";
 			sourceTree = "<group>";
 		};
 		27D4CA272A46EB44008989B1 /* App View Model */ = {
@@ -1166,6 +1185,7 @@
 				278FB2D328F321EE00BE78C2 /* Date_Tests.swift in Sources */,
 				27382DB22A4834B40001E3FA /* Mock_Network_Data_Repository.swift in Sources */,
 				276048E429BF444700AB8497 /* Test.swift in Sources */,
+				27D0567D2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift in Sources */,
 				27EFEBB12A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift in Sources */,
 				27382DC32A48389E0001E3FA /* Mock_Todays_Data_Remote_Database.swift in Sources */,
 				27F47DDA2905330D00B3F83D /* App_Data_Repository_Tests.swift in Sources */,
