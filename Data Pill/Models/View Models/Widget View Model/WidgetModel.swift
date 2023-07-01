@@ -185,15 +185,38 @@ extension WidgetModel {
         if amountUsed < 0 {
             amountUsed = 0
         }
-        let todaysData = todaysData
-        todaysData.dailyUsedData += amountUsed
-        todaysData.totalUsedData = totalUsedData
-        todaysData.hasLastTotal = true
+        guard let todaysData = dataUsageRepository.getTodaysData() else {
+            return
+        }
         
-        dataUsageRepository.updateData(todaysData)
+        let dailyUsedData = todaysData.dailyUsedData + amountUsed
+                
+        updateTodaysData(
+            totalUsedData: totalUsedData,
+            dailyUsedData: dailyUsedData,
+            hasLastTotal: true
+        )
     }
     
     func setUsageType(_ usageType: ToggleItem) {
         self.usageType = usageType
+    }
+    
+    func updateTodaysData(
+        date: Date? = nil,
+        totalUsedData: Double? = nil,
+        dailyUsedData: Double? = nil,
+        hasLastTotal: Bool? = nil,
+        isSyncedToRemote: Bool? = nil,
+        lastSyncedToRemoteDate: Date? = nil
+    ) {
+        dataUsageRepository.updateTodaysData(
+            date: date,
+            totalUsedData: totalUsedData,
+            dailyUsedData: dailyUsedData,
+            hasLastTotal: hasLastTotal,
+            isSyncedToRemote: isSyncedToRemote,
+            lastSyncedToRemoteDate: lastSyncedToRemoteDate
+        )
     }
 }

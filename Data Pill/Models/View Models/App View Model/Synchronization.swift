@@ -21,7 +21,7 @@ extension AppViewModel {
             return
         }
         
-        /// 1A. Download Existing `Plan` from `RemoteDatabase` and Update `Plan` in `Database`
+        /// 2A-1. Download Existing `Plan` from `RemoteDatabase` and Update `Plan` in `Database`
         /// - when guide is shown, this means that user has intalled the app for the first time
         /// - check the user has an existing plan from remote
         guard wasGuideShown else {
@@ -29,9 +29,9 @@ extension AppViewModel {
             return
         }
         
-        /// 1B.
-        /// - when guide was dismissed and plan is using default values, the user might have logged in to an iCloud account
-        /// - check the user has an existing plan from remote
+        /// 2A-2.
+        /// - when guide was dismissed and plan is using default values, the user might have logged in to an iCloud account for the first time
+        /// - check the user has an existing `Plan` from `RemoteDatabase` and Update `Plan` in `Database`
         let isFreshPlan = (
             startDate == Calendar.current.startOfDay(for: .init()) &&
             endDate == Calendar.current.startOfDay(for: .init()) &&
@@ -44,8 +44,9 @@ extension AppViewModel {
             syncLocalPlanFromRemote(updateToLatestPlanAfterwards: true)
             return
         }
-        
-        /// 2. Upload Local `Plan` to `RemoteDatabase`
+                
+        /// 2B. Upload Local `Plan` to `RemoteDatabase`
+        /// - this happens regularly when user make changes to the plan
         dataUsageRemoteRepository.syncPlan(
             startDate: self.startDate,
             endDate: self.endDate,
@@ -93,7 +94,7 @@ extension AppViewModel {
                 }
                 Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan: \(remotePlan.startDate) - \(remotePlan.endDate)")
                 
-                /// 2. Update `Plan` in `Database`
+                /// 2. Update `Plan` in `Database`.  Creates the `Plan` if it doesn't exist
                 /// - prevent updating plan after adding to core data
                 /// - can cause this ``syncPlan()`` to be fired again
                 self.dataUsageRepository.updatePlan(
@@ -105,7 +106,7 @@ extension AppViewModel {
                     updateToLatestPlanAfterwards: updateToLatestPlanAfterwards
                 )
             }
-            .store(in: &self.cancellables)
+            .store(in: &cancellables)
     }
     
     // MARK: - Sync Today's Data
@@ -119,82 +120,97 @@ extension AppViewModel {
             return
         }
         
+        guard let todaysData = dataUsageRepository.getTodaysData() else {
+            Logger.appModel.debug("syncTodaysData - error: today's data is nil")
+            return
+        }
+        
         /// 2. Download Latest Today's `Data` from Remote and Update `Data` in `Database`
-        syncLocalTodaysDataFromRemote()
-            .flatMap { [weak self] isLocalUpdated -> AnyPublisher<(Bool, Bool), Never> in
+        syncLocalTodaysDataFromRemote(todaysData)
+            .flatMap { [weak self] (isLocalToBeUpdated: Bool, newDailyUsedData: Double) -> AnyPublisher<(Bool, Double, Bool), Never> in
                 guard let self else {
-                    return Just((isLocalUpdated, false)).eraseToAnyPublisher()
+                    return Just((isLocalToBeUpdated, newDailyUsedData, false)).eraseToAnyPublisher()
                 }
-                if isLocalUpdated {
-                    return Just((isLocalUpdated, false)).eraseToAnyPublisher()
+                if isLocalToBeUpdated {
+                    return Just((isLocalToBeUpdated, newDailyUsedData, false)).eraseToAnyPublisher()
                 }
                 /// 3. Upload Local Today's `Data` to `RemoteDatase`
-                return self.dataUsageRemoteRepository.syncTodaysData(self.todaysData, isSyncedToRemote: self.todaysData.isSyncedToRemote)
+                return self.dataUsageRemoteRepository.syncTodaysData(todaysData, isSyncedToRemote: todaysData.isSyncedToRemote)
                     .replaceError(with: false)
                     .flatMap { isRemoteUpdated in
-                        Just((isLocalUpdated, isRemoteUpdated))
+                        Just((isLocalToBeUpdated, newDailyUsedData, isRemoteUpdated))
                             .eraseToAnyPublisher()
                     }
                     .eraseToAnyPublisher()
             }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] (isLocalUpdated: Bool, isRemoteUpdated: Bool) in
-                Logger.appModel.debug("syncTodaysData - local today's data updated: \(isLocalUpdated)")
+            .sink { [weak self] (isLocalToBeUpdated: Bool, newDailyUsedData: Double, isRemoteUpdated: Bool) in
+                Logger.appModel.debug("syncTodaysData - local today's data to be updated: \(isLocalToBeUpdated)")
+                Logger.appModel.debug("syncTodaysData - new daily used data: \(newDailyUsedData)")
                 Logger.appModel.debug("syncTodaysData - remote today's data updated: \(isRemoteUpdated)")
 
                 guard let self else {
                     return
                 }
-
-                let todaysData = self.todaysData
+                
+                var dailyUsedData: Double? = nil
+                var isSyncedToRemote: Bool? = nil
+                var lastSyncedToRemoteDate: Date? = nil
                                 
-                /// 3A. Update the `lastSyncToRemoteDate`and `isSyncedToRemote` attributes of the `Data` in `Database`
-                if (isRemoteUpdated || isLocalUpdated) && !todaysData.isSyncedToRemote {
-                    todaysData.isSyncedToRemote = true
+                /// 3A. Update the `lastSyncToRemoteDate`, `isSyncedToRemote`, `dailyUsedData` attributes of the `Data` in `Database`
+                /// - when new remote is higher than local's daily usage
+                if isLocalToBeUpdated {
+                    dailyUsedData = newDailyUsedData
                 }
-                
-                if (isRemoteUpdated || isLocalUpdated) {
-                    todaysData.lastSyncedToRemoteDate = .init()
-                    self.dataUsageRepository.updateData(todaysData)
+            
+                /// - mark synced after syncing with remote
+                if (isRemoteUpdated || isLocalToBeUpdated) && !todaysData.isSyncedToRemote {
+                    isSyncedToRemote = true
                 }
-                
+
+                /// - update last synced to remote date
+                if (isRemoteUpdated || isLocalToBeUpdated) {
+                    lastSyncedToRemoteDate = .init()
+                    self.updateTodaysData(
+                        dailyUsedData: dailyUsedData,
+                        isSyncedToRemote: isSyncedToRemote,
+                        lastSyncedToRemoteDate: lastSyncedToRemoteDate
+                    )
+                }
+
                 /// 3B.
                 self.isSyncingTodaysData = false
             }
             .store(in: &cancellables)
     }
     
-    func syncLocalTodaysDataFromRemote() -> AnyPublisher<Bool, Never> {
-        let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
+    func syncLocalTodaysDataFromRemote(_ todaysData: Data) -> AnyPublisher<(Bool, Double), Never> {
+        let date = Calendar.current.startOfDay(for: todaysData.date ?? .init())
         Logger.appModel.debug("syncLocalTodayDataFromRemote - today's date: \(date)")
                 
         /// 1. Download Existing Today's `Data` from `RemoteDatabase`
         return dataUsageRemoteRepository.getData(on: date)
             .replaceError(with: nil)
-            .flatMap { [weak self] (remoteData: RemoteData?) in
-                guard let self, let remoteData else {
+            .flatMap { (remoteData: RemoteData?) in
+                guard let remoteData else {
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data doesn't exist")
-                    return Just(false)
+                    return Just((false, 0.0))
                 }
-
-                let todaysData = self.todaysData
-
+                
                 let remoteDailyUsedData = remoteData.dailyUsedData
                 let localDailyUsedData = todaysData.dailyUsedData
                 
                 Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data from remote: \(remoteDailyUsedData)")
                 Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data from local: \(localDailyUsedData)")
 
-                /// 2. Update Existing Today's `Data` in `Database`
+                /// 2. Return the New Daily Used `Data`
                 /// - only if remote data is more than local's
-                /// - e.g. 10 MB (remote)  >  5 MB (local)
+                /// - e.g. 10 MB (Remote)  >  5 MB (Local)
                 if remoteDailyUsedData > localDailyUsedData {
                     Logger.appModel.debug("syncLocalTodayDataFromRemote - remote: \(remoteDailyUsedData) > local \(localDailyUsedData)")
-                    todaysData.dailyUsedData = remoteData.dailyUsedData
-                    self.dataUsageRepository.updateData(todaysData)
-                    return Just(true)
+                    return Just((true, remoteDailyUsedData))
                 }
-                return Just(false)
+                return Just((false, 0.0))
             }
             .eraseToAnyPublisher()
     }
@@ -211,6 +227,11 @@ extension AppViewModel {
             return
         }
         
+        guard let todaysData = dataUsageRepository.getTodaysData() else {
+            Logger.appModel.debug("syncOldThenRemoteData - error: today's data is nil")
+            return
+        }
+        
         var localData = dataUsageRepository.getAllData()
         Logger.appModel.debug("syncOldThenRemoteData - all local data dates: \(localData.compactMap(\.date))")
 
@@ -219,7 +240,7 @@ extension AppViewModel {
             .flatMap { (areOldDataAdded: Bool, areOldDataUpdated: Bool, addedRemoteData: [RemoteData]) -> AnyPublisher<(Bool, Bool, [RemoteData], [RemoteData]), Error> in
               
                 localData = self.dataUsageRepository.getAllData()
-                let date = Calendar.current.startOfDay(for: self.todaysData.date ?? .init())
+                let date = Calendar.current.startOfDay(for: todaysData.date ?? .init())
 
                 /// 3. Download Old Remote `Data`
                 return self.dataUsageRemoteRepository.syncOldRemoteData(localData, excluding: date)

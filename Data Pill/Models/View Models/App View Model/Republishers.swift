@@ -80,21 +80,10 @@ extension AppViewModel {
         
         dataUsageRepository.todaysDataPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] todaysData in
-                
-                guard let todaysData else {
-                    /// create a new data if it doesn't exist
-                    self?.dataUsageRepository.addData(
-                        date: Calendar.current.startOfDay(for: .init()),
-                        totalUsedData: 0,
-                        dailyUsedData: 0,
-                        hasLastTotal: false,
-                        isSyncedToRemote: false,
-                        lastSyncedToRemoteDate: nil
-                    )
-                    return
+            .sink { [weak self] in
+                if let todaysData = $0 {
+                    self?.todaysData = todaysData
                 }
-                self?.todaysData = todaysData
             }
             .store(in: &cancellables)
         

@@ -29,14 +29,22 @@ extension AppViewModel {
         if amountUsed < 0 {
             amountUsed = 0
         }
-        let todaysData = todaysData
-        todaysData.dailyUsedData += amountUsed
-        todaysData.totalUsedData = totalUsedData
-        todaysData.hasLastTotal = true
+                
+        guard let todaysData = dataUsageRepository.getTodaysData() else {
+            Logger.appModel.debug("refreshUsedDataToday - error: today's data is nil")
+            return
+        }
         
-        Logger.appModel.debug("refreshUsedDataToday - todaysData: \(todaysData)")
+        let dailyUsedData = todaysData.dailyUsedData + amountUsed
+                
+        updateTodaysData(
+            totalUsedData: totalUsedData,
+            dailyUsedData: dailyUsedData,
+            hasLastTotal: true
+        )
         
-        dataUsageRepository.updateData(todaysData)
+        Logger.appModel.debug("refreshUsedDataToday - today's data updated, total used data: \(totalUsedData)")
+        Logger.appModel.debug("refreshUsedDataToday - today's data updated, daily used data: \(dailyUsedData)")
     }
     
     // MARK: - Data Plan
@@ -93,6 +101,10 @@ extension AppViewModel {
     }
     
     func updatePlanPeriod() {
+        guard let todaysData = dataUsageRepository.todaysData else {
+            Logger.appModel.debug("updatePlanPeriod - error: today's data is nil")
+            return
+        }
         guard
             isPeriodAuto,
             let todaysDate = todaysData.date,
@@ -103,6 +115,7 @@ extension AppViewModel {
             return
         }
         updatePlan(startDate: newStartDate, endDate: newEndDate)
+        Logger.appModel.debug("updatePlanPeriod - updated with date from: \(newStartDate) to \(newEndDate)")
     }
     
     func updatePlan(
@@ -312,6 +325,25 @@ extension AppViewModel {
             return
         }
         dataLimitPerDayValue = newValue
+    }
+    
+    // MARK: - Today's Data
+    func updateTodaysData(
+        date: Date? = nil,
+        totalUsedData: Double? = nil,
+        dailyUsedData: Double? = nil,
+        hasLastTotal: Bool? = nil,
+        isSyncedToRemote: Bool? = nil,
+        lastSyncedToRemoteDate: Date? = nil
+    ) {
+        dataUsageRepository.updateTodaysData(
+            date: date,
+            totalUsedData: totalUsedData,
+            dailyUsedData: dailyUsedData,
+            hasLastTotal: hasLastTotal,
+            isSyncedToRemote: isSyncedToRemote,
+            lastSyncedToRemoteDate: lastSyncedToRemoteDate
+        )
     }
     
     // MARK: - Operations

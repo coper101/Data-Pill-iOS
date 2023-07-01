@@ -383,33 +383,35 @@ extension DataUsageRemoteRepository {
         let date = Calendar.current.startOfDay(for: todaysDate)
         let dailyUsedData = todaysData.dailyUsedData
         
+        /// 1. Has Access to iCloud?
         return self.isLoggedInUser()
             .flatMap { isLoggedIn  in
-                /// 1. not logged in
+                /// 1A. Yep
                 guard isLoggedIn else {
                     return Just(false)
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
-                /// 1. logged in
+                /// 1B. Nope
                 return self
                     .isDataAdded(on: date)
                     .eraseToAnyPublisher()
             }
             .flatMap { isDataAdded in
-                /// 2A. add new data
+                /// 2A. Add New Data
                 if !isSyncedToRemote && !isDataAdded {
                     return self
                         .addData(.init(date: date, dailyUsedData: dailyUsedData))
                         .eraseToAnyPublisher()
                 }
-                /// 2B. update existing data
+                /// 2B. Update Existing Data
                 if isSyncedToRemote && isDataAdded {
                     return self
                         .updateData(date: date, dailyUsedData: dailyUsedData)
                         .eraseToAnyPublisher()
                 }
-                /// 2C. data added but not yet reflected in remote
+                /// 2C. Data Added But Not Yet Reflected In Remote
+                /// - prevents the Data from being re-uploaded to `RemoteDatabase`
                 return Just(false)
                     .setFailureType(to: Error.self)
                     .eraseToAnyPublisher()

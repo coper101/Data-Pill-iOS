@@ -74,11 +74,21 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
         Just(true).eraseToAnyPublisher()
     }
     
-    func updateData(_ item: Data_Pill.Data) {
-
+    func updateTodaysData(
+        date: Date?,
+        totalUsedData: Double?,
+        dailyUsedData: Double?,
+        hasLastTotal: Bool?,
+        isSyncedToRemote: Bool?,
+        lastSyncedToRemoteDate: Date?
+    ) {
     }
     
     func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never> {
+        Just(true).eraseToAnyPublisher()
+    }
+    
+    func deleteAllData() -> AnyPublisher<Bool, Never> {
         Just(true).eraseToAnyPublisher()
     }
     
@@ -165,6 +175,10 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
     }
     
     func updateToLatestPlan() {}
+    
+    func deleteAllPlan() -> AnyPublisher<Bool, Never> {
+        Just(true).eraseToAnyPublisher()
+    }
     
     /// [3B] Error
     func clearDataError() {}

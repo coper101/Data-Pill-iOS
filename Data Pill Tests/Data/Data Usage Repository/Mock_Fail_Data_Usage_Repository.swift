@@ -58,11 +58,22 @@ final class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
         Just(false).eraseToAnyPublisher()
     }
     
-    func updateData(_ data: Data_Pill.Data) {
-        dataError = DatabaseError.updatingData("Updating Data Error")
+    func updateTodaysData(
+        date: Date?,
+        totalUsedData: Double?,
+        dailyUsedData: Double?,
+        hasLastTotal: Bool?,
+        isSyncedToRemote: Bool?,
+        lastSyncedToRemoteDate: Date?
+    ) {
+        dataError = DatabaseError.updatingData("Updating Today's Data Error")
     }
     
-    func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never> {
+    func updateData(_ remoteData: [Data_Pill.RemoteData]) -> AnyPublisher<Bool, Never> {
+        Just(false).eraseToAnyPublisher()
+    }
+    
+    func deleteAllData() -> AnyPublisher<Bool, Never> {
         Just(false).eraseToAnyPublisher()
     }
     
@@ -126,6 +137,10 @@ final class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
     }
     
     func updateToLatestPlan() {}
+    
+    func deleteAllPlan() -> AnyPublisher<Bool, Never> {
+        Just(false).eraseToAnyPublisher()
+    }
     
     /// [3B] Error
     func clearDataError() {

@@ -264,7 +264,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    func test_update_data() throws {
+    func test_update_todays_data() throws {
         // (1) Given
         // (2) When
         createExpectation(

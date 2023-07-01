@@ -11,10 +11,12 @@
   "defaultOptions" : {
     "commandLineArgumentEntries" : [
       {
-        "argument" : "-com.apple.CoreData.SQLDebug 3"
+        "argument" : "-com.apple.CoreData.SQLDebug 3",
+        "enabled" : false
       },
       {
-        "argument" : "-com.apple.CoreData.ConcurrencyDebug 1"
+        "argument" : "-com.apple.CoreData.ConcurrencyDebug 1",
+        "enabled" : false
       }
     ],
     "environmentVariableEntries" : [
