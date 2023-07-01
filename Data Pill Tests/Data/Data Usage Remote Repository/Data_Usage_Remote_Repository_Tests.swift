@@ -203,37 +203,6 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    func test_get_all_existing_data_dates() throws {
-        // (1) Given
-        let dates: [Date] = [
-            "2023-01-01T00:00:00+00:00".toDate(),
-            "2023-01-02T00:00:00+00:00".toDate()
-        ]
-        
-        // (2) When
-        createExpectation(
-            publisher: repository.getAllExistingDataDates(),
-            description: "Get All Existing Data Dates"
-        ) {
-            
-            // (3) Then
-            XCTAssertEqual($0, dates)
-        }
-    }
-    
-    func test_get_all_existing_data_dates_failed() throws {
-        // (1) Given
-        // (2) When
-        createExpectation(
-            publisher: repositoryFail.getAllExistingDataDates(),
-            description: "Get All Existing Data Dates"
-        ) { dates in
-            
-            // (3) Then
-            XCTAssert(dates.isEmpty)
-        }
-    }
-    
     func test_add_data() throws {
         // (1) Given
         let remoteData = TestData.createEmptyRemoteData()

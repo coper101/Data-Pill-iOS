@@ -53,14 +53,6 @@ final class MockSuccessDataUsageRemoteRepository: ObservableObject, DataUsageRem
             .eraseToAnyPublisher()
     }
     
-    func getAllExistingDataDates() -> AnyPublisher<[Date], Never> {
-        Just([
-            "2023-01-01T00:00:00+00:00".toDate(),
-            "2023-01-02T00:00:00+00:00".toDate()
-        ])
-        .eraseToAnyPublisher()
-    }
-    
     func addData(_ bulkData: [RemoteData]) -> AnyPublisher<Bool, Error> {
         Just(true)
             .setFailureType(to: Error.self)

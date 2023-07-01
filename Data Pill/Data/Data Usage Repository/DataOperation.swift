@@ -269,7 +269,7 @@ extension DataUsageRepository {
         }
     }
     
-    /// Retrieve the filtered `Data` from `Database`.
+    /// Retrieves the filtered `Data` from `Database`.
     ///
     /// - Parameters:
     ///  - format:
@@ -283,7 +283,7 @@ extension DataUsageRepository {
         return try database.context.fetch(request)
     }
     
-    /// Retrieve the `Data` with Today's Date from `Database`
+    /// Retrieves the `Data` with Today's Date from `Database`
     /// and Creates a new one if it doesn't exists.
     func getTodaysData() -> Data? {
         do {

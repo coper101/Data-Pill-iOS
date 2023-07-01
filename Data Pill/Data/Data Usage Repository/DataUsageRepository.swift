@@ -12,6 +12,7 @@ import OSLog
 
 // MARK: - Protocol
 protocol DataUsageRepositoryProtocol {
+    
     var database: any Database { get }
     
     // MARK: - Data
@@ -46,6 +47,8 @@ protocol DataUsageRepositoryProtocol {
     
     func updateData(_ remoteData: [RemoteData]) -> AnyPublisher<Bool, Never>
     
+    func updateToLatestData() -> Void
+    
     /// - Delete
     func deleteAllData() -> AnyPublisher<Bool, Never>
 
@@ -61,16 +64,20 @@ protocol DataUsageRepositoryProtocol {
     func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double
     
     func getThisWeeksData(from todaysData: Data?) -> [Data]
-    
-    func updateToLatestData() -> Void
-        
+            
     // MARK: - Plan
     /// - Store
     var plan: Plan? { get set }
     var planPublisher: Published<Plan?>.Publisher { get }
     
     /// - Add
-    func addPlan(startDate: Date, endDate: Date, dataAmount: Double, dailyLimit: Double, planLimit: Double) -> Void
+    func addPlan(
+        startDate: Date,
+        endDate: Date,
+        dataAmount: Double,
+        dailyLimit: Double,
+        planLimit: Double
+    ) -> Void
     
     /// - Update
     func updatePlan(
@@ -105,7 +112,9 @@ protocol DataUsageRepositoryProtocol {
 // MARK: - App Implementation
 final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
 
+    // MARK: - Dependencies
     let database: Database
+    
     
     // MARK: - Data
     @Published var todaysData: Data?
