@@ -122,6 +122,11 @@
 		27D056CF2A5091F900A6EC04 /* RemoteDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056CE2A5091F900A6EC04 /* RemoteDataOperation.swift */; };
 		27D056D12A5094F700A6EC04 /* RemoteUserOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D02A5094F600A6EC04 /* RemoteUserOperation.swift */; };
 		27D056D32A50952B00A6EC04 /* RemoteSynchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D22A50952B00A6EC04 /* RemoteSynchronization.swift */; };
+		27D056D62A50B07000A6EC04 /* RemoteErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D52A50B07000A6EC04 /* RemoteErrors.swift */; };
+		27D056D82A50B09B00A6EC04 /* RemoteIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D72A50B09B00A6EC04 /* RemoteIdentifiers.swift */; };
+		27D056DA2A50B1A700A6EC04 /* RemoteAccountOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */; };
+		27D056DC2A50B1F900A6EC04 /* RemoteRecordOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */; };
+		27D056DE2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056DD2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift */; };
 		27D4CA292A46EB60008989B1 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA282A46EB60008989B1 /* Events.swift */; };
 		27D4CA2B2A46EB67008989B1 /* Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2A2A46EB67008989B1 /* Observers.swift */; };
 		27D4CA2D2A46EB70008989B1 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2C2A46EB70008989B1 /* Synchronization.swift */; };
@@ -364,6 +369,11 @@
 		27D056CE2A5091F900A6EC04 /* RemoteDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDataOperation.swift; sourceTree = "<group>"; };
 		27D056D02A5094F600A6EC04 /* RemoteUserOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteUserOperation.swift; sourceTree = "<group>"; };
 		27D056D22A50952B00A6EC04 /* RemoteSynchronization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSynchronization.swift; sourceTree = "<group>"; };
+		27D056D52A50B07000A6EC04 /* RemoteErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteErrors.swift; sourceTree = "<group>"; };
+		27D056D72A50B09B00A6EC04 /* RemoteIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIdentifiers.swift; sourceTree = "<group>"; };
+		27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccountOperation.swift; sourceTree = "<group>"; };
+		27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteRecordOperation.swift; sourceTree = "<group>"; };
+		27D056DD2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionOperation.swift; sourceTree = "<group>"; };
 		27D4CA282A46EB60008989B1 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		27D4CA2A2A46EB67008989B1 /* Observers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observers.swift; sourceTree = "<group>"; };
 		27D4CA2C2A46EB70008989B1 /* Synchronization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
@@ -725,7 +735,7 @@
 				27801E3E28E9FDAA00201339 /* AppDataRepository.swift */,
 				27801E1D28E98F0D00201339 /* LocalStorage.swift */,
 				27801E2228E9B29D00201339 /* LocalDatabase.swift */,
-				275383E5298D1B4000404454 /* RemoteDatabase.swift */,
+				27D056D42A50B03A00A6EC04 /* Remote Database */,
 				27EE983529A7733B00D9D343 /* RemoteSubscriptionID.swift */,
 				278E7343295BFAB20020F84B /* ToastTimer.swift */,
 				27B90B8428F2D28100263983 /* Constants.swift */,
@@ -837,6 +847,19 @@
 				27D056D22A50952B00A6EC04 /* RemoteSynchronization.swift */,
 			);
 			path = "Data Usage Remote Repository";
+			sourceTree = "<group>";
+		};
+		27D056D42A50B03A00A6EC04 /* Remote Database */ = {
+			isa = PBXGroup;
+			children = (
+				27D056D72A50B09B00A6EC04 /* RemoteIdentifiers.swift */,
+				275383E5298D1B4000404454 /* RemoteDatabase.swift */,
+				27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */,
+				27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */,
+				27D056DD2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift */,
+				27D056D52A50B07000A6EC04 /* RemoteErrors.swift */,
+			);
+			path = "Remote Database";
 			sourceTree = "<group>";
 		};
 		27D4CA272A46EB44008989B1 /* App View Model */ = {
@@ -1163,6 +1186,7 @@
 				278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
 				27E77751293B68D10031456D /* Widget.swift in Sources */,
+				27D056DC2A50B1F900A6EC04 /* RemoteRecordOperation.swift in Sources */,
 				27073017298E561500B05B51 /* DataUsageRemoteRepository.swift in Sources */,
 				27FDBCDF2963FF8D008FA32E /* NonPlanView.swift in Sources */,
 				278E7344295BFAB20020F84B /* ToastTimer.swift in Sources */,
@@ -1172,18 +1196,21 @@
 				27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
 				27801E0F28E1E7C500201339 /* ButtonView.swift in Sources */,
+				27D056D62A50B07000A6EC04 /* RemoteErrors.swift in Sources */,
 				27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */,
 				27F47DDF29067C8E00B3F83D /* Button.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
 				275383E6298D1B4000404454 /* RemoteDatabase.swift in Sources */,
 				27FDBCE329646F07008FA32E /* SlideToggleView.swift in Sources */,
 				27FDBCDD2963F7D0008FA32E /* LargeButtonView.swift in Sources */,
+				27D056D82A50B09B00A6EC04 /* RemoteIdentifiers.swift in Sources */,
 				27801E0928E054C500201339 /* CloseIconView.swift in Sources */,
 				27801E1E28E98F0D00201339 /* LocalStorage.swift in Sources */,
 				270F0B0B2A483B3000517CB1 /* Mock_Fake_Data_Usage_Repository.swift in Sources */,
 				270B264D2963E516001B316F /* GuideView.swift in Sources */,
 				27801E1928E951A100201339 /* NetworkDataRepository.swift in Sources */,
 				27801E0D28E0C02200201339 /* DateInputView.swift in Sources */,
+				27D056DE2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift in Sources */,
 				27E7772029336AA10031456D /* Unit.swift in Sources */,
 				27801E2328E9B29D00201339 /* LocalDatabase.swift in Sources */,
 				27D056C72A50385900A6EC04 /* OperationError.swift in Sources */,
@@ -1214,6 +1241,7 @@
 				27801E3728E9E3D100201339 /* DataUsage.swift in Sources */,
 				27801DE428D6F01900201339 /* Modifier.swift in Sources */,
 				276048E629BF450E00AB8497 /* TestData.swift in Sources */,
+				27D056DA2A50B1A700A6EC04 /* RemoteAccountOperation.swift in Sources */,
 				27801DE228D6D15000201339 /* ItemCardView.swift in Sources */,
 				27D4CA2D2A46EB70008989B1 /* Synchronization.swift in Sources */,
 				27D056D12A5094F700A6EC04 /* RemoteUserOperation.swift in Sources */,

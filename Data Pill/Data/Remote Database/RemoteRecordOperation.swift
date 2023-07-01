@@ -1,8 +1,8 @@
 //
-//  RemoteDatabase.swift
+//  RemoteRecordOperation.swift
 //  Data Pill
 //
-//  Created by Wind Versi on 3/2/23.
+//  Created by Wind Versi on 2/7/23.
 //
 
 import Foundation
@@ -10,132 +10,7 @@ import Combine
 import CloudKit
 import OSLog
 
-// MARK: - Types
-protocol CK {
-    func toDictionary() -> [String: Any]
-}
-
-enum RecordType: String {
-    case plan = "Plan"
-    case data = "Data"
-    var type: String {
-        self.rawValue
-    }
-}
-
-enum RemoteDatabaseError: Error, Equatable {
-    case saveError(String)
-    case fetchError(String)
-    case nilProp(String)
-    
-    var description: String {
-        switch self {
-        case .saveError(let message):
-            return message
-        case .fetchError(let message):
-            return message
-        case .nilProp(let message):
-            return message
-        }
-    }
-}
-
-// MARK: - Identifiers
-enum CloudContainer: String {
-    case dataPill = "iCloud.com.penguinworks.Data-Pill"
-    var identifier: String {
-        self.rawValue
-    }
-}
-
-
-
-// MARK: - Protocol
-protocol RemoteDatabase {
-    /// Subscriptions
-    func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never>
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never>
-    
-    /// Account
-    func checkLoginStatus() -> AnyPublisher<Bool, Never>
-    
-    /// Records
-    func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error>
-    func fetchAll(of recordType: RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error>
-    func save(record: CKRecord) -> AnyPublisher<Bool, Error>
-    func save(records: [CKRecord]) -> AnyPublisher<Bool, Error>
-}
-
-
-
-// MARK: - App Implementation
-class CloudDatabase: RemoteDatabase {
-    
-    let database: CKDatabase
-    let container: CKContainer
-    
-    init(container: CloudContainer) {
-        self.container = CKContainer(identifier: container.identifier)
-        self.database = self.container.privateCloudDatabase
-    }
-    
-    func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never> {
-        Future { promise in
-            let subscription = CKQuerySubscription(
-                recordType: recordType.type, predicate: .init(value: true),
-                subscriptionID: subscriptionID,
-                options: .firesOnRecordUpdate
-            )
-            let notification = CKSubscription.NotificationInfo()
-            notification.shouldSendContentAvailable = true // silent notification
-            subscription.notificationInfo = notification
-            
-            self.database.save(subscription) { _, error in
-                if let error {
-                    Logger.remoteDatabase.debug("createOnUpdateRecordSubscription - save subscription error: \(error.localizedDescription)")
-                    promise(.success(false))
-                    return
-                }
-                Logger.remoteDatabase.debug("createOnUpdateRecordSubscription - save subscription success")
-                promise(.success(true))
-            }
-        } //: Future
-        .eraseToAnyPublisher()
-    }
-    
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
-        Future { promise in
-            self.database.fetchAllSubscriptions { subscriptions, error in
-                if let error {
-                    Logger.remoteDatabase.debug("fetchAllSubscriptions - fetch error: \(error.localizedDescription)")
-                    promise(.success([]))
-                    return
-                }
-                guard let subscriptions else {
-                    Logger.remoteDatabase.debug("fetchAllSubscriptions - subscriptions is nil")
-                    return
-                }
-                Logger.remoteDatabase.debug("fetchAllSubscriptions - subscription IDs: \(subscriptions.map(\.subscriptionID))")
-                promise(.success(subscriptions.map(\.subscriptionID)))
-            } //: fetchAll
-        }
-        .eraseToAnyPublisher()
-    }
-        
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Future { promise in
-            self.container.accountStatus { accountStatus, error in
-                guard accountStatus == .available else {
-                    Logger.remoteDatabase.debug("checkLoginStatus - is not logged in or disabled iCloud")
-                    promise(.success(false))
-                    return
-                }
-                Logger.remoteDatabase.debug("checkLoginStatus - is logged in")
-                promise(.success(true))
-            }
-        } //: Future
-        .eraseToAnyPublisher()
-    }
+extension CloudDatabase {
     
     func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error> {
         let query = CKQuery(recordType: recordType.rawValue, predicate: predicate)
@@ -377,7 +252,5 @@ class CloudDatabase: RemoteDatabase {
             
         } //: Future
         .eraseToAnyPublisher()
-    }
+    }    
 }
-
-
