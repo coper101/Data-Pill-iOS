@@ -10,18 +10,53 @@ import Combine
 import CoreData
 import OSLog
 
-// MARK: - Add
 extension DataUsageRepository {
     
-    /// Add a new `Plan` into Database.
-    ///
-    /// - Parameters:
-    ///  - startDate:
-    ///  - endDate:
-    ///  - dataAmount:
-    ///  - dailyLimit:
-    ///  - planLimit:
-    ///
+    // MARK: - Read
+    /// Returns the existing ``Plan`` record from ``Database``.
+    /// It creates a new one if it doesn't exists.
+    func getPlan() -> Plan? {
+        do {
+            /// 1A. Retrieve Plan
+            guard let plan = try getAllPlan().first else {
+                Logger.database.debug("getPlan - not found, creating")
+                
+                /// 1B. Create Plan
+                addPlan(
+                    startDate: Calendar.current.startOfDay(for: .init()),
+                    endDate: Calendar.current.startOfDay(for: .init()),
+                    dataAmount: 0,
+                    dailyLimit: 0,
+                    planLimit: 0
+                )
+                
+                /// 1A. Retrieve Plan
+                return try getAllPlan().first
+            }
+            return plan
+        } catch let error {
+            dataError = DatabaseError.gettingAll(error.localizedDescription)
+            Logger.database.error("failed to get all plan: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    /// Returns  all ``Plan`` records  from ``Database``.
+    func getAllPlan() throws -> [Plan] {
+        database.context.refreshAllObjects()
+        
+        /// 1. Request
+        let request = NSFetchRequest<Plan>(entityName: Entities.plan.name)
+        
+        /// 2. Execute
+        let result = try database.context.fetch(request)
+        
+        return result
+    }
+
+    
+    // MARK: - Add
+    /// Save a new ``Plan``record into Database.
     func addPlan(
         startDate: Date,
         endDate: Date,
@@ -30,32 +65,28 @@ extension DataUsageRepository {
         planLimit: Double
     ) {
         do {
+            /// 1. Create Plan
             let plan = Plan(context: database.context)
             plan.startDate = startDate
             plan.endDate = endDate
             plan.dataAmount = dataAmount
             plan.dailyLimit = dailyLimit
             plan.planLimit = planLimit
-            try database.context.saveIfNeeded()
+            
+            /// 2. Save Plan
+            let _ = try database.context.saveIfNeeded()
+            
         } catch let error {
             dataError = DatabaseError.addingPlan(error.localizedDescription)
             Logger.database.error("failed to add plan: \(error.localizedDescription)")
         }
     }
-}
-
-
-// MARK: - Update
-extension DataUsageRepository {
     
-    /// Update the existing `Plan` from `Database`.
+    
+    // MARK: - Update
+    /// Save the existing ``Plan`` record into ``Database``.
     ///
     /// - Parameters:
-    ///  - startDate:
-    ///  - endDate:
-    ///  - dataAmount:
-    ///  - dailyLimit:
-    ///  - planLimit:
     ///  - updateToLatestPlanAfterwards: Calls ``updateToLatestPlan()`` if True
     ///
     func updatePlan(
@@ -67,10 +98,13 @@ extension DataUsageRepository {
         updateToLatestPlanAfterwards: Bool
     ) {
         do {
+            /// 1A. Retrieve Plan
             guard let plan = getPlan() else {
                 Logger.database.error("no plan found despite creating one in update plan block")
                 return
             }
+            
+            /// 1B. Modify Plan
             if let startDate {
                 plan.startDate = startDate
             }
@@ -86,10 +120,15 @@ extension DataUsageRepository {
             if let planLimit {
                 plan.planLimit = planLimit
             }
+            
+            /// 2. Save Plan
             let isUpdated = try database.context.saveIfNeeded()
+            
+            /// 3. Update Store
             if isUpdated && updateToLatestPlanAfterwards {
                 updateToLatestPlan()
             }
+            
         } catch let error {
             dataError = DatabaseError.updatingPlan(error.localizedDescription)
             Logger.database.error("failed to update plan: \(error.localizedDescription)")
@@ -101,24 +140,24 @@ extension DataUsageRepository {
     func updateToLatestPlan() {
         plan = getPlan()
     }
-}
 
-
-// MARK: - Delete
-extension DataUsageRepository {
-
-    /// Deletes all `Plan` from `Database`.
+    
+    // MARK: - Delete
+    /// Removes all ``Plan`` from ``Database``
+    /// and publishes whether it was successul or not
     func deleteAllPlan() -> AnyPublisher<Bool, Never> {
         Future { promise in
-            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: Entities.plan.name)
-            let batchRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-            
             let backgroundContext = self.database.container.newBackgroundContext()
             backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             
+            /// 1. Batch Request
+            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: Entities.plan.name)
+            let batchRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+            
             backgroundContext.performAndWait {
                 do {
-                    _ = try backgroundContext.execute(batchRequest)
+                    /// 2. Execute Batch Request
+                    let _ = try backgroundContext.execute(batchRequest)
                     
                     Logger.database.debug("successful deleting batch plan")
                     promise(.success(true))
@@ -130,40 +169,5 @@ extension DataUsageRepository {
             }
         }
         .eraseToAnyPublisher()
-    }
-}
-
-
-// MARK: - Read
-extension DataUsageRepository {
-    
-    /// Retrieves all `Plan`  from `Database`.
-    func getAllPlan() throws -> [Plan] {
-        database.context.refreshAllObjects()
-        let request = NSFetchRequest<Plan>(entityName: Entities.plan.name)
-        return try database.context.fetch(request)
-    }
-    
-    /// Retrieves the `Plan` from `Database`
-    /// and Creates a new one if it doesn't exists.
-    func getPlan() -> Plan? {
-        do {
-            guard let plan = try getAllPlan().first else {
-                Logger.database.debug("getPlan - not found, creating")
-                addPlan(
-                    startDate: Calendar.current.startOfDay(for: .init()),
-                    endDate: Calendar.current.startOfDay(for: .init()),
-                    dataAmount: 0,
-                    dailyLimit: 0,
-                    planLimit: 0
-                )
-                return try getAllPlan().first
-            }
-            return plan
-        } catch let error {
-            dataError = DatabaseError.gettingAll(error.localizedDescription)
-            Logger.database.error("failed to get all plan: \(error.localizedDescription)")
-            return nil
-        }
     }
 }

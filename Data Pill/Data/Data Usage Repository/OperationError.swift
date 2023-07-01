@@ -7,10 +7,10 @@
 
 enum DatabaseError: Error, Equatable {
     
-    /// Database
+    // MARK: - Database
     case loadingContainer(String = "Sorry, the data can’t be loaded from the Storage.")
     
-    /// [1] Data
+    // MARK: - Data
     case loadingAll(String)
     case adding(String)
     case updatingData(String)
@@ -18,7 +18,7 @@ enum DatabaseError: Error, Equatable {
     case gettingTodaysData(String)
     case filteringData(String)
     
-    /// [2] Plan
+    // MARK: - Plan
     case gettingPlan(String)
     case addingPlan(String)
     case updatingPlan(String)

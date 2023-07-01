@@ -23,6 +23,19 @@ protocol DataUsageRepositoryProtocol {
     var thisWeeksData: [Data] { get set }
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { get }
     
+    /// - Read
+    func getAllData() -> [Data]
+    
+    func getDataWith(format: String, _ args: CVarArg..., sortDescriptors: [NSSortDescriptor]) throws -> [Data]
+    
+    func getTodaysData() -> Data?
+    
+    func getDataWithHasTotal() -> Data?
+    
+    func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double
+    
+    func getThisWeeksData(from todaysData: Data?) -> [Data]
+    
     /// - Add
     func addData(
         date: Date,
@@ -52,23 +65,16 @@ protocol DataUsageRepositoryProtocol {
     /// - Delete
     func deleteAllData() -> AnyPublisher<Bool, Never>
 
-    /// - Read
-    func getAllData() -> [Data]
-    
-    func getDataWith(format: String, _ args: CVarArg..., sortDescriptors: [NSSortDescriptor]) throws -> [Data]
-    
-    func getTodaysData() -> Data?
-    
-    func getDataWithHasTotal() -> Data?
-    
-    func getTotalUsedData(from startDate: Date, to endDate: Date) -> Double
-    
-    func getThisWeeksData(from todaysData: Data?) -> [Data]
             
     // MARK: - Plan
     /// - Store
     var plan: Plan? { get set }
     var planPublisher: Published<Plan?>.Publisher { get }
+    
+    /// - Read
+    func getPlan() -> Plan?
+    
+    func getAllPlan() throws -> [Plan]
     
     /// - Add
     func addPlan(
@@ -94,10 +100,6 @@ protocol DataUsageRepositoryProtocol {
     /// - Delete
     func deleteAllPlan() -> AnyPublisher<Bool, Never>
     
-    /// - Read
-    func getAllPlan() throws -> [Plan]
-    
-    func getPlan() -> Plan?
     
     // MARK: - Error
     /// - Store
