@@ -12,6 +12,7 @@ import OSLog
 
 extension CloudDatabase {
     
+    /// Publishes whether a we have access to user's iCloud database
     func checkLoginStatus() -> AnyPublisher<Bool, Never> {
         Future { promise in
             self.container.accountStatus { accountStatus, error in

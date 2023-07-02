@@ -12,19 +12,23 @@ import OSLog
 
 extension CloudDatabase {
     
+    // MARK: - Read
+    /// Publishes a list of ``CKRecord`` that satisifies the specified `predicate` and `recordType` from iCloud Database.
     func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error> {
         let query = CKQuery(recordType: recordType.rawValue, predicate: predicate)
         
         return Future { promise in
             if #available(iOS 15.0, *) {
                 
+                /// `iOS 15.0`
                 self.database.fetch(withQuery: query) { completion in
                     
-                    // L1. fetch response
                     switch completion {
+                    /// 1. Success
+                    /// 1A. Fetch Response
                     case .success(let response):
                         
-                        // L2. fetch results
+                        /// 1B. Fetch Result
                         let results: [Result<CKRecord, Error>] = response.matchResults.compactMap { $0.1 }
                         
                         let records: [CKRecord] = results.compactMap { result in
@@ -35,11 +39,14 @@ extension CloudDatabase {
                                 return nil
                             }
                         }
+                        
                         Logger.remoteDatabase.debug("fetch - records count \(records.count)")
                         promise(.success(records))
                         
+                    /// 2. Fail
                     case .failure(let error):
-                        Logger.remoteDatabase.debug("fetch - error: \(error.localizedDescription)")
+                        
+                        Logger.remoteDatabase.error("fetch - \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription)))
                         
                     } //: switch-case
@@ -48,20 +55,23 @@ extension CloudDatabase {
                 
             } else {
                 
+                /// `< iOS 14.0`
                 self.database.perform(query, inZoneWith: nil) { records, error in
                     
+                    /// 2. Fail
                     if let error {
-                        Logger.remoteDatabase.debug("fetch - error: \(error.localizedDescription)")
+                        Logger.remoteDatabase.error("fetch - \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription)))
                         return
                     }
                     
                     guard let records else {
-                        Logger.remoteDatabase.debug("fetch - error: records is nil")
+                        Logger.remoteDatabase.error("fetch - records is nil")
                         promise(.failure(RemoteDatabaseError.fetchError("records is nil")))
                         return
                     }
                     
+                    /// 1. Success
                     Logger.remoteDatabase.debug("fetch - records count \(records.count)")
                     promise(.success(records))
                     
@@ -69,6 +79,90 @@ extension CloudDatabase {
                 
             } //: if-else
         } //: Future
+        .eraseToAnyPublisher()
+    }
+    
+    /// Publishes all ``CKRecord`` that exists in iCloud Database.
+    ///
+    /// - Parameter recursively: Fetches all records if True, fetches the first number of records if False.
+    ///
+    func fetchAll(of recordType: RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
+        let predicate = NSPredicate(value: true)
+                
+        if !recursively {
+            return fetch(with: predicate, of: recordType)
+        }
+        
+        return Future { promise in
+          
+            let query = CKQuery(recordType: recordType.rawValue, predicate: predicate)
+
+            var records = [CKRecord]()
+            var reccurrentOperationCounter = 0
+                      
+            /// 1B. Cursor Query to Keep on Fetching Records
+            func recurrentOperation(
+                _ cursor: CKQueryOperation.Cursor,
+                successBlock: @escaping ([CKRecord]) -> Void,
+                failureBlock: @escaping (Error) -> Void
+            ) {
+                var operation = CKQueryOperation(cursor: cursor)
+                self.executeQueryOperation(&operation) { record in
+                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation record ID: \(record.recordID)")
+                    reccurrentOperationCounter += 1
+                    records.append(record)
+                    Logger.remoteDatabase.debug("fetchAll - reccurrentOperationCounter count: \(reccurrentOperationCounter)")
+                    
+                } recordFailureBlock: { error in
+                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation record error: \(error.localizedDescription)")
+                    
+                } resultSuccessBlock: { cursor in
+                    guard let cursor else {
+                        Logger.remoteDatabase.debug("fetchAll - recurrentOperation cursor is nil")
+                        successBlock(records)
+                        return
+                    }
+                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation result success")
+                    recurrentOperation(cursor, successBlock: successBlock, failureBlock: failureBlock)
+                    
+                } resultFailureBlock: { error in
+                    failureBlock(error)
+                }
+                self.database.add(operation)
+            }
+            
+            /// 1A. Initial Query
+            var queryOperation = CKQueryOperation(query: query)
+
+            self.executeQueryOperation(&queryOperation) { record in
+                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation record ID: \(record.recordID)")
+                    records.append(record)
+                    
+                } recordFailureBlock: { error in
+                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation record error: \(error.localizedDescription)")
+                    
+                } resultSuccessBlock: { cursor in
+                    guard let cursor else {
+                        Logger.remoteDatabase.debug("fetchAll - initial queryOperation result cursor is nil")
+                        promise(.success(records)) // A
+                        return
+                    }
+                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation result success")
+                    recurrentOperation(
+                        cursor,
+                        successBlock: { promise(.success($0)) },
+                        failureBlock: { promise(.failure($0)) }
+                    )
+                    
+                } resultFailureBlock: { error in
+                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation result error: \(error.localizedDescription)")
+                    promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription))) // B
+                    
+                }
+           
+            /// 2. Execute Operation
+            self.database.add(queryOperation)
+        }
         .eraseToAnyPublisher()
     }
     
@@ -116,105 +210,38 @@ extension CloudDatabase {
         } // completion block
     }
         
-    func fetchAll(of recordType: RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
-        let predicate = NSPredicate(value: true)
-        
-        if !recursively {
-            return fetch(with: predicate, of: recordType)
-        }
-        
-        return Future { promise in
-          
-            let query = CKQuery(recordType: recordType.rawValue, predicate: predicate)
-
-            var records = [CKRecord]()
-            var reccurrentOperationCounter = 0
-                      
-            // Cursor Query
-            func recurrentOperation(
-                _ cursor: CKQueryOperation.Cursor,
-                successBlock: @escaping ([CKRecord]) -> Void,
-                failureBlock: @escaping (Error) -> Void
-            ) {
-                var operation = CKQueryOperation(cursor: cursor)
-                self.executeQueryOperation(&operation) { record in
-                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation record ID: \(record.recordID)")
-                    reccurrentOperationCounter += 1
-                    records.append(record)
-                    Logger.remoteDatabase.debug("fetchAll - reccurrentOperationCounter count: \(reccurrentOperationCounter)")
-                    
-                } recordFailureBlock: { error in
-                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation record error: \(error.localizedDescription)")
-                    
-                } resultSuccessBlock: { cursor in
-                    guard let cursor else {
-                        Logger.remoteDatabase.debug("fetchAll - recurrentOperation cursor is nil")
-                        successBlock(records)
-                        return
-                    }
-                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation result success")
-                    recurrentOperation(cursor, successBlock: successBlock, failureBlock: failureBlock)
-                    
-                } resultFailureBlock: { error in
-                    failureBlock(error)
-                }
-                self.database.add(operation)
-            }
-            
-            // Initial Query
-            var queryOperation = CKQueryOperation(query: query)
-
-            self.executeQueryOperation(&queryOperation) { record in
-                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation record ID: \(record.recordID)")
-                    records.append(record)
-                    
-                } recordFailureBlock: { error in
-                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation record error: \(error.localizedDescription)")
-                    
-                } resultSuccessBlock: { cursor in
-                    guard let cursor else {
-                        Logger.remoteDatabase.debug("fetchAll - initial queryOperation result cursor is nil")
-                        promise(.success(records)) // A
-                        return
-                    }
-                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation result success")
-                    recurrentOperation(
-                        cursor,
-                        successBlock: { promise(.success($0)) },
-                        failureBlock: { promise(.failure($0)) }
-                    )
-                    
-                } resultFailureBlock: { error in
-                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation result error: \(error.localizedDescription)")
-                    promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription))) // B
-                    
-                }
-           
-            self.database.add(queryOperation)
-        }
-        .eraseToAnyPublisher()
-    }
-        
+    
+    // MARK: - Update / Add
+    /// Saves the specified ``CKRecord`` into iCloud Database
+    /// and publishes whether it was successful or not.
     func save(record: CKRecord) -> AnyPublisher<Bool, Error> {
         Future { promise in
             self.database.save(record) { newRecord, error in
+                
+                /// 2. Fail
                 if let error {
                     Logger.remoteDatabase.debug("save - error: \(error.localizedDescription)")
                     promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
                     return
                 }
+                
                 guard newRecord != nil else {
                     Logger.remoteDatabase.debug("save - error: new record is nil")
                     promise(.failure(RemoteDatabaseError.saveError("new record is nil")))
                     return
                 }
+                
+                /// 1. Success
                 Logger.remoteDatabase.debug("save - saved")
                 promise(.success(true))
+                
             } //: save
         } //: Future
         .eraseToAnyPublisher()
     }
     
+    /// Saves the specified `records` list of ``CKRecord`` into iCloud Database
+    /// and publishes whether it was successful or not.
     func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
         Logger.remoteDatabase.debug("save - records: \(records)")
 
@@ -222,12 +249,18 @@ extension CloudDatabase {
             let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
             
             if #available(iOS 15.0, *) {
+                
+                /// `iOS 15.0`
                 operation.modifyRecordsResultBlock = { completion in
                     switch completion {
+                        
+                    /// 1. Success
                     case .success(_):
                         Logger.remoteDatabase.debug("save - records saved")
                         promise(.success(true))
                         return
+                        
+                    /// 2. Fail
                     case .failure(let error):
                         Logger.remoteDatabase.debug("save - records error: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
@@ -236,18 +269,25 @@ extension CloudDatabase {
                 }
                 
             } else {
+                
+                /// `< iOS 14.0`
                 operation.modifyRecordsCompletionBlock = { _, _, error in
+                    
+                    /// 2. Fail
                     if let error {
                         Logger.remoteDatabase.debug("save - records error: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
                         return
                     }
+                    
+                    /// 1. Success
                     Logger.remoteDatabase.debug("save - records saved")
                     promise(.success(true))
                 }
                 
             } //: if-else
             
+            /// 3. Execute Operation
             self.database.add(operation)
             
         } //: Future

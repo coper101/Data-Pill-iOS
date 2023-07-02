@@ -127,6 +127,11 @@
 		27D056DA2A50B1A700A6EC04 /* RemoteAccountOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */; };
 		27D056DC2A50B1F900A6EC04 /* RemoteRecordOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */; };
 		27D056DE2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056DD2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift */; };
+		27D056E12A51539B00A6EC04 /* AppDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E02A51539B00A6EC04 /* AppDataKeys.swift */; };
+		27D056E22A5153B300A6EC04 /* AppDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E02A51539B00A6EC04 /* AppDataKeys.swift */; };
+		27D056E52A51562200A6EC04 /* LocalIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E42A51562200A6EC04 /* LocalIdentifiers.swift */; };
+		27D056EA2A5157C100A6EC04 /* LocalIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E42A51562200A6EC04 /* LocalIdentifiers.swift */; };
+		27D056EC2A51589A00A6EC04 /* Mock_Local_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E72A5156C700A6EC04 /* Mock_Local_Database.swift */; };
 		27D4CA292A46EB60008989B1 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA282A46EB60008989B1 /* Events.swift */; };
 		27D4CA2B2A46EB67008989B1 /* Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2A2A46EB67008989B1 /* Observers.swift */; };
 		27D4CA2D2A46EB70008989B1 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2C2A46EB70008989B1 /* Synchronization.swift */; };
@@ -374,6 +379,9 @@
 		27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccountOperation.swift; sourceTree = "<group>"; };
 		27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteRecordOperation.swift; sourceTree = "<group>"; };
 		27D056DD2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionOperation.swift; sourceTree = "<group>"; };
+		27D056E02A51539B00A6EC04 /* AppDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataKeys.swift; sourceTree = "<group>"; };
+		27D056E42A51562200A6EC04 /* LocalIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalIdentifiers.swift; sourceTree = "<group>"; };
+		27D056E72A5156C700A6EC04 /* Mock_Local_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Local_Database.swift; sourceTree = "<group>"; };
 		27D4CA282A46EB60008989B1 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		27D4CA2A2A46EB67008989B1 /* Observers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observers.swift; sourceTree = "<group>"; };
 		27D4CA2C2A46EB70008989B1 /* Synchronization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
@@ -728,13 +736,11 @@
 		27801E1C28E98E6300201339 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				27801E1828E951A000201339 /* NetworkDataRepository.swift */,
-				27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */,
+				27D056E92A51571A00A6EC04 /* Network */,
 				27D056C12A50379600A6EC04 /* Data Usage Repository */,
 				27D056CB2A50646C00A6EC04 /* Data Usage Remote Repository */,
-				27801E3E28E9FDAA00201339 /* AppDataRepository.swift */,
-				27801E1D28E98F0D00201339 /* LocalStorage.swift */,
-				27801E2228E9B29D00201339 /* LocalDatabase.swift */,
+				27D056DF2A51538600A6EC04 /* App Data Repository */,
+				27D056E32A51560800A6EC04 /* Local Database */,
 				27D056D42A50B03A00A6EC04 /* Remote Database */,
 				27EE983529A7733B00D9D343 /* RemoteSubscriptionID.swift */,
 				278E7343295BFAB20020F84B /* ToastTimer.swift */,
@@ -784,6 +790,7 @@
 				27382DB32A4834DC0001E3FA /* Network Data Repository */,
 				27382DBB2A4836EC0001E3FA /* App Data Repository */,
 				27382DBC2A4837400001E3FA /* Remote Database */,
+				27D056E62A5156AD00A6EC04 /* Local Database */,
 				274FCF932978D9860087AC86 /* Toast_Timer_Tests.swift */,
 			);
 			path = Data;
@@ -852,14 +859,50 @@
 		27D056D42A50B03A00A6EC04 /* Remote Database */ = {
 			isa = PBXGroup;
 			children = (
-				27D056D72A50B09B00A6EC04 /* RemoteIdentifiers.swift */,
 				275383E5298D1B4000404454 /* RemoteDatabase.swift */,
+				27D056D72A50B09B00A6EC04 /* RemoteIdentifiers.swift */,
 				27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */,
 				27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */,
 				27D056DD2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift */,
 				27D056D52A50B07000A6EC04 /* RemoteErrors.swift */,
 			);
 			path = "Remote Database";
+			sourceTree = "<group>";
+		};
+		27D056DF2A51538600A6EC04 /* App Data Repository */ = {
+			isa = PBXGroup;
+			children = (
+				27801E3E28E9FDAA00201339 /* AppDataRepository.swift */,
+				27D056E02A51539B00A6EC04 /* AppDataKeys.swift */,
+				27801E1D28E98F0D00201339 /* LocalStorage.swift */,
+			);
+			path = "App Data Repository";
+			sourceTree = "<group>";
+		};
+		27D056E32A51560800A6EC04 /* Local Database */ = {
+			isa = PBXGroup;
+			children = (
+				27801E2228E9B29D00201339 /* LocalDatabase.swift */,
+				27D056E42A51562200A6EC04 /* LocalIdentifiers.swift */,
+			);
+			path = "Local Database";
+			sourceTree = "<group>";
+		};
+		27D056E62A5156AD00A6EC04 /* Local Database */ = {
+			isa = PBXGroup;
+			children = (
+				27D056E72A5156C700A6EC04 /* Mock_Local_Database.swift */,
+			);
+			path = "Local Database";
+			sourceTree = "<group>";
+		};
+		27D056E92A51571A00A6EC04 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				27801E1828E951A000201339 /* NetworkDataRepository.swift */,
+				27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		27D4CA272A46EB44008989B1 /* App View Model */ = {
@@ -1160,6 +1203,7 @@
 				278D1A6E29B4A61400E6C974 /* SpinnerView.swift in Sources */,
 				27D056CF2A5091F900A6EC04 /* RemoteDataOperation.swift in Sources */,
 				27D4CA2F2A472F84008989B1 /* Republishers.swift in Sources */,
+				27D056EC2A51589A00A6EC04 /* Mock_Local_Database.swift in Sources */,
 				27801E1728E82B9100201339 /* TextInputView.swift in Sources */,
 				27801DFB28DA0B0D00201339 /* NavRowView.swift in Sources */,
 				278FB31128FAA00F00BE78C2 /* Animation.swift in Sources */,
@@ -1240,7 +1284,9 @@
 				27801DB428D6C96800201339 /* PillGroupView.swift in Sources */,
 				27801E3728E9E3D100201339 /* DataUsage.swift in Sources */,
 				27801DE428D6F01900201339 /* Modifier.swift in Sources */,
+				27D056E52A51562200A6EC04 /* LocalIdentifiers.swift in Sources */,
 				276048E629BF450E00AB8497 /* TestData.swift in Sources */,
+				27D056E12A51539B00A6EC04 /* AppDataKeys.swift in Sources */,
 				27D056DA2A50B1A700A6EC04 /* RemoteAccountOperation.swift in Sources */,
 				27801DE228D6D15000201339 /* ItemCardView.swift in Sources */,
 				27D4CA2D2A46EB70008989B1 /* Synchronization.swift in Sources */,
@@ -1298,7 +1344,9 @@
 			files = (
 				27E777392934B33C0031456D /* NetworkDataRepository.swift in Sources */,
 				27E777382934AF060031456D /* WidgetModel.swift in Sources */,
+				27D056EA2A5157C100A6EC04 /* LocalIdentifiers.swift in Sources */,
 				27D056C92A50425A00A6EC04 /* PlanOperation.swift in Sources */,
+				27D056E22A5153B300A6EC04 /* AppDataKeys.swift in Sources */,
 				27E7772229336C8A0031456D /* BasePillView.swift in Sources */,
 				27E777452934D1F70031456D /* DataUsagePreview.swift in Sources */,
 				27E7772429336CC10031456D /* Frame.swift in Sources */,

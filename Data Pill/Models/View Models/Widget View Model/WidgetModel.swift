@@ -114,7 +114,7 @@ final class WidgetModel {
         dataUsageRepository.updateToLatestPlan()
         
         /// [C]
-        networkDataRepository.receiveDataInfo()
+        networkDataRepository.receiveUsedDataInfo()
     }
     
 }

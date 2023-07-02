@@ -10,6 +10,9 @@ import Network
 
 // MARK: - Protocol
 protocol NetworkConnectivity {
+    
+    // MARK: - Data
+    /// - Store
     var hasInternetConnection: Bool { get set }
     var hasInternetConnectionPublisher: Published<Bool>.Publisher { get }
 }
@@ -21,6 +24,8 @@ final class NetworkConnectionRepository: ObservableObject, NetworkConnectivity {
     
     var cancellables: Set<AnyCancellable> = .init()
     
+    
+    // MARK: - Data
     @Published var wifiStatus: NWPath.Status? = nil
     @Published var celullarStatus: NWPath.Status? = nil
     
@@ -30,11 +35,16 @@ final class NetworkConnectionRepository: ObservableObject, NetworkConnectivity {
     private let monitorWifi = NWPathMonitor(requiredInterfaceType: .wifi)
     private let monitorCellular = NWPathMonitor(requiredInterfaceType: .cellular)
     
+    
+    // MARK: - Initializer
     init() {
         startMonitoring()
         observeInternetConnection()
     }
     
+    
+    // MARK: - Events
+    /// Start observing the status of Mobile Data and Wifi.
     func startMonitoring() {
         monitorWifi.pathUpdateHandler = {
             self.wifiStatus = $0.status
@@ -46,6 +56,10 @@ final class NetworkConnectionRepository: ObservableObject, NetworkConnectivity {
         monitorCellular.start(queue: .main)
     }
     
+    
+    // MARK: - Observers
+    /// Observe whether internet connection is available or not by deriving it from the `wifiStatus` and `cellularStatus`
+    /// and sets the `hasInternet` store.
     func observeInternetConnection() {
         $wifiStatus
             .combineLatest($celullarStatus)

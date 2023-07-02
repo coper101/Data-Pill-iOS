@@ -11,14 +11,18 @@ import OSLog
 
 // MARK: - Protocol
 protocol NetworkDataRepositoryProtocol {
+    
+    // MARK: - Data
+    /// - Store
     var totalUsedData: Double { get set }
     var totalUsedDataPublisher: Published<Double>.Publisher { get }
     
     var usedDataInfo: UsedDataInfo { get set }
     var usedDataInfoPublisher: Published<UsedDataInfo>.Publisher { get }
     
+    /// - Events
     func getTotalUsedData() -> UsedDataInfo
-    func receiveDataInfo() -> Void
+    func receiveUsedDataInfo() -> Void
     func receiveTotalUsedData() -> Void
 }
 
@@ -26,19 +30,22 @@ protocol NetworkDataRepositoryProtocol {
 
 // MARK: - App Implementation
 /// Source: https://stackoverflow.com/questions/25888272/track-cellular-data-usage-using-swift
-final class NetworkDataRepository:
-    ObservableObject, CustomStringConvertible,
-    NetworkDataRepositoryProtocol {
+final class NetworkDataRepository: ObservableObject, CustomStringConvertible, NetworkDataRepositoryProtocol {
     
+    private var cancellables: Set<AnyCancellable> = .init()
+    private var timer: AnyCancellable?
+
+    
+    // MARK: - Data
     @Published var totalUsedData = 0.0
     var totalUsedDataPublisher: Published<Double>.Publisher { $totalUsedData }
     
     @Published var usedDataInfo: UsedDataInfo = .init()
     var usedDataInfoPublisher: Published<UsedDataInfo>.Publisher { $usedDataInfo }
         
-    private var timer: AnyCancellable?
-    private var cancellables: Set<AnyCancellable> = .init()
 
+    // MARK: - Initializer
+    /// - Parameter automaticUpdates: Whether to receive data usage update every time interval specified.
     init(automaticUpdates: Bool = true) {
         if automaticUpdates {
             receiveUpdatedDataInfo()
@@ -46,11 +53,12 @@ final class NetworkDataRepository:
         receiveTotalUsedData()
     }
     
-    func receiveDataInfo() {
-        usedDataInfo = getTotalUsedData()
-    }
     
-    /// receive Data Usage Info every n seconds
+    // MARK: - Events
+    /// Receives ``UsedDataInfo`` every `n` seconds specified by calling ``receiveUsedDataInfo()``.
+    ///
+    /// - Parameter every: The number of seconds to receive data usage update. Default is 2 seconds.
+    ///
     func receiveUpdatedDataInfo(every n: TimeInterval = 2) {
         timer = Timer
             .publish(every: n, on: .main, in: .default)
@@ -60,12 +68,17 @@ final class NetworkDataRepository:
                 guard let self = self else {
                     return
                 }
-                self.receiveDataInfo()
+                self.receiveUsedDataInfo()
             }
     }
     
-    /// receive total amount of used Data every 2 seconds
-    /// Data is retrieved from Data Info which is updated by a Timer
+    /// Set the `usedDataInfo` store.
+    func receiveUsedDataInfo() {
+        usedDataInfo = getTotalUsedData()
+    }
+    
+    /// Receives the `usedDataInfo` on change and calculates the amount of total used data
+    /// and sets the `totalUsedData` store.
     func receiveTotalUsedData() {
         $usedDataInfo
             .map {

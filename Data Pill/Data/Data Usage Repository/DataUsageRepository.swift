@@ -13,6 +13,7 @@ import OSLog
 // MARK: - Protocol
 protocol DataUsageRepositoryProtocol {
     
+    // MARK: - Dependencies
     var database: any Database { get }
     
     // MARK: - Data

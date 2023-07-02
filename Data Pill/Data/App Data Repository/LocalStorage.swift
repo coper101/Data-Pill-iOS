@@ -13,10 +13,7 @@ final class LocalStorage {
         .init(suiteName: AppGroup.dataPill.groupIdentifier)
     }
     
-    static func setItem(
-        _ value: Any?,
-        forKey key: Keys
-    ) {
+    static func setItem(_ value: Any?, forKey key: Keys) {
         guard let defaults = getUserDefaults() else { return }
         defaults.set(value, forKey: key.rawValue)
     }
@@ -40,5 +37,4 @@ final class LocalStorage {
         guard let defaults = getUserDefaults() else { return 0 }
         return defaults.double(forKey: key.rawValue)
     }
-
 }

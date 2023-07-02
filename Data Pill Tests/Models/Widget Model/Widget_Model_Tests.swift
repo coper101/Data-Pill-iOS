@@ -63,7 +63,7 @@ final class Widget_Model_Tests: XCTestCase {
         
         // (2) When
         widgetModel.republishAndObserveData()
-        networkDataRepository.receiveDataInfo()
+        networkDataRepository.receiveUsedDataInfo()
         
         // (3) Then
         XCTAssertEqual(widgetModel.totalUsedData, 10.0)

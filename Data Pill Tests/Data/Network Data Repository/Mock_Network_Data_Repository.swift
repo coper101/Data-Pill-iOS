@@ -24,7 +24,7 @@ final class MockNetworkDataRepository: ObservableObject, NetworkDataRepositoryPr
         receiveTotalUsedData()
     }
     
-    func receiveDataInfo() {
+    func receiveUsedDataInfo() {
         usedDataInfo = getTotalUsedData()
     }
     
