@@ -11,12 +11,12 @@ import XCTest
 final class Numbers_Tests: XCTestCase {
 
     override func setUpWithError() throws {
-        try super.setUpWithError()
+        continueAfterFailure = false
     }
 
     override func tearDownWithError() throws {}
     
-    /// Int - prefixDay()
+    // MARK: - Prefix Day
     func test_prefix_day_is_1_day() throws {
         // (1) Given
         let input = 1
@@ -44,7 +44,7 @@ final class Numbers_Tests: XCTestCase {
         XCTAssertEqual(output, "-1 Day")
     }
     
-    /// Int - toWeekdayName()
+    // MARK: - To Weekday Name
     func test_to_weekday_name_sunday() throws {
         // (1) Given
         let input = 1
@@ -63,7 +63,7 @@ final class Numbers_Tests: XCTestCase {
         XCTAssertEqual(output, "Sat")
     }
 
-    /// Double - toInt()
+    // MARK: - To Int
     func test_convert_decimal_to_int() throws {
         // (1) Given
         let input = 40.1
@@ -91,7 +91,7 @@ final class Numbers_Tests: XCTestCase {
         XCTAssertEqual(output, 0)
     }
     
-    /// Double - toIntOrDp()
+    // MARK: - To Int or Dp
     func test_round_decimal_places_to_2_dp() throws {
         // (1) Given
         let input = 1.2345
@@ -128,7 +128,7 @@ final class Numbers_Tests: XCTestCase {
         XCTAssertEqual(output, "0")
     }
 
-    /// Double - toDp()
+    // MARK: - To Dp
     func test_4_decimal_places() throws {
         // (1) Given
         let input = 4.123456
@@ -169,7 +169,7 @@ final class Numbers_Tests: XCTestCase {
         XCTAssertEqual(output, "0")
     }
     
-    /// Double - toPercentage()
+    // MARK: - To Percentage
     func test_to_percentage() throws {
         // (1) Given
         let numerator = 2.0
@@ -200,7 +200,7 @@ final class Numbers_Tests: XCTestCase {
         XCTAssertEqual(output, 0)
     }
     
-    /// Double - toGB()
+    // MARK: - To GB
     func test_megabyte_to_gigabye() throws {
         // (1) Given
         let input = 1_400.0
@@ -218,10 +218,4 @@ final class Numbers_Tests: XCTestCase {
         // (3) Then
         XCTAssertEqual(output, 0)
     }
-    
-    /// toInt64()
-//    func test_unsigned_64_to_int() throws {
-//        let uint64: UInt64 = 1_000_000
-//    }
-    
 }

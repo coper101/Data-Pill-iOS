@@ -1,5 +1,5 @@
 //
-//  Data_Usage_Remote_Repository_Tests.swift
+//  Mock_Data_Usage_Remote_Repository_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 13/3/23.
@@ -8,12 +8,13 @@
 @testable import Data_Pill
 import XCTest
 
-final class Data_Usage_Remote_Repository_Tests: XCTestCase {
+final class Mock_Data_Usage_Remote_Repository_Tests: XCTestCase {
 
     private var repository: DataUsageRemoteRepositoryProtocol!
     private var repositoryFail: DataUsageRemoteRepositoryProtocol!
     
     override func setUpWithError() throws {
+        continueAfterFailure = false
         repository = MockSuccessDataUsageRemoteRepository()
         repositoryFail = MockFailDataUsageRemoteRepository()
     }
@@ -23,7 +24,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         repositoryFail = nil
     }
 
-    // MARK: Plan
+    // MARK: - Plan
     func test_is_plan_added() throws {
         // (1) Given
         // (2) When
@@ -147,7 +148,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    // MARK: Data
+    // MARK: - Data
     func test_is_data_added_on() throws {
         // (1) Given
         // (2) When
@@ -265,7 +266,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    // MARK: User
+    // MARK: - User
     func test_is_logged_in_user() throws {
         // (1) Given
         // (2) When
@@ -292,8 +293,8 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    // MARK: Synchronization
-    // Today's Data
+    // MARK: - Synchronization
+    /// Today's Data
     func test_sync_todays_data() throws {
         // (1) Given
         TestData.createLocalData { data in
@@ -330,7 +331,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    // Plan
+    /// Plan
     func test_sync_plan() throws {
         // (1) Given
         // (2) When
@@ -369,7 +370,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    // All Data
+    /// All Data
     func test_sync_old_local_data() throws {
         // (1) Given
         let localData: [Data_Pill.Data] = []
@@ -448,8 +449,8 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    // MARK: Subscription
-    // Data
+    // MARK: - Subscription
+    /// Data
     func test_subscribe_to_remote_todays_data_changes() throws {
         // (1) Given
         // (2) When
@@ -476,7 +477,7 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
         }
     }
     
-    // Plan
+    /// Plan
     func test_subscribe_to_remote_plan_changes() throws {
         // (1) Given
         // (2) When
@@ -502,5 +503,4 @@ final class Data_Usage_Remote_Repository_Tests: XCTestCase {
             XCTAssertFalse(isSubscribed)
         }
     }
-   
 }

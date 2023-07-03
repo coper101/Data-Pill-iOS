@@ -12,6 +12,7 @@ import CloudKit
 final class App_View_Model_New_User_Tests: XCTestCase {
     
     private var appViewModel: AppViewModel!
+    
     private var dataUsageRepository: DataUsageRepositoryProtocol!
     private var localDatabase: Database!
     private var remoteDatabase: RemoteDatabase!

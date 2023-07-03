@@ -1,5 +1,5 @@
 //
-//  Network_Data_Repository_Tests.swift
+//  Mock_Network_Data_Repository_Tests.swift
 //  Data Pill Tests
 //
 //  Created by Wind Versi on 23/10/22.
@@ -8,12 +8,12 @@
 @testable import Data_Pill
 import XCTest
 
-final class Network_Data_Repository_Tests: XCTestCase {
+final class Mock_Network_Data_Repository_Tests: XCTestCase {
 
     private var repository: NetworkDataRepositoryProtocol!
 
     override func setUpWithError() throws {
-        try super.setUpWithError()
+        continueAfterFailure = false
         repository = MockNetworkDataRepository()
     }
 
@@ -21,11 +21,13 @@ final class Network_Data_Repository_Tests: XCTestCase {
         repository = nil
     }
     
+    // MARK: - Total Used Data
     func test_get_total_used_data() throws {
         // (1) Given
         // (2) When
         let output = repository.getTotalUsedData()
         repository.usedDataInfo = output
+        
         // (3) Then
         let expected = UsedDataInfo(
             wirelessWanDataReceived: 10_000_000,

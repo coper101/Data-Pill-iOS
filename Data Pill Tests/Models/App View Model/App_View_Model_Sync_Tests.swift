@@ -16,14 +16,15 @@ import OSLog
 final class App_View_Model_Sync_Tests: XCTestCase {
     
     private var appViewModel: AppViewModel!
+    
     private var networkConnectionRepository: NetworkConnectivity!
     private var localDatabase: Database!
     private var dataUsageRepository: DataUsageRepositoryProtocol!
 
     override func setUpWithError() throws {
+        continueAfterFailure = false
         networkConnectionRepository = MockNoNetworkConnectionRepository()
         networkConnectionRepository.hasInternetConnection = true
-        continueAfterFailure = false
     }
 
     override func tearDownWithError() throws {
@@ -32,6 +33,7 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         appViewModel = nil
     }
     
+    // MARK: - Helpers
     func load_fresh_data_usage_repository() throws {
         try prevent_running_on_real_device()
         localDatabase = LocalDatabase(container: .dataUsage, appGroup: .dataPill)

@@ -17,6 +17,7 @@ final class Data_Usage_Remote_Sync_Repository_Tests: XCTestCase {
     private var repository: DataUsageRemoteRepository!
 
     override func setUpWithError() throws {
+        continueAfterFailure = false
         remoteDatabase = MockRemoteDatabase()
         repository = DataUsageRemoteRepository(remoteDatabase: remoteDatabase)
     }

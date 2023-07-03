@@ -13,6 +13,7 @@ final class Toast_Timer_Tests: XCTestCase {
     private var toastTimer: ToastTimer<String>!
 
     override func setUpWithError() throws {
+        continueAfterFailure = false
         toastTimer = .init()
     }
 
@@ -20,6 +21,7 @@ final class Toast_Timer_Tests: XCTestCase {
         toastTimer = nil
     }
 
+    // MARK: - Show Toast
     func test_show_toast() throws {
         // (1) Given
         let message = "Exceeds Maximum Data Amount"
@@ -36,5 +38,4 @@ final class Toast_Timer_Tests: XCTestCase {
             XCTAssertNil(self.toastTimer.timer)
         }
     }
-
 }

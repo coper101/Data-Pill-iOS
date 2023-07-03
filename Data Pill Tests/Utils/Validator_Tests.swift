@@ -10,11 +10,13 @@ import XCTest
 
 final class Validator_Tests: XCTestCase {
 
-    override func setUpWithError() throws {}
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+    }
 
     override func tearDownWithError() throws {}
 
-    /// hasExceededLimit()
+    // MARK: - Has Exceeded Limit
     func test_has_exceeded_limit_above_max() throws {
         // (1) Given
         let value = "6.0"
@@ -59,6 +61,4 @@ final class Validator_Tests: XCTestCase {
         // (3) Then
         XCTAssertFalse(hasExceeded)
     }
-    
-    
 }

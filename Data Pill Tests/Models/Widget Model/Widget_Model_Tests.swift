@@ -11,12 +11,13 @@ import XCTest
 final class Widget_Model_Tests: XCTestCase {
     
     private var widgetModel: WidgetModel!
+    
     private var appDataRepository: AppDataRepositoryProtocol!
     private var dataUsageRepository: DataUsageRepositoryProtocol!
     private var networkDataRepository: NetworkDataRepositoryProtocol!
 
     override func setUpWithError() throws {
-        try super.setUpWithError()
+        continueAfterFailure = false
         widgetModel = createWidgetModel()
     }
 
@@ -24,6 +25,7 @@ final class Widget_Model_Tests: XCTestCase {
         widgetModel = nil
     }
     
+    // MARK: - Helpers
     func createWidgetModel() -> WidgetModel {
         appDataRepository = MockAppDataRepository()
         dataUsageRepository = DataUsageRepository(
@@ -39,6 +41,7 @@ final class Widget_Model_Tests: XCTestCase {
         )
     }
     
+    // MARK: - Latest App Data
     func test_get_latest_app_data() throws {
         // (1) Given
         let unit = Unit.gb

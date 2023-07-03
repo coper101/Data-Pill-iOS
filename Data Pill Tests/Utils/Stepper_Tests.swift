@@ -11,12 +11,12 @@ import XCTest
 final class Stepper_Tests: XCTestCase {
 
     override func setUpWithError() throws {
-        try super.setUpWithError()
+        continueAfterFailure = false
     }
 
     override func tearDownWithError() throws {}
 
-    // MARK: Plus
+    // MARK: - Plus
     func test_plus_in_range() {
         // (1) Given
         // (2) When
@@ -65,7 +65,7 @@ final class Stepper_Tests: XCTestCase {
         XCTAssertEqual(output, "0.1")
     }
     
-    // MARK: Minus
+    // MARK: - Minus
     func test_minus_in_range() {
         // (1) Given
         // (2) When
@@ -89,5 +89,4 @@ final class Stepper_Tests: XCTestCase {
         // (3) Then
         XCTAssertEqual(output, "-1.0")
     }
-
 }

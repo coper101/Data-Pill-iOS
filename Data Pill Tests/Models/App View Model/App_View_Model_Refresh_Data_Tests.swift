@@ -10,15 +10,15 @@ import XCTest
 
 final class App_View_Model_Refresh_Data_Tests: XCTestCase {
 
-    /**
-        When View of app is not shown, the Today's Data will not be created
-            - ensure today's data is created every test case
-    */
-    override func setUpWithError() throws {}
+    /// When View of app is not shown, the Today's Data will not be created
+    /// - ensure today's data is created every test case
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+    }
 
     override func tearDownWithError() throws {}
 
-    // MARK: - Mobile Data
+    // MARK: - Refresh Used Mobile Data
     func test_refresh_used_data_today_with_empty_total_used_data() throws {
         // (1) Given
         let newTotalUsedData = 0.0

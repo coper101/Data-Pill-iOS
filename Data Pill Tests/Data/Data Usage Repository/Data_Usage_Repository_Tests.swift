@@ -15,7 +15,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
     private var mockErrorRepository: DataUsageRepositoryProtocol!
 
     override func setUpWithError() throws {
-        try super.setUpWithError()
+        continueAfterFailure = false
         let database = InMemoryLocalDatabase(
             container: .dataUsage,
             appGroup: nil
@@ -28,10 +28,8 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         repository = nil
         mockErrorRepository = nil
     }
-    
-    // MARK: - Operations
-    
-    // MARK: [1] Data
+        
+    // MARK: - Data
     func test_add_data_yesterday() throws {
         // (1) Given
         let todaysDate = Calendar.current.startOfDay(for: .init())
@@ -421,7 +419,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         XCTAssertEqual(totalUsedData, 0)
     }
     
-    // MARK: [2] Plan
+    // MARK: - Plan
     func test_get_plan_exists() throws {
         // (1) Given
         // (2) When
@@ -460,10 +458,8 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         XCTAssertEqual(thePlan!.dailyLimit, 1.0)
         XCTAssertEqual(thePlan!.planLimit, 9.0)
     }
-        
-    // MARK: - Operation Errors
-    
-    // MARK: [1] Data
+            
+    // MARK: - Data Error
     func test_add_data_has_error() throws {
         // (1) Given
         let date = Date()
@@ -584,7 +580,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         try test_data_error_is_empty()
     }
     
-    // MARK: [2] Plan
+    // MARK: - Plan Error
     func test_get_plan_has_error() throws {
         // (1) Given
         // (2) When
@@ -638,7 +634,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         try test_data_error_is_empty()
     }
     
-    // MARK: [3] Error
+    // MARK: - Error
     func test_data_error_is_empty() throws {
         mockErrorRepository.clearDataError()
         XCTAssertNil(mockErrorRepository.dataError)

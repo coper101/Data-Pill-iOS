@@ -14,7 +14,7 @@ final class App_View_Model_Tests: XCTestCase {
     private var appViewModel: AppViewModel!
     
     override func setUpWithError() throws {
-        try super.setUpWithError()
+        continueAfterFailure = false
         appViewModel = createAppViewModel()
     }
 
@@ -603,7 +603,7 @@ final class App_View_Model_Tests: XCTestCase {
         XCTAssertFalse(appViewModel.isHistoryShown)
     }
     
-    // MARK: Data Error
+    // MARK: - Data Error
     func test_date_error() throws {
         // (1) Given
         let error = DatabaseError.loadingContainer()
@@ -633,7 +633,6 @@ final class App_View_Model_Tests: XCTestCase {
         // (3) Then
         XCTAssertEqual(appViewModel.usageType, ToggleItem.plan)
     }
-    
 }
 
 

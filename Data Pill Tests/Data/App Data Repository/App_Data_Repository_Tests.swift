@@ -13,7 +13,7 @@ final class App_Data_Repository_Tests: XCTestCase {
     private var repository: MockAppDataRepository!
 
     override func setUpWithError() throws {
-        try super.setUpWithError()
+        continueAfterFailure = false
         repository = MockAppDataRepository()
     }
 
@@ -21,7 +21,7 @@ final class App_Data_Repository_Tests: XCTestCase {
         repository = nil
     }
     
-    /// setWasGuideShown()
+    // MARK: - Was Guide Shown
     func test_set_was_guide_shown() throws {
         // (1) Given
         let wasShown = true
@@ -40,7 +40,7 @@ final class App_Data_Repository_Tests: XCTestCase {
         XCTAssertEqual(repository.wasGuideShown, false)
     }
     
-    /// setIsPlanActive()
+    // MARK: - Is Plan Active
     func test_set_is_plan_active() throws {
         // (1) Given
         let isActive = true
@@ -59,7 +59,7 @@ final class App_Data_Repository_Tests: XCTestCase {
         XCTAssertEqual(repository.isPlanActive, false)
     }
     
-    /// setUsageType()
+    // MARK: - Usage Type
     func test_set_plan_usage_type() throws {
         // (1) Given
         let type = ToggleItem.plan.rawValue
@@ -78,7 +78,7 @@ final class App_Data_Repository_Tests: XCTestCase {
         XCTAssertEqual(repository.usageType, ToggleItem.daily)
     }
     
-    /// setIsPeriodAuto()
+    // MARK: - Is Period Auto
     func test_set_is_auto_period() throws {
         // (1) Given
         let isAuto = true
@@ -97,7 +97,7 @@ final class App_Data_Repository_Tests: XCTestCase {
         XCTAssertEqual(repository.isPeriodAuto, false)
     }
     
-    /// setPlusStepperValue()
+    // MARK: - Plus Stepper Value
     func test_set_plus_stepper_value_is_data_correct() throws {
         // (1) Given
         let value = 0.1
@@ -125,7 +125,7 @@ final class App_Data_Repository_Tests: XCTestCase {
         XCTAssertEqual(repository.dataLimitPlusStepperValue, 0.1)
     }
     
-    /// setMinusStepperValue()
+    // MARK: - Minus Stepper Value
     func test_set_minus_stepper_value_is_data_correct() throws {
         // (1) Given
         let value = 0.1

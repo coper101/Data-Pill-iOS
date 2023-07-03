@@ -14,6 +14,7 @@ final class Mock_Cloud_Database_Tests: XCTestCase {
     private var cloudDatabase: RemoteDatabase!
 
     override func setUpWithError() throws {
+        continueAfterFailure = false
         cloudDatabase = MockCloudDatabase()
     }
 
@@ -260,5 +261,4 @@ final class Mock_Cloud_Database_Tests: XCTestCase {
             XCTAssertEqual(remoteData2!.dailyUsedData, 22.0)
         }
     }
-
 }
