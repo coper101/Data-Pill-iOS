@@ -21,6 +21,7 @@ extension XCTestCase {
         dataUsageRepository: DataUsageRepositoryProtocol? = nil,
         dataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol? = nil,
         networkDataRepository: NetworkDataRepositoryProtocol? = nil,
+        networkConnectionRepository: NetworkConnectivity? = nil,
         setupValues: Bool = false,
         withTotalUsedData totalUsedData: Double = 0
     ) -> AppViewModel {
@@ -44,6 +45,7 @@ extension XCTestCase {
             dataUsageRepository: dataUsageRepository ?? defaultDataUsageRepository,
             dataUsageRemoteRepository: dataUsageRemoteRepository ?? defaultDataUsageRemoteRepository,
             networkDataRepository: networkDataRepository ?? MockNetworkDataRepository(),
+            networkConnectionRepository: networkConnectionRepository ?? MockHasNetworkConnectionRepository(),
             setupValues: setupValues
         )
     }
@@ -74,6 +76,6 @@ extension XCTestCase {
         }
         .store(in: &subscriptions)
 
-        waitForExpectations(timeout: timeout)
+        wait(for: [expectation], timeout: timeout)
     }
 }

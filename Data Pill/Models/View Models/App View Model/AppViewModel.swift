@@ -169,7 +169,7 @@ final class AppViewModel: ObservableObject {
             database: LocalDatabase(container: .dataUsage, appGroup: .dataPill)
         ),
         dataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol = DataUsageRemoteRepository(
-            remoteDatabase: CloudDatabase(container: .dataPill)
+            remoteDatabase: MockCloudDatabase() //CloudDatabase(container: .dataPill)
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
         networkConnectionRepository: NetworkConnectivity = NetworkConnectionRepository(),

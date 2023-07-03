@@ -15,3 +15,11 @@ final class MockNoNetworkConnectionRepository: NetworkConnectivity {
     var hasInternetConnectionPublisher: Published<Bool>.Publisher { $hasInternetConnection }
     
 }
+
+final class MockHasNetworkConnectionRepository: NetworkConnectivity {
+    
+    @Published var hasInternetConnection: Bool = true
+    var hasInternetConnectionPublisher: Published<Bool>.Publisher { $hasInternetConnection }
+    
+}
+

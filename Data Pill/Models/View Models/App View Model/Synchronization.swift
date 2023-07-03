@@ -12,9 +12,14 @@ extension AppViewModel {
     
     // MARK: - Sync Plan
     func syncPlan() {
+        /// 1A. Prevent Duplicate Calls
+        guard !isSyncingPlan else {
+            return
+        }
+        
         isSyncingPlan = true
         
-        /// 1. Check Internet Connection
+        /// 1B. Check Internet Connection
         guard hasInternetConnection else {
             Logger.appModel.debug("syncPlan - error: no internet connection")
             isSyncingPlan = false
@@ -25,6 +30,7 @@ extension AppViewModel {
         /// - when guide is shown, this means that user has intalled the app for the first time
         /// - check the user has an existing plan from remote
         guard wasGuideShown else {
+            Logger.appModel.debug("syncPlan - syncing local plan from remote")
             syncLocalPlanFromRemote(updateToLatestPlanAfterwards: false)
             return
         }
@@ -41,12 +47,20 @@ extension AppViewModel {
         )
         
         guard !isFreshPlan else {
+            Logger.appModel.debug("syncPlan - syncing local plan from remote")
             syncLocalPlanFromRemote(updateToLatestPlanAfterwards: true)
             return
         }
                 
+        Logger.appModel.debug("syncPlan - syncing local plan to remote")
+
         /// 2B. Upload Local `Plan` to `RemoteDatabase`
         /// - this happens regularly when user make changes to the plan
+        syncLocalPlanToRemote()
+    }
+    
+    func syncLocalPlanToRemote() {
+        
         dataUsageRemoteRepository.syncPlan(
             startDate: self.startDate,
             endDate: self.endDate,
@@ -58,14 +72,14 @@ extension AppViewModel {
         .sink { [weak self] completion in
             switch completion {
             case .failure(let error):
-                Logger.appModel.debug("syncPlan - is plan saved or updated error: \(error.localizedDescription)")
+                Logger.appModel.debug("syncPlan -> syncLocalPlanToRemote - is plan saved or updated error: \(error.localizedDescription)")
             case .finished:
                 break
             }
             self?.isSyncingPlan = false
             
         } receiveValue: { isSavedOrUpdated in
-            Logger.appModel.debug("syncPlan - is plan saved or updated: \(isSavedOrUpdated)")
+            Logger.appModel.debug("syncPlan -> syncLocalPlanToRemote - is plan saved or updated: \(isSavedOrUpdated)")
         }
         .store(in: &cancellables)
     }
@@ -78,7 +92,7 @@ extension AppViewModel {
             .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan error: \(error.localizedDescription)")
+                    Logger.appModel.debug("syncPlan -> syncLocalPlanFromRemote - get existing plan error: \(error.localizedDescription)")
                 case .finished:
                     break
                 }
@@ -89,12 +103,14 @@ extension AppViewModel {
                     return
                 }
                 guard let remotePlan else {
-                    Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan doesn't exist")
+                    Logger.appModel.debug("syncPlan -> syncLocalPlanFromRemote - get existing plan doesn't exist, uploading new plan")
+                    /// 2A. Upload New Local `Plan` to `RemoteDatabase`
+                    self.syncLocalPlanToRemote()
                     return
                 }
-                Logger.appModel.debug("syncLocalPlanFromRemote - get existing plan: \(remotePlan.startDate) - \(remotePlan.endDate)")
+                Logger.appModel.debug("syncPlan -> syncLocalPlanFromRemote - get existing plan: \(remotePlan.startDate) - \(remotePlan.endDate), updating local plan")
                 
-                /// 2. Update `Plan` in `Database`.  Creates the `Plan` if it doesn't exist
+                /// 2B. Update `Plan` in `Database`.  Creates the `Plan` if it doesn't exist
                 /// - prevent updating plan after adding to core data
                 /// - can cause this ``syncPlan()`` to be fired again
                 self.dataUsageRepository.updatePlan(
@@ -111,9 +127,14 @@ extension AppViewModel {
     
     // MARK: - Sync Today's Data
     func syncTodaysData() {
+        /// 1A. Prevent Duplicate Calls
+        guard !isSyncingTodaysData else {
+            return
+        }
+        
         isSyncingTodaysData = true
 
-        /// 1. Check Internet Connection
+        /// 1B. Check Internet Connection
         guard hasInternetConnection else {
             Logger.appModel.debug("syncTodaysData - error: no internet connection")
             isSyncingTodaysData = false
@@ -186,28 +207,28 @@ extension AppViewModel {
     
     func syncLocalTodaysDataFromRemote(_ todaysData: Data) -> AnyPublisher<(Bool, Double), Never> {
         let date = Calendar.current.startOfDay(for: todaysData.date ?? .init())
-        Logger.appModel.debug("syncLocalTodayDataFromRemote - today's date: \(date)")
+        Logger.appModel.debug("syncTodaysData -> syncLocalTodayDataFromRemote - today's date: \(date)")
                 
         /// 1. Download Existing Today's `Data` from `RemoteDatabase`
         return dataUsageRemoteRepository.getData(on: date)
             .replaceError(with: nil)
             .flatMap { (remoteData: RemoteData?) in
                 guard let remoteData else {
-                    Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data doesn't exist")
+                    Logger.appModel.debug("syncTodaysData -> syncLocalTodayDataFromRemote - get existing todays data doesn't exist")
                     return Just((false, 0.0))
                 }
                 
                 let remoteDailyUsedData = remoteData.dailyUsedData
                 let localDailyUsedData = todaysData.dailyUsedData
                 
-                Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data from remote: \(remoteDailyUsedData)")
-                Logger.appModel.debug("syncLocalTodayDataFromRemote - get existing todays data from local: \(localDailyUsedData)")
+                Logger.appModel.debug("syncTodaysData -> syncLocalTodayDataFromRemote - get existing todays data from remote: \(remoteDailyUsedData)")
+                Logger.appModel.debug("syncTodaysData -> syncLocalTodayDataFromRemote - get existing todays data from local: \(localDailyUsedData)")
 
                 /// 2. Return the New Daily Used `Data`
                 /// - only if remote data is more than local's
                 /// - e.g. 10 MB (Remote)  >  5 MB (Local)
                 if remoteDailyUsedData > localDailyUsedData {
-                    Logger.appModel.debug("syncLocalTodayDataFromRemote - remote: \(remoteDailyUsedData) > local \(localDailyUsedData)")
+                    Logger.appModel.debug("syncTodaysData -> syncLocalTodayDataFromRemote - remote: \(remoteDailyUsedData) > local \(localDailyUsedData)")
                     return Just((true, remoteDailyUsedData))
                 }
                 return Just((false, 0.0))
@@ -217,9 +238,14 @@ extension AppViewModel {
     
     // MARK: - Sync Old Data
     func syncOldThenRemoteData() {
+        /// 1A. Prevent Duplicate Calls
+        guard !isSyncingOldData else {
+            return
+        }
+        
         isSyncingOldData = true
         
-        /// 1. Check Internet Connection
+        /// 1B. Check Internet Connection
         guard hasInternetConnection else {
             Logger.appModel.debug("syncOldThenRemoteData - error: no internet connection")
             isSyncingOldData = false

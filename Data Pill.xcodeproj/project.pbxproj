@@ -132,6 +132,9 @@
 		27D056E52A51562200A6EC04 /* LocalIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E42A51562200A6EC04 /* LocalIdentifiers.swift */; };
 		27D056EA2A5157C100A6EC04 /* LocalIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E42A51562200A6EC04 /* LocalIdentifiers.swift */; };
 		27D056EC2A51589A00A6EC04 /* Mock_Local_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E72A5156C700A6EC04 /* Mock_Local_Database.swift */; };
+		27D056F02A516E6C00A6EC04 /* Mock_Cloud_Database_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056EF2A516E6C00A6EC04 /* Mock_Cloud_Database_Tests.swift */; };
+		27D056F22A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056F12A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift */; };
+		27D056F32A51A41C00A6EC04 /* Mock_Cloud_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056ED2A515AE900A6EC04 /* Mock_Cloud_Database.swift */; };
 		27D4CA292A46EB60008989B1 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA282A46EB60008989B1 /* Events.swift */; };
 		27D4CA2B2A46EB67008989B1 /* Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2A2A46EB67008989B1 /* Observers.swift */; };
 		27D4CA2D2A46EB70008989B1 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2C2A46EB70008989B1 /* Synchronization.swift */; };
@@ -382,6 +385,9 @@
 		27D056E02A51539B00A6EC04 /* AppDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataKeys.swift; sourceTree = "<group>"; };
 		27D056E42A51562200A6EC04 /* LocalIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalIdentifiers.swift; sourceTree = "<group>"; };
 		27D056E72A5156C700A6EC04 /* Mock_Local_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Local_Database.swift; sourceTree = "<group>"; };
+		27D056ED2A515AE900A6EC04 /* Mock_Cloud_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Cloud_Database.swift; sourceTree = "<group>"; };
+		27D056EF2A516E6C00A6EC04 /* Mock_Cloud_Database_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Cloud_Database_Tests.swift; sourceTree = "<group>"; };
+		27D056F12A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_New_User_Tests.swift; sourceTree = "<group>"; };
 		27D4CA282A46EB60008989B1 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		27D4CA2A2A46EB67008989B1 /* Observers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observers.swift; sourceTree = "<group>"; };
 		27D4CA2C2A46EB70008989B1 /* Synchronization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
@@ -535,6 +541,8 @@
 				27382DBD2A48376B0001E3FA /* Mock_Success_Remote_Database.swift */,
 				27382DBF2A4837BD0001E3FA /* Mock_Fail_Remote_Database.swift */,
 				27E3F42B2A4844AA00ED655F /* Mock_Defaults_Remote_Database.swift */,
+				27D056EF2A516E6C00A6EC04 /* Mock_Cloud_Database_Tests.swift */,
+				27D056ED2A515AE900A6EC04 /* Mock_Cloud_Database.swift */,
 			);
 			path = "Remote Database";
 			sourceTree = "<group>";
@@ -809,6 +817,7 @@
 		27D056792A4B2A5600A6EC04 /* App View Model */ = {
 			isa = PBXGroup;
 			children = (
+				27D056F12A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift */,
 				27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */,
 				27EFEBB02A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift */,
 				278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */,
@@ -1277,6 +1286,7 @@
 				27D4CA2B2A46EB67008989B1 /* Observers.swift in Sources */,
 				27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */,
 				27EFEBB42A4AAA5300F73DD5 /* ProcessInfo.swift in Sources */,
+				27D056F32A51A41C00A6EC04 /* Mock_Cloud_Database.swift in Sources */,
 				27B90B8928F2D43700263983 /* DataTest.swift in Sources */,
 				27801DEE28D8B7FA00201339 /* Numbers.swift in Sources */,
 				27801DEA28D72A6600201339 /* Date.swift in Sources */,
@@ -1306,6 +1316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27D056F02A516E6C00A6EC04 /* Mock_Cloud_Database_Tests.swift in Sources */,
 				27F47DDC29053AE400B3F83D /* Network_Data_Repository_Tests.swift in Sources */,
 				27382DB52A48352A0001E3FA /* Mock_Fail_Data_Usage_Repository.swift in Sources */,
 				27E3F42C2A4844AA00ED655F /* Mock_Defaults_Remote_Database.swift in Sources */,
@@ -1323,6 +1334,7 @@
 				27382DC32A48389E0001E3FA /* Mock_Todays_Data_Remote_Database.swift in Sources */,
 				27F47DDA2905330D00B3F83D /* App_Data_Repository_Tests.swift in Sources */,
 				2761528D293CAF7F00AEA000 /* Widget_Model_Tests.swift in Sources */,
+				27D056F22A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift in Sources */,
 				2740146C29D02A44003EF614 /* Data_Usage_Remote_Sync_Repository_Tests.swift in Sources */,
 				274FCF942978D9860087AC86 /* Toast_Timer_Tests.swift in Sources */,
 				272DB10929BB0E7100E9CA93 /* Remote_Database_Tests.swift in Sources */,
