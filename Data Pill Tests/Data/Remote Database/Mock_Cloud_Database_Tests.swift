@@ -23,12 +23,12 @@ final class Mock_Cloud_Database_Tests: XCTestCase {
     }
 
     // MARK: - Status
-    func test_is_logged_in() throws {
+    func test_has_access_to_cloud_database() throws {
         createExpectation(
-            publisher: cloudDatabase.checkLoginStatus(),
-            description: "Is Logged In"
-        ) { isLoggedIn in
-            XCTAssertTrue(isLoggedIn)
+            publisher: cloudDatabase.isAvailable(),
+            description: "Is Available"
+        ) { isAvailable in
+            XCTAssertTrue(isAvailable)
         }
     }
     

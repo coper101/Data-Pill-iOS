@@ -12,6 +12,13 @@ import CloudKit
 
 final class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProtocol {
     
+    // MARK: - User
+    func isDatabaseAccessible() -> AnyPublisher<Bool, Error> {
+        Fail(error: RemoteDatabaseError.accountError(.noAccount))
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Plan
     func isPlanAdded() -> AnyPublisher<Bool, Error> {
         Just(false)
             .setFailureType(to: Error.self)
@@ -48,6 +55,7 @@ final class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemote
             .eraseToAnyPublisher()
     }
     
+    // MARK: - Data
     func getData(on date: Date) -> AnyPublisher<RemoteData?, Error> {
         Just(nil)
             .setFailureType(to: Error.self)
@@ -78,11 +86,7 @@ final class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemote
             .eraseToAnyPublisher()
     }
     
-    func isLoggedInUser() -> AnyPublisher<Bool, Never> {
-        Just(false)
-            .eraseToAnyPublisher()
-    }
-    
+    // MARK: - Synchronization
     func syncPlan(
         startDate: Date,
         endDate: Date,
@@ -113,6 +117,7 @@ final class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemote
             .eraseToAnyPublisher()
     }
     
+    // MARK: - Subscription
     func subscribeToRemotePlanChanges() -> AnyPublisher<Bool, Never> {
         Just(false)
             .eraseToAnyPublisher()

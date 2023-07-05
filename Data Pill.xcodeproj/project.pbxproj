@@ -107,6 +107,7 @@
 		27B9B0442A42DCF8002CC568 /* Mock_Common_Remote_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B9B0432A42DCF8002CC568 /* Mock_Common_Remote_Database.swift */; };
 		27BB19EB2971568800851E14 /* PillTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB19EA2971568800851E14 /* PillTitleView.swift */; };
 		27BB19ED2972D1F500851E14 /* AccessibilityLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB19EC2972D1F400851E14 /* AccessibilityLabels.swift */; };
+		27BBCB122A55579500C76B05 /* RemoteOperationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BBCB112A55579500C76B05 /* RemoteOperationError.swift */; };
 		27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE08292928BD6C00E0781C /* StepperValueView.swift */; };
 		27BE082C2928D7BE00E0781C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE082B2928D7BE00E0781C /* Types.swift */; };
 		27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */; };
@@ -122,7 +123,6 @@
 		27D056CF2A5091F900A6EC04 /* RemoteDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056CE2A5091F900A6EC04 /* RemoteDataOperation.swift */; };
 		27D056D12A5094F700A6EC04 /* RemoteUserOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D02A5094F600A6EC04 /* RemoteUserOperation.swift */; };
 		27D056D32A50952B00A6EC04 /* RemoteSynchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D22A50952B00A6EC04 /* RemoteSynchronization.swift */; };
-		27D056D62A50B07000A6EC04 /* RemoteErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D52A50B07000A6EC04 /* RemoteErrors.swift */; };
 		27D056D82A50B09B00A6EC04 /* RemoteIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D72A50B09B00A6EC04 /* RemoteIdentifiers.swift */; };
 		27D056DA2A50B1A700A6EC04 /* RemoteAccountOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */; };
 		27D056DC2A50B1F900A6EC04 /* RemoteRecordOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */; };
@@ -133,7 +133,7 @@
 		27D056EA2A5157C100A6EC04 /* LocalIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E42A51562200A6EC04 /* LocalIdentifiers.swift */; };
 		27D056EC2A51589A00A6EC04 /* Mock_Local_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056E72A5156C700A6EC04 /* Mock_Local_Database.swift */; };
 		27D056F02A516E6C00A6EC04 /* Mock_Cloud_Database_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056EF2A516E6C00A6EC04 /* Mock_Cloud_Database_Tests.swift */; };
-		27D056F22A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056F12A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift */; };
+		27D056F22A517C5A00A6EC04 /* App_View_Model_Cloud_Sync_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056F12A517C5A00A6EC04 /* App_View_Model_Cloud_Sync_Tests.swift */; };
 		27D056F32A51A41C00A6EC04 /* Mock_Cloud_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056ED2A515AE900A6EC04 /* Mock_Cloud_Database.swift */; };
 		27D4CA292A46EB60008989B1 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA282A46EB60008989B1 /* Events.swift */; };
 		27D4CA2B2A46EB67008989B1 /* Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D4CA2A2A46EB67008989B1 /* Observers.swift */; };
@@ -365,6 +365,7 @@
 		27B9B0432A42DCF8002CC568 /* Mock_Common_Remote_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Common_Remote_Database.swift; sourceTree = "<group>"; };
 		27BB19EA2971568800851E14 /* PillTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillTitleView.swift; sourceTree = "<group>"; };
 		27BB19EC2972D1F400851E14 /* AccessibilityLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityLabels.swift; sourceTree = "<group>"; };
+		27BBCB112A55579500C76B05 /* RemoteOperationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteOperationError.swift; sourceTree = "<group>"; };
 		27BE08292928BD6C00E0781C /* StepperValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperValueView.swift; sourceTree = "<group>"; };
 		27BE082B2928D7BE00E0781C /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionRepository.swift; sourceTree = "<group>"; };
@@ -377,7 +378,6 @@
 		27D056CE2A5091F900A6EC04 /* RemoteDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDataOperation.swift; sourceTree = "<group>"; };
 		27D056D02A5094F600A6EC04 /* RemoteUserOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteUserOperation.swift; sourceTree = "<group>"; };
 		27D056D22A50952B00A6EC04 /* RemoteSynchronization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSynchronization.swift; sourceTree = "<group>"; };
-		27D056D52A50B07000A6EC04 /* RemoteErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteErrors.swift; sourceTree = "<group>"; };
 		27D056D72A50B09B00A6EC04 /* RemoteIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIdentifiers.swift; sourceTree = "<group>"; };
 		27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccountOperation.swift; sourceTree = "<group>"; };
 		27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteRecordOperation.swift; sourceTree = "<group>"; };
@@ -387,7 +387,7 @@
 		27D056E72A5156C700A6EC04 /* Mock_Local_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Local_Database.swift; sourceTree = "<group>"; };
 		27D056ED2A515AE900A6EC04 /* Mock_Cloud_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Cloud_Database.swift; sourceTree = "<group>"; };
 		27D056EF2A516E6C00A6EC04 /* Mock_Cloud_Database_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Cloud_Database_Tests.swift; sourceTree = "<group>"; };
-		27D056F12A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_New_User_Tests.swift; sourceTree = "<group>"; };
+		27D056F12A517C5A00A6EC04 /* App_View_Model_Cloud_Sync_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Cloud_Sync_Tests.swift; sourceTree = "<group>"; };
 		27D4CA282A46EB60008989B1 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		27D4CA2A2A46EB67008989B1 /* Observers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observers.swift; sourceTree = "<group>"; };
 		27D4CA2C2A46EB70008989B1 /* Synchronization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
@@ -819,7 +819,7 @@
 			isa = PBXGroup;
 			children = (
 				27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */,
-				27D056F12A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift */,
+				27D056F12A517C5A00A6EC04 /* App_View_Model_Cloud_Sync_Tests.swift */,
 				27EFEBB02A49C00800F73DD5 /* App_View_Model_Sync_Tests.swift */,
 				278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */,
 			);
@@ -861,6 +861,7 @@
 				27D056CC2A5091F000A6EC04 /* RemotePlanOperation.swift */,
 				27D056D02A5094F600A6EC04 /* RemoteUserOperation.swift */,
 				27D056D22A50952B00A6EC04 /* RemoteSynchronization.swift */,
+				27BBCB112A55579500C76B05 /* RemoteOperationError.swift */,
 			);
 			path = "Data Usage Remote Repository";
 			sourceTree = "<group>";
@@ -873,7 +874,6 @@
 				27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */,
 				27D056DB2A50B1F900A6EC04 /* RemoteRecordOperation.swift */,
 				27D056DD2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift */,
-				27D056D52A50B07000A6EC04 /* RemoteErrors.swift */,
 			);
 			path = "Remote Database";
 			sourceTree = "<group>";
@@ -1238,6 +1238,7 @@
 				278D1A7029B4AA0800E6C974 /* SyncIndicatorView.swift in Sources */,
 				278FB2D528F53DCA00BE78C2 /* Stepper.swift in Sources */,
 				27801DEC28D73AC900201339 /* UsedCardView.swift in Sources */,
+				27BBCB122A55579500C76B05 /* RemoteOperationError.swift in Sources */,
 				27E77751293B68D10031456D /* Widget.swift in Sources */,
 				27D056DC2A50B1F900A6EC04 /* RemoteRecordOperation.swift in Sources */,
 				27073017298E561500B05B51 /* DataUsageRemoteRepository.swift in Sources */,
@@ -1249,7 +1250,6 @@
 				27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
 				27801E0F28E1E7C500201339 /* ButtonView.swift in Sources */,
-				27D056D62A50B07000A6EC04 /* RemoteErrors.swift in Sources */,
 				27F233AD2945CD4800E6102D /* SmallWidgetView.swift in Sources */,
 				27F47DDF29067C8E00B3F83D /* Button.swift in Sources */,
 				27801DF928DA0A8600201339 /* DataPlanCardView.swift in Sources */,
@@ -1334,7 +1334,7 @@
 				27382DC32A48389E0001E3FA /* Mock_Todays_Data_Remote_Database.swift in Sources */,
 				27F47DDA2905330D00B3F83D /* App_Data_Repository_Tests.swift in Sources */,
 				2761528D293CAF7F00AEA000 /* Widget_Model_Tests.swift in Sources */,
-				27D056F22A517C5A00A6EC04 /* App_View_Model_New_User_Tests.swift in Sources */,
+				27D056F22A517C5A00A6EC04 /* App_View_Model_Cloud_Sync_Tests.swift in Sources */,
 				2740146C29D02A44003EF614 /* Data_Usage_Remote_Sync_Repository_Tests.swift in Sources */,
 				274FCF942978D9860087AC86 /* Toast_Timer_Tests.swift in Sources */,
 				272DB10929BB0E7100E9CA93 /* Mock_Remote_Database_Tests.swift in Sources */,

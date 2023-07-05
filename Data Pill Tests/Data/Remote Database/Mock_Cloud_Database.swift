@@ -13,13 +13,24 @@ final class MockCloudDatabase: RemoteDatabase {
     
     let dataRecords: NSMutableArray = []
     let planRecords: NSMutableArray = []
-    let isLoggedIn: Bool = true
+    let hasAccess: Bool
     
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Just(isLoggedIn)
+    init(hasAccess: Bool = true) {
+        self.hasAccess = hasAccess
+    }
+    
+    // MARK: - Account
+    func isAvailable() -> AnyPublisher<Bool, Error> {
+        if hasAccess {
+            return Just(true)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        return Fail(error: RemoteDatabaseError.accountError(.noAccount))
             .eraseToAnyPublisher()
     }
     
+    // MARK: - Records
     func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error> {
         switch recordType {
         case .plan:
@@ -151,6 +162,7 @@ final class MockCloudDatabase: RemoteDatabase {
             .eraseToAnyPublisher()
     }
     
+    // MARK: - Subscriptions
     func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never> {
         Just(false)
             .eraseToAnyPublisher()

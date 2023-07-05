@@ -12,21 +12,13 @@ import CloudKit
 
 final class MockFailCloudDatabase: RemoteDatabase {
     
-    func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never> {
-        Just(false)
+    // MARK: - Account
+    func isAvailable() -> AnyPublisher<Bool, Error> {
+        Fail(error: RemoteDatabaseError.accountError(.noAccount))
             .eraseToAnyPublisher()
     }
     
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
-        Just([])
-            .eraseToAnyPublisher()
-    }
-    
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Just(false)
-            .eraseToAnyPublisher()
-    }
-    
+    // MARK: - Records
     func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error> {
         Just([])
             .setFailureType(to: Error.self)
@@ -46,6 +38,17 @@ final class MockFailCloudDatabase: RemoteDatabase {
     
     func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
         Fail(error: RemoteDatabaseError.saveError("Save Error"))
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Subscription
+    func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never> {
+        Just(false)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
+        Just([])
             .eraseToAnyPublisher()
     }
 }

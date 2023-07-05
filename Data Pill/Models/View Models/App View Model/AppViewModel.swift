@@ -57,7 +57,7 @@ final class AppViewModel: ObservableObject {
     @Published var totalUsedData = 0.0
     
     /// [4] Network Connection
-    @Published var hasInternetConnection: Bool = true
+    @Published var hasInternetConnection: Bool = false
 
     var numOfDaysOfPlan: Int {
         startDate.toNumOfDays(to: endDate)
@@ -93,6 +93,9 @@ final class AppViewModel: ObservableObject {
     @Published var isSyncingOldData = false
     
     @Published var isSyncing = false
+    @Published var isSyncPlanCancelled = false
+    @Published var isSyncTodaysDataCancelled = false
+    @Published var isSyncOldDataCancelled = false
     
     /// Background iCloud Syncing
     @Published var backgroundTaskID: UIBackgroundTaskIdentifier?
@@ -176,20 +179,20 @@ final class AppViewModel: ObservableObject {
         toastTimer: ToastTimer<LocalizedStringKey> = .init(),
         setupValues: Bool = true
     ) {
+        self.networkConnectionRepository = networkConnectionRepository
         self.appDataRepository = appDataRepository
         self.dataUsageRepository = dataUsageRepository
         self.dataUsageRemoteRepository = dataUsageRemoteRepository
         self.networkDataRepository = networkDataRepository
-        self.networkConnectionRepository = networkConnectionRepository
         self.toastTimer = toastTimer
         
         guard setupValues else {
             return
         }
+        republishNetworkConnection()
         republishAppData()
         republishDataUsage()
         republishNetworkData()
-        republishNetworkConnection()
         republishToast()
         
         setInputValues()

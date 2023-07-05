@@ -14,7 +14,7 @@ import OSLog
 protocol RemoteDatabase {
   
     // MARK: - Account
-    func checkLoginStatus() -> AnyPublisher<Bool, Never>
+    func isAvailable() -> AnyPublisher<Bool, Error>
     
     
     // MARK: - Records

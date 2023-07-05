@@ -12,24 +12,13 @@ import CloudKit
 
 extension RemoteDatabase {
     
-    func createOnUpdateRecordSubscription(
-        of recordType: Data_Pill.RecordType,
-        id subscriptionID: String
-    ) -> AnyPublisher<Bool, Never> {
+    // MARK: - Account
+    func isAvailable() -> AnyPublisher<Bool, Never> {
         Just(true)
             .eraseToAnyPublisher()
     }
     
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
-        Just([])
-            .eraseToAnyPublisher()
-    }
-    
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
+    // MARK: - Records
     func fetch(with predicate: NSPredicate, of recordType: Data_Pill.RecordType) -> AnyPublisher<[CKRecord], Error> {
         Just([])
             .setFailureType(to: Error.self)
@@ -51,6 +40,20 @@ extension RemoteDatabase {
     func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
         Just(true)
             .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Subscriptions
+    func createOnUpdateRecordSubscription(
+        of recordType: Data_Pill.RecordType,
+        id subscriptionID: String
+    ) -> AnyPublisher<Bool, Never> {
+        Just(true)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
+        Just([])
             .eraseToAnyPublisher()
     }
 }

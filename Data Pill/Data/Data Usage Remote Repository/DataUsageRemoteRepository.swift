@@ -12,6 +12,11 @@ import OSLog
 
 // MARK: - Protocol
 protocol DataUsageRemoteRepositoryProtocol {
+    
+    // MARK: - User
+    /// - Read
+    func isDatabaseAccessible() -> AnyPublisher<Bool, Error>
+    
         
     // MARK: - Data
     /// - Read
@@ -49,11 +54,6 @@ protocol DataUsageRemoteRepositoryProtocol {
     ) -> AnyPublisher<Bool, Error>
     
     
-    // MARK: - User
-    /// - Read
-    func isLoggedInUser() -> AnyPublisher<Bool, Never>
-    
-    
     // MARK: - Synchronization
     /// - Plan
     func syncPlan(
@@ -88,11 +88,6 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     
     // MARK: - Dependencies
     let remoteDatabase: RemoteDatabase
-    
-    
-    // MARK: - User
-    @Published var isLoggedIn = false
-    @Published var plan: RemotePlan?
     
     
     // MARK: - Initializer

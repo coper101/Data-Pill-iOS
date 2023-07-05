@@ -12,11 +12,14 @@ import CloudKit
 
 final class MockSyncRemoteDatabase: RemoteDatabase {
     
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
+    // MARK: - Account
+    func isAvailable() -> AnyPublisher<Bool, Error> {
         Just(true)
+            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
     
+    // MARK: - Records
     func fetchAll(of recordType: RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
         if recursively {
             let todaysDate = Calendar.current.startOfDay(for: .init())
@@ -82,11 +85,14 @@ final class MockSyncRemoteDatabase: RemoteDatabase {
 
 final class MockSyncTodaysDataRemoteDatabase: RemoteDatabase {
     
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
+    // MARK: - Account
+    func isAvailable() -> AnyPublisher<Bool, Error> {
         Just(true)
+            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
+    // MARK: - Records
     func fetchAll(of recordType: RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
         let todaysDate = Calendar.current.startOfDay(for: .init())
         return Just([

@@ -267,29 +267,29 @@ final class Mock_Data_Usage_Remote_Repository_Tests: XCTestCase {
     }
     
     // MARK: - User
-    func test_is_logged_in_user() throws {
+    func test_has_access_to_database() throws {
         // (1) Given
         // (2) When
         createExpectation(
-            publisher: repository.isLoggedInUser(),
-            description: "Check Is User Logged In"
-        ) { isLoggedIn in
+            publisher: repository.isDatabaseAccessible(),
+            description: "Is Database Accessible"
+        ) { hasAccess in
             
             // (3) Then
-            XCTAssertTrue(isLoggedIn)
+            XCTAssertTrue(hasAccess)
         }
     }
     
-    func test_is_not_logged_in_user() throws {
+    func test_has_no_access_to_database() throws {
         // (1) Given
         // (2) When
         createExpectation(
-            publisher: repositoryFail.isLoggedInUser(),
-            description: "Check Is User Logged In"
-        ) { isLoggedIn in
+            publisher: repositoryFail.isDatabaseAccessible(),
+            description: "Is Database Accessible"
+        ) { hasAccess in
             
             // (3) Then
-            XCTAssertFalse(isLoggedIn)
+            XCTAssertFalse(hasAccess)
         }
     }
     

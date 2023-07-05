@@ -55,10 +55,7 @@ extension AppViewModel {
             .store(in: &cancellables)
         
         appDataRepository.lastSyncedToRemoteDatePublisher
-            .sink { [weak self] in
-                self?.lastSyncedToRemoteDate = $0
-                Logger.appModel.debug("lastSyncedToRemoteDate: \(String(describing: $0))")
-            }
+            .sink { [weak self] in self?.lastSyncedToRemoteDate = $0 }
             .store(in: &cancellables)
     }
     
@@ -115,7 +112,17 @@ extension AppViewModel {
     func republishNetworkConnection() {
         networkConnectionRepository.hasInternetConnectionPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.hasInternetConnection = $0 }
+            .sink { [weak self] hasInternetConnection in
+                guard let self = self else {
+                    return
+                }
+                self.hasInternetConnection = hasInternetConnection
+                
+                guard self.hasInternetConnection else {
+                    return
+                }
+                self.reSynchronize()
+            }
             .store(in: &cancellables)
     }
     

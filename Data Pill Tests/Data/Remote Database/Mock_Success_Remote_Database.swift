@@ -12,21 +12,14 @@ import CloudKit
 
 final class MockSuccessCloudDatabase: RemoteDatabase {
     
-    func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never> {
+    // MARK: - Account
+    func isAvailable() -> AnyPublisher<Bool, Error> {
         Just(true)
+            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
     
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
-        Just(["Plan", "Data"])
-            .eraseToAnyPublisher()
-    }
-    
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
+    // MARK: - Records
     func fetch(with predicate: NSPredicate, of recordType: RecordType) -> AnyPublisher<[CKRecord], Error> {
         
         let remotePlan = RemotePlan(
@@ -72,6 +65,17 @@ final class MockSuccessCloudDatabase: RemoteDatabase {
     func save(records: [CKRecord]) -> AnyPublisher<Bool, Error> {
         Just(true)
             .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Subscriptions
+    func createOnUpdateRecordSubscription(of recordType: RecordType, id subscriptionID: String) -> AnyPublisher<Bool, Never> {
+        Just(true)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
+        Just(["Plan", "Data"])
             .eraseToAnyPublisher()
     }
 }

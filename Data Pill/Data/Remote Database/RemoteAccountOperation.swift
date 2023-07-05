@@ -12,17 +12,40 @@ import OSLog
 
 extension CloudDatabase {
     
-    /// Publishes whether a we have access to user's iCloud database
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
+    /// Publishes whether a user has allowed to access his iCloud Database
+    func isAvailable() -> AnyPublisher<Bool, Error> {
         Future { promise in
             self.container.accountStatus { accountStatus, error in
-                guard accountStatus == .available else {
-                    Logger.remoteDatabase.debug("checkLoginStatus - is not logged in or disabled iCloud")
-                    promise(.success(false))
+                if let error {
+                    Logger.remoteDatabase.debug("checkLoginStatus - error: \(error.localizedDescription)")
+                    promise(.failure(RemoteDatabaseError.accountError(.error)))
                     return
                 }
-                Logger.remoteDatabase.debug("checkLoginStatus - is logged in")
-                promise(.success(true))
+                switch accountStatus {
+                case .couldNotDetermine:
+                    Logger.remoteDatabase.debug("checkLoginStatus - status: could not determine")
+                    promise(.failure(RemoteDatabaseError.accountError(.couldNotDetermine)))
+
+                case .available:
+                    Logger.remoteDatabase.debug("checkLoginStatus - status: is available")
+                    promise(.success(true))
+                    
+                case .restricted:
+                    Logger.remoteDatabase.debug("checkLoginStatus - status: restricted")
+                    promise(.failure(RemoteDatabaseError.accountError(.restricted)))
+
+                case .noAccount:
+                    Logger.remoteDatabase.debug("checkLoginStatus - status: no account")
+                    promise(.failure(RemoteDatabaseError.accountError(.noAccount)))
+
+                case .temporarilyUnavailable:
+                    Logger.remoteDatabase.debug("checkLoginStatus - status: temporarily unavailable")
+                    promise(.failure(RemoteDatabaseError.accountError(.temporarilyUnavailable)))
+
+                @unknown default:
+                    Logger.remoteDatabase.debug("checkLoginStatus - status: unknown")
+                    promise(.failure(RemoteDatabaseError.accountError(.unknown)))
+                }
             }
         } //: Future
         .eraseToAnyPublisher()

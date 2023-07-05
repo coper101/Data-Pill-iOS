@@ -58,6 +58,15 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         }
     }
     
+    func has_internet_connection() throws {
+        let hasInternetConnection = XCTestExpectation(description: "Internet Connection is Available")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            XCTAssertTrue(self.appViewModel.hasInternetConnection)
+            hasInternetConnection.fulfill()
+        }
+        wait(for: [hasInternetConnection], timeout: 5.0)
+    }
+    
     func prevent_running_on_real_device() throws {
         #if targetEnvironment(simulator)
         #else
@@ -77,7 +86,7 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         try load_fresh_data_usage_repository()
         let remoteDatabase = MockSyncRemoteDatabase()
         
-        let appDataRepository =  AppDataRepository()
+        let appDataRepository = AppDataRepository()
         appDataRepository.setWasGuideShown(false)
         
         /// Today's Data
@@ -90,12 +99,13 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             lastSyncedToRemoteDate: nil
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             appDataRepository: appDataRepository,
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         /// Plan is using default values
         
@@ -133,7 +143,7 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         try load_fresh_data_usage_repository()
         let remoteDatabase = MockSyncRemoteDatabase()
         
-        let appDataRepository =  AppDataRepository()
+        let appDataRepository = AppDataRepository()
         appDataRepository.setWasGuideShown(true)
         
         /// Today's Data
@@ -146,12 +156,13 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             lastSyncedToRemoteDate: nil
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             appDataRepository: appDataRepository,
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         /// Plan is using default values
         
@@ -192,7 +203,7 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         try load_fresh_data_usage_repository()
         let remoteDatabase = MockSyncRemoteDatabase()
         
-        let appDataRepository =  AppDataRepository()
+        let appDataRepository = AppDataRepository()
         appDataRepository.setWasGuideShown(true)
         
         /// Today's Data
@@ -215,12 +226,13 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             updateToLatestPlanAfterwards: true
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             appDataRepository: appDataRepository,
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         // (2) When
         /// Fired from ``didChangeActiveScenePhase()``
@@ -289,11 +301,12 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         
         wait(for: [addTodaysData], timeout: 5.0)
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         // (2) When
         dataUsageRepository.updateToLatestData()
@@ -354,11 +367,12 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         
         wait(for: [addTodaysData], timeout: 5.0)
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
                 
         // (2) When
         appViewModel.syncTodaysData()
@@ -433,12 +447,13 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             lastSyncedToRemoteDate: nil
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             appDataRepository: appDataRepository,
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         // (2) When
         appViewModel.syncOldThenRemoteData()
@@ -464,7 +479,7 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         wait(for: [syncOldData], timeout: 5.0)
     }
     
-    func test_sync_old_local_then_remote_that_has_local_data_to_upload_but_failed_to_login() throws {
+    func test_sync_old_local_then_remote_that_has_local_data_to_upload_but_no_access_to_remote() throws {
         // (1) Given
         let todaysDate = Calendar.current.startOfDay(for: .init())
         let lastSyncedToRemoteDate = TestData.createDate(offset: -2, from: todaysDate)
@@ -504,12 +519,13 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             lastSyncedToRemoteDate: nil
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             appDataRepository: appDataRepository,
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         // (2) When
         appViewModel.syncOldThenRemoteData()
@@ -575,12 +591,13 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             lastSyncedToRemoteDate: lastSyncedToRemoteDate /// Data to Update
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             appDataRepository: appDataRepository,
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         // (2) When
         appViewModel.syncOldThenRemoteData()
@@ -610,7 +627,7 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         wait(for: [syncOldData], timeout: 5.0)
     }
     
-    func test_sync_old_local_then_remote_that_has_local_data_to_update_but_failed_to_login() throws {
+    func test_sync_old_local_then_remote_that_has_local_data_to_update_but_no_access_to_remote() throws {
         // (1) Given
         let todaysDate = Calendar.current.startOfDay(for: .init())
         let lastSyncedToRemoteDate = TestData.createDate(offset: -2, from: todaysDate)
@@ -650,12 +667,13 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             lastSyncedToRemoteDate: lastSyncedToRemoteDate /// Data to Update
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             appDataRepository: appDataRepository,
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         // (2) When
         appViewModel.syncOldThenRemoteData()
@@ -706,11 +724,12 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             lastSyncedToRemoteDate: nil
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         // (2) When
         appViewModel.syncOldThenRemoteData()
@@ -736,7 +755,7 @@ final class App_View_Model_Sync_Tests: XCTestCase {
         wait(for: [syncOldData], timeout: 5.0)
     }
     
-    func test_sync_old_local_then_remote_that_has_remote_data_to_download_but_failed_to_login() throws {
+    func test_sync_old_local_then_remote_that_has_remote_data_to_download_but_no_access_to_remote() throws {
         // (1) Given
         let todaysDate = Calendar.current.startOfDay(for: .init())
         
@@ -754,11 +773,12 @@ final class App_View_Model_Sync_Tests: XCTestCase {
             lastSyncedToRemoteDate: nil
         )
         
-        appViewModel = .init(
+        appViewModel = createAppViewModel(
             dataUsageRepository: dataUsageRepository,
             dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: remoteDatabase),
-            networkConnectionRepository: networkConnectionRepository
+            setupValues: true
         )
+        try has_internet_connection()
         
         // (2) When
         appViewModel.syncOldThenRemoteData()

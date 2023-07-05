@@ -24,15 +24,15 @@ extension DataUsageRemoteRepository {
         let dailyUsedData = todaysData.dailyUsedData
         
         /// 1. Has Access to iCloud?
-        return self.isLoggedInUser()
-            .flatMap { isLoggedIn  in
-                /// 1A. Yep
-                guard isLoggedIn else {
+        return self.isDatabaseAccessible()
+            .flatMap { isAccessible  in
+                /// 1A. Nope
+                guard isAccessible else {
                     return Just(false)
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
-                /// 1B. Nope
+                /// 1B. Yep
                 return self
                     .isDataAdded(on: date)
                     .eraseToAnyPublisher()
@@ -72,15 +72,15 @@ extension DataUsageRemoteRepository {
     ) -> AnyPublisher<Bool, Error> {
         
         /// 1. Has Access to iCloud?
-        self.isLoggedInUser()
-            .flatMap { isLoggedIn in
-                /// 1A. Yep
-                guard isLoggedIn else {
+        self.isDatabaseAccessible()
+            .flatMap { isAccessible in
+                /// 1A. Nope
+                guard isAccessible else {
                     return Just(false)
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
-                /// 1B. Nope
+                /// 1B. Yep
                 return self.isPlanAdded()
                     .eraseToAnyPublisher()
             }
@@ -134,12 +134,12 @@ extension DataUsageRemoteRepository {
                 .eraseToAnyPublisher()
         }
         
-        return self.isLoggedInUser()
-            .flatMap { isLoggedIn -> AnyPublisher<([Data], [Data]), Never> in
+        return self.isDatabaseAccessible()
+            .flatMap { isAccessible -> AnyPublisher<([Data], [Data]), Never> in
                 
                 /// 1. Has Access to iCloud?
                 /// 1A. Nope
-                guard isLoggedIn else {
+                guard isAccessible else {
                     return Just(([], [])).eraseToAnyPublisher()
                 }
                 
@@ -215,15 +215,15 @@ extension DataUsageRemoteRepository {
         Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from local count excluding today: \(allLocalData.count)")
 
         /// 1. Has Access to iCloud?
-        return self.isLoggedInUser()
-            .flatMap { isLoggedIn in
-                /// 1A. Yep - Get All Existing Data from Remote
-                if isLoggedIn {
-                    return self.getAllData(excluding: date)
-                        .eraseToAnyPublisher()
+        return self.isDatabaseAccessible()
+            .flatMap { isAccessible in
+                /// 1A. Nope - Empty Data
+                guard isAccessible else {
+                    return Just([RemoteData]()).eraseToAnyPublisher()
                 }
-                /// 1B. Nope - Empty Data
-                return Just([RemoteData]()).eraseToAnyPublisher()
+                /// 1B. Yep - Get All Existing Data from Remote
+                return self.getAllData(excluding: date)
+                    .eraseToAnyPublisher()
             }
             .flatMap { oldRemoteData in
                 

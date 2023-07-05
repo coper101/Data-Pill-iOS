@@ -12,24 +12,14 @@ import CloudKit
 
 final class MockRemoteDatabase: RemoteDatabase {
     
-    func createOnUpdateRecordSubscription(
-        of recordType: Data_Pill.RecordType,
-        id subscriptionID: String
-    ) -> AnyPublisher<Bool, Never> {
+    // MARK: - Account
+    func isAvailable() -> AnyPublisher<Bool, Error> {
         Just(true)
+            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
     
-    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
-        Just([])
-            .eraseToAnyPublisher()
-    }
-    
-    func checkLoginStatus() -> AnyPublisher<Bool, Never> {
-        Just(true)
-            .eraseToAnyPublisher()
-    }
-    
+    // MARK: - Records
     func fetch(with predicate: NSPredicate, of recordType: Data_Pill.RecordType) -> AnyPublisher<[CKRecord], Error> {
         let todaysDate = Calendar.current.startOfDay(for: .init())
         let yesterdaysDate = TestData.createDate(offset: -1, from: todaysDate)
@@ -86,6 +76,20 @@ final class MockRemoteDatabase: RemoteDatabase {
         }
         return Just(records.count == 2)
             .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Subscriptions
+    func createOnUpdateRecordSubscription(
+        of recordType: Data_Pill.RecordType,
+        id subscriptionID: String
+    ) -> AnyPublisher<Bool, Never> {
+        Just(true)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchAllSubscriptions() -> AnyPublisher<[String], Never> {
+        Just([])
             .eraseToAnyPublisher()
     }
 }

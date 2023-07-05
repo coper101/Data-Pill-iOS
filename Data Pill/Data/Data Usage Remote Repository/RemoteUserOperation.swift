@@ -12,7 +12,7 @@ extension DataUsageRemoteRepository {
     
     /// Publishes whether the ``RemoteDatabase`` is accessible or not for performing operations such
     /// as ``getData()``, ``getData()``, ``updateData()``
-    func isLoggedInUser() -> AnyPublisher<Bool, Never> {
-        remoteDatabase.checkLoginStatus()
+    func isDatabaseAccessible() -> AnyPublisher<Bool, Error> {
+        remoteDatabase.isAvailable()
     }
 }

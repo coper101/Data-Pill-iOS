@@ -26,32 +26,33 @@ final class Mock_Remote_Database_Tests: XCTestCase {
     }
         
     // MARK: - Account
-    func test_check_in_login_status_success() throws {
+    func test_is_available() throws {
         // (1) Given
         // (2) When
         createExpectation(
-            publisher: successRemoteDatabase.checkLoginStatus(),
-            description: "Check Login Status"
-        ) { isLoggedIn in
+            publisher: successRemoteDatabase.isAvailable(),
+            description: "Is Available"
+        ) { isAvailable in
             
             // (3) Then
-            XCTAssertTrue(isLoggedIn)
-            
+            XCTAssertTrue(isAvailable)
         }
     }
     
-    func test_check_in_login_status_fail() throws {
+    func test_is_available_has_error() throws {
         // (1) Given
         // (2) When
         createExpectation(
-            publisher: failRemoteDatabase.checkLoginStatus(),
-            description: "Check Login Status"
-        ) { isLoggedIn in
-            
-            // (3) Then
-            XCTAssertFalse(isLoggedIn)
-            
-        }
+            publisher: failRemoteDatabase.isAvailable(),
+            description: "Is Available",
+            onFailure: { error in
+                
+                // (3) Then
+                let remoteDatabaseError = error as? RemoteDatabaseError
+                XCTAssertNotNil(remoteDatabaseError)
+                XCTAssertEqual(remoteDatabaseError, .accountError(.noAccount))
+            }
+        ) { _ in }
     }
 
     // MARK: - Records

@@ -12,6 +12,14 @@ import CloudKit
 
 final class MockTwoExistingDataRemoteDatabase: RemoteDatabase {
     
+    // MARK: - Account
+    func isAvailable() -> AnyPublisher<Bool, Error> {
+        Just(true)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Records
     func fetchAll(of recordType: RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
         guard recursively else {
             return Just([])
@@ -34,11 +42,3 @@ final class MockTwoExistingDataRemoteDatabase: RemoteDatabase {
             .eraseToAnyPublisher()
     }
 }
-
-//final class MockFailToFetchAllDataRemoteDatabase: RemoteDatabase {
-//
-//    func fetchAll(of recordType: RecordType, recursively: Bool) -> AnyPublisher<[CKRecord], Error> {
-//        Fail(error: RemoteDatabaseError.fetchError("Fetch Error"))
-//            .eraseToAnyPublisher()
-//    }
-//}
