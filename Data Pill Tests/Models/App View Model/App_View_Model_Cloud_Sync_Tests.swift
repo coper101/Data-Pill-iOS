@@ -16,10 +16,12 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
     private var dataUsageRepository: DataUsageRepositoryProtocol!
     private var localDatabase: Database!
     private var remoteDatabase: RemoteDatabase!
+    private var remoteData: CloudData!
     private var appDataRepository: AppDataRepositoryProtocol!
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        remoteData = .init()
     }
 
     override func tearDownWithError() throws {
@@ -27,6 +29,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
         dataUsageRepository = nil
         localDatabase = nil
         remoteDatabase = nil
+        remoteData = nil
         appDataRepository = nil
     }
 
@@ -61,7 +64,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
     }
     
     func load_fresh_remote_database(hasAccess: Bool = true) throws {
-        remoteDatabase = MockCloudDatabase(hasAccess: hasAccess, data: .init())
+        remoteDatabase = MockCloudDatabase(hasAccess: hasAccess, data: remoteData)
     }
     
     func setup_up_app_view_model(hasInternet: Bool = true) throws {
@@ -682,74 +685,32 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
     /// - Local Database: Today's Data (No Synced), Existing Old Data (No Synced), Existing Plan (Not Synced)
     func test_on_launch_app_existing_user_no_access_to_remote_database() throws {
         // (1) Given
-        try load_fresh_remote_database(hasAccess: false)
-
         let todaysDate = Calendar.current.startOfDay(for: .init())
         let yesteredayDate = TestData.createDate(offset: -1, from: todaysDate)
         
         let planStartDate = TestData.createDate(offset: -15, from: todaysDate)
         let planEndDate = TestData.createDate(offset: 15, from: todaysDate)
         
-        let records: [CKRecord] = [
-            /// Today's Data
-            TestData.createDataRecord(date: todaysDate, dailyUsedData: 100),
-            /// Plan
+        /// Add Plan
+        remoteData.planRecords.add(
             TestData.createPlanRecord(
                 startDate: planStartDate,
                 endDate: planEndDate,
                 dataAmount: 15,
                 dailyLimit: 0.5,
                 planLimit: 14
-            ),
-            /// Old Data
-            TestData.createDataRecord(date: yesteredayDate, dailyUsedData: 50),
-        ]
-        
-        createExpectation(
-            publisher: remoteDatabase.save(records: records),
-            description: "Save Records"
-        ) { areSaved in
-            XCTAssertTrue(areSaved)
-        }
-        
-        /// - Remote: Check Existing Data (Today's Data, Old Data)
-        createExpectation(
-            publisher: remoteDatabase.fetchAll(of: .data, recursively: true),
-            description: "Fetch All Remote Data"
-        ) { records in
-            XCTAssertEqual(records.count, 2)
-            
-            let firstRecord = records[0]
-            let secondRecord = records[1]
-            
-            let todaysRemoteData = RemoteData.toRemoteData(secondRecord)
-            XCTAssertNotNil(todaysRemoteData)
-            XCTAssertEqual(todaysRemoteData!.date, todaysDate)
-            XCTAssertEqual(todaysRemoteData!.dailyUsedData, 100)
-            
-            let yesterdayRemoteData = RemoteData.toRemoteData(firstRecord)
-            XCTAssertNotNil(yesterdayRemoteData)
-            XCTAssertEqual(yesterdayRemoteData!.dailyUsedData, 50)
-        }
-        
-        /// - Remote: Check Existing Plan
-        createExpectation(
-            publisher: remoteDatabase.fetchAll(of: .plan, recursively: true),
-            description: "Fetch All Remote Plan"
-        ) { records in
-            XCTAssertEqual(records.count, 1)
-            
-            let firstRecord = records[0]
-
-            let remotePlan = RemotePlan.toRemotePlan(firstRecord)
-            XCTAssertNotNil(remotePlan)
-            XCTAssertEqual(remotePlan!.startDate, planStartDate)
-            XCTAssertEqual(remotePlan!.endDate, planEndDate)
-            XCTAssertEqual(remotePlan!.dataAmount, 15)
-            XCTAssertEqual(remotePlan!.planLimit, 14)
-            XCTAssertEqual(remotePlan!.dailyLimit, 0.5)
-        }
-        
+            )
+        )
+        /// Add Today's Data
+        remoteData.dataRecords.add(
+            TestData.createDataRecord(date: todaysDate, dailyUsedData: 100)
+        )
+        /// Add Old Data
+        remoteData.dataRecords.add(
+            TestData.createDataRecord(date: yesteredayDate, dailyUsedData: 50)
+        )
+               
+        try load_fresh_remote_database(hasAccess: false)
         try load_fresh_app_data_repository()
         try load_fresh_data_usage_repository()
         try setup_up_app_view_model(hasInternet: true)
@@ -1039,74 +1000,32 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
     /// - Local Database: Existing Today's Data, Existing Old Data, Existing Plan
     func test_on_launch_app_existing_user_open_app_comes_to_foreground_with_access_to_remote_database() throws {
         // (1) Given
-        try load_fresh_remote_database()
-
         let todaysDate = Calendar.current.startOfDay(for: .init())
         let yesteredayDate = TestData.createDate(offset: -1, from: todaysDate)
         
         let planStartDate = TestData.createDate(offset: -15, from: todaysDate)
         let planEndDate = TestData.createDate(offset: 15, from: todaysDate)
         
-        let records: [CKRecord] = [
-            /// Today's Data
-            TestData.createDataRecord(date: todaysDate, dailyUsedData: 100),
-            /// Plan
+        /// Add Plan
+        remoteData.planRecords.add(
             TestData.createPlanRecord(
                 startDate: planStartDate,
                 endDate: planEndDate,
                 dataAmount: 15,
                 dailyLimit: 0.5,
                 planLimit: 14
-            ),
-            /// Old Data
-            TestData.createDataRecord(date: yesteredayDate, dailyUsedData: 50),
-        ]
+            )
+        )
+        /// Add Today's Data
+        remoteData.dataRecords.add(
+            TestData.createDataRecord(date: todaysDate, dailyUsedData: 100)
+        )
+        /// Add Old Data
+        remoteData.dataRecords.add(
+            TestData.createDataRecord(date: yesteredayDate, dailyUsedData: 50)
+        )
         
-        createExpectation(
-            publisher: remoteDatabase.save(records: records),
-            description: "Save Records"
-        ) { areSaved in
-            XCTAssertTrue(areSaved)
-        }
-        
-        /// - Remote: Check Existing Data (Today's Data, Old Data)
-        createExpectation(
-            publisher: remoteDatabase.fetchAll(of: .data, recursively: true),
-            description: "Fetch All Remote Data"
-        ) { records in
-            XCTAssertEqual(records.count, 2)
-            
-            let firstRecord = records[0]
-            let secondRecord = records[1]
-            
-            let todaysRemoteData = RemoteData.toRemoteData(secondRecord)
-            XCTAssertNotNil(todaysRemoteData)
-            XCTAssertEqual(todaysRemoteData!.date, todaysDate)
-            XCTAssertEqual(todaysRemoteData!.dailyUsedData, 100)
-            
-            let yesterdayRemoteData = RemoteData.toRemoteData(firstRecord)
-            XCTAssertNotNil(yesterdayRemoteData)
-            XCTAssertEqual(yesterdayRemoteData!.dailyUsedData, 50)
-        }
-        
-        /// - Remote: Check Existing Plan
-        createExpectation(
-            publisher: remoteDatabase.fetchAll(of: .plan, recursively: true),
-            description: "Fetch All Remote Plan"
-        ) { records in
-            XCTAssertEqual(records.count, 1)
-            
-            let firstRecord = records[0]
-
-            let remotePlan = RemotePlan.toRemotePlan(firstRecord)
-            XCTAssertNotNil(remotePlan)
-            XCTAssertEqual(remotePlan!.startDate, planStartDate)
-            XCTAssertEqual(remotePlan!.endDate, planEndDate)
-            XCTAssertEqual(remotePlan!.dataAmount, 15)
-            XCTAssertEqual(remotePlan!.planLimit, 14)
-            XCTAssertEqual(remotePlan!.dailyLimit, 0.5)
-        }
-        
+        try load_fresh_remote_database(hasAccess: true)
         try load_fresh_app_data_repository()
         try load_fresh_data_usage_repository()
 
@@ -1191,12 +1110,12 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
             let firstRecord = records[0]
             let secondRecord = records[1]
             
-            let todaysRemoteData = RemoteData.toRemoteData(secondRecord)
+            let todaysRemoteData = RemoteData.toRemoteData(firstRecord)
             XCTAssertNotNil(todaysRemoteData)
             XCTAssertEqual(todaysRemoteData!.date, todaysDate)
             XCTAssertEqual(todaysRemoteData!.dailyUsedData, 100)
             
-            let yesterdayRemoteData = RemoteData.toRemoteData(firstRecord)
+            let yesterdayRemoteData = RemoteData.toRemoteData(secondRecord)
             XCTAssertNotNil(yesterdayRemoteData)
             XCTAssertEqual(yesterdayRemoteData!.dailyUsedData, 50)
         }
