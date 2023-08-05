@@ -98,7 +98,7 @@ extension DataUsageRepository {
             /// 2.
             let recentData = data.first
             
-            Logger.database.debug("- DATA OPERATION: 📀 Get Todays With Has Total | ✅ FOUND")
+            Logger.database.debug("- DATA OPERATION: 📀 Get Data With Has Total | ✅ FOUND")
             return recentData
             
         } catch let error {
@@ -304,7 +304,7 @@ extension DataUsageRepository {
         do {
             /// 1A. Retrieve Data
             guard let todaysData = getTodaysData() else {
-                Logger.database.debug("- DATA OPERATION: 📀 Update Today's Data | ✍️ NOT FOUND, Creating...")
+                Logger.database.debug("- DATA OPERATION: 📀 Update Today's Data | 😭 NOT FOUND, Aborting...")
                 return
             }
             
