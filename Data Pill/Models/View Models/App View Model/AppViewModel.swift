@@ -165,6 +165,8 @@ final class AppViewModel: ObservableObject {
     ///   - appDataRepository: The data source for app settings
     ///   - dataUsageRepository: The data source for data usage persistence
     ///   - networkDataRepository: The data source for ceullular data usage
+    ///   - networkConnectionRepository: The data source for internet connection
+    ///   - toastTimer: The timer for showing Toast
     ///   - setupValues: Execute events (useful for testing)
     init(
         appDataRepository: AppDataRepositoryProtocol = AppDataRepository(),
