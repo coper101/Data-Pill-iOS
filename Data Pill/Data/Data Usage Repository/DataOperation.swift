@@ -22,11 +22,12 @@ extension DataUsageRepository {
             /// 2. Execute
             let result = try database.context.fetch(request)
             
+            Logger.database.debug("- LOCAL DATABASE: 💾 Get All Data | ✅ \(result.count) Items")
             return result
             
         } catch let error {
             dataError = DatabaseError.gettingAll(error.localizedDescription)
-            Logger.database.error("failed to get all data: \(error.localizedDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 Get All Data | 😭 ERROR: \(error.localizedDescription)")
             return []
         }
     }
@@ -56,7 +57,7 @@ extension DataUsageRepository {
             
             /// 1B. Create if Non-existent
             if dataItems.isEmpty {
-                Logger.database.debug("getTodaysData - not found, creating")
+                Logger.database.debug("- LOCAL DATABASE: 💾 Get Today's Data | ✍️ NOT FOUND, Creating...")
                 addData(
                     date: Calendar.current.startOfDay(for: .init()),
                     totalUsedData: 0,
@@ -71,13 +72,13 @@ extension DataUsageRepository {
             
             /// 2.
             let todaysData = dataItems.first
-            Logger.database.debug("getTodaysData - data found: \(todaysData)")
             
+            Logger.database.debug("- LOCAL DATABASE: 💾 Get Today's Data | ✅ CREATED or/and FOUND")
             return todaysData
             
         } catch let error {
             dataError = DatabaseError.gettingTodaysData(error.localizedDescription)
-            Logger.database.error("failed to get today's data: \(error.localizedDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 Get Today's Data | 😭 ERROR: \(error.localizedDescription)")
             return nil
         }
     }
@@ -97,11 +98,12 @@ extension DataUsageRepository {
             /// 2.
             let recentData = data.first
             
+            Logger.database.debug("- LOCAL DATABASE: 💾 Get Todays With Has Total | ✅ FOUND")
             return recentData
             
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
-            Logger.database.error("failed to filter data with has total: \(error.localizedDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 Get Data With Has Total | 😭 ERROR: \(error.localizedDescription)")
             return nil
         }
     }
@@ -153,12 +155,12 @@ extension DataUsageRepository {
                 endDate
             )
             
-            Logger.database.debug("this weeks data dates: \(thisWeeksData.compactMap(\.date))")
+            Logger.database.debug("- LOCAL DATABASE: 💾 Get This Week's Data | ✅ \(thisWeeksData.count) Items")
             return thisWeeksData
             
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
-            Logger.database.error("failed to get weeks data: \(error.localizedDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 Get This Week's Data | 😭 ERROR: \(error.localizedDescription)")
             return []
         }
     }
@@ -179,11 +181,12 @@ extension DataUsageRepository {
                 return acc + data.dailyUsedData
             }
             
+            Logger.database.debug("- LOCAL DATABASE: 💾 Get Total Used Data | ✅ \(totalUsedData) MB of Used Data")
             return totalUsedData
             
         } catch let error {
             dataError = DatabaseError.filteringData(error.localizedDescription)
-            Logger.database.error("failed to get total used data: \(error.localizedDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 Get Total Used Data | 😭 ERROR: \(error.localizedDescription)")
             return 0
         }
     }
@@ -220,13 +223,14 @@ extension DataUsageRepository {
             guard isAdded else {
                 return
             }
+            Logger.database.debug("- LOCAL DATABASE: 💾 ADD DATA | ✅ CREATED")
             
             /// 3. Update Store
             updateToLatestData()
             
         } catch let error {
             dataError = DatabaseError.adding(error.localizedDescription)
-            Logger.database.error("failed to add data: \(error.localizedDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 ADD DATA | 😭 ERROR: \(error.localizedDescription)")
         }
     }
     
@@ -246,14 +250,14 @@ extension DataUsageRepository {
                     let batchInsertResult = try backgroundContext.execute(request) as! NSBatchInsertResult
                     let addedIDs = batchInsertResult.result as! [NSManagedObjectID]
                     
-                    Logger.database.debug("successful adding batch data result count: \(addedIDs.count)")
+                    Logger.database.debug("- LOCAL DATABASE: 💾 ADD BULK DATA | ✅ \(addedIDs.count) Items Created Successfully")
                     
                     /// 3. Update Store
                     self.updateToLatestData()
                     promise(.success(true))
                     
                 } catch let error {
-                    Logger.database.error("failed to add batch data: \(error.localizedDescription)")
+                    Logger.database.error("- LOCAL DATABASE: 💾 ADD BULK DATA | 😭 ERROR: \(error.localizedDescription)")
                     promise(.success(false))
                 }
             }
@@ -300,7 +304,7 @@ extension DataUsageRepository {
         do {
             /// 1A. Retrieve Data
             guard let todaysData = getTodaysData() else {
-                Logger.database.error("no today's data found despite creating one in update today's data block")
+                Logger.database.debug("- LOCAL DATABASE: 💾 Update Today's Data | ✍️ NOT FOUND, Creating...")
                 return
             }
             
@@ -329,12 +333,13 @@ extension DataUsageRepository {
             
             /// 4. Update Store
             if isUpdated {
+                Logger.database.debug("- LOCAL DATABASE: 💾 Update Today's Data | ✅ UPDATED")
                 updateToLatestData()
             }
             
         } catch let error {
             dataError = DatabaseError.updatingData(error.localizedDescription)
-            Logger.database.error("failed to update today's data: \(error.localizedDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 Update Today's Data | 😭 ERROR: \(error.localizedDescription)")
         }
     }
     
@@ -365,11 +370,11 @@ extension DataUsageRepository {
                     let changes = [NSUpdatedObjectsKey: updatedIDs]
                     NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [self.database.context])
                     
-                    Logger.database.debug("successful updating batch data result count: \(updatedIDs.count)")
+                    Logger.database.debug("- LOCAL DATABASE: 💾 UPDATE BULK DATA | ✅ \(updatedIDs.count) Items Updated Successfully")
                     promise(.success(true))
                     
                 } catch let error {
-                    Logger.database.error("failed to update batch data: \(error.localizedDescription)")
+                    Logger.database.error("- LOCAL DATABASE: 💾 UPDATE BULK DATA | 😭 ERROR: \(error.localizedDescription)")
                     promise(.success(false))
                 }
             }
@@ -416,11 +421,11 @@ extension DataUsageRepository {
                     /// 2. Execute Batch Request
                     let _ = try backgroundContext.execute(batchRequest)
                     
-                    Logger.database.debug("successful deleting batch data")
+                    Logger.database.debug("- LOCAL DATABASE: 💾 DELETE ALL DATA | ✅ DELETED")
                     promise(.success(true))
                     
                 } catch let error {
-                    Logger.database.error("failed to delete batch data: \(error.localizedDescription)")
+                    Logger.database.error("- LOCAL DATABASE: 💾 DELETE ALL DATA | 😭 ERROR: \(error.localizedDescription)")
                     promise(.success(false))
                 }
             }
