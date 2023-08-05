@@ -91,7 +91,7 @@ final class NetworkDataRepository: ObservableObject, CustomStringConvertible, Ne
             .map { $0.toInt64().toMB() }
             .sink { [weak self] in
                 self?.totalUsedData = $0
-                Logger.networkRepository.debug("totalUsedData: \($0) MB")
+                Logger.networkRepository.debug("- NETWORK DATA: 📶 Total Used Data is \($0) MB")
             }
             .store(in: &cancellables)
     }
