@@ -145,13 +145,13 @@ final class DataUsageRepository: ObservableObject, DataUsageRepositoryProtocol {
                 return
             }
             self?.dataError = DatabaseError.loadingContainer()
-            Logger.database.error("failed to load container: \(error.debugDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 😭 Failed to Load Container, ERROR: \(error.debugDescription)")
 
         } onSuccess: { [weak self] in
             guard let self = self else {
                 return
             }
-            Logger.database.debug("successfully loaded DataUsage container")
+            Logger.database.debug("- LOCAL DATABASE: 💾 ✅ Successfully Loaded Container")
             self.database.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             self.database.context.automaticallyMergesChangesFromParent = true
             self.updateToLatestData()
