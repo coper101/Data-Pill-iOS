@@ -25,7 +25,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         didReceiveRemoteNotification userInfo: [AnyHashable : Any],
         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
     ) {
-        Logger.appDelegate.debug("didReceiveRemoteNotification")
+        Logger.appDelegate.debug("- APP DELEGATE: ℹ️ Received Remote Notification")
         
         guard
             let notification = CKNotification(fromRemoteNotificationDictionary: userInfo),
@@ -49,13 +49,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        Logger.appDelegate.debug("didRegisterForRemoteNotificationsWithDeviceToken")
+        Logger.appDelegate.debug("- APP DELEGATE: ℹ️ Registered for Remote Notifications with Device Token")
     }
     
     func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
-        Logger.appDelegate.debug("didFailToRegisterForRemoteNotificationsWithError error: \(error.localizedDescription)")
+        Logger.appDelegate.debug("- APP DELEGATE: ℹ️ Failed to Register Remote Notification with Error: \(error.localizedDescription)")
     }
 }
