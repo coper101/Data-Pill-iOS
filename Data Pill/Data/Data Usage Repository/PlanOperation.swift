@@ -19,7 +19,7 @@ extension DataUsageRepository {
         do {
             /// 1A. Retrieve Plan
             guard let plan = try getAllPlan().first else {
-                Logger.database.debug("getPlan - not found, creating")
+                Logger.database.debug("- PLAN OPERATION: 📜 Get Plan | ✍️ NOT FOUND, Creating...")
                 
                 /// 1B. Create Plan
                 addPlan(
@@ -29,6 +29,7 @@ extension DataUsageRepository {
                     dailyLimit: 0,
                     planLimit: 0
                 )
+                Logger.database.debug("- PLAN OPERATION: 📜 Get Plan | ✅ CREATED or/and FOUND")
                 
                 /// 1A. Retrieve Plan
                 return try getAllPlan().first
@@ -36,7 +37,7 @@ extension DataUsageRepository {
             return plan
         } catch let error {
             dataError = DatabaseError.gettingAll(error.localizedDescription)
-            Logger.database.error("failed to get all plan: \(error.localizedDescription)")
+            Logger.database.error("- PLAN OPERATION: 📜 Get Plan | 😭 ERROR: \(error.localizedDescription)")
             return nil
         }
     }
@@ -50,6 +51,8 @@ extension DataUsageRepository {
         
         /// 2. Execute
         let result = try database.context.fetch(request)
+        
+        Logger.database.debug("- PLAN OPERATION: 📜 Get All Plan | ✅ \(result.count) Items (Assert 1 Item)")
         
         return result
     }
@@ -76,9 +79,11 @@ extension DataUsageRepository {
             /// 2. Save Plan
             let _ = try database.context.saveIfNeeded()
             
+            Logger.database.debug("- PLAN OPERATION: 📜 ADD PLAN | ✅ CREATED")
+            
         } catch let error {
             dataError = DatabaseError.addingPlan(error.localizedDescription)
-            Logger.database.error("failed to add plan: \(error.localizedDescription)")
+            Logger.database.error("- PLAN OPERATION: 📜 ADD PLAN | ERROR: \(error.localizedDescription)")
         }
     }
     
@@ -100,7 +105,7 @@ extension DataUsageRepository {
         do {
             /// 1A. Retrieve Plan
             guard let plan = getPlan() else {
-                Logger.database.error("no plan found despite creating one in update plan block")
+                Logger.database.debug("- PLAN OPERATION: 📜 UPDATE PLAN | 😭 PLAN NOT FOUND. Aborting...")
                 return
             }
             
@@ -126,12 +131,13 @@ extension DataUsageRepository {
             
             /// 3. Update Store
             if isUpdated && updateToLatestPlanAfterwards {
+                Logger.database.debug("- PLAN OPERATION: 📜 UPDATE PLAN | ✅ UPDATED")
                 updateToLatestPlan()
             }
             
         } catch let error {
             dataError = DatabaseError.updatingPlan(error.localizedDescription)
-            Logger.database.error("failed to update plan: \(error.localizedDescription)")
+            Logger.database.error("- PLAN OPERATION: 📜 UPDATE PLAN | 😭 ERROR: \(error.localizedDescription)")
         }
     }
     
@@ -159,11 +165,11 @@ extension DataUsageRepository {
                     /// 2. Execute Batch Request
                     let _ = try backgroundContext.execute(batchRequest)
                     
-                    Logger.database.debug("successful deleting batch plan")
+                    Logger.database.debug("- PLAN OPERATION: 📜 DELETE ALL PLAN | ✅ DELETED")
                     promise(.success(true))
                     
                 } catch let error {
-                    Logger.database.error("failed to delete batch plan: \(error.localizedDescription)")
+                    Logger.database.error("- PLAN OPERATION: 📜 DELETE ALL PLAN | 😭 ERROR: \(error.localizedDescription)")
                     promise(.success(false))
                 }
             }
