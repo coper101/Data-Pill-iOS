@@ -17,33 +17,33 @@ extension CloudDatabase {
         Future { promise in
             self.container.accountStatus { accountStatus, error in
                 if let error {
-                    Logger.remoteDatabase.debug("checkLoginStatus - error: \(error.localizedDescription)")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Get Login Status | 😭 FAILED: \(error.localizedDescription)")
                     promise(.failure(RemoteDatabaseError.accountError(.error)))
                     return
                 }
                 switch accountStatus {
                 case .couldNotDetermine:
-                    Logger.remoteDatabase.debug("checkLoginStatus - status: could not determine")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Get Login Status | ✅ Could Not Determine")
                     promise(.failure(RemoteDatabaseError.accountError(.couldNotDetermine)))
 
                 case .available:
-                    Logger.remoteDatabase.debug("checkLoginStatus - status: is available")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Get Login Status | ✅ Available")
                     promise(.success(true))
                     
                 case .restricted:
-                    Logger.remoteDatabase.debug("checkLoginStatus - status: restricted")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Get Login Status | ✅ Restricted")
                     promise(.failure(RemoteDatabaseError.accountError(.restricted)))
 
                 case .noAccount:
-                    Logger.remoteDatabase.debug("checkLoginStatus - status: no account")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Get Login Status | ✅ No Account")
                     promise(.failure(RemoteDatabaseError.accountError(.noAccount)))
 
                 case .temporarilyUnavailable:
-                    Logger.remoteDatabase.debug("checkLoginStatus - status: temporarily unavailable")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Get Login Status | ✅ Temporarily Unavailable")
                     promise(.failure(RemoteDatabaseError.accountError(.temporarilyUnavailable)))
 
                 @unknown default:
-                    Logger.remoteDatabase.debug("checkLoginStatus - status: unknown")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Get Login Status | ✅ Unknown")
                     promise(.failure(RemoteDatabaseError.accountError(.unknown)))
                 }
             }

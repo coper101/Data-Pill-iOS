@@ -31,7 +31,7 @@ extension AppViewModel {
         }
                 
         guard let todaysData = dataUsageRepository.getTodaysData() else {
-            Logger.appModel.debug("refreshUsedDataToday - error: today's data is nil")
+            Logger.appModel.debug("- MOBILE DATA: 📲 Refreshing | 😭 ERROR: Today's Data is Nil")
             return
         }
         
@@ -42,9 +42,8 @@ extension AppViewModel {
             dailyUsedData: dailyUsedData,
             hasLastTotal: true
         )
-        
-        Logger.appModel.debug("refreshUsedDataToday - today's data updated, total used data: \(totalUsedData)")
-        Logger.appModel.debug("refreshUsedDataToday - today's data updated, daily used data: \(dailyUsedData)")
+        Logger.appModel.debug("- MOBILE DATA: 📲 Refreshing | ✅ Today's Data Updated, Total Used Data: \(totalUsedData)")
+        Logger.appModel.debug("- MOBILE DATA: 📲 Refreshing | ✅ Today's Data Updated, Daily Used Data: \(dailyUsedData)")
     }
     
     // MARK: - Data Plan

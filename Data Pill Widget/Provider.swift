@@ -49,7 +49,7 @@ struct Provider: IntentTimelineProvider {
         let currentDate = Date()
         let entry = getNewEntry(for: configuration, date: currentDate)
         let timeline = Timeline(entries: [entry], policy: .atEnd)
-        Logger.widgetProvider.debug("timeline: \(timeline.entries)")
+        Logger.widgetProvider.debug("- WIDGET PROVIDER: ⏳ Timeline | Entries \(timeline.entries)")
         completion(timeline)
     }
     

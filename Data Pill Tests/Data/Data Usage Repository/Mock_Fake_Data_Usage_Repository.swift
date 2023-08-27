@@ -37,8 +37,9 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
         
         database.loadContainer { [weak self] error in
             self?.dataError = DatabaseError.loadingContainer()
-            Logger.database.error("failed to load container: \(error.localizedDescription)")
+            Logger.database.error("- LOCAL DATABASE: 💾 😭 Failed to Load Container, ERROR: \(error.localizedDescription)")
         } onSuccess: { [weak self] in
+            Logger.database.debug("- LOCAL DATABASE: 💾 ✅ Successfully Loaded Container")
             guard let self = self else {
                 return
             }

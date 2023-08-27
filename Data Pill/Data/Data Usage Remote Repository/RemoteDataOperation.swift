@@ -18,11 +18,7 @@ extension DataUsageRemoteRepository {
         let predicate = NSPredicate(format: "date == %@", date as NSDate)
         
         return remoteDatabase.fetch(with: predicate, of: .data)
-            .map {
-                Logger.dataUsageRemoteRepository.debug("count - \($0.count)")
-                return $0.count > 0
-                
-            }
+            .map {  $0.count > 0 }
             .eraseToAnyPublisher()
     }
     
@@ -109,15 +105,17 @@ extension DataUsageRemoteRepository {
                     dataRecord.setValue(dailyUsedData, forKey: "dailyUsedData")
                     hasHigherUsageChange = true
                 }
+                
                                 
-                Logger.dataUsageRemoteRepository.debug("updateData - has higher usage change: \(hasHigherUsageChange)")
-
                 guard hasHigherUsageChange else {
+                    Logger.dataUsageRemoteRepository.debug("- REMOTE DATA OPERATION: 🌐 Update Data | 😭 Updating Item Cancelled as No Change Detected")
                     return Just(false)
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
                 
+                Logger.dataUsageRemoteRepository.debug("- REMOTE DATA OPERATION: 🌐 Update Data | Updating Item...")
+
                 return self.remoteDatabase.save(record: dataRecord)
                     .eraseToAnyPublisher()
             }
@@ -128,7 +126,7 @@ extension DataUsageRemoteRepository {
     /// and publisher whether it was successful or not.
     func updateData(_ data: [RemoteData]) -> AnyPublisher<Bool, Error> {
         guard !data.isEmpty else {
-            Logger.dataUsageRemoteRepository.debug("updateMultipleData - nothing to update")
+            Logger.dataUsageRemoteRepository.debug("- REMOTE DATA OPERATION: 🌐 Update Multiple Data | 😭 No Items to Updated")
             return Just(false)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
@@ -138,9 +136,7 @@ extension DataUsageRemoteRepository {
         
         return remoteDatabase.fetch(with: predicate, of: .data)
             .flatMap { (dataRecords: [CKRecord]) in
-                
-                Logger.dataUsageRemoteRepository.debug("updateMultipleData - data records count: \(dataRecords.count)")
-                Logger.dataUsageRemoteRepository.debug("updateMultipleData - data records: \(dataRecords)")
+                Logger.dataUsageRemoteRepository.debug("- REMOTE DATA OPERATION: 🌐 Update Multiple Data | Fetching Latest \(dataRecords.count) Items")
                 
                 let recordsToUpdate = zip(dataRecords, data)
                     .compactMap { (remoteData: CKRecord, localData: RemoteData) -> (record: CKRecord, data: RemoteData)? in
@@ -158,7 +154,7 @@ extension DataUsageRemoteRepository {
                     }
                     .map { $0.record }
                 
-                Logger.dataUsageRemoteRepository.debug("updateMultipleData - data to update records: \(recordsToUpdate)")
+                Logger.dataUsageRemoteRepository.debug("- REMOTE DATA OPERATION: 🌐 Update Multiple Data | Updating \(recordsToUpdate.count) Items")
                 
                 guard !recordsToUpdate.isEmpty else {
                     return Just(false)

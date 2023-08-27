@@ -62,8 +62,7 @@ final class LocalDatabase: Database {
             storeDescription.shouldInferMappingModelAutomatically = true
             
             self.container.persistentStoreDescriptions = [storeDescription]
-            Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
-            
+            Logger.database.debug("- LOCAL DATABASE: 💾 ℹ️ Container Persistent Descriptions: \(self.container.persistentStoreDescriptions)")
         }
     }
 }

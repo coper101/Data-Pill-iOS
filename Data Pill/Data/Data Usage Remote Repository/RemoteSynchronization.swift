@@ -118,15 +118,12 @@ extension DataUsageRemoteRepository {
     func syncOldLocalData(_ localData: [Data], lastSyncedDate: Date?) -> AnyPublisher<(Bool, Bool, [RemoteData]), Error> {
         var allLocalData = localData
         
-        Logger.dataUsageRemoteRepository.debug("syncOldLocalData - last synced date: \(String(describing: lastSyncedDate))")
-
-        // Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data from local: \(allLocalData)")
-        
         /// 0. Exclude Today's Data
         let todaysDate = Calendar.current.startOfDay(for: .init())
         allLocalData.removeAll(where: { $0.date == todaysDate })
         
-        Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data from local count excluding today's data: \(allLocalData.count)")
+        Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬆️ Syncing Old Local Data | Last Synced Date: \(String(describing: lastSyncedDate))")
+        Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬆️ Syncing Old Local Data | \(allLocalData.count) Items (Excluding Today's)")
         
         guard !allLocalData.isEmpty else {
             return Just((false, false, []))
@@ -150,7 +147,8 @@ extension DataUsageRemoteRepository {
                 if dataToAdd.count >= limit {
                     dataToAdd = Array(dataToAdd[..<limit])
                 }
-                Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data to add to remote count: \(dataToAdd.count)")
+                
+                Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬆️ Syncing Old Local Data | \(dataToAdd.count) Items to Upload")
                 
                 /// - Get Data to Update
                 var dataToUpdate = [Data]()
@@ -162,7 +160,8 @@ extension DataUsageRemoteRepository {
                         return data.isSyncedToRemote && date.isDateInRange(from: lastSyncedDate, to: todaysDate)
                     }
                 }
-                Logger.dataUsageRemoteRepository.debug("syncOldLocalData - data to update to remote count: \(dataToUpdate.count)")
+                
+                Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬆️ Syncing Old Local Data | \(dataToUpdate.count) Items to Update")
                                 
                 return Just((dataToAdd, dataToUpdate)).eraseToAnyPublisher()
             }
@@ -212,7 +211,8 @@ extension DataUsageRemoteRepository {
         
         /// 0. Exclude Today's Data
         allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
-        Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from local count excluding today: \(allLocalData.count)")
+        
+        Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬇️ Syncing Old Remote Data | \(allLocalData.count) Local Items (Excluding Today's)")
 
         /// 1. Has Access to iCloud?
         return self.isDatabaseAccessible()
@@ -227,7 +227,7 @@ extension DataUsageRemoteRepository {
             }
             .flatMap { oldRemoteData in
                 
-                Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data from remote count: \(oldRemoteData.count)")
+                Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬇️ Syncing Old Remote Data | \(oldRemoteData.count) Remote Items")
                 
                 /// 2. Get All Data that Doesn't Exist from Remote
                 var dataToAdd = [RemoteData]()
@@ -241,8 +241,8 @@ extension DataUsageRemoteRepository {
                     dataToAdd.append(remoteData)
                 }
                 
-                Logger.dataUsageRemoteRepository.debug("syncOldRemoteData - data to add to local count: \(dataToAdd.count)")
-                
+                Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬇️ Syncing Old Remote Data | \(dataToAdd.count) Items to Add to Local")
+
                 return Just(dataToAdd)
                     .setFailureType(to: Error.self)
                     .eraseToAnyPublisher()

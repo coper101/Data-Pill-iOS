@@ -49,7 +49,7 @@ extension URL {
         guard let fileContainer = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: appGroup.groupIdentifier
         ) else {
-            Logger.database.error("failed to get file container \(container.name)")
+            Logger.database.error("- LOCAL DATABASE: 💾 😭 Failed to Get File Container \(container.name)")
             return nil
         }
         return fileContainer.appendingPathComponent("\(container.name).sqlite")

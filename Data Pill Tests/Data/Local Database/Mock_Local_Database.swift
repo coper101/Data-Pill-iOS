@@ -22,6 +22,6 @@ final class InMemoryLocalDatabase: Database {
             storeDescription.type = NSInMemoryStoreType
             storeDescription.url = URL(fileURLWithPath: "/dev/null")
         }
-        Logger.database.debug("container persistent descriptions: \(self.container.persistentStoreDescriptions)")
+        Logger.database.debug("- LOCAL DATABASE: 💾 ℹ️ Container Persistent Descriptions: \(self.container.persistentStoreDescriptions)")
     }
 }

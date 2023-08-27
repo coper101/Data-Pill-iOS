@@ -40,15 +40,13 @@ extension CloudDatabase {
                             }
                         }
                         
-                        Logger.remoteDatabase.debug("fetch - records count \(records.count)")
+                        Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch Records | ✅ \(records.count) Items")
                         promise(.success(records))
                         
                     /// 2. Fail
                     case .failure(let error):
-                        
-                        Logger.remoteDatabase.error("fetch - \(error.localizedDescription)")
+                        Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch Records | 😭 ERROR: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription)))
-                        
                     } //: switch-case
                     
                 } //: fetch
@@ -60,19 +58,19 @@ extension CloudDatabase {
                     
                     /// 2. Fail
                     if let error {
-                        Logger.remoteDatabase.error("fetch - \(error.localizedDescription)")
+                        Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch Records | 😭 ERROR: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription)))
                         return
                     }
                     
                     guard let records else {
-                        Logger.remoteDatabase.error("fetch - records is nil")
+                        Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch Records | 😭 ERROR: Records is Nil)")
                         promise(.failure(RemoteDatabaseError.fetchError("records is nil")))
                         return
                     }
                     
                     /// 1. Success
-                    Logger.remoteDatabase.debug("fetch - records count \(records.count)")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch Records | ✅ \(records.count) Items")
                     promise(.success(records))
                     
                 } //: fetch
@@ -108,21 +106,21 @@ extension CloudDatabase {
             ) {
                 var operation = CKQueryOperation(cursor: cursor)
                 self.executeQueryOperation(&operation) { record in
-                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation record ID: \(record.recordID)")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | Reccurent Operation Record ID: \(record.recordID)")
                     reccurrentOperationCounter += 1
                     records.append(record)
-                    Logger.remoteDatabase.debug("fetchAll - reccurrentOperationCounter count: \(reccurrentOperationCounter)")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | Reccurent Operation Count: \(reccurrentOperationCounter)")
                     
                 } recordFailureBlock: { error in
-                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation record error: \(error.localizedDescription)")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | Reccurent Operation Record - ERROR: \(error.localizedDescription)")
                     
                 } resultSuccessBlock: { cursor in
                     guard let cursor else {
-                        Logger.remoteDatabase.debug("fetchAll - recurrentOperation cursor is nil")
+                        Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | Reccurent Operation Record - ERROR: Cursor is Nil")
                         successBlock(records)
                         return
                     }
-                    Logger.remoteDatabase.debug("fetchAll - recurrentOperation result success")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | ✅ Reccurent Operation Record")
                     recurrentOperation(cursor, successBlock: successBlock, failureBlock: failureBlock)
                     
                 } resultFailureBlock: { error in
@@ -135,30 +133,31 @@ extension CloudDatabase {
             var queryOperation = CKQueryOperation(query: query)
 
             self.executeQueryOperation(&queryOperation) { record in
-                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation record ID: \(record.recordID)")
-                    records.append(record)
-                    
-                } recordFailureBlock: { error in
-                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation record error: \(error.localizedDescription)")
-                    
-                } resultSuccessBlock: { cursor in
-                    guard let cursor else {
-                        Logger.remoteDatabase.debug("fetchAll - initial queryOperation result cursor is nil")
-                        promise(.success(records)) // A
-                        return
-                    }
-                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation result success")
-                    recurrentOperation(
-                        cursor,
-                        successBlock: { promise(.success($0)) },
-                        failureBlock: { promise(.failure($0)) }
-                    )
-                    
-                } resultFailureBlock: { error in
-                    Logger.remoteDatabase.debug("fetchAll - initial queryOperation result error: \(error.localizedDescription)")
-                    promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription))) // B
-                    
+                Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | Fetching Initial Records...")
+                records.append(record)
+                
+            } recordFailureBlock: { error in
+                Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | 😭 Fetch Initial Records - ERROR: \(error.localizedDescription)")
+                
+            } resultSuccessBlock: { cursor in
+                guard let cursor else {
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | ✅ Fetched Initial Records - ERROR: Cursor is Nil")
+                    promise(.success(records)) // A
+                    return
                 }
+                Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | ✅ Fetched Initial Records")
+
+                recurrentOperation(
+                    cursor,
+                    successBlock: { promise(.success($0)) },
+                    failureBlock: { promise(.failure($0)) }
+                )
+                
+            } resultFailureBlock: { error in
+                Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | 😭 Fetch Initial Records - ERROR: \(error.localizedDescription)")
+                promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription))) // B
+                
+            }
            
             /// 2. Execute Operation
             self.database.add(queryOperation)
@@ -220,19 +219,19 @@ extension CloudDatabase {
                 
                 /// 2. Fail
                 if let error {
-                    Logger.remoteDatabase.debug("save - error: \(error.localizedDescription)")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Save Record | 😭 ERROR: \(error.localizedDescription)")
                     promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
                     return
                 }
                 
                 guard newRecord != nil else {
-                    Logger.remoteDatabase.debug("save - error: new record is nil")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Save Record | 😭 ERROR: New Record is Nil")
                     promise(.failure(RemoteDatabaseError.saveError("new record is nil")))
                     return
                 }
                 
                 /// 1. Success
-                Logger.remoteDatabase.debug("save - saved")
+                Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Save Record | ✅ Saved")
                 promise(.success(true))
                 
             } //: save
@@ -256,13 +255,13 @@ extension CloudDatabase {
                         
                     /// 1. Success
                     case .success(_):
-                        Logger.remoteDatabase.debug("save - records saved")
+                        Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Save Bulk Records | ✅ Saved")
                         promise(.success(true))
                         return
                         
                     /// 2. Fail
                     case .failure(let error):
-                        Logger.remoteDatabase.debug("save - records error: \(error.localizedDescription)")
+                        Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Save Bulk Records | 😭 ERROR: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
                         return
                     }
@@ -275,13 +274,13 @@ extension CloudDatabase {
                     
                     /// 2. Fail
                     if let error {
-                        Logger.remoteDatabase.debug("save - records error: \(error.localizedDescription)")
+                        Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Save Bulk Records | 😭 ERROR: \(error.localizedDescription)")
                         promise(.failure(RemoteDatabaseError.saveError(error.localizedDescription)))
                         return
                     }
                     
                     /// 1. Success
-                    Logger.remoteDatabase.debug("save - records saved")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Save Bulk Records | ✅ Saved")
                     promise(.success(true))
                 }
                 

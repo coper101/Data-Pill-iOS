@@ -105,13 +105,15 @@ extension DataUsageRemoteRepository {
                     changeCount += 1
                 }
                 
-                Logger.dataUsageRemoteRepository.debug("updatePlan - changes count \(changeCount)")
                 
                 guard changeCount > 0 else {
+                    Logger.dataUsageRemoteRepository.debug("- REMOTE PLAN OPERATION: 🌐 Update Plan | 😭 Updating Item Cancelled as No Change Detected")
                     return Just(false)
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
+                
+                Logger.dataUsageRemoteRepository.debug("- REMOTE PLAN OPERATION: 🌐 Update Plan | Updating...")
                 
                 return self.remoteDatabase.save(record: planRecord)
                     .eraseToAnyPublisher()

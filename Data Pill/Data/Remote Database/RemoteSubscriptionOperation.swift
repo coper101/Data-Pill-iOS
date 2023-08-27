@@ -25,11 +25,11 @@ extension CloudDatabase {
             
             self.database.save(subscription) { _, error in
                 if let error {
-                    Logger.remoteDatabase.debug("createOnUpdateRecordSubscription - save subscription error: \(error.localizedDescription)")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Create Subscription | 😭 ERROR: \(error.localizedDescription)")
                     promise(.success(false))
                     return
                 }
-                Logger.remoteDatabase.debug("createOnUpdateRecordSubscription - save subscription success")
+                Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Create Subscription | ✅ Created")
                 promise(.success(true))
             }
         } //: Future
@@ -40,15 +40,15 @@ extension CloudDatabase {
         Future { promise in
             self.database.fetchAllSubscriptions { subscriptions, error in
                 if let error {
-                    Logger.remoteDatabase.debug("fetchAllSubscriptions - fetch error: \(error.localizedDescription)")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Subscriptions | 😭 ERROR: \(error.localizedDescription)")
                     promise(.success([]))
                     return
                 }
                 guard let subscriptions else {
-                    Logger.remoteDatabase.debug("fetchAllSubscriptions - subscriptions is nil")
+                    Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Subscriptions | 😭 ERROR: Subscriptions is Nil")
                     return
                 }
-                Logger.remoteDatabase.debug("fetchAllSubscriptions - subscription IDs: \(subscriptions.map(\.subscriptionID))")
+                Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Subscriptions | ✅ Subscription IDs: \(subscriptions.map(\.subscriptionID))")
                 promise(.success(subscriptions.map(\.subscriptionID)))
             } //: fetchAll
         }
