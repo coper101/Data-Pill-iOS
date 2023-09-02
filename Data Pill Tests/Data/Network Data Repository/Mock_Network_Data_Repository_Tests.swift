@@ -14,7 +14,6 @@ final class Mock_Network_Data_Repository_Tests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
-        repository = MockNetworkDataRepository()
     }
 
     override func tearDownWithError() throws {
@@ -24,17 +23,28 @@ final class Mock_Network_Data_Repository_Tests: XCTestCase {
     // MARK: - Total Used Data
     func test_get_total_used_data() throws {
         // (1) Given
+        repository = MockNetworkDataRepository(automaticUpdates: false)
+
         // (2) When
-        let output = repository.getTotalUsedData()
-        repository.usedDataInfo = output
+        /// The total used data `DataInfo` is received once and it is coverted to MB format
         
         // (3) Then
-        let expected = UsedDataInfo(
-            wirelessWanDataReceived: 10_000_000,
-            wirelessWanDataSent: 485_760
-        )
         let totalUsedDataOutput = repository.totalUsedData
-        XCTAssertEqual(output, expected)
-        XCTAssertEqual(totalUsedDataOutput, 10.0)
+        XCTAssertEqual(totalUsedDataOutput, 10.0, accuracy: 1) /// In MB (Megabytes)
+    }
+    
+    func test_get_total_used_data_overtime() throws {
+        // (1) Given
+        repository = MockNetworkDataRepository(automaticUpdates: true)
+
+        // (2) When
+        /// The total used data `DataInfo` is received every 2 seconds and it is coverted to MB format
+        
+        // (3) Then
+        let totalUsedDataOutput = repository.totalUsedData
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            XCTAssertEqual(totalUsedDataOutput, 20.0, accuracy: 2) /// In MB (Megabytes)
+        }
     }
 }

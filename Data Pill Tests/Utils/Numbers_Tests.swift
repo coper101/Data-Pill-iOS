@@ -218,4 +218,23 @@ final class Numbers_Tests: XCTestCase {
         // (3) Then
         XCTAssertEqual(output, 0)
     }
+    
+    // MARK: - From MB to B
+    func test_megabyte_to_byte() throws {
+        // (1) Given
+        let input = 10.0
+        // (2) When
+        let output = input.toBytesFromMegabytes()
+        // (3) Then
+        XCTAssertEqual(output, 10_000_000)
+    }
+    
+    func test_negative_megabyte_to_byte() throws {
+        // (1) Given
+        let input = -10.0
+        // (2) When
+        let output = input.toBytesFromMegabytes()
+        // (3) Then
+        XCTAssertEqual(output, 0)
+    }
 }

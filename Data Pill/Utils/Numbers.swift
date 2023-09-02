@@ -145,6 +145,14 @@ extension Double {
         }
         return self * 1_000
     }
+    
+    /// Convert decimal number from MB to Bytes
+    func toBytesFromMegabytes() -> Double {
+        if (self < 0) {
+            return 0
+        }
+        return self * 1_000_000
+    }
 }
 
 extension Int64 {
@@ -153,14 +161,18 @@ extension Int64 {
     func toMB() -> Double {
         Double(self) / pow(1_024, 2)
     }
-
+    
+    /// convert bytes (B) to megabytes (MB)
+    func toBytes() -> Double {
+        Double(self) * pow(1_024, 2)
+    }
 }
 
 extension UInt64 {
     
     /// convert UInt64 to Int64
     func toInt64() -> Int64 {
-        Int64(self)
+        .init(self)
     }
     
 }

@@ -188,6 +188,10 @@ final class AppViewModel: ObservableObject {
         self.networkDataRepository = networkDataRepository
         self.toastTimer = toastTimer
         
+        if ProcessInfo.isUITesting && ProcessInfo.isMockedCloudAndMobileData {
+            addTestData()
+        }
+        
         guard setupValues else {
             return
         }
@@ -206,38 +210,24 @@ final class AppViewModel: ObservableObject {
         observeDataErrors()
         
         // syncRemoteOnChange()
-        
-        // #if DEBUG
-        //     addTestData()
-        // #endif
     }
 }
 
 extension AppViewModel {
     
     func addTestData() {
-        // Logger.appModel.debug("adding test data")
+        let todaysDate = Date()
+        let remoteDataToAdd = (1...50).map { value in
+            let date = Calendar.current.date(byAdding: .day, value: Int(-value), to: todaysDate)!
+            let startDate = Calendar.current.startOfDay(for: date)
+            return RemoteData(date: startDate, dailyUsedData: 1_500)
+        }
         
-        // let todaysDate = Date()
-
-        // let remoteDataToAdd = (1...50).map { value in
-        //     let date = Calendar.current.date(byAdding: .day, value: Int(-value), to: todaysDate)!
-        //     let startDate = Calendar.current.startOfDay(for: date)
-        //     return RemoteData(date: startDate, dailyUsedData: 1_500)
-        // }
-        // self.dataUsageRepository.addData(remoteDataToAdd, isSyncedToRemote: false)
-        // Update Database
-        // dataUsageRepository.updatePlan(
-        //     startDate: Calendar.current.date(
-        //         byAdding: .day, value: -3, to: todaysDate)!,
-        //     endDate: Calendar.current.date(
-        //         byAdding: .day, value: 0, to: todaysDate)!,
-        //     dataAmount: 10,
-        //     dailyLimit: 4,
-        //     planLimit: 9
-        // )
-        
-        // refreshUsedDataToday(1000)
+        Logger.appModel.debug("- TESTING DATA: ✏️ Adding Old Data")
+        self.dataUsageRepository.addData(remoteDataToAdd, isSyncedToRemote: false)
+            .sink { areAdded in
+                Logger.appModel.debug("- TESTING DATA: ✅ Added Successfully")
+            }
+            .store(in: &cancellables)
     }
-    
 }

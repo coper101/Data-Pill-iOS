@@ -10,7 +10,7 @@ import SwiftUI
 struct AppView: View {
     // MARK: - Props
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    @StateObject var appViewModel: AppViewModel = .init()
+    @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.dimensions) var dimensions: Dimensions
     @Environment(\.scenePhase) var scenePhase

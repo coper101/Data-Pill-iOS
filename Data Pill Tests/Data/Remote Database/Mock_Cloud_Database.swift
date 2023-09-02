@@ -29,7 +29,7 @@ final class MockCloudDatabase: RemoteDatabase {
     let data: CloudData
     let hasAccess: Bool
     
-    init(hasAccess: Bool = true, data: CloudData) {
+    init(hasAccess: Bool = true, data: CloudData = .init()) {
         self.hasAccess = hasAccess
         self.data = data
     }
