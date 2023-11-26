@@ -114,6 +114,8 @@ extension CloudDatabase {
                 } recordFailureBlock: { error in
                     Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | Reccurent Operation Record - ERROR: \(error.localizedDescription)")
                     
+                    
+                    
                 } resultSuccessBlock: { cursor in
                     guard let cursor else {
                         Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | Reccurent Operation Record - ERROR: Cursor is Nil")
@@ -138,6 +140,7 @@ extension CloudDatabase {
                 
             } recordFailureBlock: { error in
                 Logger.remoteDatabase.debug("- CLOUD DATABASE: ☁️ Fetch All Records | 😭 Fetch Initial Records - ERROR: \(error.localizedDescription)")
+                promise(.failure(RemoteDatabaseError.fetchError(error.localizedDescription))) // B
                 
             } resultSuccessBlock: { cursor in
                 guard let cursor else {

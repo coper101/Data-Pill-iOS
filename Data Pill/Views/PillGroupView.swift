@@ -26,7 +26,7 @@ struct PillGroupView: View {
         VStack(spacing: 0) {
             
             // MARK: - Row 1: Top Bar
-            TopBarView(isSyncing: appViewModel.isSyncing)
+            TopBarView(syncStatus: appViewModel.syncStatus)
                 .padding(.bottom, dimensions.spaceBottomTopBar)
 
             // MARK: - Row 2: Pill Group

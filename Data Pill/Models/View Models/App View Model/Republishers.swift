@@ -102,6 +102,24 @@ extension AppViewModel {
             .store(in: &cancellables)
     }
     
+    func republishDataUsageRemote() {
+        
+        dataUsageRemoteRepository.uploadOldDataCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.syncOldDataProgress?.updateSynced(count: $0) }
+            .store(in: &cancellables)
+        
+        dataUsageRemoteRepository.uploadOldDataTotalCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.syncOldDataProgress?.updateTotal(count: $0) }
+            .store(in: &cancellables)
+        
+        dataUsageRemoteRepository.downloadOldDataTotalCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.syncOldDataProgress?.updateTotal(count: $0) }
+            .store(in: &cancellables)
+    }
+    
     func republishNetworkData() {
         networkDataRepository.totalUsedDataPublisher
             .receive(on: DispatchQueue.main)
@@ -117,7 +135,8 @@ extension AppViewModel {
                     return
                 }
                 self.hasInternetConnection = hasInternetConnection
-                
+                Logger.networkRepository.debug("- NETWORK CONNECTION: 🛜 \(self.hasInternetConnection ? "Online" : "Offline")")
+
                 guard self.hasInternetConnection else {
                     return
                 }

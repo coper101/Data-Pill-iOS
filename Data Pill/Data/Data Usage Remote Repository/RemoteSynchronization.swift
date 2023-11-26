@@ -125,6 +125,9 @@ extension DataUsageRemoteRepository {
         Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬆️ Syncing Old Local Data | Last Synced Date: \(String(describing: lastSyncedDate))")
         Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬆️ Syncing Old Local Data | \(allLocalData.count) Items (Excluding Today's)")
         
+        self.uploadOldDataCount = 0 /// a. Reset Update Count
+        self.uploadOldDataTotalCount = 0
+        
         guard !allLocalData.isEmpty else {
             return Just((false, false, []))
                 .setFailureType(to: Error.self)
@@ -147,7 +150,7 @@ extension DataUsageRemoteRepository {
                 if dataToAdd.count >= limit {
                     dataToAdd = Array(dataToAdd[..<limit])
                 }
-                
+                                
                 Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬆️ Syncing Old Local Data | \(dataToAdd.count) Items to Upload")
                 
                 /// - Get Data to Update
@@ -162,6 +165,8 @@ extension DataUsageRemoteRepository {
                 }
                 
                 Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬆️ Syncing Old Local Data | \(dataToUpdate.count) Items to Update")
+                
+                self.uploadOldDataTotalCount = dataToAdd.count + dataToUpdate.count
                                 
                 return Just((dataToAdd, dataToUpdate)).eraseToAnyPublisher()
             }
@@ -185,6 +190,9 @@ extension DataUsageRemoteRepository {
                     return self.updateData(remoteDataToUpdate)
                         .flatMap { isUpdated in
                             let updatedRemoteData = isUpdated ? remoteDataToUpdate : []
+                            
+                            self.uploadOldDataCount = remoteDataToUpdate.count /// b. Update Upload Count
+                            
                             return Just((false, isUpdated, updatedRemoteData))
                         }
                         .eraseToAnyPublisher()
@@ -192,9 +200,13 @@ extension DataUsageRemoteRepository {
                 /// 2B. Add New Data Items
                 return self.addData(remoteDataToAdd)
                     .flatMap { isAdded in
+                        self.uploadOldDataCount = remoteDataToAdd.count /// b. Update Upload Count
+
                         /// 2A. Update Existing Data Items
-                        self.updateData(remoteDataToUpdate)
+                        return self.updateData(remoteDataToUpdate)
                             .flatMap { isUpdated in
+                                self.uploadOldDataCount = remoteDataToAdd.count + remoteDataToUpdate.count /// c. Update Download Count
+
                                 let updatedRemoteData = isUpdated ? remoteDataToUpdate : []
                                 return Just((isAdded, isUpdated, updatedRemoteData + remoteDataToAdd))
                             }
@@ -213,13 +225,17 @@ extension DataUsageRemoteRepository {
         allLocalData.removeAll(where: { $0.date == Calendar.current.startOfDay(for: .init()) })
         
         Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬇️ Syncing Old Remote Data | \(allLocalData.count) Local Items (Excluding Today's)")
+        
+        self.downloadOldDataTotalCount = 0 /// a. Update Download Count
 
         /// 1. Has Access to iCloud?
         return self.isDatabaseAccessible()
             .flatMap { isAccessible in
                 /// 1A. Nope - Empty Data
                 guard isAccessible else {
-                    return Just([RemoteData]()).eraseToAnyPublisher()
+                    return Just([RemoteData]())
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
                 }
                 /// 1B. Yep - Get All Existing Data from Remote
                 return self.getAllData(excluding: date)
@@ -240,6 +256,8 @@ extension DataUsageRemoteRepository {
                     /// doesn't exist, need to be added
                     dataToAdd.append(remoteData)
                 }
+                
+                self.downloadOldDataTotalCount = dataToAdd.count /// b. Update Download Count
                 
                 Logger.dataUsageRemoteRepository.debug("- SYNC REMOTE: 🌐 ⬇️ Syncing Old Remote Data | \(dataToAdd.count) Items to Add to Local")
 

@@ -41,9 +41,8 @@ extension DataUsageRemoteRepository {
     }
     
     /// Publishes all the existing ``RemoteData``records from ``RemoteDatabase``.
-    func getAllData(excluding date: Date) -> AnyPublisher<[RemoteData], Never> {
+    func getAllData(excluding date: Date) -> AnyPublisher<[RemoteData], Error> {
         remoteDatabase.fetchAll(of: .data, recursively: true)
-            .replaceError(with: [])
             .map { dataRecords in
                 dataRecords
                     .compactMap { dataRecord in

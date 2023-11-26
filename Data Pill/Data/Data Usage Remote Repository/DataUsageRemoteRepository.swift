@@ -13,6 +13,15 @@ import OSLog
 // MARK: - Protocol
 protocol DataUsageRemoteRepositoryProtocol {
     
+    var uploadOldDataCount: Int { get set }
+    var uploadOldDataCountPublisher: Published<Int>.Publisher { get }
+    
+    var uploadOldDataTotalCount: Int { get set }
+    var uploadOldDataTotalCountPublisher: Published<Int>.Publisher { get }
+    
+    var downloadOldDataTotalCount: Int { get set }
+    var downloadOldDataTotalCountPublisher: Published<Int>.Publisher { get }
+    
     // MARK: - User
     /// - Read
     func isDatabaseAccessible() -> AnyPublisher<Bool, Error>
@@ -88,6 +97,17 @@ class DataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProt
     
     // MARK: - Dependencies
     let remoteDatabase: RemoteDatabase
+    
+    
+    // MARK: - UI
+    @Published var uploadOldDataCount = 0
+    var uploadOldDataCountPublisher: Published<Int>.Publisher { $uploadOldDataCount }
+
+    @Published var uploadOldDataTotalCount = 0
+    var uploadOldDataTotalCountPublisher: Published<Int>.Publisher { $uploadOldDataTotalCount }
+
+    @Published var downloadOldDataTotalCount = 0
+    var downloadOldDataTotalCountPublisher: Published<Int>.Publisher { $downloadOldDataTotalCount }
     
     
     // MARK: - Initializer

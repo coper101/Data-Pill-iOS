@@ -9,6 +9,38 @@ import SwiftUI
 import Combine
 import OSLog
 
+enum SyncOldDataOperation {
+    case upload
+    case download
+}
+
+struct SyncOldDataProgress {
+    var operation: SyncOldDataOperation
+    var syncedCount: Int
+    var totalCount: Int
+    
+    var shortMessage: String {
+        switch operation {
+        case .upload:
+            return "Syncing \(totalCount) Item to iCloud"
+        case .download:
+            return "Syncing \(totalCount) Items from iCloud"
+        }
+    }
+    
+    mutating func updateSynced(count: Int) {
+        syncedCount = count
+    }
+    
+    mutating func updateTotal(count: Int) {
+        totalCount = count
+    }
+    
+    mutating func updateOperation(operation: SyncOldDataOperation) {
+        self.operation = operation
+    }
+}
+
 final class AppViewModel: ObservableObject {
     
     var cancellables: Set<AnyCancellable> = .init()
@@ -92,10 +124,31 @@ final class AppViewModel: ObservableObject {
     @Published var isSyncingTodaysData = false
     @Published var isSyncingOldData = false
     
+    @Published var syncOldDataProgress: SyncOldDataProgress? = nil
+    
     @Published var isSyncing = false
     @Published var isSyncPlanCancelled = false
     @Published var isSyncTodaysDataCancelled = false
     @Published var isSyncOldDataCancelled = false
+    
+    var syncStatus: SyncStatus {
+        if isSyncing && isSyncingPlan {
+            return .syncing(message: "Syncing")
+            
+        } else if isSyncing && isSyncingTodaysData {
+            return .syncing(message: "Syncing")
+            
+        } else if isSyncing && isSyncingOldData {
+            return .syncing(message: syncOldDataProgress?.shortMessage ?? "Syncing")
+            
+        } else if (isSyncPlanCancelled || isSyncTodaysDataCancelled || isSyncOldDataCancelled) {
+            return .failed(message: "Syncing Unavailable")
+            
+        } else {
+            return .synced
+            
+        }
+    }
     
     /// Background iCloud Syncing
     @Published var backgroundTaskID: UIBackgroundTaskIdentifier?
@@ -198,6 +251,7 @@ final class AppViewModel: ObservableObject {
         republishNetworkConnection()
         republishAppData()
         republishDataUsage()
+        republishDataUsageRemote()
         republishNetworkData()
         republishToast()
         

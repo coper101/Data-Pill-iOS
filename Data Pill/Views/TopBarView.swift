@@ -10,13 +10,13 @@ import SwiftUI
 struct TopBarView: View {
     // MARK: - Props
     @Environment(\.dimensions) var dimensions
-    var isSyncing: Bool
+    var syncStatus: SyncStatus
     
     // MARK: - UI
     var body: some View {
         HStack(spacing: 0) {
             
-            SyncIndicatorView(isSyncing: isSyncing)
+            SyncIndicatorView(status: syncStatus)
             
             Spacer()
             
@@ -30,7 +30,7 @@ struct TopBarView: View {
 // MARK: - Preview
 struct TopBarView_Previews: PreviewProvider {
     static var previews: some View {
-        TopBarView(isSyncing: false)
+        TopBarView(syncStatus: .synced)
             .previewLayout(.sizeThatFits)
             .padding()
     }

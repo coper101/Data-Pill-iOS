@@ -97,7 +97,8 @@ extension AppViewModel {
             case .failure(let error):
                 let description = (error as? RemoteDatabaseError)?.description ?? ""
                 Logger.appModel.debug("- SYNC PLAN: 😭 Failed To Upload Local Plan To Remote, ERROR: \(description)")
-                
+                self?.isSyncPlanCancelled = true
+
             case .finished:
                 break
             }
@@ -119,10 +120,12 @@ extension AppViewModel {
                 case .failure(let error):
                     let description = (error as? RemoteDatabaseError)?.description ?? ""
                     Logger.appModel.debug("- SYNC PLAN: 😭 Failed To Get Existing Plan From Remote, ERROR: \(description)")
+                    self?.isSyncPlanCancelled = true
                     
                 case .finished:
                     break
                 }
+                
                 self?.isSyncingPlan = false
                 
             } receiveValue: { [weak self] remotePlan in
@@ -205,10 +208,12 @@ extension AppViewModel {
                 case .failure(let error):
                     let description = (error as? RemoteDatabaseError)?.description ?? ""
                     Logger.appModel.debug("- SYNC TODAY'S DATA: 😭 Failed to Download Today's Data From Remote, ERROR: \(description)")
+                    self?.isSyncTodaysDataCancelled = true
                     
                 case .finished:
                     break
                 }
+                
                 self?.isSyncingTodaysData = false
 
             } receiveValue: { [weak self] (isLocalToBeUpdated: Bool, newDailyUsedData: Double, isRemoteUpdated: Bool) in
@@ -306,15 +311,22 @@ extension AppViewModel {
 
         /// 2. Upload Old Local `Data`
         Logger.appModel.debug("- SYNC OLD DATA: ⬆️ Uploading Old Local Data")
+        self.syncOldDataProgress?.updateOperation(operation: .upload)
+
         dataUsageRemoteRepository.syncOldLocalData(localData, lastSyncedDate: lastSyncedToRemoteDate)
             .flatMap { (areOldDataAdded: Bool, areOldDataUpdated: Bool, addedRemoteData: [RemoteData]) -> AnyPublisher<(Bool, Bool, [RemoteData], [RemoteData]), Error> in
               
                 localData = self.dataUsageRepository.getAllData()
                 let date = Calendar.current.startOfDay(for: todaysData.date ?? .init())
-                Logger.appModel.debug("- SYNC OLD DATA: 1️⃣ \(localData.count) Items Found in Local")
+                Logger.appModel.debug("- SYNC OLD DATA: ℹ️ \(localData.count) Items Found in Local")
 
                 /// 3. Download Old Remote `Data`
                 Logger.appModel.debug("- SYNC OLD DATA: ⬇️ Downloading Old Local Data")
+                
+                DispatchQueue.main.async {
+                    self.syncOldDataProgress?.updateOperation(operation: .download)
+                }
+
                 return self.dataUsageRemoteRepository.syncOldRemoteData(localData, excluding: date)
                     .flatMap { oldRemoteData in
                         Just((areOldDataAdded, areOldDataUpdated, addedRemoteData, oldRemoteData))
@@ -330,6 +342,8 @@ extension AppViewModel {
                     let description = (error as? RemoteDatabaseError)?.description ?? ""
                     Logger.appModel.debug("- SYNC OLD DATA: 😭 Failed to Upload or Download Old Data, ERROR: \(description)")
 
+                    self?.syncOldDataProgress = nil
+                    self?.isSyncOldDataCancelled = true
                     self?.isSyncingOldData = false
                     self?.endBackgroundTask()
                 case .finished:
@@ -360,9 +374,11 @@ extension AppViewModel {
                     /// 4A.
                     self.dataUsageRepository.updateData(addedRemoteData)
                         .flatMap { areUpdated in
+                            
                             Logger.appModel.debug("- SYNC OLD DATA: \(areUpdated ? "✅ Updated" : "😭 Failed to Update") Sync State of Local Data Uploaded, \(addedRemoteData.count) Items")
                             
                             Logger.appModel.debug("- SYNC OLD DATA: ✏️ Adding New Local Data From Remote")
+                            
                             guard !oldRemoteData.isEmpty else {
                                 return Just(false)
                                     .eraseToAnyPublisher()
@@ -371,6 +387,7 @@ extension AppViewModel {
                             return self.dataUsageRepository.addData(oldRemoteData, isSyncedToRemote: true)
                         }
                         .sink { areAdded in
+                            
                             Logger.appModel.debug("- SYNC OLD DATA: \(areAdded ? "✅ Added New Local Data" : "ℹ️ Nothing To Add New Local Data"), \(oldRemoteData.count) Items")
                             
                             /// 4C.
@@ -386,6 +403,10 @@ extension AppViewModel {
                     Logger.appModel.debug("- SYNC OLD DATA: ✏️ Adding New Local Data From Remote")
                     self.dataUsageRepository.addData(oldRemoteData, isSyncedToRemote: true)
                         .sink { areAdded in
+                            
+                            DispatchQueue.main.async {
+                                self.syncOldDataProgress?.updateSynced(count: oldRemoteData.count)
+                            }
                             Logger.appModel.debug("- SYNC OLD DATA: \(areAdded ? "✅ Added" : "😭 Failed to Add") New Local Data, \(oldRemoteData.count) Items")
                             
                             /// 4C.
@@ -404,6 +425,7 @@ extension AppViewModel {
     private func onSyncedOldTheRemoteData() {
         appDataRepository.setLastSyncedToRemoteDate(.init())
         isSyncingOldData = false
+        syncOldDataProgress = nil
         endBackgroundTask()
     }
     
