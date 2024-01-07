@@ -11,6 +11,7 @@ import WidgetKit
 struct WidgetPillView: View {
     // MARK: - Props
     @Environment(\.widgetFamily) var widgetFamily
+    @Environment(\.colorScheme) var colorScheme
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
@@ -19,25 +20,62 @@ struct WidgetPillView: View {
     var color: Colors
     
     // MARK: - UI
+    var smallWidget: some View {
+        SmallWidgetView(
+            usedData: usedData,
+            maxData: maxData,
+            dataUnit: dataUnit,
+            localizedSubtitle: localizedSubtitle,
+            subtitle: subtitle,
+            color: color
+        )
+    }
+    
+    var rectangularWidget: some View {
+        RectangularWidgetView(
+            usedData: usedData,
+            maxData: maxData,
+            dataUnit: dataUnit,
+            subtitle: subtitle,
+            color: color
+        )
+    }
+    
     var body: some View {
-        switch widgetFamily {
-        case .accessoryRectangular:
-            RectangularWidgetView(
-                usedData: usedData,
-                maxData: maxData,
-                dataUnit: dataUnit,
-                subtitle: subtitle,
-                color: color
-            )
-        default:
-            SmallWidgetView(
-                usedData: usedData,
-                maxData: maxData,
-                dataUnit: dataUnit,
-                localizedSubtitle: localizedSubtitle,
-                subtitle: subtitle,
-                color: color
-            )
+        Group {
+            switch widgetFamily {
+            case .accessoryRectangular:
+                
+                /// For Lock Screen Widget
+                if #available(iOS 17.0, *) {
+                    
+                    rectangularWidget
+                        .containerBackground(for: .widget) {
+                            Color.clear
+                        }
+                    
+                } else {
+                    
+                    rectangularWidget
+                    
+                } //: if-else
+                
+            default:
+               
+                /// For Home Screen Widget - Has Background Color
+                if #available(iOS 17.0, *) {
+                    
+                    smallWidget
+                        .containerBackground(for: .widget) {
+                            colorScheme == .dark ? Color.black : Color.white
+                        }
+                    
+                } else {
+                    
+                    smallWidget
+                    
+                } //: if-else
+            }
         }
     }
 

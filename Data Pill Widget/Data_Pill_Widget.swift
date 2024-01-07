@@ -38,23 +38,33 @@ struct Data_Pill_Widget: Widget {
         .configurationDisplayName("Data Pill")
         .description("Monitor data usage.")
         .supportedFamilies(supportedFamilies)
+        .contentMarginsDisabledIfAvailable()
     }
 }
 
 struct Widget_Previews: PreviewProvider {
     static var previews: some View {
-        WidgetPillView(
-            usedData: 0.5,
-            maxData: 1,
-            dataUnit: .gb,
-            localizedSubtitle: "TODAY",
-            subtitle: "TODAY",
-            color: .secondaryBlue
-        )
-        .previewContext(WidgetPreviewContext(family: .systemSmall))
-        .previewDisplayName("System Small")
         
-        if #available(iOSApplicationExtension 16.0, *) {
+        if #available(iOS 17.0, *) {
+            
+            EmptyView()
+            
+        } else {
+            
+            WidgetPillView(
+                usedData: 0.5,
+                maxData: 1,
+                dataUnit: .gb,
+                localizedSubtitle: "TODAY",
+                subtitle: "TODAY",
+                color: .secondaryBlue
+            )
+            .previewContext(WidgetPreviewContext(family: .systemSmall))
+            .previewDisplayName("iOS 16 Below / System / Small")
+        }
+        
+        
+        if #available(iOS 16.0, *) {
             WidgetPillView(
                 usedData: 0.5,
                 maxData: 1,
@@ -64,7 +74,23 @@ struct Widget_Previews: PreviewProvider {
                 color: .secondaryBlue
             )
             .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
-            .previewDisplayName("Accessory Rectangular")
+            .previewDisplayName("Accessory / Rectangular")
         }
     }
+}
+
+@available(iOS 17.0, *)
+#Preview("System / Small", as: .systemSmall) {
+    Data_Pill_Widget()
+} timeline: {
+    SimpleEntry(
+       date: .init(),
+       usedData: 0.5,
+       maxData: 1,
+       dataUnit: .gb,
+       localizedSubtitle: "USED",
+       subtitle: "USED",
+       color: .secondaryBlue,
+       usageType: .daily
+    )
 }
