@@ -432,11 +432,11 @@ extension AppViewModel {
     func syncRemoteOnChange() {
         dataUsageRemoteRepository.subscribeToRemotePlanChanges()
             .flatMap { isPlanSubscribed in
-                Logger.appModel.debug("syncRemoteOnChange - isPlanSubscribed: \(isPlanSubscribed)")
+                Logger.appModel.debug("- REMOTE NOTIFICATION: 💈 Plan \(isPlanSubscribed ? "Subscribed" : "Subscribing...")")
                 return self.dataUsageRemoteRepository.subscribeToRemoteTodaysDataChanges()
             }
             .sink { isTodaysDataSubscribed in
-                Logger.appModel.debug("syncRemoteOnChange - isTodaysDataSubscribed: \(isTodaysDataSubscribed)")
+                Logger.appModel.debug("- REMOTE NOTIFICATION: 💈 Today's Data: \(isTodaysDataSubscribed ? "Subscribed" : "Subscribing...")")
             }
             .store(in: &cancellables)
     }

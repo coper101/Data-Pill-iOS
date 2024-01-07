@@ -241,7 +241,11 @@ final class AppViewModel: ObservableObject {
         self.networkDataRepository = networkDataRepository
         self.toastTimer = toastTimer
         
-        if ProcessInfo.isUITesting && ProcessInfo.isMockedCloudAndMobileData {
+        if 
+            ProcessInfo.isUITesting &&
+            ProcessInfo.isMockedCloud &&
+            ProcessInfo.isMockedMobileData
+        {
             addTestData()
         }
         
@@ -263,7 +267,7 @@ final class AppViewModel: ObservableObject {
         observeEditPlan()
         observeDataErrors()
         
-        // syncRemoteOnChange()
+        syncRemoteOnChange()
     }
 }
 

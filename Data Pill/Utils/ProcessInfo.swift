@@ -17,8 +17,15 @@ extension ProcessInfo {
         processInfo.arguments.contains("UI_TESTING")
     }
     
-    static var isMockedCloudAndMobileData: Bool {
-        guard let subscriberValue = processInfo.environment["MOCKED_CLOUD_AND_MOBILE_DATA"] else {
+    static var isMockedMobileData: Bool {
+        guard let subscriberValue = processInfo.environment["MOCKED_MOBILE_DATA"] else {
+            return false
+        }
+        return subscriberValue == "1"
+    }
+    
+    static var isMockedCloud: Bool {
+        guard let subscriberValue = processInfo.environment["MOCKED_CLOUD"] else {
             return false
         }
         return subscriberValue == "1"

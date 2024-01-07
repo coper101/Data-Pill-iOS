@@ -17,6 +17,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         UIApplication.shared.registerForRemoteNotifications()
+        Logger.appDelegate.debug("- REMOTE NOTIFICATION: 💈 \(UIApplication.shared.isRegisteredForRemoteNotifications ? "Registered" : "Not Registered")")
         return true
     }
     
@@ -25,7 +26,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         didReceiveRemoteNotification userInfo: [AnyHashable : Any],
         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
     ) {
-        Logger.appDelegate.debug("- APP DELEGATE: ℹ️ Received Remote Notification")
+        Logger.appDelegate.debug("- REMOTE NOTIFICATION: 💈 Received")
         
         guard
             let notification = CKNotification(fromRemoteNotificationDictionary: userInfo),
@@ -45,17 +46,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         completionHandler(.newData)
     }
     
-    private func application(
-        _ application: UIApplication,
-        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
-    ) {
-        Logger.appDelegate.debug("- APP DELEGATE: ℹ️ Registered for Remote Notifications with Device Token")
+    private func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        /// Note: Most of the time, this method is not called
+        Logger.appDelegate.debug("- REMOTE NOTIFICATION: 💈 Registered")
     }
     
     func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
-        Logger.appDelegate.debug("- APP DELEGATE: ℹ️ Failed to Register Remote Notification with Error: \(error.localizedDescription)")
+        /// Note: Most of the time, this method is not called
+        Logger.appDelegate.debug("- APP DELEGATE: ℹ️ Failed to Register | REASON: \(error.localizedDescription)")
     }
 }

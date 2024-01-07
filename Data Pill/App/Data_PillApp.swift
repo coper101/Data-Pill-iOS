@@ -10,15 +10,8 @@ import SwiftUI
 @main
 struct Data_PillApp: App {
     // MARK: - Props
-    @StateObject var appViewModel: AppViewModel = {
-        if ProcessInfo.isUITesting && ProcessInfo.isMockedCloudAndMobileData {
-            return .init(
-                dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: MockCloudDatabase()),
-                networkDataRepository: MockNetworkDataRepository(automaticUpdates: true)
-            )
-        } //: if
-        return .init()
-    }()
+    @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
+    @StateObject var appViewModel: AppViewModel = createAppViewModel()
     
     // MARK: - UI
     var body: some Scene {
@@ -33,6 +26,33 @@ struct Data_PillApp: App {
                     .environmentObject(appViewModel)
                 
             } //: if-else
+        }
+    }
+}
+
+extension Data_PillApp {
+    
+    static func createAppViewModel() -> AppViewModel {
+        if !ProcessInfo.isUITesting {
+            return .init()
+        }
+        
+        /// * UI Testing *
+        if ProcessInfo.isMockedCloud && ProcessInfo.isMockedMobileData {
+            return .init(
+                dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: MockCloudDatabase()),
+                networkDataRepository: MockNetworkDataRepository(automaticUpdates: true)
+            )
+        } else if ProcessInfo.isMockedCloud {
+            return .init(
+                dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: MockCloudDatabase())
+            )
+        } else if ProcessInfo.isMockedMobileData {
+            return .init(
+                networkDataRepository: MockNetworkDataRepository(automaticUpdates: true)
+            )
+        } else {
+            return .init()
         }
     }
 }
