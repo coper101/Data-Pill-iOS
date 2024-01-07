@@ -14,6 +14,12 @@ Built with:
 - Swift UI 
 - MVVM Design
 
+## Languages Supported
+- English
+- Simplified Chinese (Credits: Kenny Wong Xi Zhou)
+- German
+- Filipino
+
 ## MVVM Architecture
 
 <img src="https://user-images.githubusercontent.com/51541224/211184398-165e26e8-e7a0-43dd-9094-db7526680e49.png" width="1000">
