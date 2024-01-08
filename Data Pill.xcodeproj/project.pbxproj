@@ -40,6 +40,7 @@
 		2761528E293CB5CE00AEA000 /* WidgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E777372934AF060031456D /* WidgetModel.swift */; };
 		27615290293E3FCC00AEA000 /* DataPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528F293E3FCC00AEA000 /* DataPlan.swift */; };
 		27615291293E3FCC00AEA000 /* DataPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528F293E3FCC00AEA000 /* DataPlan.swift */; };
+		276626F92B4AACDA00613C82 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276626F82B4AACDA00613C82 /* Configuration.swift */; };
 		27801DB128D6C96800201339 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB028D6C96800201339 /* AppView.swift */; };
 		27801DB428D6C96800201339 /* PillGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB328D6C96800201339 /* PillGroupView.swift */; };
 		27801DB728D6C96800201339 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB628D6C96800201339 /* AppViewModel.swift */; };
@@ -293,6 +294,7 @@
 		276048E529BF450E00AB8497 /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		2761528C293CAF7F00AEA000 /* Widget_Model_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget_Model_Tests.swift; sourceTree = "<group>"; };
 		2761528F293E3FCC00AEA000 /* DataPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlan.swift; sourceTree = "<group>"; };
+		276626F82B4AACDA00613C82 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		27801DAC28D6C96800201339 /* Data Pill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Data Pill.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27801DB028D6C96800201339 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		27801DB328D6C96800201339 /* PillGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillGroupView.swift; sourceTree = "<group>"; };
@@ -988,6 +990,7 @@
 				27E7770B293367450031456D /* Data_Pill_Widget.swift */,
 				27E7774E2935010D0031456D /* Entry.swift */,
 				27E7774B293500BB0031456D /* Provider.swift */,
+				276626F82B4AACDA00613C82 /* Configuration.swift */,
 				27E7770D293367470031456D /* Assets.xcassets */,
 			);
 			path = "Data Pill Widget";
@@ -1391,6 +1394,7 @@
 				27E7771C293367630031456D /* Type.swift in Sources */,
 				27E777442934D1DB0031456D /* DataTest.swift in Sources */,
 				27F233AE2945CD4800E6102D /* SmallWidgetView.swift in Sources */,
+				276626F92B4AACDA00613C82 /* Configuration.swift in Sources */,
 				27E7771E29336A420031456D /* WidgetPillView.swift in Sources */,
 				27A0A8F2295858EF0007C412 /* Logging.swift in Sources */,
 				27E777402934CCFF0031456D /* Date.swift in Sources */,

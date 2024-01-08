@@ -128,7 +128,6 @@ struct SmallWidgetView: View {
             .padding(.vertical, 8)
             .padding(.horizontal, 10)
             .fillMaxSize()
-            .background(Colors.background.color)
             
         } //: GeometryReader
     }
