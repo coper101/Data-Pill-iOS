@@ -430,11 +430,13 @@ extension AppViewModel {
     // MARK: - Scene Phase
     func didChangeActiveScenePhase() {
         updatePlanPeriod()
-        syncPlan()
-        syncTodaysData()
         
-        setupBackgroundTask()
-        syncOldThenRemoteData()
+        /// Disable iCloud for Now
+        // syncPlan()
+        // syncTodaysData()
+        
+        // setupBackgroundTask()
+        // syncOldThenRemoteData()
     }
 
     func didChangeBackgroundScenePhase() {

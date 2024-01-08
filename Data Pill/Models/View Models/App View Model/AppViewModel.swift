@@ -252,22 +252,24 @@ final class AppViewModel: ObservableObject {
         guard setupValues else {
             return
         }
-        republishNetworkConnection()
+        
+        /// Disable iCloud for Now
+        // republishNetworkConnection()
         republishAppData()
         republishDataUsage()
-        republishDataUsageRemote()
+        // republishDataUsageRemote()
         republishNetworkData()
         republishToast()
         
         setInputValues()
         
-        observeSynchronization()
+        // observeSynchronization()
         observePlanSettings()
-        observeRemoteData()
+        // observeRemoteData()
         observeEditPlan()
         observeDataErrors()
         
-        syncRemoteOnChange()
+        // syncRemoteOnChange()
     }
 }
 
