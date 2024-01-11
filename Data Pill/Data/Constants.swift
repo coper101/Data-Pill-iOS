@@ -7,13 +7,13 @@
 
 import Foundation
 
-let dayPills: [DayPill] = [
-    .init(color: .secondaryBrown, day: .sunday),
-    .init(color: .secondaryRed, day: .monday),
-    .init(color: .secondaryGreen, day: .tuesday),
-    .init(color: .secondaryPink, day: .wednesday),
-    .init(color: .secondaryOrange, day: .thursday),
-    .init(color: .secondaryPurple, day: .friday),
-    .init(color: .secondaryBlue, day: .saturday)
+let defaultDayColors: [Day: Colors] = [
+    .sunday: .secondaryBrown,
+    .monday: .secondaryRed,
+    .tuesday: .secondaryGreen,
+    .wednesday : .secondaryPink,
+    .thursday : .secondaryOrange,
+    .friday : .secondaryPurple,
+    .saturday : .secondaryBlue
 ]
 

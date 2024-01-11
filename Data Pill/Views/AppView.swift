@@ -206,7 +206,7 @@ struct AppView: View {
             // MARK: Layer 6: Week's History
             if appViewModel.isHistoryShown {
                 HistoryView(
-                    days: appViewModel.days,
+                    dayColors: appViewModel.dayColors,
                     weekData: appViewModel.thisWeeksData,
                     dataLimitPerDay: appViewModel.dataLimitPerDay,
                     usageType: appViewModel.usageType,

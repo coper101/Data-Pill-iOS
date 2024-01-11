@@ -86,4 +86,53 @@ class TestData {
         date = Calendar.current.date(byAdding: .second, value: secondsOffset, to: date)!
         return Calendar.current.startOfDay(for: date)
     }
+    
+    // MARK: - Local Data (Test)
+    static let weeksDataSample: [DataTest] = [
+        .init(
+            date: "2022-10-09T10:44:00+0000".toDate(),
+            dailyUsedData: 2_500
+        ),
+        .init(
+            date: "2022-10-10T10:44:00+0000".toDate(),
+            dailyUsedData: 1_480
+        ),
+        .init(
+            date: "2022-10-11T10:44:00+0000".toDate(),
+            dailyUsedData: 1_000
+        ),
+        .init(
+            date: "2022-10-12T10:44:00+0000".toDate(),
+            dailyUsedData: 800
+        ),
+        .init(
+            date: "2022-10-13T10:44:00+0000".toDate(),
+            dailyUsedData: 500
+        ),
+        .init(
+            date: "2022-10-14T10:44:00+0000".toDate(),
+            dailyUsedData: 250
+        ),
+        .init(
+            date: "2022-10-15T10:44:00+0000".toDate(),
+            dailyUsedData: 50
+        )
+    ]
+    
+    static let weeksDataWithMissingDaysSample: [DataTest] = [
+        .init(
+            date: "2022-10-10T10:44:00+0000".toDate(),
+            dailyUsedData: 1_480
+        ),
+        .init(
+            date: "2022-10-12T10:44:00+0000".toDate(),
+            dailyUsedData: 800
+        ),
+        .init(
+            date: "2022-10-14T10:44:00+0000".toDate(),
+            dailyUsedData: 250
+        )
+    ]
+    
+    static let todaysDataSample = DataTest()
 }

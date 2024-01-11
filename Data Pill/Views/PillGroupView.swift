@@ -18,7 +18,8 @@ struct PillGroupView: View {
     
     var color: Colors {
         let weekday = todaysDate.toDateComp().weekday ?? 1
-        return appViewModel.days[weekday - 1].color
+        let defaultColor = appViewModel.dayColors.values.first ?? .secondaryBlue
+        return appViewModel.dayColors[weekday.toDay()] ?? defaultColor
     }
     
     // MARK: - UI
@@ -37,6 +38,7 @@ struct PillGroupView: View {
 
                 // Col 1: DATA PILL
                 Button(action: dataPillAction) {
+                    
                     PillView(
                         color: color,
                         percentage: appViewModel.dateUsedInPercentage,
@@ -48,7 +50,8 @@ struct PillGroupView: View {
                         ),
                         isContentShown: !appViewModel.isHistoryShown
                     )
-                }
+                    
+                } //: Button
                 .buttonStyle(
                     ScaleButtonStyle(minScale: 0.9)
                 )

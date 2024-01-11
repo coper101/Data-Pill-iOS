@@ -67,7 +67,7 @@ struct PillView_Previews: PreviewProvider {
         Group {
             
             PillView(
-                color: appViewModel.days[0].color,
+                color: appViewModel.dayColors.values.first!,
                 percentage: percentage,
                 date: Date(),
                 usageType: .daily
@@ -77,7 +77,7 @@ struct PillView_Previews: PreviewProvider {
             )
             
             PillView(
-                color: appViewModel.days[0].color,
+                color: appViewModel.dayColors.values.first!,
                 percentage: percentage,
                 date: Date(),
                 usageType: .daily,

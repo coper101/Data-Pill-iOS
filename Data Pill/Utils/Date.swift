@@ -59,7 +59,7 @@ extension Date {
         return dateFormatter.string(from: self)
     }
         
-    /// Returns the weekday index
+    /// Returns the weekday index from 1 - 7 : Sun - Sat
     /// e.g. 1 Jan 2022, Sat = 7
     func getWeekday() -> Int {
         self.toDateComp().weekday!

@@ -68,6 +68,30 @@ extension Int {
         }
     }
     
+    func toDay() -> Day {
+        let weekday = self
+        if weekday == 1 {
+            return .sunday
+        }
+        else if weekday == 2 {
+            return .monday
+        }
+        else if weekday == 3 {
+            return .tuesday
+        }
+        else if weekday == 4 {
+            return .wednesday
+        }
+        else if weekday == 5 {
+            return .thursday
+        }
+        else if weekday == 6 {
+            return .friday
+        } else {
+            return .saturday
+        }
+    }
+    
 }
 
 extension Double {

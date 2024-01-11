@@ -73,7 +73,8 @@ struct Provider: IntentTimelineProvider {
         let todaysDate = widgetModel.todaysData.date ?? .init()
         var color: Colors {
             let weekday = todaysDate.toDateComp().weekday ?? 1
-            return widgetModel.days[weekday - 1].color
+            let defaultColor = widgetModel.dayColors.values.first ?? .secondaryBlue
+            return widgetModel.dayColors[weekday.toDay()] ?? defaultColor
         }
         let isPlan = usageType == .plan
         let localizedSubtitle: LocalizedStringKey = isPlan ? "PLAN" : "TODAY"

@@ -109,12 +109,12 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
             return data
         }
         addData(
-            date: todaysDataSample.date,
-            totalUsedData: todaysDataSample.totalUsedData,
-            dailyUsedData: todaysDataSample.dailyUsedData,
-            hasLastTotal: todaysDataSample.hasLastTotal,
-            isSyncedToRemote: todaysDataSample.isSyncedToRemote,
-            lastSyncedToRemoteDate: todaysDataSample.lastSyncedDateToRemote
+            date: TestData.todaysDataSample.date,
+            totalUsedData: TestData.todaysDataSample.totalUsedData,
+            dailyUsedData: TestData.todaysDataSample.dailyUsedData,
+            hasLastTotal: TestData.todaysDataSample.hasLastTotal,
+            isSyncedToRemote: TestData.todaysDataSample.isSyncedToRemote,
+            lastSyncedToRemoteDate: TestData.todaysDataSample.lastSyncedDateToRemote
         )
         return thisWeeksData.first!
     }

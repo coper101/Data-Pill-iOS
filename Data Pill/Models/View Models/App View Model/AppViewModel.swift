@@ -211,7 +211,7 @@ final class AppViewModel: ObservableObject {
     }
     
     /// Weekday color can be customizable in the future
-    @Published var days = dayPills
+    @Published var dayColors: [Day: Colors] = defaultDayColors
     
     // MARK: - Initializer
     /// - parameters:
