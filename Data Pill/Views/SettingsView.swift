@@ -50,6 +50,26 @@ struct SettingsView: View {
             // MARK: ROOT
             ScrollView {
                 
+                HStack(spacing: 0) {
+                    
+                    // MARK: Title
+                    Text("Settings")
+                        .textStyle(
+                            foregroundColor: .onBackground,
+                            font: .bold,
+                            size: 32
+                        )
+                    
+                    Spacer()
+                    
+                    // MARK: Close
+                    CloseIconView(action: appViewModel.closeSettings)
+                    
+                } //: HStack
+                .padding(.leading, 18)
+                .padding(.trailing, 12)
+                .padding(.top, 21)
+                
                 VStack(spacing: 26) {
                     
                     // MARK: APPEARANCE
@@ -148,13 +168,16 @@ struct SettingsView: View {
 
                 } //: VStack
                 .padding(.horizontal, 21)
-                .padding(.vertical, 12)
+                .padding(.top, 4)
+                .padding(.bottom, 16)
               
             } //: VStack
             .fillMaxSize()
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
-        }
+            .navigationBarHidden(true)
+            
+        } //: NavigationView
     }
     
     // MARK: - Actions

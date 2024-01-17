@@ -45,13 +45,13 @@ struct HistoryView: View {
                     "This Week",
                     comment: "The title for viewing all the data usage for the week"
                 )
-                    .textStyle(
-                        foregroundColor: .onBackground,
-                        font: .bold,
-                        size: 30,
-                        maxWidth: .infinity,
-                        lineLimit: 1
-                    )
+                .textStyle(
+                    foregroundColor: .onBackground,
+                    font: .bold,
+                    size: 30,
+                    maxWidth: .infinity,
+                    lineLimit: 1
+                )
                 
                 // CLOSE
                 CloseIconView(action: closeAction)
