@@ -114,6 +114,7 @@ final class AppViewModel: ObservableObject {
     
     // MARK: - UI
     @Published var isGuideShown = false
+    @Published var isSettingsShown = false
     @Published var isPlanActive = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false

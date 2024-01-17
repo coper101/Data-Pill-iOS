@@ -461,7 +461,7 @@ extension AppViewModel {
         }
     }
     
-    // MARK: - Guide
+    // MARK: - Guide Screen
     func showGuide() {
         isGuideShown = !wasGuideShown
     }
@@ -469,5 +469,14 @@ extension AppViewModel {
     func closeGuide() {
         isGuideShown = false
         appDataRepository.setWasGuideShown(true)
+    }
+    
+    // MARK: - Settings Screen
+    func showSettings() {
+        isSettingsShown = true
+    }
+    
+    func closeSettings() {
+        isSettingsShown = false
     }
 }

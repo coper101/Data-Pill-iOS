@@ -12,6 +12,8 @@ struct SlideToggleView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     let minXOffset: CGFloat = 4
     let maxXOffset: CGFloat = 25
+    var activeColor: Colors = .onSurfaceLight
+    var inactiveColor: Colors = .onSurfaceLight2
     @Binding var isOn: Bool
     
     var handleXOffset: CGFloat {
@@ -19,7 +21,7 @@ struct SlideToggleView: View {
     }
     
     var background: Colors {
-        isOn ? .onSurfaceLight : .onSurfaceLight2
+        isOn ? activeColor : inactiveColor
     }
     
     // MARK: - UI

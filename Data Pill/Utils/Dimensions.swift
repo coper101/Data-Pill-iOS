@@ -19,7 +19,7 @@ struct Dimensions {
     let spaceBottomTopBar: CGFloat = 12
     
     /// Top Bar
-    let topBarHeight: CGFloat = 23
+    let topBarHeight: CGFloat = 30
     
     /// Card
     let planCardHeight: CGFloat = 150

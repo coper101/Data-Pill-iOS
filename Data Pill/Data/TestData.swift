@@ -9,6 +9,76 @@ import CloudKit
 
 class TestData {
     
+    // MARK: - Dependencies
+    static func createAppViewModel() -> AppViewModel {
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        let todaysDate = Date()
+        
+        // Today's Data
+        dataRepo.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
+        )
+        
+        // 3 Days Ago
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -3, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 1_500,
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
+        )
+        // 2 Days Ago
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -2, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 5_000,
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
+        )
+        // Yesterday
+        dataRepo.addData(
+            date: Calendar.current.date(
+                byAdding: .day, value: -1, to: todaysDate)!,
+            totalUsedData: 0,
+            dailyUsedData: 2_100,
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
+        )
+       
+        // Update Database
+        dataRepo.updatePlan(
+            startDate: Calendar.current.date(
+                byAdding: .day, value: -3, to: todaysDate)!,
+            endDate: Calendar.current.date(
+                byAdding: .day, value: 0, to: todaysDate)!,
+            dataAmount: 10,
+            dailyLimit: 4,
+            planLimit: 9,
+            updateToLatestPlanAfterwards: true
+        )
+        
+        let viewModel = AppViewModel(
+            dataUsageRepository: dataRepo,
+            dataUsageRemoteRepository: MockSuccessDataUsageRemoteRepository()
+        )
+        
+        // Update created Today's Data (added automatically by app)
+        viewModel.refreshUsedDataToday(1000)
+        
+        return viewModel
+    }
+    
     // MARK: - Local
     static func createLocalData(completion: @escaping (Data?) -> Void)  {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: nil)

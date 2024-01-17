@@ -27,15 +27,18 @@ struct PillGroupView: View {
         VStack(spacing: 0) {
             
             // MARK: - Row 1: Top Bar
-            TopBarView(syncStatus: appViewModel.syncStatus)
-                .padding(.bottom, dimensions.spaceBottomTopBar)
-
+            TopBarView(
+                syncStatus: appViewModel.syncStatus,
+                settingsAction: settingsAction
+            )
+            .padding(.bottom, dimensions.spaceBottomTopBar)
+            
             // MARK: - Row 2: Pill Group
             HStack(
                 alignment: .center,
                 spacing: dimensions.spaceInBetween
             ) {
-
+                
                 // Col 1: DATA PILL
                 Button(action: dataPillAction) {
                     
@@ -71,18 +74,18 @@ struct PillGroupView: View {
                             dataUnit: appViewModel.unit,
                             width: cardWidth
                         )
-
+                        
                         Spacer()
-
+                        
                         // USAGE TOGGLE
                         UsageCardView(
                             selectedItem: $appViewModel.usageType,
                             width: cardWidth,
                             isPlanActive: appViewModel.isPlanActive
                         )
-
+                        
                         Spacer()
-
+                        
                         // AUTO DATA PERIOD TOGGLE
                         AutoPeriodCardView(
                             isAuto: $appViewModel.isPeriodAuto,
@@ -94,7 +97,7 @@ struct PillGroupView: View {
                     .fillMaxSize()
                     
                 } //: GeometryReader
-
+                
             } //: HStack
             .frame(height: dimensions.maxPillHeight)
             
@@ -152,7 +155,7 @@ struct PillGroupView: View {
             
         } //: VStack
         .padding(.horizontal, dimensions.horizontalPadding)
-//        .padding(.vertical, dimensions.horizontalPadding)
+        //        .padding(.vertical, dimensions.horizontalPadding)
     }
     
     // MARK: - Actions
@@ -186,6 +189,9 @@ struct PillGroupView: View {
         }
     }
     
+    func settingsAction() {
+        appViewModel.showSettings()
+    }
 }
 
 // MARK: - Preview

@@ -8,10 +8,18 @@
 import SwiftUI
 
 enum Icons: String {
-    case navigateIcon = "Right Arrow Icon"
+    case bellIcon = "Bell"
+    case bugIcon = "Bug"
     case closeIcon = "X Mark Icon"
+    case moonIcon = "Moon"
+    case fileIcon = "File"
     case minusIcon = "Minus"
+    case navigateIcon = "Right Arrow Icon"
+    case navigateThickIcon = "Right Arrow Thick"
+    case pillIcon = "Pill"
     case plusIcon = "Plus"
+    case settingsIcon = "Settings"
+    case starIcon = "Star"
     case warningIcon = "Warning Icon"
     var image: Image {
         Image(self.rawValue)
