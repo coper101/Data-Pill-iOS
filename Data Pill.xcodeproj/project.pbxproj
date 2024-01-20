@@ -86,6 +86,11 @@
 		27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801E3E28E9FDAA00201339 /* AppDataRepository.swift */; };
 		278337C32B52A19900EAC8C5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278337C22B52A19900EAC8C5 /* SettingsView.swift */; };
 		278337C52B58189B00EAC8C5 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278337C42B58189B00EAC8C5 /* SettingsRowView.swift */; };
+		278337C72B5BAE7500EAC8C5 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278337C62B5BAE7500EAC8C5 /* SettingsScreen.swift */; };
+		278337CA2B5BB25100EAC8C5 /* CustomizePillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278337C92B5BB25100EAC8C5 /* CustomizePillView.swift */; };
+		278337CC2B5BB26900EAC8C5 /* ShowAllRecordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278337CB2B5BB26900EAC8C5 /* ShowAllRecordsView.swift */; };
+		278337CE2B5BB27600EAC8C5 /* ReportABugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278337CD2B5BB27600EAC8C5 /* ReportABugView.swift */; };
+		278337D02B5BB27D00EAC8C5 /* RequestAFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278337CF2B5BB27D00EAC8C5 /* RequestAFeatureView.swift */; };
 		278BAB5929C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */; };
 		278D1A6E29B4A61400E6C974 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D1A6D29B4A61400E6C974 /* SpinnerView.swift */; };
 		278D1A7029B4AA0800E6C974 /* SyncIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D1A6F29B4AA0800E6C974 /* SyncIndicatorView.swift */; };
@@ -342,6 +347,11 @@
 		27801E3E28E9FDAA00201339 /* AppDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataRepository.swift; sourceTree = "<group>"; };
 		278337C22B52A19900EAC8C5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		278337C42B58189B00EAC8C5 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
+		278337C62B5BAE7500EAC8C5 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		278337C92B5BB25100EAC8C5 /* CustomizePillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizePillView.swift; sourceTree = "<group>"; };
+		278337CB2B5BB26900EAC8C5 /* ShowAllRecordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowAllRecordsView.swift; sourceTree = "<group>"; };
+		278337CD2B5BB27600EAC8C5 /* ReportABugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportABugView.swift; sourceTree = "<group>"; };
+		278337CF2B5BB27D00EAC8C5 /* RequestAFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestAFeatureView.swift; sourceTree = "<group>"; };
 		278BAB5429C47ACD00A5A005 /* Unit_Tests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Unit_Tests.xctestplan; sourceTree = "<group>"; };
 		278BAB5529C47AD500A5A005 /* UI_Tests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UI_Tests.xctestplan; sourceTree = "<group>"; };
 		278BAB5829C4806F00A5A005 /* App_View_Model_Refresh_Data_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Refresh_Data_Tests.swift; sourceTree = "<group>"; };
@@ -629,7 +639,7 @@
 				27801DB328D6C96800201339 /* PillGroupView.swift */,
 				27801E0228DA196E00201339 /* HistoryView.swift */,
 				278337C22B52A19900EAC8C5 /* SettingsView.swift */,
-				278337C42B58189B00EAC8C5 /* SettingsRowView.swift */,
+				278337C82B5BB23700EAC8C5 /* Settings */,
 				270B264B2963E166001B316F /* Guide */,
 				27F233AB2945CD2E00E6102D /* Widget */,
 				278FB2D828F5B20400BE78C2 /* Pill */,
@@ -761,6 +771,18 @@
 				276048E529BF450E00AB8497 /* TestData.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		278337C82B5BB23700EAC8C5 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				278337C42B58189B00EAC8C5 /* SettingsRowView.swift */,
+				278337C92B5BB25100EAC8C5 /* CustomizePillView.swift */,
+				278337CB2B5BB26900EAC8C5 /* ShowAllRecordsView.swift */,
+				278337CD2B5BB27600EAC8C5 /* ReportABugView.swift */,
+				278337CF2B5BB27D00EAC8C5 /* RequestAFeatureView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		278BAB5629C47AE500A5A005 /* Test Plans */ = {
@@ -937,6 +959,7 @@
 				2761528F293E3FCC00AEA000 /* DataPlan.swift */,
 				278D6B6828F17065006931DA /* DataInfo.swift */,
 				27B90B8828F2D43700263983 /* DataTest.swift */,
+				278337C62B5BAE7500EAC8C5 /* SettingsScreen.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1217,7 +1240,9 @@
 				278D1A6E29B4A61400E6C974 /* SpinnerView.swift in Sources */,
 				27D056CF2A5091F900A6EC04 /* RemoteDataOperation.swift in Sources */,
 				27D4CA2F2A472F84008989B1 /* Republishers.swift in Sources */,
+				278337C72B5BAE7500EAC8C5 /* SettingsScreen.swift in Sources */,
 				27D056EC2A51589A00A6EC04 /* Mock_Local_Database.swift in Sources */,
+				278337D02B5BB27D00EAC8C5 /* RequestAFeatureView.swift in Sources */,
 				27801E1728E82B9100201339 /* TextInputView.swift in Sources */,
 				27801DFB28DA0B0D00201339 /* NavRowView.swift in Sources */,
 				278FB31128FAA00F00BE78C2 /* Animation.swift in Sources */,
@@ -1251,6 +1276,7 @@
 				278E7344295BFAB20020F84B /* ToastTimer.swift in Sources */,
 				27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */,
 				27801DB128D6C96800201339 /* AppView.swift in Sources */,
+				278337CE2B5BB27600EAC8C5 /* ReportABugView.swift in Sources */,
 				27F233B32955434B00E6102D /* EditItemCardView.swift in Sources */,
 				27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */,
 				27801DE828D7215D00201339 /* Enums.swift in Sources */,
@@ -1311,6 +1337,8 @@
 				27801DC928D6C96800201339 /* Data_PillApp.swift in Sources */,
 				27801DC728D6C96800201339 /* Color.swift in Sources */,
 				27EE983629A7733B00D9D343 /* RemoteSubscriptionID.swift in Sources */,
+				278337CA2B5BB25100EAC8C5 /* CustomizePillView.swift in Sources */,
+				278337CC2B5BB26900EAC8C5 /* ShowAllRecordsView.swift in Sources */,
 				27801DFD28DA0CF500201339 /* DividerView.swift in Sources */,
 				27801DF228D8BDBE00201339 /* ToggleView.swift in Sources */,
 				27D056C52A5037C500A6EC04 /* DataOperation.swift in Sources */,

@@ -114,12 +114,15 @@ final class AppViewModel: ObservableObject {
     
     // MARK: - UI
     @Published var isGuideShown = false
-    @Published var isSettingsShown = false
     @Published var isPlanActive = false
     @Published var isHistoryShown = false
     @Published var isBlurShown = false
     @Published var isTappedOutside = false
     @Published var isLongPressedOutside = false
+    
+    @Published var isSettingsShown = false
+    @Published var activeSettingsScreen: SettingsScreen? = nil
+    
     
     @Published var isSyncingPlan = false
     @Published var isSyncingTodaysData = false

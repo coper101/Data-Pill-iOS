@@ -10,12 +10,14 @@ import CloudKit
 class TestData {
     
     // MARK: - Dependencies
-    static func createAppViewModel() -> AppViewModel {
+    static func createAppViewModel(
+        activeSettingsScreen: SettingsScreen? = nil
+    ) -> AppViewModel {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
         let todaysDate = Date()
         
-        // Today's Data
+        /// Today's Data
         dataRepo.addData(
             date: Calendar.current.startOfDay(for: .init()),
             totalUsedData: 0,
@@ -25,7 +27,7 @@ class TestData {
             lastSyncedToRemoteDate: nil
         )
         
-        // 3 Days Ago
+        /// 3 Days Ago
         dataRepo.addData(
             date: Calendar.current.date(
                 byAdding: .day, value: -3, to: todaysDate)!,
@@ -35,7 +37,7 @@ class TestData {
             isSyncedToRemote: false,
             lastSyncedToRemoteDate: nil
         )
-        // 2 Days Ago
+        /// 2 Days Ago
         dataRepo.addData(
             date: Calendar.current.date(
                 byAdding: .day, value: -2, to: todaysDate)!,
@@ -45,7 +47,7 @@ class TestData {
             isSyncedToRemote: false,
             lastSyncedToRemoteDate: nil
         )
-        // Yesterday
+        /// Yesterday
         dataRepo.addData(
             date: Calendar.current.date(
                 byAdding: .day, value: -1, to: todaysDate)!,
@@ -56,7 +58,7 @@ class TestData {
             lastSyncedToRemoteDate: nil
         )
        
-        // Update Database
+        /// Update Database
         dataRepo.updatePlan(
             startDate: Calendar.current.date(
                 byAdding: .day, value: -3, to: todaysDate)!,
@@ -73,7 +75,9 @@ class TestData {
             dataUsageRemoteRepository: MockSuccessDataUsageRemoteRepository()
         )
         
-        // Update created Today's Data (added automatically by app)
+        viewModel.activeSettingsScreen = activeSettingsScreen
+        
+        /// Update created Today's Data (added automatically by app)
         viewModel.refreshUsedDataToday(1000)
         
         return viewModel
