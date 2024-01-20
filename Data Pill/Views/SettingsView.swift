@@ -10,20 +10,37 @@ import SwiftUI
 struct SectionModifier: ViewModifier {
     // MARK: Props
     var title: String
+    var atTop: Bool
+    var alignment: HorizontalAlignment
     
     // MARK: UI
+    var header: some View {
+        Text(title.uppercased())
+            .textStyle(
+                foregroundColor: .onSurfaceLight,
+                size: 14
+            )
+    }
+    
     func body(content: Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: alignment, spacing: 12) {
             
-            Text(title.uppercased())
-                .textStyle(
-                    foregroundColor: .onSurfaceLight,
-                    size: 14
-                )
+            // MARK: HEADER (TOP)
+            if atTop {
+                
+                header
+                
+            } //: if
             
+            // MARK: CONTENT
             content
-                .background(Colors.surface.color)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+            
+            // MARK: HEADER (BOTTOM)
+            if !atTop {
+                
+                header
+                
+            } //: if
             
         } //: VStack
     }
@@ -31,8 +48,25 @@ struct SectionModifier: ViewModifier {
 
 extension View {
     
-    func section(title: String) -> some View {
-        self.modifier(SectionModifier(title: title))
+    func section(
+        title: String,
+        atTop: Bool = true,
+        alignment: HorizontalAlignment = .leading
+    ) -> some View {
+        self.modifier(
+            SectionModifier(
+                title: title,
+                atTop: atTop,
+                alignment: alignment
+            )
+        )
+    }
+    
+    func rowSection(title: String) -> some View {
+        self
+            .background(Colors.surface.color)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .section(title: title )
     }
 }
 
@@ -96,7 +130,7 @@ struct SettingsView: View {
                     } //: SettingsRowView
                     
                 } //: VStack
-                .section(title: "Appearance")
+                .rowSection(title: "Appearance")
                 
                 // MARK: - NOTIFICATION
                 VStack(spacing: 0) {
@@ -116,7 +150,7 @@ struct SettingsView: View {
                     } //: SettingsRowView
                     
                 } //: VStack
-                .section(title: "Notification")
+                .rowSection(title: "Notification")
                 
                 // MARK: - DATA
                 VStack(spacing: 0) {
@@ -131,7 +165,7 @@ struct SettingsView: View {
                     } //: SettingsRowView
                     
                 } //: VStack
-                .section(title: "data")
+                .rowSection(title: "data")
                 
                 // MARK: - SUPPORT
                 VStack(spacing: 0) {
@@ -156,7 +190,7 @@ struct SettingsView: View {
                     } //: SettingsRowView
                     
                 } //: VStack
-                .section(title: "Support")
+                .rowSection(title: "Support")
 
             } //: VStack
             .padding(.horizontal, 21)

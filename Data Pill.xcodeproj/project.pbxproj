@@ -41,6 +41,7 @@
 		27615290293E3FCC00AEA000 /* DataPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528F293E3FCC00AEA000 /* DataPlan.swift */; };
 		27615291293E3FCC00AEA000 /* DataPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2761528F293E3FCC00AEA000 /* DataPlan.swift */; };
 		276626F92B4AACDA00613C82 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276626F82B4AACDA00613C82 /* Configuration.swift */; };
+		277944682B5C14B6006A2FF7 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277944672B5C14B6006A2FF7 /* RadioButtonView.swift */; };
 		27801DB128D6C96800201339 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB028D6C96800201339 /* AppView.swift */; };
 		27801DB428D6C96800201339 /* PillGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB328D6C96800201339 /* PillGroupView.swift */; };
 		27801DB728D6C96800201339 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB628D6C96800201339 /* AppViewModel.swift */; };
@@ -300,6 +301,7 @@
 		2761528C293CAF7F00AEA000 /* Widget_Model_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget_Model_Tests.swift; sourceTree = "<group>"; };
 		2761528F293E3FCC00AEA000 /* DataPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlan.swift; sourceTree = "<group>"; };
 		276626F82B4AACDA00613C82 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		277944672B5C14B6006A2FF7 /* RadioButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonView.swift; sourceTree = "<group>"; };
 		27801DAC28D6C96800201339 /* Data Pill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Data Pill.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27801DB028D6C96800201339 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		27801DB328D6C96800201339 /* PillGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillGroupView.swift; sourceTree = "<group>"; };
@@ -734,6 +736,7 @@
 				27BE08282928BD3F00E0781C /* Stepper */,
 				27801DF128D8BDBE00201339 /* ToggleView.swift */,
 				27FDBCE229646F07008FA32E /* SlideToggleView.swift */,
+				277944672B5C14B6006A2FF7 /* RadioButtonView.swift */,
 				27801E1628E82B9100201339 /* TextInputView.swift */,
 				27B10A71295BE714009E910C /* ToastView.swift */,
 				278D1A6D29B4A61400E6C974 /* SpinnerView.swift */,
@@ -1239,6 +1242,7 @@
 				27801E1528E8227500201339 /* StepperButtonView.swift in Sources */,
 				278D1A6E29B4A61400E6C974 /* SpinnerView.swift in Sources */,
 				27D056CF2A5091F900A6EC04 /* RemoteDataOperation.swift in Sources */,
+				277944682B5C14B6006A2FF7 /* RadioButtonView.swift in Sources */,
 				27D4CA2F2A472F84008989B1 /* Republishers.swift in Sources */,
 				278337C72B5BAE7500EAC8C5 /* SettingsScreen.swift in Sources */,
 				27D056EC2A51589A00A6EC04 /* Mock_Local_Database.swift in Sources */,

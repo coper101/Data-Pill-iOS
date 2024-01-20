@@ -17,6 +17,28 @@ enum Day: String, CaseIterable {
     case saturday
 }
 
+extension Day {
+    
+    var shortName: String {
+        switch self {
+        case .sunday:
+            "Sun"
+        case .monday:
+            "Mon"
+        case .tuesday:
+            "Tue"
+        case .wednesday:
+            "Wed"
+        case .thursday:
+            "Thu"
+        case .friday:
+            "Fri"
+        case .saturday:
+            "Sat"
+        }
+    }
+}
+
 struct DayPill: Identifiable {
     let color: Colors
     let day: Day

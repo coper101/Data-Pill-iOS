@@ -11,8 +11,8 @@ struct SettingsRowView<Content>: View where Content: View {
     // MARK: - Props
     var title: String
     var subtitle: String?
-    var icon: Icons
-    var iconColor: Colors
+    var icon: Icons?
+    var iconColor: Colors?
     var hasDivider: Bool = false
     var action: Action?
     @ViewBuilder var trailingContent: Content
@@ -22,15 +22,18 @@ struct SettingsRowView<Content>: View where Content: View {
         HStack(spacing: 14) {
             
             // MARK: ICON
-            Circle()
-                .fill(iconColor.color)
-                .frame(width: 32, height: 32)
-                .overlay(
-                    icon.image
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(Colors.background.color)
-                )
+            if let icon, let iconColor {
+                
+                Circle()
+                    .fill(iconColor.color)
+                    .frame(width: 32, height: 32)
+                    .overlay(
+                        icon.image
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(Colors.background.color)
+                    )
+            } //: if
             
             // MARK: TITLE
             VStack(
@@ -98,7 +101,7 @@ struct SettingsRowView<Content>: View where Content: View {
             if hasDivider {
                 
                 DividerView(color: .onSurfaceLight2)
-                    .padding(.leading, 58)
+                    .padding(.leading, (icon != nil) ? 58 : 18)
                     .padding(.trailing, 18)
                 
             } //: if
@@ -122,6 +125,13 @@ struct SettingsRowView_Previews: PreviewProvider {
                 hasDivider: true
             ) { Text("Content") }
             .previewDisplayName("w/o Action")
+            
+            SettingsRowView(
+                title: "Dark Mode",
+                subtitle: "Subtitle",
+                hasDivider: true
+            ) { Text("Content") }
+            .previewDisplayName("w/o Icon")
             
             SettingsRowView(
                 title: "Dark Mode",
