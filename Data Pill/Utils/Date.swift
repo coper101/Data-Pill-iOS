@@ -31,10 +31,10 @@ extension Date {
     
     /// Formats the Date to `dd mm`
     /// e.g. 1 Jan
-    func toDayMonthFormat(locale identifier: String) -> String {
+    func toDayMonthFormat(locale identifier: String, format: String = "d MMM") -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = .init(identifier: identifier)
-        dateFormatter.dateFormat = "d MMM"
+        dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)
     }
     

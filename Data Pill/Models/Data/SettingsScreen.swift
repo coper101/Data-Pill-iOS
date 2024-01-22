@@ -9,7 +9,7 @@ import Foundation
 
 enum SettingsScreen: String, CaseIterable {
     case customizePill = "Customize Pill"
-    case showAllRecords = "Show All Records"
+    case showAllRecords = "All Records"
     case reportABug = "Report a Bug"
     case requestAFeature = "Request a Feature"
 }
