@@ -7,69 +7,6 @@
 
 import SwiftUI
 
-struct SectionModifier: ViewModifier {
-    // MARK: Props
-    var title: String
-    var atTop: Bool
-    var alignment: HorizontalAlignment
-    
-    // MARK: UI
-    var header: some View {
-        Text(title.uppercased())
-            .textStyle(
-                foregroundColor: .onSurfaceLight,
-                size: 14
-            )
-    }
-    
-    func body(content: Content) -> some View {
-        VStack(alignment: alignment, spacing: 12) {
-            
-            // MARK: HEADER (TOP)
-            if atTop {
-                
-                header
-                
-            } //: if
-            
-            // MARK: CONTENT
-            content
-            
-            // MARK: HEADER (BOTTOM)
-            if !atTop {
-                
-                header
-                
-            } //: if
-            
-        } //: VStack
-    }
-}
-
-extension View {
-    
-    func section(
-        title: String,
-        atTop: Bool = true,
-        alignment: HorizontalAlignment = .leading
-    ) -> some View {
-        self.modifier(
-            SectionModifier(
-                title: title,
-                atTop: atTop,
-                alignment: alignment
-            )
-        )
-    }
-    
-    func rowSection(title: String) -> some View {
-        self
-            .background(Colors.surface.color)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .section(title: title )
-    }
-}
-
 struct SettingsView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
