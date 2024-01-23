@@ -98,7 +98,7 @@ struct ShowAllRecordsView: View {
                             )
                         )
                         .textStyle(
-                            foregroundColor: .onSurface,
+                            foregroundColor: .onSurfaceLight,
                             size: 16
                         )
                         .padding(.vertical, 4)
