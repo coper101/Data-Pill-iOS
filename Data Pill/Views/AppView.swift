@@ -33,7 +33,8 @@ struct AppView: View {
             planCardHeight +
             dimensions.spaceInBetween +
             dimensions.planLimitCardsHeight +
-            dimensions.horizontalPadding
+            dimensions.horizontalPadding +
+            dimensions.insets.bottom + 21
         )
     }
     
@@ -49,11 +50,14 @@ struct AppView: View {
     // MARK: - UI
     var body: some View {
         ZStack {
+            
+            Colors.background.color
 
             // MARK: Layer 0: Today's Data Pill
             PillGroupView()
                 .fillMaxHeight(alignment: .top)
                 .padding(.top, dimensions.insets.top)
+                .padding(.bottom, dimensions.insets.bottom + 21)
                 .position(
                     x: dimensions.screen.width * 0.5,
                     y: (dimensions.screen.height * 0.5) + contentSpacing
