@@ -280,6 +280,7 @@ final class AppViewModel: ObservableObject {
         // observeRemoteData()
         observeEditPlan()
         observeDataErrors()
+        observeSettings()
         
         // syncRemoteOnChange()
     }
