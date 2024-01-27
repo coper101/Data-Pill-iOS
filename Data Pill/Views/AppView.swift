@@ -270,6 +270,7 @@ struct AppView: View {
         .onAppear {
             appViewModel.showGuide()
         }
+        .environment(\.colorScheme, appViewModel.colorScheme)
     }
     
     // MARK: - Actions

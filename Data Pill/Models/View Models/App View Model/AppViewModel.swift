@@ -217,6 +217,14 @@ final class AppViewModel: ObservableObject {
     /// Weekday color can be customizable in the future
     @Published var dayColors: [Day: Colors] = defaultDayColors
     
+    /// Settings
+    @Published var isDarkMode = false
+    @Published var hasNotification = false
+    
+    var colorScheme: ColorScheme {
+        isDarkMode ? .dark : .light
+    }
+    
     // MARK: - Initializer
     /// - parameters:
     ///   - appDataRepository: The data source for app settings

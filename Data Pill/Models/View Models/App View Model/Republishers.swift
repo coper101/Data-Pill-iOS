@@ -57,6 +57,14 @@ extension AppViewModel {
         appDataRepository.lastSyncedToRemoteDatePublisher
             .sink { [weak self] in self?.lastSyncedToRemoteDate = $0 }
             .store(in: &cancellables)
+        
+        appDataRepository.isDarkModePublisher
+            .sink { [weak self] in self?.isDarkMode = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.hasNotificationPublisher
+            .sink { [weak self] in self?.hasNotification = $0 }
+            .store(in: &cancellables)
     }
     
     func republishDataUsage() {

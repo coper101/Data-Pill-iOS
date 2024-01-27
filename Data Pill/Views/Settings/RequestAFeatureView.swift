@@ -10,6 +10,7 @@ import SwiftUI
 struct RequestAFeatureView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
+    @Environment(\.dimensions) var dimensions: Dimensions
     @State var emailAddress: String = ""
     @State var title: String = ""
     @State var description: String = ""
@@ -84,6 +85,7 @@ struct RequestAFeatureView: View {
             .clipShape(
                 RoundedRectangle(cornerRadius: 12)
             )
+            .padding(.bottom, dimensions.insets.bottom)
             .padding(.horizontal, 18)
             
         } //: ZStack

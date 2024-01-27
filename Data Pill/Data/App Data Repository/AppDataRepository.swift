@@ -69,6 +69,20 @@ protocol AppDataRepositoryProtocol {
     func setLastSyncedToRemoteDate(_ date: Date)
     
     func loadAllData(unit: Unit?, usageType: ToggleItem?) -> Void
+    
+    /// [9] Settings
+    
+    /// [9.1] Dark Mode
+    var isDarkMode: Bool { get set }
+    var isDarkModePublisher: Published<Bool>.Publisher { get }
+    
+    func setIsDarkMode(_ enabled: Bool) -> Void
+    
+    /// [9.2] Notification
+    var hasNotification: Bool { get set }
+    var hasNotificationPublisher: Published<Bool>.Publisher { get }
+    
+    func setHasNotification(_ enabled: Bool) -> Void
 }
 
 
@@ -120,6 +134,14 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     /// [8]
     @Published var lastSyncedToRemoteDate: Date?
     var lastSyncedToRemoteDatePublisher: Published<Date?>.Publisher { $lastSyncedToRemoteDate }
+    
+    /// [9.1]
+    @Published var isDarkMode: Bool = false
+    var isDarkModePublisher: Published<Bool>.Publisher { $isDarkMode }
+    
+    /// [9.2]
+    @Published var hasNotification: Bool = false
+    var hasNotificationPublisher: Published<Bool>.Publisher { $hasNotification }
     
     
     // MARK: - Initializer
@@ -178,6 +200,9 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
             LocalStorage.setItem(1.0, forKey: .dataLimitMinusStepperValue)
             getDataLimitMinusStepperValue()
         }
+        
+        getIsDarkMode()
+        getHasNotification()
     }
     
     /// [1]
@@ -283,5 +308,25 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     func setLastSyncedToRemoteDate(_ date: Date) {
         LocalStorage.setItem(date, forKey: .lastSyncToRemoteDate)
         getLastSyncedToRemote()
+    }
+    
+    /// [9.1]
+    func getIsDarkMode() {
+        isDarkMode = LocalStorage.getBoolItem(forKey: .isDarkMode)
+    }
+    
+    func setIsDarkMode(_ enabled: Bool) {
+        LocalStorage.setItem(enabled, forKey: .isDarkMode)
+        getIsDarkMode()
+    }
+    
+    /// [9.2]
+    func getHasNotification() {
+        hasNotification = LocalStorage.getBoolItem(forKey: .hasNotification)
+    }
+    
+    func setHasNotification(_ enabled: Bool) {
+        LocalStorage.setItem(enabled, forKey: .hasNotification)
+        getHasNotification()
     }
 }

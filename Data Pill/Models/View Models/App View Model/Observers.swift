@@ -86,4 +86,15 @@ extension AppViewModel {
             .store(in: &cancellables)
     }
     
+    func observeSettings() {
+        $isDarkMode
+            .removeDuplicates()
+            .sink { [weak self] in self?.appDataRepository.setIsDarkMode($0) }
+            .store(in: &cancellables)
+        
+        $hasNotification
+            .removeDuplicates()
+            .sink { [weak self] in self?.appDataRepository.setHasNotification($0) }
+            .store(in: &cancellables)
+    }
 }

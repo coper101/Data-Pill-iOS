@@ -5,11 +5,25 @@
 //  Created by Wind Versi on 20/1/24.
 //
 
+public extension View {
+    
+    func transparentScrolling() -> some View {
+        if #available(iOS 16.0, *) {
+            return scrollContentBackground(.hidden)
+        } else {
+            return onAppear {
+                UITextView.appearance().backgroundColor = .clear
+            }
+        }
+    }
+}
+
 import SwiftUI
 
 struct ReportABugView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
+    @Environment(\.dimensions) var dimensions: Dimensions
     @State var emailAddress: String = ""
     @State var title: String = ""
     @State var description: String = ""
@@ -27,7 +41,8 @@ struct ReportABugView: View {
                 TextField("", text: $title)
                     .cardStyle(title: "Title")
                 
-                TextField("", text: $description)
+                TextEditor(text: $description)
+                    .transparentScrolling()
                     .cardStyle(
                         title: "Description",
                         lineLimit: 5
@@ -84,6 +99,7 @@ struct ReportABugView: View {
             .clipShape(
                 RoundedRectangle(cornerRadius: 12)
             )
+            .padding(.bottom, dimensions.insets.bottom)
             .padding(.horizontal, 18)
             
         } //: ZStack

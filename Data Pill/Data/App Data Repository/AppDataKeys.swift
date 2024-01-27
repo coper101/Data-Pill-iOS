@@ -32,4 +32,8 @@ enum Keys: String {
     
     /// Local - Remote Synchronization
     case lastSyncToRemoteDate = "Last_Synced_To_Remote_Date"
+    
+    /// Settings
+    case isDarkMode = "Is_Dark_Mode"
+    case hasNotification = "Has_Notification"
 }

@@ -10,10 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
-    
-    @State private var isDarkMode: Bool = true
-    @State private var isNotificationOn: Bool = true
-    
+    @Environment(\.dimensions) var dimensions: Dimensions
+
     // MARK: - UI
     var root: some View {
         ScrollView {
@@ -52,7 +50,7 @@ struct SettingsView: View {
                         
                         SlideToggleView(
                             activeColor: .secondaryBlue,
-                            isOn: $isDarkMode
+                            isOn: $appViewModel.isDarkMode
                         )
                         
                     } //: SettingsRowView
@@ -81,7 +79,7 @@ struct SettingsView: View {
                         
                         SlideToggleView(
                             activeColor: .secondaryBlue,
-                            isOn: $isNotificationOn
+                            isOn: $appViewModel.hasNotification
                         )
                         
                     } //: SettingsRowView
@@ -197,6 +195,10 @@ struct SettingsView: View {
             } //: switch-case
                         
         } //: VStack
+        .padding(.top, dimensions.insets.top)
+        .background(Colors.background.color)
+        .ignoresSafeArea()
+        .environment(\.colorScheme, appViewModel.colorScheme)
     }
     
     // MARK: - Actions
