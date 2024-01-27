@@ -9,58 +9,108 @@ import SwiftUI
 
 struct RequestAFeatureView: View {
     // MARK: - Props
-    @State private var emailAddress: String = "example@mail.com"
-    @State private var title: String = "Pill Customization"
-    @State private var description: String = "I really want this..."
-    @State private var screenshots: [Screenshot] = []
+    @EnvironmentObject var appViewModel: AppViewModel
+    @State var emailAddress: String = ""
+    @State var title: String = ""
+    @State var description: String = ""
+    @State var screenshots: [Screenshot] = []
     
     // MARK: - UI
-    var body: some View {
+    var inputs: some View {
         ScrollView {
             
-            VStack(spacing: 12) {
-                
-                
+            VStack(spacing: 16) {
+                                
                 TextField("", text: $emailAddress)
-                    .textFieldStyle(title: "Email Address")
+                    .cardStyle(title: "Email Address")
                 
                 TextField("", text: $title)
-                    .textFieldStyle(title: "Title")
+                    .cardStyle(title: "Title")
                 
                 TextField("", text: $description)
-                    .textFieldStyle(title: "Description", lineLimit: 5)
+                    .cardStyle(
+                        title: "Description",
+                        lineLimit: 5
+                    )
                 
-                ScrollView(.horizontal) {
+                ScrollView(.horizontal, showsIndicators: false) {
                     
-                    HStack(spacing: 12) {
+                    HStack(spacing: 14) {
                         
                         ForEach(screenshots) { screenshot in
                             
                             Image(uiImage: screenshot.image)
                                 .resizable()
-                                .frame(width: 100, height: 450)
-                                .scaledToFit()
+                                .scaledToFill()
+                                .frame(width: 124, height: 184)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                             
                         } //: ForEach
                         
                     } //: HStack
+                    .padding(.top, 8)
+                    .padding(.horizontal, 14)
                     
                 } //: ScrollView
-                
+                .cardStyle(title: "Screenshot", contentPadding: false)
+
             } //: VStack
-            .padding(.horizontal, 21)
+            .padding(.vertical, 21)
+            .padding(.horizontal, 18)
                         
         } //: ScrollView
     }
     
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            
+            // MARK: INPUTS
+            inputs
+            
+            // MARK: ACTION
+            Button(action: sendAction) {
+                
+                Text("Send Report Via")
+                    .textStyle(
+                        foregroundColor: .onSecondary,
+                        font: .semibold,
+                        size: 16
+                    )
+                
+            } //: Button
+            .fillMaxWidth()
+            .frame(height: 54)
+            .background(Colors.secondaryBlue.color)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 12)
+            )
+            .padding(.horizontal, 18)
+            
+        } //: ZStack
+        .fillMaxSize()
+    }
+    
     // MARK: - Actions
+    func sendAction() {
+        
+    }
 }
 
 // MARK: - Preview
 struct RequestAFeature_Previews: PreviewProvider {
     static var previews: some View {
-        RequestAFeatureView()
-            .previewLayout(.sizeThatFits)
-            // .background(Colors.Background)
+        RequestAFeatureView(
+            emailAddress: "example@mail.com",
+            title: "Pill Customization",
+            description: "I really want this...",
+            screenshots: [
+                .init(image: .testImage),
+                .init(image: .testImage),
+                .init(image: .testImage)
+            ]
+        )
+        .previewLayout(.sizeThatFits)
+        .background(Colors.background.color)
+        .environmentObject(TestData.createAppViewModel())
     }
 }

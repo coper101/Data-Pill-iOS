@@ -72,7 +72,11 @@ extension View {
             .section(title: title)
     }
     
-    func textFieldStyle(title: String, lineLimit: Int = 1) -> some View {
+    func cardStyle(
+        title: String,
+        lineLimit: Int = 1,
+        contentPadding: Bool = true
+    ) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             
             Text(title)
@@ -80,6 +84,7 @@ extension View {
                     foregroundColor: .onSurfaceLight,
                     size: 12
                 )
+                .padding(.horizontal, 14)
             
             self
                 .frame(
@@ -91,10 +96,10 @@ extension View {
                     size: 16,
                     lineLimit: lineLimit
                 )
+                .padding(.horizontal, contentPadding ? 14 : 0)
             
         } //: VStack
         .padding(.vertical, 12)
-        .padding(.horizontal, 14)
         .rowSection(title: nil)
     }
 }
