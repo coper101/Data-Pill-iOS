@@ -84,6 +84,7 @@ final class AppViewModel: ObservableObject {
     
     @Published var todaysData: Data = createFakeData()
     @Published var thisWeeksData = [Data]()
+    @Published var allData = [Data]()
     
     @Published var totalUsedDataPlan = 0.0
     

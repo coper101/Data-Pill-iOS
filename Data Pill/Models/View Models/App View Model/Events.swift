@@ -587,4 +587,13 @@ extension AppViewModel {
     func setIsNotificationAlertShown(_ shown: Bool) {
         isNotificationAlertShown = shown
     }
+    
+    // MARK: Records
+    func loadAllRecords() {
+        allData = dataUsageRepository.getAllData()
+    }
+    
+    func clearRecords() {
+        allData.removeAll()
+    }
 }

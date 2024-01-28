@@ -13,8 +13,25 @@ struct DataRecord {
 }
 
 extension DataRecord: Identifiable {
+    
     var id: Date {
         date
+    }
+    
+    func displayedDate(_ localeIdentifier: String) -> String {
+        date.toDayMonthFormat(
+            locale: localeIdentifier,
+            format: "d MMM YYY"
+        )
+    }
+    
+    var displayedAmount: String {
+        let amountInMB = usedAmount.toMB()
+        let amountInGB = usedAmount.toGB()
+        if amountInMB >= 1_000_000 {
+            return "\(amountInGB.toDp()) GB"
+        }
+        return "\(amountInMB.toDp()) MB"
     }
 }
 
@@ -25,49 +42,15 @@ struct ShowAllRecordsView: View {
     @Environment(\.locale) var locale: Locale
 
     var records: [DataRecord] {
-        let todaysDate = Date()
-        return [
-            .init(
-                date: Calendar.current.startOfDay(
-                    for: Calendar.current.date(
-                        byAdding: .day,
-                        value: 0,
-                        to: todaysDate
-                    )!
-                ),
-                usedAmount: 20
-            ),
-            .init(
-                date: Calendar.current.startOfDay(
-                    for: Calendar.current.date(
-                        byAdding: .day,
-                        value: -1,
-                        to: todaysDate
-                    )!
-                ),
-                usedAmount: 20
-            ),
-            .init(
-                date: Calendar.current.startOfDay(
-                    for: Calendar.current.date(
-                        byAdding: .day,
-                        value: -2,
-                        to: todaysDate
-                    )!
-                ),
-                usedAmount: 20
-            ),
-            .init(
-                date: Calendar.current.startOfDay(
-                    for: Calendar.current.date(
-                        byAdding: .day,
-                        value: -3,
-                        to: todaysDate
-                    )!
-                ),
-                usedAmount: 20
+        appViewModel.allData.compactMap { data in
+            guard let date = data.date else {
+                return nil
+            }
+            return .init(
+                date: date,
+                usedAmount: data.dailyUsedData
             )
-        ]
+        }
     }
     
     // MARK: - UI
@@ -86,31 +69,29 @@ struct ShowAllRecordsView: View {
                     }()
                     
                     SettingsRowView(
-                        title: "\(record.usedAmount) MB",
+                        title: record.displayedAmount,
                         icon: .pillIcon,
                         iconColor: .secondaryGreen,
                         hasDivider: hasDivider
                     ) {
-                        Text(
-                            record.date.toDayMonthFormat(
-                                locale: locale.identifier,
-                                format: "d MMM YYY"
+                        Text(record.displayedDate(locale.identifier))
+                            .textStyle(
+                                foregroundColor: .onSurfaceLight,
+                                size: 16
                             )
-                        )
-                        .textStyle(
-                            foregroundColor: .onSurfaceLight,
-                            size: 16
-                        )
-                        .padding(.vertical, 4)
+                            .padding(.vertical, 4)
                     }
                     
                 } //: ForEach
                 
             } //: VStack
-            .rowSection(title: "")
+            .rowSection(title: "\(records.count) Items")
             .padding(.horizontal, dimensions.horizontalPadding)
+            .padding(.top, 21)
              
         } //: ScrollView
+        .onAppear(perform: appViewModel.loadAllRecords)
+        .onDisappear(perform: appViewModel.clearRecords)
     }
     
     // MARK: - Actions
