@@ -274,7 +274,7 @@ struct AppView: View {
         .onAppear {
             appViewModel.showGuide()
         }
-        .environment(\.colorScheme, appViewModel.colorScheme)
+        .preferredColorScheme(appViewModel.colorScheme)
         .alert(isPresented: $appViewModel.isNotificationAlertShown) {
             Alert(
                 title: Text("Notification"),

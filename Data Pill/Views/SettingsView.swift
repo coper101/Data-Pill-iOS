@@ -210,7 +210,7 @@ struct SettingsView: View {
         .padding(.top, dimensions.insets.top)
         .background(Colors.background.color)
         .ignoresSafeArea()
-        .environment(\.colorScheme, appViewModel.colorScheme)
+        .preferredColorScheme(appViewModel.colorScheme)
     }
     
     // MARK: - Actions
