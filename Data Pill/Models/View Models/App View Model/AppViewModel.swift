@@ -51,6 +51,7 @@ final class AppViewModel: ObservableObject {
     let dataUsageRemoteRepository: DataUsageRemoteRepositoryProtocol
     let networkDataRepository: NetworkDataRepositoryProtocol
     let networkConnectionRepository: NetworkConnectivity
+    let localNotificationManager: LocalNotification
     let toastTimer: ToastTimer<LocalizedStringKey>
     
     /// [A] App Data
@@ -70,6 +71,9 @@ final class AppViewModel: ObservableObject {
     @Published var dataLimitMinusStepperValue = 1.0
     
     @Published var lastSyncedToRemoteDate: Date?
+    
+    @Published var todaysLastNotificationDate: Date?
+    @Published var planLastNotificationDate: Date?
     
     /// [B] Data Usage
     @Published var startDate = Date()
@@ -107,8 +111,7 @@ final class AppViewModel: ObservableObject {
             dataUsageRepository.getTotalUsedData(from: startDate, to: endDate).toGB()
     }
     
-    
-    var dateUsedInPercentage: Int {
+    var dataUsedInPercentage: Int {
         usedData.toPercentage(with: maxData)
     }
     
@@ -219,7 +222,9 @@ final class AppViewModel: ObservableObject {
     
     /// Settings
     @Published var isDarkMode = false
-    @Published var hasNotification = false
+    @Published var hasDailyNotification = false
+    @Published var hasPlanNotification = false
+    @Published var isNotificationAlertShown: Bool = false
     
     var colorScheme: ColorScheme {
         isDarkMode ? .dark : .light
@@ -243,6 +248,7 @@ final class AppViewModel: ObservableObject {
         ),
         networkDataRepository: NetworkDataRepositoryProtocol = NetworkDataRepository(),
         networkConnectionRepository: NetworkConnectivity = NetworkConnectionRepository(),
+        localNotificationManager: LocalNotification = LocalNotificationManager.shared,
         toastTimer: ToastTimer<LocalizedStringKey> = .init(),
         setupValues: Bool = true
     ) {
@@ -251,6 +257,7 @@ final class AppViewModel: ObservableObject {
         self.dataUsageRepository = dataUsageRepository
         self.dataUsageRemoteRepository = dataUsageRemoteRepository
         self.networkDataRepository = networkDataRepository
+        self.localNotificationManager = localNotificationManager
         self.toastTimer = toastTimer
         
         if 

@@ -11,6 +11,20 @@ struct SettingsView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
+    
+    var notificationSubtitle: String? {
+        let hasDailyNotif = appViewModel.hasDailyNotification
+        let hasPlanNotif = appViewModel.hasPlanNotification
+        if hasDailyNotif && hasPlanNotif {
+            return "Daily Usage, Plan Usage"
+        } else if hasDailyNotif {
+            return "Daily Usage"
+        } else if hasPlanNotif {
+            return "Plan Usage"
+        } else {
+            return nil
+        }
+    }
 
     // MARK: - UI
     var root: some View {
@@ -71,16 +85,12 @@ struct SettingsView: View {
                 VStack(spacing: 0) {
                     
                     SettingsRowView(
-                        title: "Notify",
-                        subtitle: "On Exceeds Limit",
+                        title: "Notifications",
+                        subtitle: notificationSubtitle,
                         icon: .bellIcon,
-                        iconColor: .secondaryOrange
+                        iconColor: .secondaryOrange,
+                        action: { screenAction(screen: .notifications) }
                     ) {
-                        
-                        SlideToggleView(
-                            activeColor: .secondaryBlue,
-                            isOn: $appViewModel.hasNotification
-                        )
                         
                     } //: SettingsRowView
                     
@@ -184,6 +194,8 @@ struct SettingsView: View {
             switch appViewModel.activeSettingsScreen {
             case .customizePill:
                 CustomizePillView()
+            case .notifications:
+                NotificationSettingsView()
             case .showAllRecords:
                 ShowAllRecordsView()
             case .reportABug:

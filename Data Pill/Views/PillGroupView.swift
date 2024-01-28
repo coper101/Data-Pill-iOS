@@ -44,7 +44,7 @@ struct PillGroupView: View {
                     
                     PillView(
                         color: color,
-                        percentage: appViewModel.dateUsedInPercentage,
+                        percentage: appViewModel.dataUsedInPercentage,
                         date: todaysDate,
                         usageType: appViewModel.usageType,
                         customSize: .init(

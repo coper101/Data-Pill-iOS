@@ -11,11 +11,15 @@ import OSLog
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     
+    let localNotificationManager: LocalNotificationManager = .shared
+    
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions
         launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
+        localNotificationManager.notificationCenter.delegate = self
+        
         /// Disable iCloud for now
         // UIApplication.shared.registerForRemoteNotifications()
         // Logger.appDelegate.debug("- REMOTE NOTIFICATION: 💈 \(UIApplication.shared.isRegisteredForRemoteNotifications ? "Registered" : "Not Registered")")
@@ -59,4 +63,21 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     //     /// Note: Most of the time, this method is not called
     //     Logger.appDelegate.debug("- APP DELEGATE: ℹ️ Failed to Register | REASON: \(error.localizedDescription)")
     // }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    /// Handler when app is in background
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        let identifier = response.notification.request.identifier
+        guard let notification = NotificationItem(rawValue: identifier) else {
+            return
+        }
+        localNotificationManager.resetReceivedNotification(notification: notification)
+    }
+    
+    /// Notiifcation alert types
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.list, .badge, .sound])
+    }
 }

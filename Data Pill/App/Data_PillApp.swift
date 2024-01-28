@@ -11,7 +11,17 @@ import SwiftUI
 struct Data_PillApp: App {
     // MARK: - Props
     @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
-    @StateObject var appViewModel: AppViewModel = createAppViewModel()
+    @StateObject var appViewModel: AppViewModel
+    @StateObject var localNotificationManager: LocalNotificationManager
+    
+    init() {
+        
+        let localNotificationManager = LocalNotificationManager.shared
+        _localNotificationManager = .init(wrappedValue: localNotificationManager)
+        
+        let appViewModel = Self.createAppViewModel()
+        _appViewModel = .init(wrappedValue: appViewModel)
+    }
     
     // MARK: - UI
     var body: some Scene {

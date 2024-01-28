@@ -35,5 +35,8 @@ enum Keys: String {
     
     /// Settings
     case isDarkMode = "Is_Dark_Mode"
-    case hasNotification = "Has_Notification"
+    case hasDailyNotification = "Has_Daily_Notification"
+    case hasPlanNotification = "Has_Plan_Notification"
+    case todaysLastNotificationDate = "Todays_Last_Notification_Date"
+    case planLastNotificationDate = "Plan_Last_Notification_Date"
 }

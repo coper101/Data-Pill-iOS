@@ -108,6 +108,8 @@
 		278FB31128FAA00F00BE78C2 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB31028FAA00F00BE78C2 /* Animation.swift */; };
 		278FB31328FAA61500BE78C2 /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278FB31228FAA61500BE78C2 /* StepperView.swift */; };
 		2792441F2B64EB0A00F4FA67 /* Screenshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2792441E2B64EB0A00F4FA67 /* Screenshot.swift */; };
+		279244212B6504CB00F4FA67 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279244202B6504CB00F4FA67 /* LocalNotificationManager.swift */; };
+		279244232B665ACE00F4FA67 /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279244222B665ACE00F4FA67 /* NotificationSettingsView.swift */; };
 		27A0A8F1295858AD0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
 		27A0A8F2295858EF0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
 		27AECC8E2916E5E700AB963E /* App_View_Model_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */; };
@@ -375,6 +377,8 @@
 		278FB31028FAA00F00BE78C2 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		278FB31228FAA61500BE78C2 /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
 		2792441E2B64EB0A00F4FA67 /* Screenshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshot.swift; sourceTree = "<group>"; };
+		279244202B6504CB00F4FA67 /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
+		279244222B665ACE00F4FA67 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
 		27A0A8F0295858AD0007C412 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		27A19A0029EAEB03006775E5 /* DataUsage 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "DataUsage 2.xcdatamodel"; sourceTree = "<group>"; };
 		27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Tests.swift; sourceTree = "<group>"; };
@@ -785,6 +789,7 @@
 			children = (
 				278337C42B58189B00EAC8C5 /* SettingsRowView.swift */,
 				278337C92B5BB25100EAC8C5 /* CustomizePillView.swift */,
+				279244222B665ACE00F4FA67 /* NotificationSettingsView.swift */,
 				278337CB2B5BB26900EAC8C5 /* ShowAllRecordsView.swift */,
 				278337CD2B5BB27600EAC8C5 /* ReportABugView.swift */,
 				278337CF2B5BB27D00EAC8C5 /* RequestAFeatureView.swift */,
@@ -902,6 +907,7 @@
 		27D056D42A50B03A00A6EC04 /* Remote Database */ = {
 			isa = PBXGroup;
 			children = (
+				279244202B6504CB00F4FA67 /* LocalNotificationManager.swift */,
 				275383E5298D1B4000404454 /* RemoteDatabase.swift */,
 				27D056D72A50B09B00A6EC04 /* RemoteIdentifiers.swift */,
 				27D056D92A50B1A700A6EC04 /* RemoteAccountOperation.swift */,
@@ -1257,6 +1263,7 @@
 				27801DFB28DA0B0D00201339 /* NavRowView.swift in Sources */,
 				278FB31128FAA00F00BE78C2 /* Animation.swift in Sources */,
 				27801DFF28DA13C500201339 /* DataPlanLimitView.swift in Sources */,
+				279244232B665ACE00F4FA67 /* NotificationSettingsView.swift in Sources */,
 				27801DC528D6C96800201339 /* Frame.swift in Sources */,
 				27F233B02945CD6300E6102D /* RectangularWidgetView.swift in Sources */,
 				27D4CA372A47359A008989B1 /* Screen.swift in Sources */,
@@ -1337,6 +1344,7 @@
 				27A0A8F1295858AD0007C412 /* Logging.swift in Sources */,
 				27801DB428D6C96800201339 /* PillGroupView.swift in Sources */,
 				27801E3728E9E3D100201339 /* DataUsage.swift in Sources */,
+				279244212B6504CB00F4FA67 /* LocalNotificationManager.swift in Sources */,
 				27801DE428D6F01900201339 /* Modifier.swift in Sources */,
 				27D056E52A51562200A6EC04 /* LocalIdentifiers.swift in Sources */,
 				276048E629BF450E00AB8497 /* TestData.swift in Sources */,

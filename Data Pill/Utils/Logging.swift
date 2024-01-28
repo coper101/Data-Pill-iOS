@@ -16,6 +16,7 @@ extension Logger {
         case remoteDatabase = "Remote_Database"
         case networkRepository = "Network_Repository"
         case dataUsageRemoteRepository = "Data_Usage_Remote_Repository"
+        case localNotification = "Local_Notification"
         case widgetProvider = "Widget_Provider"
     }
     
@@ -26,6 +27,7 @@ extension Logger {
     static let dataUsageRemoteRepository = createLogger(of: .dataUsageRemoteRepository)
     static let database = createLogger(of: .localDatabase)
     static let remoteDatabase = createLogger(of: .remoteDatabase)
+    static let localNotification = createLogger(of: .localNotification)
     
     /// Widget Extension
     static let widgetProvider = createLogger(of: .widgetProvider)

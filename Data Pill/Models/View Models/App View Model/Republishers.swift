@@ -62,8 +62,20 @@ extension AppViewModel {
             .sink { [weak self] in self?.isDarkMode = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.hasNotificationPublisher
-            .sink { [weak self] in self?.hasNotification = $0 }
+        appDataRepository.hasDailyNotificationPublisher
+            .sink { [weak self] in self?.hasDailyNotification = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.hasPlanNotificationPublisher
+            .sink { [weak self] in self?.hasPlanNotification = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.todaysLastNotificationDatePublisher
+            .sink { [weak self] in self?.todaysLastNotificationDate = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.planLastNotificationDatePublisher
+            .sink { [weak self] in self?.planLastNotificationDate = $0 }
             .store(in: &cancellables)
     }
     
@@ -86,8 +98,12 @@ extension AppViewModel {
         dataUsageRepository.todaysDataPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
+                guard let self else {
+                    return
+                }
                 if let todaysData = $0 {
-                    self?.todaysData = todaysData
+                    self.todaysData = todaysData
+                    self.notifyExceededUsages()
                 }
             }
             .store(in: &cancellables)

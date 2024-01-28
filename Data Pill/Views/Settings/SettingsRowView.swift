@@ -38,7 +38,7 @@ struct SettingsRowView<Content>: View where Content: View {
             // MARK: TITLE
             VStack(
                 alignment: .leading,
-                spacing: (subtitle == nil) ? 0 : 4
+                spacing: (subtitle == nil) ? 0 : 3
             ) {
                 
                 Text(title)
@@ -51,8 +51,8 @@ struct SettingsRowView<Content>: View where Content: View {
                     
                     Text(subtitle)
                         .textStyle(
-                            foregroundColor: .onSurface,
-                            size: 12
+                            foregroundColor: .onSurfaceLight,
+                            size: 13
                         )
                     
                 } //: if

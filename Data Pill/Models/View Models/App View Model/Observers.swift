@@ -92,9 +92,20 @@ extension AppViewModel {
             .sink { [weak self] in self?.appDataRepository.setIsDarkMode($0) }
             .store(in: &cancellables)
         
-        $hasNotification
+        $hasDailyNotification
             .removeDuplicates()
-            .sink { [weak self] in self?.appDataRepository.setHasNotification($0) }
+            .sink { [weak self] in
+                self?.appDataRepository.setHasDailyNotification($0)
+                self?.didTapNotification(enabled: $0)
+            }
+            .store(in: &cancellables)
+        
+        $hasPlanNotification
+            .removeDuplicates()
+            .sink { [weak self] in
+                self?.appDataRepository.setHasPlanNotification($0)
+                self?.didTapNotification(enabled: $0)
+            }
             .store(in: &cancellables)
     }
 }

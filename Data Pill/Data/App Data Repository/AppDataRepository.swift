@@ -79,10 +79,22 @@ protocol AppDataRepositoryProtocol {
     func setIsDarkMode(_ enabled: Bool) -> Void
     
     /// [9.2] Notification
-    var hasNotification: Bool { get set }
-    var hasNotificationPublisher: Published<Bool>.Publisher { get }
+    var hasDailyNotification: Bool { get set }
+    var hasDailyNotificationPublisher: Published<Bool>.Publisher { get }
     
-    func setHasNotification(_ enabled: Bool) -> Void
+    var hasPlanNotification: Bool { get set }
+    var hasPlanNotificationPublisher: Published<Bool>.Publisher { get }
+    
+    var todaysLastNotificationDate: Date? { get set }
+    var todaysLastNotificationDatePublisher: Published<Date?>.Publisher { get }
+    
+    var planLastNotificationDate: Date? { get set }
+    var planLastNotificationDatePublisher: Published<Date?>.Publisher { get }
+    
+    func setHasDailyNotification(_ enabled: Bool) -> Void
+    func setHasPlanNotification(_ enabled: Bool) -> Void
+    func setTodaysLastNotificationDate(_ date: Date) -> Void
+    func setPlanLastNotificationDate(_ date: Date) -> Void
 }
 
 
@@ -140,9 +152,17 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     var isDarkModePublisher: Published<Bool>.Publisher { $isDarkMode }
     
     /// [9.2]
-    @Published var hasNotification: Bool = false
-    var hasNotificationPublisher: Published<Bool>.Publisher { $hasNotification }
+    @Published var hasDailyNotification: Bool = false
+    var hasDailyNotificationPublisher: Published<Bool>.Publisher { $hasDailyNotification }
     
+    @Published var hasPlanNotification: Bool = false
+    var hasPlanNotificationPublisher: Published<Bool>.Publisher { $hasPlanNotification }
+    
+    @Published var todaysLastNotificationDate: Date?
+    var todaysLastNotificationDatePublisher: Published<Date?>.Publisher { $todaysLastNotificationDate }
+    
+    @Published var planLastNotificationDate: Date?
+    var planLastNotificationDatePublisher: Published<Date?>.Publisher { $planLastNotificationDate }
     
     // MARK: - Initializer
     init() {
@@ -202,7 +222,10 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         }
         
         getIsDarkMode()
-        getHasNotification()
+        getHasDailyNotification()
+        getHasPlanNotification()
+        getTodaysLastNotificationDate()
+        getPlanLastNotificationDate()
     }
     
     /// [1]
@@ -321,12 +344,39 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     }
     
     /// [9.2]
-    func getHasNotification() {
-        hasNotification = LocalStorage.getBoolItem(forKey: .hasNotification)
+    func getHasDailyNotification() {
+        hasDailyNotification = LocalStorage.getBoolItem(forKey: .hasDailyNotification)
     }
     
-    func setHasNotification(_ enabled: Bool) {
-        LocalStorage.setItem(enabled, forKey: .hasNotification)
-        getHasNotification()
+    func setHasDailyNotification(_ enabled: Bool) {
+        LocalStorage.setItem(enabled, forKey: .hasDailyNotification)
+        getHasDailyNotification()
+    }
+    
+    func getHasPlanNotification() {
+        hasPlanNotification = LocalStorage.getBoolItem(forKey: .hasPlanNotification)
+    }
+    
+    func setHasPlanNotification(_ enabled: Bool) {
+        LocalStorage.setItem(enabled, forKey: .hasPlanNotification)
+        getHasPlanNotification()
+    }
+    
+    func getTodaysLastNotificationDate() {
+        todaysLastNotificationDate = LocalStorage.getDateItem(forKey: .todaysLastNotificationDate)
+    }
+
+    func setTodaysLastNotificationDate(_ date: Date) {
+        LocalStorage.setItem(date, forKey: .todaysLastNotificationDate)
+        getTodaysLastNotificationDate()
+    }
+    
+    func getPlanLastNotificationDate() {
+        planLastNotificationDate = LocalStorage.getDateItem(forKey: .planLastNotificationDate)
+    }
+
+    func setPlanLastNotificationDate(_ date: Date) {
+        LocalStorage.setItem(date, forKey: .planLastNotificationDate)
+        getPlanLastNotificationDate()
     }
 }

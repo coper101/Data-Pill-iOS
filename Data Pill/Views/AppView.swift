@@ -275,6 +275,20 @@ struct AppView: View {
             appViewModel.showGuide()
         }
         .environment(\.colorScheme, appViewModel.colorScheme)
+        .alert(isPresented: $appViewModel.isNotificationAlertShown) {
+            Alert(
+                title: Text("Notification"),
+                message: Text("Please allow notification in settings to get notifications"),
+                primaryButton: .default(
+                    Text("Ok"),
+                    action: dimsmissAlertAction
+                ),
+                secondaryButton: .default(
+                    Text("Settings"),
+                    action: settingsAction
+                )
+            )
+        } //: alert
     }
     
     // MARK: - Actions
@@ -408,7 +422,18 @@ struct AppView: View {
             break
         }
     }
-
+    
+    /// Notification
+    func settingsAction() {
+        appViewModel.setIsNotificationAlertShown(false)
+    }
+    
+    func dimsmissAlertAction() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        UIApplication.shared.open(url)
+    }
 }
 
 // MARK: - Preview

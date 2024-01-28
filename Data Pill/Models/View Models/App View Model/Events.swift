@@ -487,4 +487,104 @@ extension AppViewModel {
     func didTapSettingsChild(screen: SettingsScreen) {
         activeSettingsScreen = screen
     }
+    
+    // MARK: Notifications
+    func didTapNotification(enabled: Bool) {
+        Task {
+            if enabled {
+                
+                /// A. Ask User To Allow Notification
+                var (isAllowed, isNotDermined) = await localNotificationManager.status()
+                
+                if isNotDermined {
+                    isAllowed = await localNotificationManager.requestPersmission()
+                }
+                
+                if !isAllowed {
+                    
+                    await setIsNotificationAlertShown(true)
+
+                } //: if
+                
+            } else {
+                
+                /// B. Remove All Notifications
+                localNotificationManager.removeAll()
+                
+            } //: if-else
+        }
+    }
+    
+    func notifyExceededUsages() {
+        if hasDailyNotification {
+            notifyExceededUsage(for: .daily)
+        }
+        if hasPlanNotification {
+            notifyExceededUsage(for: .plan)
+        }
+    }
+    
+    func notifyExceededUsage(for type: ToggleItem) {
+        Task {
+            let (isAllowed, _) = await localNotificationManager.status()
+          
+            guard isAllowed else {
+                return
+            }
+            
+            let dailyLimitMinPercentage = 90 /// fixed for now
+            let planLimitMaxPercentage = 100
+            var dataUsedInPercentage = 0
+            
+            switch type {
+            case .daily:
+                dataUsedInPercentage = todaysData.dailyUsedData
+                    .toGB()
+                    .toPercentage(with: dataLimitPerDay)
+                
+                if (dataUsedInPercentage >= dailyLimitMinPercentage) {
+                    let hasReceived = await localNotificationManager.hasReceived(notification: .dailyUsage)
+                    let hasNotifiedToday = todaysLastNotificationDate?.isToday() ?? false
+
+                    if !hasReceived, !hasNotifiedToday {
+                        await self.localNotificationManager.scheduleNow(
+                            notification: .dailyUsage,
+                            amountUsageInPercentage: dailyLimitMinPercentage
+                        )
+                        appDataRepository.setTodaysLastNotificationDate(.init())
+                        Logger.appModel.debug("🔔 Notification - \(type.rawValue) Notified")
+                    } else {
+                        Logger.appModel.debug("🔔 Notification - \(type.rawValue) Cancelled")
+                    }
+                } //: if
+            case .plan:
+                dataUsedInPercentage = dataUsageRepository.getTotalUsedData(from: startDate, to: endDate)
+                    .toGB()
+                    .toPercentage(with: dataLimit)
+                
+                if (dataUsedInPercentage >= planLimitMaxPercentage) {
+                    let hasReceived = await localNotificationManager.hasReceived(notification: .planUsage)
+                    let hasNotifiedToday = planLastNotificationDate != nil
+
+                    if !hasReceived, !hasNotifiedToday {
+                        await self.localNotificationManager.scheduleNow(
+                            notification: .planUsage,
+                            amountUsageInPercentage: planLimitMaxPercentage
+                        )
+                        appDataRepository.setPlanLastNotificationDate(.init())
+                        Logger.appModel.debug("🔔 Notification - \(type.rawValue) Notified")
+                    } else {
+                        Logger.appModel.debug("🔔 Notification - \(type.rawValue) Cancelled")
+                    }
+                } //: if
+            } //: switch-case
+            
+            Logger.appModel.debug("🔔 Notification - Notify \(type.rawValue)?")
+        } //: if
+    }
+    
+    @MainActor
+    func setIsNotificationAlertShown(_ shown: Bool) {
+        isNotificationAlertShown = shown
+    }
 }
