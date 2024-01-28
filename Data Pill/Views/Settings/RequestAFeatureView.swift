@@ -57,7 +57,7 @@ struct RequestAFeatureView: View {
 
             } //: VStack
             .padding(.vertical, 21)
-            .padding(.horizontal, 18)
+            .padding(.horizontal, 12)
                         
         } //: ScrollView
     }

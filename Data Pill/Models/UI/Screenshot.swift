@@ -16,7 +16,7 @@ extension UIImage {
     
     static func createBlank(size: CGSize) -> UIImage {
         let image = UIGraphicsImageRenderer(size: size).image { _ in
-            UIColor(Colors.onSurfaceLight2.color).setFill()
+            UIColor(Colors.onSurfaceDark2.color).setFill()
             UIRectFill(
                 CGRect(x: 0, y: 0, width: size.width, height: size.height)
             )

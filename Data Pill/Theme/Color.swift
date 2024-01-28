@@ -9,6 +9,9 @@ import SwiftUI
 
 enum Colors: String {
     // App
+    case error = "Error"
+    case onError = "On Error"
+
     case background = "Background"
     case onBackground = "On Background"
     case onBackgroundLight = "On Background Light"

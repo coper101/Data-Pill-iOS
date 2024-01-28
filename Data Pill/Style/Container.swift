@@ -65,23 +65,25 @@ extension View {
         )
     }
     
-    func rowSection(title: String?) -> some View {
+    func rowSection(title: String?, background: Colors = .surface) -> some View {
         self
-            .background(Colors.surface.color)
+            .background(background.color)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .section(title: title)
     }
     
     func cardStyle(
         title: String,
+        titleColor: Colors = .onSurfaceLight,
         lineLimit: Int = 1,
-        contentPadding: Bool = true
+        contentPadding: Bool = true,
+        background: Colors = .surface
     ) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             
             Text(title)
                 .textStyle(
-                    foregroundColor: .onSurfaceLight,
+                    foregroundColor: titleColor,
                     size: 12
                 )
                 .padding(.horizontal, 14)
@@ -100,6 +102,6 @@ extension View {
             
         } //: VStack
         .padding(.vertical, 12)
-        .rowSection(title: nil)
+        .rowSection(title: nil, background: background)
     }
 }
