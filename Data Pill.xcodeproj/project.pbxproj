@@ -110,6 +110,8 @@
 		2792441F2B64EB0A00F4FA67 /* Screenshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2792441E2B64EB0A00F4FA67 /* Screenshot.swift */; };
 		279244212B6504CB00F4FA67 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279244202B6504CB00F4FA67 /* LocalNotificationManager.swift */; };
 		279244232B665ACE00F4FA67 /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279244222B665ACE00F4FA67 /* NotificationSettingsView.swift */; };
+		279244252B6BA42300F4FA67 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279244242B6BA42300F4FA67 /* ImagePickerView.swift */; };
+		279244272B6BA78100F4FA67 /* ReportABugViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279244262B6BA78100F4FA67 /* ReportABugViewModel.swift */; };
 		27A0A8F1295858AD0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
 		27A0A8F2295858EF0007C412 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A0A8F0295858AD0007C412 /* Logging.swift */; };
 		27AECC8E2916E5E700AB963E /* App_View_Model_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */; };
@@ -122,6 +124,8 @@
 		27BBCB122A55579500C76B05 /* RemoteOperationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BBCB112A55579500C76B05 /* RemoteOperationError.swift */; };
 		27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE08292928BD6C00E0781C /* StepperValueView.swift */; };
 		27BE082C2928D7BE00E0781C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE082B2928D7BE00E0781C /* Types.swift */; };
+		27BF5FCA2B6E58B9006DD737 /* ReportABugEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF5FC92B6E58B9006DD737 /* ReportABugEvents.swift */; };
+		27BF5FCE2B6E5AFC006DD737 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF5FCD2B6E5AFC006DD737 /* ShareSheetView.swift */; };
 		27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */; };
 		27D0567D2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D0567C2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift */; };
 		27D056C02A4FED2B00A6EC04 /* Mock_Network_Connection_Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056BF2A4FED2B00A6EC04 /* Mock_Network_Connection_Repository.swift */; };
@@ -379,6 +383,8 @@
 		2792441E2B64EB0A00F4FA67 /* Screenshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshot.swift; sourceTree = "<group>"; };
 		279244202B6504CB00F4FA67 /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
 		279244222B665ACE00F4FA67 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
+		279244242B6BA42300F4FA67 /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
+		279244262B6BA78100F4FA67 /* ReportABugViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportABugViewModel.swift; sourceTree = "<group>"; };
 		27A0A8F0295858AD0007C412 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		27A19A0029EAEB03006775E5 /* DataUsage 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "DataUsage 2.xcdatamodel"; sourceTree = "<group>"; };
 		27AECC8D2916E5E600AB963E /* App_View_Model_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App_View_Model_Tests.swift; sourceTree = "<group>"; };
@@ -391,6 +397,8 @@
 		27BBCB112A55579500C76B05 /* RemoteOperationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteOperationError.swift; sourceTree = "<group>"; };
 		27BE08292928BD6C00E0781C /* StepperValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperValueView.swift; sourceTree = "<group>"; };
 		27BE082B2928D7BE00E0781C /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		27BF5FC92B6E58B9006DD737 /* ReportABugEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportABugEvents.swift; sourceTree = "<group>"; };
+		27BF5FCD2B6E5AFC006DD737 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
 		27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionRepository.swift; sourceTree = "<group>"; };
 		27D0567C2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Sync_Remote_Database.swift; sourceTree = "<group>"; };
 		27D056BF2A4FED2B00A6EC04 /* Mock_Network_Connection_Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Network_Connection_Repository.swift; sourceTree = "<group>"; };
@@ -793,6 +801,8 @@
 				278337CB2B5BB26900EAC8C5 /* ShowAllRecordsView.swift */,
 				278337CD2B5BB27600EAC8C5 /* ReportABugView.swift */,
 				278337CF2B5BB27D00EAC8C5 /* RequestAFeatureView.swift */,
+				279244242B6BA42300F4FA67 /* ImagePickerView.swift */,
+				27BF5FCD2B6E5AFC006DD737 /* ShareSheetView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -851,6 +861,15 @@
 				27BE08292928BD6C00E0781C /* StepperValueView.swift */,
 			);
 			path = Stepper;
+			sourceTree = "<group>";
+		};
+		27BF5FC82B6E589C006DD737 /* Report A Bug View Model */ = {
+			isa = PBXGroup;
+			children = (
+				279244262B6BA78100F4FA67 /* ReportABugViewModel.swift */,
+				27BF5FC92B6E58B9006DD737 /* ReportABugEvents.swift */,
+			);
+			path = "Report A Bug View Model";
 			sourceTree = "<group>";
 		};
 		27D056792A4B2A5600A6EC04 /* App View Model */ = {
@@ -998,6 +1017,7 @@
 			children = (
 				27D4CA332A47333A008989B1 /* Widget View Model */,
 				27D4CA272A46EB44008989B1 /* App View Model */,
+				27BF5FC82B6E589C006DD737 /* Report A Bug View Model */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -1249,6 +1269,7 @@
 				27FDBCE12963FF96008FA32E /* PlanView.swift in Sources */,
 				2761528E293CB5CE00AEA000 /* WidgetModel.swift in Sources */,
 				27801DBA28D6C96800201339 /* Dimensions.swift in Sources */,
+				279244252B6BA42300F4FA67 /* ImagePickerView.swift in Sources */,
 				278FB31328FAA61500BE78C2 /* StepperView.swift in Sources */,
 				27FDBCDB2963F565008FA32E /* SelectPlanTypeView.swift in Sources */,
 				27801E1528E8227500201339 /* StepperButtonView.swift in Sources */,
@@ -1274,6 +1295,7 @@
 				27801E0528DA1A7B00201339 /* DraggablePillView.swift in Sources */,
 				27E776FF293365730031456D /* BasePillView.swift in Sources */,
 				27BB19ED2972D1F500851E14 /* AccessibilityLabels.swift in Sources */,
+				279244272B6BA78100F4FA67 /* ReportABugViewModel.swift in Sources */,
 				2792441F2B64EB0A00F4FA67 /* Screenshot.swift in Sources */,
 				278E7348295C57E30020F84B /* Validator.swift in Sources */,
 				27B10A72295BE714009E910C /* ToastView.swift in Sources */,
@@ -1290,6 +1312,7 @@
 				27E77751293B68D10031456D /* Widget.swift in Sources */,
 				27D056DC2A50B1F900A6EC04 /* RemoteRecordOperation.swift in Sources */,
 				27073017298E561500B05B51 /* DataUsageRemoteRepository.swift in Sources */,
+				27BF5FCA2B6E58B9006DD737 /* ReportABugEvents.swift in Sources */,
 				27FDBCDF2963FF8D008FA32E /* NonPlanView.swift in Sources */,
 				278E7344295BFAB20020F84B /* ToastTimer.swift in Sources */,
 				27BE082A2928BD6C00E0781C /* StepperValueView.swift in Sources */,
@@ -1318,6 +1341,7 @@
 				27E7772029336AA10031456D /* Unit.swift in Sources */,
 				27801E2328E9B29D00201339 /* LocalDatabase.swift in Sources */,
 				27D056C72A50385900A6EC04 /* OperationError.swift in Sources */,
+				27BF5FCE2B6E5AFC006DD737 /* ShareSheetView.swift in Sources */,
 				27801DF028D8BA2400201339 /* UsageCardView.swift in Sources */,
 				27D056CD2A5091F000A6EC04 /* RemotePlanOperation.swift in Sources */,
 				27D056D32A50952B00A6EC04 /* RemoteSynchronization.swift in Sources */,
@@ -1706,6 +1730,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Data-Pill-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app lets upload screenshots to report a bug";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
@@ -1742,6 +1767,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Data-Pill-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app lets upload screenshots to report a bug";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";

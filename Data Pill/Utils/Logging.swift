@@ -11,7 +11,10 @@ extension Logger {
     
     enum Category: String {
         case appDelegate = "App_Delegate"
+        
         case appModel = "App_View_Model"
+        case reportABug = "Report_A_Bug_View_Model"
+        
         case localDatabase = "Local_Database"
         case remoteDatabase = "Remote_Database"
         case networkRepository = "Network_Repository"
@@ -22,7 +25,10 @@ extension Logger {
     
     /// App
     static let appDelegate = createLogger(of: .appDelegate)
+    
     static let appModel = createLogger(of: .appModel)
+    static let reportABug = createLogger(of: .reportABug)
+    
     static let networkRepository = createLogger(of: .networkRepository)
     static let dataUsageRemoteRepository = createLogger(of: .dataUsageRemoteRepository)
     static let database = createLogger(of: .localDatabase)

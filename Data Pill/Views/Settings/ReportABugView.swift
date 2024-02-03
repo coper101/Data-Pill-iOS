@@ -24,28 +24,13 @@ struct ReportABugView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
-    @State var emailAddress: String = ""
-    @State var title: String = ""
-    @State var description: String = ""
-    @State var screenshots: [Screenshot] = []
+    @StateObject var viewModel: ReportABugViewModel
     
-    @State private var hasTappedSend: Bool = false
-    
-    var canSend: Bool {
-        if emailAddress.isEmpty {
-            return false
-        }
-        if title.isEmpty {
-            return false
-        }
-        if description.isEmpty {
-            return false
-        }
-        if screenshots.isEmpty {
-            return false
-        }
-        return true
+    init(viewModel: ReportABugViewModel) {
+        self._viewModel = .init(wrappedValue: viewModel)
     }
+
+    @State private var hasTappedSend: Bool = false
     
     func background(isValid: Bool) -> Colors {
         let color: Colors = {
@@ -69,8 +54,12 @@ struct ReportABugView: View {
         return hasTappedSend ? color : .onSurfaceLight
     }
     
-    func title(isValid: Bool, inputName: String) -> String {
-        "\(hasTappedSend && !isValid ? "Enter" : "") \(inputName)"
+    func title(
+        isValid: Bool,
+        inputName: String,
+        prefix: String = "Enter"
+    ) -> String {
+        "\(hasTappedSend && !isValid ? prefix : "") \(inputName)"
     }
     
     // MARK: - UI
@@ -79,28 +68,41 @@ struct ReportABugView: View {
             
             VStack(spacing: 16) {
                                 
-                TextField("", text: $emailAddress)
+                TextField("", text: $viewModel.inputEmailAddress)
                     .cardStyle(
-                        title: title(isValid: !emailAddress.isEmpty, inputName: "Email Address"),
-                        titleColor: onBackground(isValid: !emailAddress.isEmpty),
-                        background: background(isValid: !emailAddress.isEmpty)
+                        title: title(isValid: viewModel.isValidEmailAddress, inputName: "Email Address"),
+                        titleColor: onBackground(isValid: viewModel.isValidEmailAddress),
+                        background: background(isValid: viewModel.isValidEmailAddress)
                     )
                 
-                TextField("", text: $title)
+                TextField("", text: $viewModel.inputTitle)
                     .cardStyle(
-                        title: title(isValid: !title.isEmpty, inputName: "Title"),
-                        titleColor: onBackground(isValid: !title.isEmpty),
-                        background: background(isValid: !title.isEmpty)
+                        title: title(isValid: viewModel.isValidTitle, inputName: "Title"),
+                        titleColor: onBackground(isValid: viewModel.isValidTitle),
+                        background: background(isValid: viewModel.isValidTitle)
                     )
                 
-                TextEditor(text: $description)
-                    .transparentScrolling()
-                    .cardStyle(
-                        title: title(isValid: !description.isEmpty, inputName: "Description"),
-                        titleColor: onBackground(isValid: !description.isEmpty),
-                        lineLimit: 5, 
-                        background: background(isValid: !description.isEmpty)
-                    )
+                VStack(alignment: .trailing, spacing: 8) {
+                    
+                    TextEditor(text: $viewModel.inputDescription)
+                        .transparentScrolling()
+                        .cardStyle(
+                            title: title(isValid: viewModel.isValidDescription, inputName: "Description"),
+                            titleColor: onBackground(isValid: viewModel.isValidDescription),
+                            lineLimit: 5,
+                            background: background(isValid: viewModel.isValidDescription)
+                        )
+                    
+                    Text("Min: 10 Characters")
+                        .textStyle(
+                            foregroundColor: .onSurfaceLight,
+                            font: .medium,
+                            size: 12,
+                            lineLimit: nil,
+                            lineSpacing: 2,
+                            textAlignment: .center
+                        )
+                }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     
@@ -130,13 +132,37 @@ struct ReportABugView: View {
                             
                         } //: Button
                         
-                        ForEach(screenshots) { screenshot in
+                        ForEach(viewModel.inputScreenshots) { screenshot in
                             
-                            Image(uiImage: screenshot.image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 124, height: 184)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            ZStack(alignment: .topTrailing) {
+                                                   
+                                Image(uiImage: screenshot.image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 124, height: 178)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                
+                                Button(action: { 
+                                    deleteImageAction(id: screenshot.id)
+                                }) {
+                                    
+                                    ZStack {
+                                        
+                                        Circle()
+                                            .fill(Colors.onSecondary.color)
+                                        
+                                        Icons.deleteIcon.image
+                                            .resizable()
+                                            .foregroundColor(Colors.secondaryBlue.color)
+                                        
+                                    } //: ZStack
+                                    .frame(width: 26, height: 26)
+                                    .offset(x: 8, y: -8)
+                                    
+                                } //: Button
+                                
+                            } //: ZStack
+                            .frame(width: 124, height: 184)
                             
                         } //: ForEach
                         
@@ -146,10 +172,10 @@ struct ReportABugView: View {
                     
                 } //: ScrollView
                 .cardStyle(
-                    title: title(isValid: !screenshots.isEmpty, inputName: "Screenshots"),
-                    titleColor: onBackground(isValid: !screenshots.isEmpty),
+                    title: title(isValid: viewModel.isValidScreenshots, inputName: "Screenshot", prefix: "Upload At least 1 "),
+                    titleColor: onBackground(isValid: viewModel.isValidScreenshots),
                     contentPadding: false,
-                    background: background(isValid: !screenshots.isEmpty)
+                    background: background(isValid: viewModel.isValidScreenshots)
                 )
                 
             } //: VStack
@@ -205,48 +231,71 @@ struct ReportABugView: View {
             
         } //: ZStack
         .fillMaxSize()
+        .imagePicker(
+            isPresented: $viewModel.isImagePickerShown,
+            onCompletion: imageSelectedAction
+        )
+        .sheet(isPresented: $viewModel.isShowingMailView) {
+            MailView(
+                subject: viewModel.inputTitle,
+                message: viewModel.inputDescription,
+                recipient: viewModel.inputRecipient,
+                screenshots: viewModel.inputScreenshots,
+                result: $viewModel.mailResult
+            )
+        }
     }
     
     // MARK: - Actions
     func sendAction() {
-        withAnimation {
+        withAnimation(.easeInOut(duration: 0.85)) {
             hasTappedSend = true
+            viewModel.didTapSend()
         }
-        guard canSend else {
-            return
-        }
-        // MARK: TODO
     }
     
     func uploadImageAction() {
-        // MARK: TODO
+        withAnimation {
+            viewModel.didTapAddImage()
+        }
+    }
+    
+    func imageSelectedAction(image: UIImage?) {
+        DispatchQueue.main.async {
+            viewModel.didSelectImage(image)
+        }
+    }
+    
+    func deleteImageAction(id: String) {
+        withAnimation {
+            viewModel.didTapDeleteImage(id: id)
+        }
     }
 }
 
 // MARK: - Preview
 struct ReportABugView_Previews: PreviewProvider {
+    static var viewModel: ReportABugViewModel = {
+        let viewModel = ReportABugViewModel()
+        viewModel.inputEmailAddress = "example@mail.com"
+        viewModel.inputTitle = "Widget Not Working"
+        viewModel.inputDescription = "When I was..."
+        viewModel.inputScreenshots = [
+            .init(image: .testImage),
+            .init(image: .testImage),
+            .init(image: .testImage)
+        ]
+        return viewModel
+    }()
+    
     static var previews: some View {
         Group {
             
-            ReportABugView(
-                emailAddress: "example@mail.com",
-                title: "Widget Not Working",
-                description: "When I was...",
-                screenshots: [
-                    .init(image: .testImage),
-                    .init(image: .testImage),
-                    .init(image: .testImage)
-                ]
-            )
-            .previewDisplayName("Filled In")
+            ReportABugView(viewModel: viewModel)
+                .previewDisplayName("Filled In")
             
-            ReportABugView(
-                emailAddress: "",
-                title: "",
-                description: "",
-                screenshots: []
-            )
-            .previewDisplayName("Empty")
+            ReportABugView(viewModel: .init())
+                .previewDisplayName("Empty")
         }
         .previewLayout(.sizeThatFits)
         .background(Colors.background.color)

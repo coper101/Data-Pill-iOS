@@ -199,7 +199,7 @@ struct SettingsView: View {
             case .showAllRecords:
                 ShowAllRecordsView()
             case .reportABug:
-                ReportABugView()
+                ReportABugView(viewModel: .init())
             case .requestAFeature:
                 RequestAFeatureView()
             case .none:
