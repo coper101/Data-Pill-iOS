@@ -26,10 +26,4 @@ class Validator {
         let underMin = value < min
         return overMax || underMin
     }
-    
-    static func isValidEmailAddress(_ emailAddress: String) -> Bool {
-        let regex = try! NSRegularExpression(pattern: "^\\S+@\\S+\\.\\S+$")
-        let range = NSRange(location: 0, length: emailAddress.utf16.count)
-        return regex.firstMatch(in: emailAddress, options: [], range: range) != nil
-    }
 }

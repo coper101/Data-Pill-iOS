@@ -126,6 +126,9 @@
 		27BE082C2928D7BE00E0781C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE082B2928D7BE00E0781C /* Types.swift */; };
 		27BF5FCA2B6E58B9006DD737 /* ReportABugEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF5FC92B6E58B9006DD737 /* ReportABugEvents.swift */; };
 		27BF5FCE2B6E5AFC006DD737 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF5FCD2B6E5AFC006DD737 /* ShareSheetView.swift */; };
+		27BF5FD02B6F4AD9006DD737 /* ReportABugObservers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF5FCF2B6F4AD9006DD737 /* ReportABugObservers.swift */; };
+		27BF5FD22B6F5157006DD737 /* KeyboardRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF5FD12B6F5157006DD737 /* KeyboardRepository.swift */; };
+		27BF5FD42B6F51C6006DD737 /* KeyboardToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF5FD32B6F51C6006DD737 /* KeyboardToolbarView.swift */; };
 		27C1BDC529A4AB2C00D81AAA /* NetworkConnectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */; };
 		27D0567D2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D0567C2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift */; };
 		27D056C02A4FED2B00A6EC04 /* Mock_Network_Connection_Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D056BF2A4FED2B00A6EC04 /* Mock_Network_Connection_Repository.swift */; };
@@ -399,6 +402,9 @@
 		27BE082B2928D7BE00E0781C /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		27BF5FC92B6E58B9006DD737 /* ReportABugEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportABugEvents.swift; sourceTree = "<group>"; };
 		27BF5FCD2B6E5AFC006DD737 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
+		27BF5FCF2B6F4AD9006DD737 /* ReportABugObservers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportABugObservers.swift; sourceTree = "<group>"; };
+		27BF5FD12B6F5157006DD737 /* KeyboardRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardRepository.swift; sourceTree = "<group>"; };
+		27BF5FD32B6F51C6006DD737 /* KeyboardToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardToolbarView.swift; sourceTree = "<group>"; };
 		27C1BDC429A4AB2C00D81AAA /* NetworkConnectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionRepository.swift; sourceTree = "<group>"; };
 		27D0567C2A4B2A9D00A6EC04 /* Mock_Sync_Remote_Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Sync_Remote_Database.swift; sourceTree = "<group>"; };
 		27D056BF2A4FED2B00A6EC04 /* Mock_Network_Connection_Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock_Network_Connection_Repository.swift; sourceTree = "<group>"; };
@@ -757,6 +763,7 @@
 				27B10A71295BE714009E910C /* ToastView.swift */,
 				278D1A6D29B4A61400E6C974 /* SpinnerView.swift */,
 				278D1A6F29B4AA0800E6C974 /* SyncIndicatorView.swift */,
+				27BF5FD32B6F51C6006DD737 /* KeyboardToolbarView.swift */,
 			);
 			path = Inputs;
 			sourceTree = "<group>";
@@ -784,6 +791,7 @@
 				27D056DF2A51538600A6EC04 /* App Data Repository */,
 				27D056E32A51560800A6EC04 /* Local Database */,
 				27D056D42A50B03A00A6EC04 /* Remote Database */,
+				27BF5FD12B6F5157006DD737 /* KeyboardRepository.swift */,
 				27EE983529A7733B00D9D343 /* RemoteSubscriptionID.swift */,
 				278E7343295BFAB20020F84B /* ToastTimer.swift */,
 				27B90B8428F2D28100263983 /* Constants.swift */,
@@ -868,6 +876,7 @@
 			children = (
 				279244262B6BA78100F4FA67 /* ReportABugViewModel.swift */,
 				27BF5FC92B6E58B9006DD737 /* ReportABugEvents.swift */,
+				27BF5FCF2B6F4AD9006DD737 /* ReportABugObservers.swift */,
 			);
 			path = "Report A Bug View Model";
 			sourceTree = "<group>";
@@ -1275,6 +1284,7 @@
 				27801E1528E8227500201339 /* StepperButtonView.swift in Sources */,
 				278D1A6E29B4A61400E6C974 /* SpinnerView.swift in Sources */,
 				27D056CF2A5091F900A6EC04 /* RemoteDataOperation.swift in Sources */,
+				27BF5FD22B6F5157006DD737 /* KeyboardRepository.swift in Sources */,
 				277944682B5C14B6006A2FF7 /* RadioButtonView.swift in Sources */,
 				27D4CA2F2A472F84008989B1 /* Republishers.swift in Sources */,
 				278337C72B5BAE7500EAC8C5 /* SettingsScreen.swift in Sources */,
@@ -1357,6 +1367,7 @@
 				27801E2128E9B16E00201339 /* DataUsage.xcdatamodeld in Sources */,
 				27EE983429A7638B00D9D343 /* AppDelegate.swift in Sources */,
 				27801E3D28E9F72F00201339 /* DataUsageRepository.swift in Sources */,
+				27BF5FD02B6F4AD9006DD737 /* ReportABugObservers.swift in Sources */,
 				27801DC128D6C96800201339 /* Text.swift in Sources */,
 				27D4CA2B2A46EB67008989B1 /* Observers.swift in Sources */,
 				27801E3F28E9FDAA00201339 /* AppDataRepository.swift in Sources */,
@@ -1372,6 +1383,7 @@
 				27801DE428D6F01900201339 /* Modifier.swift in Sources */,
 				27D056E52A51562200A6EC04 /* LocalIdentifiers.swift in Sources */,
 				276048E629BF450E00AB8497 /* TestData.swift in Sources */,
+				27BF5FD42B6F51C6006DD737 /* KeyboardToolbarView.swift in Sources */,
 				27D056E12A51539B00A6EC04 /* AppDataKeys.swift in Sources */,
 				27D056DA2A50B1A700A6EC04 /* RemoteAccountOperation.swift in Sources */,
 				27801DE228D6D15000201339 /* ItemCardView.swift in Sources */,

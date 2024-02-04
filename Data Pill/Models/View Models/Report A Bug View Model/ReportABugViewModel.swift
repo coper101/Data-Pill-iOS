@@ -18,28 +18,23 @@ final class ReportABugViewModel: ObservableObject {
     // MARK: - Data
     
     // MARK: - UI
-    @Published var inputEmailAddress: String = ""
     @Published var inputTitle: String = ""
     @Published var inputDescription: String = ""
     @Published var inputScreenshots: [Screenshot] = []
     let inputRecipient: String = "penguinworksco@gmail.com"
+    let inputDescriptionMinChar: Int = 20
     
     @Published var isImagePickerShown: Bool = false
     @Published var isShowingMailView: Bool = false
-    @Published var mailResult: Result<MFMailComposeResult, Error>? 
     @Published var isAlertShown: Bool = false
     @Published var alertMessage: String?
-    
-    var isValidEmailAddress: Bool {
-        Validator.isValidEmailAddress(inputEmailAddress)
-    }
     
     var isValidTitle: Bool {
         !inputTitle.isEmpty
     }
     
     var isValidDescription: Bool {
-        !inputDescription.isEmpty && inputDescription.count >= 10
+        !inputDescription.isEmpty && inputDescription.count >= inputDescriptionMinChar
     }
     
     var isValidScreenshots: Bool {
@@ -49,7 +44,10 @@ final class ReportABugViewModel: ObservableObject {
     var areAllValid: Bool {
         isValidTitle &&
         isValidDescription &&
-        isValidEmailAddress &&
         isValidScreenshots
+    }
+    
+    init(inputTitle: String) {
+        self.inputTitle = inputTitle
     }
 }

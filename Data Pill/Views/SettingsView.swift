@@ -199,17 +199,17 @@ struct SettingsView: View {
             case .showAllRecords:
                 ShowAllRecordsView()
             case .reportABug:
-                ReportABugView(viewModel: .init())
+                ReportABugView()
             case .requestAFeature:
                 RequestAFeatureView()
             case .none:
                 root
             } //: switch-case
-                        
+            
         } //: VStack
         .padding(.top, dimensions.insets.top)
         .background(Colors.background.color)
-        .ignoresSafeArea()
+        .ignoresSafeArea(.container, edges: .vertical)
         .preferredColorScheme(appViewModel.colorScheme)
     }
     

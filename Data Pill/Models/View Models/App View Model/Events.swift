@@ -488,6 +488,10 @@ extension AppViewModel {
         activeSettingsScreen = screen
     }
     
+    func navigateToSettingsRoot() {
+        activeSettingsScreen = .none
+    }
+    
     // MARK: Notifications
     func didTapNotification(enabled: Bool) {
         Task {

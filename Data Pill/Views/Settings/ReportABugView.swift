@@ -24,9 +24,11 @@ struct ReportABugView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
+    @StateObject var keyboardRepository: KeyboardRepository = .init()
     @StateObject var viewModel: ReportABugViewModel
     
-    init(viewModel: ReportABugViewModel) {
+    
+    init(viewModel: ReportABugViewModel = .init(inputTitle: "Bug")) {
         self._viewModel = .init(wrappedValue: viewModel)
     }
 
@@ -57,9 +59,10 @@ struct ReportABugView: View {
     func title(
         isValid: Bool,
         inputName: String,
-        prefix: String = "Enter"
+        prefix: String = "Enter",
+        suffix: String = ""
     ) -> String {
-        "\(hasTappedSend && !isValid ? prefix : "") \(inputName)"
+        "\(hasTappedSend && !isValid ? prefix : "") \(inputName) \(hasTappedSend && !isValid ? suffix : "")"
     }
     
     // MARK: - UI
@@ -68,32 +71,35 @@ struct ReportABugView: View {
             
             VStack(spacing: 16) {
                                 
-                TextField("", text: $viewModel.inputEmailAddress)
-                    .cardStyle(
-                        title: title(isValid: viewModel.isValidEmailAddress, inputName: "Email Address"),
-                        titleColor: onBackground(isValid: viewModel.isValidEmailAddress),
-                        background: background(isValid: viewModel.isValidEmailAddress)
-                    )
-                
+                // MARK: TITLE
                 TextField("", text: $viewModel.inputTitle)
                     .cardStyle(
-                        title: title(isValid: viewModel.isValidTitle, inputName: "Title"),
+                        title: title(
+                            isValid: viewModel.isValidTitle,
+                            inputName: "Title"
+                        ),
                         titleColor: onBackground(isValid: viewModel.isValidTitle),
                         background: background(isValid: viewModel.isValidTitle)
                     )
                 
+                // MARK: DESCRIPTION
                 VStack(alignment: .trailing, spacing: 8) {
                     
                     TextEditor(text: $viewModel.inputDescription)
                         .transparentScrolling()
                         .cardStyle(
-                            title: title(isValid: viewModel.isValidDescription, inputName: "Description"),
+                            title: title(
+                                isValid: viewModel.isValidDescription,
+                                inputName: "Description",
+                                prefix: "Enter",
+                                suffix: "with min. of \(viewModel.inputDescriptionMinChar) Characters"
+                            ),
                             titleColor: onBackground(isValid: viewModel.isValidDescription),
                             lineLimit: 5,
                             background: background(isValid: viewModel.isValidDescription)
                         )
                     
-                    Text("Min: 10 Characters")
+                    Text("Min: \(viewModel.inputDescriptionMinChar) Characters")
                         .textStyle(
                             foregroundColor: .onSurfaceLight,
                             font: .medium,
@@ -104,6 +110,7 @@ struct ReportABugView: View {
                         )
                 }
                 
+                // MARK: SCREENSHOTS
                 ScrollView(.horizontal, showsIndicators: false) {
                     
                     HStack(spacing: 14) {
@@ -172,7 +179,11 @@ struct ReportABugView: View {
                     
                 } //: ScrollView
                 .cardStyle(
-                    title: title(isValid: viewModel.isValidScreenshots, inputName: "Screenshot", prefix: "Upload At least 1 "),
+                    title: title(
+                        isValid: viewModel.isValidScreenshots,
+                        inputName: "Screenshot",
+                        prefix: "Upload At least 1 "
+                    ),
                     titleColor: onBackground(isValid: viewModel.isValidScreenshots),
                     contentPadding: false,
                     background: background(isValid: viewModel.isValidScreenshots)
@@ -186,6 +197,45 @@ struct ReportABugView: View {
         } //: ScrollView
     }
     
+    var bottomBar: some View {
+        VStack(spacing: 18) {
+            
+            Text("We will get back to you once we’ve received your report. We appreciate your support for this app.")
+                .textStyle(
+                    foregroundColor: .onSurface,
+                    font: .medium,
+                    size: 13,
+                    lineLimit: nil,
+                    lineSpacing: 2,
+                    textAlignment: .center
+                )
+                .padding(.horizontal, 2)
+            
+            Button(action: sendAction) {
+                
+                Text("Send Via Mail")
+                    .textStyle(
+                        foregroundColor: .onSecondary,
+                        font: .semibold,
+                        size: 16
+                    )
+                    .fillMaxWidth()
+                    .frame(height: 54)
+                
+            } //: Button
+            .background(Colors.secondaryBlue.color)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 12)
+            )
+            .padding(.bottom, 8)
+            
+        } //: VStack
+        .padding(.bottom, dimensions.insets.bottom)
+        .padding(.top, 8)
+        .padding(.horizontal, 18)
+        .background(Colors.background.color)
+    }
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             
@@ -193,41 +243,15 @@ struct ReportABugView: View {
             inputs
             
             // MARK: ACTION
-            VStack(spacing: 18) {
-                                    
-                Text("We will get back to you once we’ve received your report. We appreciate your support for this app.")
-                    .textStyle(
-                        foregroundColor: .onSurface,
-                        font: .medium,
-                        size: 13,
-                        lineLimit: nil,
-                        lineSpacing: 2,
-                        textAlignment: .center
-                    )
-                    .padding(.horizontal, 2)
+            if !keyboardRepository.isShown {
                 
-                Button(action: sendAction) {
-                    
-                    Text("Send Report Via")
-                        .textStyle(
-                            foregroundColor: .onSecondary,
-                            font: .semibold,
-                            size: 16
-                        )
-                        .fillMaxWidth()
-                        .frame(height: 54)
-                    
-                } //: Button
-                .background(Colors.secondaryBlue.color)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 12)
-                )
+                bottomBar
                 
-            } //: VStack
-            .padding(.bottom, dimensions.insets.bottom)
-            .padding(.top, 8)
-            .padding(.horizontal, 18)
-            .background(Colors.background.color)
+            } else {
+                
+                KeyboardToolbarView(doneAction: doneAction)
+                
+            } //: if-else
             
         } //: ZStack
         .fillMaxSize()
@@ -241,12 +265,17 @@ struct ReportABugView: View {
                 message: viewModel.inputDescription,
                 recipient: viewModel.inputRecipient,
                 screenshots: viewModel.inputScreenshots,
-                result: $viewModel.mailResult
+                onSent: sentAction,
+                onError: {}
             )
         }
     }
     
     // MARK: - Actions
+    func doneAction() {
+        keyboardRepository.dismissKeyboard()
+    }
+    
     func sendAction() {
         withAnimation(.easeInOut(duration: 0.85)) {
             hasTappedSend = true
@@ -271,14 +300,18 @@ struct ReportABugView: View {
             viewModel.didTapDeleteImage(id: id)
         }
     }
+    
+    func sentAction() {
+        withAnimation {
+            appViewModel.navigateToSettingsRoot()
+        }
+    }
 }
 
 // MARK: - Preview
 struct ReportABugView_Previews: PreviewProvider {
     static var viewModel: ReportABugViewModel = {
-        let viewModel = ReportABugViewModel()
-        viewModel.inputEmailAddress = "example@mail.com"
-        viewModel.inputTitle = "Widget Not Working"
+        let viewModel = ReportABugViewModel(inputTitle: "Bug")
         viewModel.inputDescription = "When I was..."
         viewModel.inputScreenshots = [
             .init(image: .testImage),
@@ -294,7 +327,7 @@ struct ReportABugView_Previews: PreviewProvider {
             ReportABugView(viewModel: viewModel)
                 .previewDisplayName("Filled In")
             
-            ReportABugView(viewModel: .init())
+            ReportABugView(viewModel: .init(inputTitle: "Bug"))
                 .previewDisplayName("Empty")
         }
         .previewLayout(.sizeThatFits)

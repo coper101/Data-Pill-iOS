@@ -16,7 +16,8 @@ struct MailView: UIViewControllerRepresentable {
     let message: String
     let recipient: String
     let screenshots: [Screenshot]
-    @Binding var result: Result<MFMailComposeResult, Error>?
+    let onSent: () -> Void
+    let onError: () -> Void
 
     // MARK: - UI
     func makeUIViewController(context: UIViewControllerRepresentableContext<MailView>) -> MFMailComposeViewController {
@@ -45,7 +46,7 @@ struct MailView: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        .init(presentation: presentation,  result: $result)
+        .init(presentation: presentation, onSent: onSent, onError: onError)
     }
 }
 
@@ -54,28 +55,44 @@ extension MailView {
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
 
         @Binding var presentation: PresentationMode
-        @Binding var result: Result<MFMailComposeResult, Error>?
+        let onSent: () -> Void
+        let onError: () -> Void
 
         init(
             presentation: Binding<PresentationMode>,
-            result: Binding<Result<MFMailComposeResult, Error>?>
+            onSent: @escaping () -> Void,
+            onError: @escaping () -> Void
         ) {
             _presentation = presentation
-            _result = result
+            self.onSent = onSent
+            self.onError = onError
         }
-
-        func mailComposeController(_ controller: MFMailComposeViewController,
-                                   didFinishWith result: MFMailComposeResult,
-                                   error: Error?) {
+        
+        func mailComposeController(
+            _ controller: MFMailComposeViewController,
+            didFinishWith result: MFMailComposeResult,
+            error: Error?
+        ) {
             defer {
                 $presentation.wrappedValue.dismiss()
             }
             guard error == nil else {
-                self.result = .failure(error!)
+                onError()
                 return
             }
-            self.result = .success(result)
+            switch result {
+            case .cancelled:
+                break
+            case .saved:
+                break
+            case .sent:
+                onSent()
+            case .failed:
+                break
+            default:
+                break
+            }
         }
-    }
-
+                
+    } //: class
 }
