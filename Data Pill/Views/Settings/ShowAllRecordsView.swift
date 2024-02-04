@@ -85,9 +85,9 @@ struct ShowAllRecordsView: View {
                 } //: ForEach
                 
             } //: VStack
-            .rowSection(title: "\(records.count) Items")
+            .rowSection(title: "Last \(records.count) Records")
             .padding(.horizontal, dimensions.horizontalPadding)
-            .padding(.top, 21)
+            .padding(.vertical, 12)
              
         } //: ScrollView
         .onAppear(perform: appViewModel.loadAllRecords)

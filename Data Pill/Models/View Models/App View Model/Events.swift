@@ -586,7 +586,7 @@ extension AppViewModel {
     
     // MARK: Records
     func loadAllRecords() {
-        allData = dataUsageRepository.getAllData()
+        allData = dataUsageRepository.getAllData(maxNumber: 14)
     }
     
     func clearRecords() {

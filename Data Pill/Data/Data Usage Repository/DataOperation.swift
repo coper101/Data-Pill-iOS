@@ -14,10 +14,17 @@ extension DataUsageRepository {
     
     // MARK: - Read
     /// Returns all ``Data`` from ``Database``.
-    func getAllData() -> [Data] {
+    func getAllData(maxNumber: Int? = nil) -> [Data] {
         do {
             /// 1. Request
             let request = NSFetchRequest<Data>(entityName: Entities.data.name)
+            
+            let sortDescriptor = NSSortDescriptor(key: #keyPath(Data.date), ascending: false)
+            request.sortDescriptors = [sortDescriptor]
+
+            if let maxNumber {
+                request.fetchLimit = maxNumber
+            }
             
             /// 2. Execute
             let result = try database.context.fetch(request)

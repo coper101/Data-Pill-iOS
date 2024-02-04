@@ -93,7 +93,7 @@ final class DataUsageFakeRepository: ObservableObject, DataUsageRepositoryProtoc
         Just(true).eraseToAnyPublisher()
     }
     
-    func getAllData() -> [Data_Pill.Data] {
+    func getAllData(maxNumber: Int? = nil) -> [Data_Pill.Data] {
         []
     }
     

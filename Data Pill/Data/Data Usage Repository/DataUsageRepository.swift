@@ -25,7 +25,7 @@ protocol DataUsageRepositoryProtocol {
     var thisWeeksDataPublisher: Published<[Data]>.Publisher { get }
     
     /// - Read
-    func getAllData() -> [Data]
+    func getAllData(maxNumber: Int?) -> [Data]
     
     func getDataWith(format: String, _ args: CVarArg..., sortDescriptors: [NSSortDescriptor]) throws -> [Data]
     

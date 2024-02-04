@@ -306,7 +306,7 @@ extension AppViewModel {
             return
         }
         
-        var localData = dataUsageRepository.getAllData()
+        var localData = dataUsageRepository.getAllData(maxNumber: nil)
         Logger.appModel.debug("- SYNC OLD DATA: ℹ️ \(localData.count) Items Found in Local")
 
         /// 2. Upload Old Local `Data`
@@ -316,7 +316,7 @@ extension AppViewModel {
         dataUsageRemoteRepository.syncOldLocalData(localData, lastSyncedDate: lastSyncedToRemoteDate)
             .flatMap { (areOldDataAdded: Bool, areOldDataUpdated: Bool, addedRemoteData: [RemoteData]) -> AnyPublisher<(Bool, Bool, [RemoteData], [RemoteData]), Error> in
               
-                localData = self.dataUsageRepository.getAllData()
+                localData = self.dataUsageRepository.getAllData(maxNumber: nil)
                 let date = Calendar.current.startOfDay(for: todaysData.date ?? .init())
                 Logger.appModel.debug("- SYNC OLD DATA: ℹ️ \(localData.count) Items Found in Local")
 
