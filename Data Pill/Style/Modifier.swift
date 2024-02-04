@@ -52,4 +52,24 @@ extension View {
             }
         }
     }
+    
+    func hideNavigationBar() -> some View {
+        if #available(iOS 16, *) {
+            return self.toolbar(.hidden)
+        } else {
+            return self.navigationBarHidden(true)
+        }
+    }
+}
+
+extension UINavigationController: UIGestureRecognizerDelegate {
+    
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
 }

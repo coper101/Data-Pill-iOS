@@ -119,6 +119,7 @@ struct CustomizePillView: View {
             } //: HStack
             
         } //: GeometryReader
+        .frame(height: 412)
     }
     
     var colors: some View {
@@ -153,10 +154,9 @@ struct CustomizePillView: View {
                 } //: ForEach
                 
             } //: HStack
-            .padding(.horizontal, 21)
-            .padding(.top, dimensions.screen.width)
                         
         } //: ScrollView
+        .padding(.horizontal, 21)
     }
     
     var body: some View {
@@ -233,6 +233,7 @@ struct CustomizePillView: View {
             .padding(.bottom, 34)
             
         } //: ScrollView
+        .withTopBar(title: "Customize Pill")
     }
     
     // MARK: - Actions

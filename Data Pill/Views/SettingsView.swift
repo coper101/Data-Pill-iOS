@@ -27,7 +27,7 @@ struct SettingsView: View {
     }
 
     // MARK: - UI
-    var root: some View {
+    var content: some View {
         ScrollView {
             
             HStack(spacing: 0) {
@@ -69,30 +69,38 @@ struct SettingsView: View {
                         
                     } //: SettingsRowView
                     
-                    SettingsRowView(
-                        title: "Customize Pill",
-                        icon: .pillIcon,
-                        iconColor: .secondaryPurple,
-                        action: { screenAction(screen: .customizePill) }
-                    ) {
+                    NavigationLink(destination: CustomizePillView()) {
                         
-                    } //: SettingsRowView
-                    
+                        SettingsRowView(
+                            title: "Customize Pill",
+                            icon: .pillIcon,
+                            iconColor: .secondaryPurple,
+                            action: {}
+                        ) {
+                            
+                        } //: SettingsRowView
+                        
+                    }
+
                 } //: VStack
                 .rowSection(title: "Appearance")
                 
                 // MARK: - NOTIFICATION
                 VStack(spacing: 0) {
                     
-                    SettingsRowView(
-                        title: "Notifications",
-                        subtitle: notificationSubtitle,
-                        icon: .bellIcon,
-                        iconColor: .secondaryOrange,
-                        action: { screenAction(screen: .notifications) }
-                    ) {
+                    NavigationLink(destination: NotificationSettingsView()) {
                         
-                    } //: SettingsRowView
+                        SettingsRowView(
+                            title: "Notifications",
+                            subtitle: notificationSubtitle,
+                            icon: .bellIcon,
+                            iconColor: .secondaryOrange,
+                            action: {}
+                        ) {
+                            
+                        } //: SettingsRowView
+                        
+                    }
                     
                 } //: VStack
                 .rowSection(title: "Notification")
@@ -100,14 +108,18 @@ struct SettingsView: View {
                 // MARK: - DATA
                 VStack(spacing: 0) {
                     
-                    SettingsRowView(
-                        title: "Show All Records",
-                        icon: .fileIcon,
-                        iconColor: .secondaryGreen,
-                        action: { screenAction(screen: .showAllRecords) }
-                    ) {
+                    NavigationLink(destination: ShowAllRecordsView()) {
                         
-                    } //: SettingsRowView
+                        SettingsRowView(
+                            title: "Show All Records",
+                            icon: .fileIcon,
+                            iconColor: .secondaryGreen,
+                            action: {}
+                        ) {
+                            
+                        } //: SettingsRowView
+                        
+                    }
                     
                 } //: VStack
                 .rowSection(title: "data")
@@ -115,24 +127,30 @@ struct SettingsView: View {
                 // MARK: - SUPPORT
                 VStack(spacing: 0) {
                     
-                    SettingsRowView(
-                        title: "Report a Bug",
-                        icon: .bugIcon,
-                        iconColor: .secondaryRed,
-                        hasDivider: true,
-                        action: { screenAction(screen: .reportABug) }
-                    ) {
+                    NavigationLink(destination: ReportABugView()) {
                         
-                    } //: SettingsRowView
+                        SettingsRowView(
+                            title: "Report a Bug",
+                            icon: .bugIcon,
+                            iconColor: .secondaryRed,
+                            hasDivider: true,
+                            action: {}
+                        ) {
+                            
+                        } //: SettingsRowView
+                    }
                     
-                    SettingsRowView(
-                        title: "Request a Feature",
-                        icon: .starIcon,
-                        iconColor: .secondaryRed,
-                        action: { screenAction(screen: .requestAFeature) }
-                    ) {
+                    NavigationLink(destination: RequestAFeatureView()) {
                         
-                    } //: SettingsRowView
+                        SettingsRowView(
+                            title: "Request a Feature",
+                            icon: .starIcon,
+                            iconColor: .secondaryRed,
+                            action: {}
+                        ) {
+                            
+                        } //: SettingsRowView
+                    }
                     
                 } //: VStack
                 .rowSection(title: "Support")
@@ -147,84 +165,18 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        NavigationView {
             
-            // MARK: TOP BAR
-            if let settingsScreen = appViewModel.activeSettingsScreen {
-                
-                HStack(spacing: 0) {
-                    
-                    // MARK: Back
-                    Button(action: backAction) {
-                        
-                        Icons.navigateIcon.image
-                            .resizable()
-                            .rotationEffect(.degrees(180))
-                            .frame(width: 38, height: 38)
-                            .foregroundColor(Colors.secondaryBlue.color)
-                    } //: Button
-                    
-                    // MARK: Title
-                    Spacer()
-                    Text(settingsScreen.title)
-                        .textStyle(
-                            foregroundColor: .onBackground,
-                            size: 18
-                        )
-                    
-                    // MARK: Filler
-                    Spacer()
-                    Rectangle()
-                        .fill(Color.clear)
-                        .frame(width: 38, height: 38)
-                    
-                } //: HStack
-                .frame(height: 58)
-                .overlay(
-                    DividerView(
-                        color: .onBackgroundLight,
-                        height: 0.2
-                    ),
-                    alignment: .bottom
-                )
-                
-            } //: if
-            
-            // MARK: ROOT
-            switch appViewModel.activeSettingsScreen {
-            case .customizePill:
-                CustomizePillView()
-            case .notifications:
-                NotificationSettingsView()
-            case .showAllRecords:
-                ShowAllRecordsView()
-            case .reportABug:
-                ReportABugView()
-            case .requestAFeature:
-                RequestAFeatureView()
-            case .none:
-                root
-            } //: switch-case
-            
-        } //: VStack
-        .padding(.top, dimensions.insets.top)
-        .background(Colors.background.color)
-        .ignoresSafeArea(.container, edges: .vertical)
-        .preferredColorScheme(appViewModel.colorScheme)
+            content
+                .hideNavigationBar()
+                .padding(.top, dimensions.insets.top)
+                .background(Colors.background.color)
+                .ignoresSafeArea(.container, edges: .vertical)
+                .preferredColorScheme(appViewModel.colorScheme)
+        } //: NavigationView
     }
     
     // MARK: - Actions
-    func backAction() {
-        withAnimation {
-            appViewModel.didTapBackSettingsChild()
-        }
-    }
-    
-    func screenAction(screen: SettingsScreen) {
-        withAnimation {
-            appViewModel.didTapSettingsChild(screen: screen)
-        }
-    }
 }
 
 // MARK: - Preview

@@ -11,10 +11,45 @@ struct RequestAFeatureView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
-    @State var emailAddress: String = ""
-    @State var title: String = ""
-    @State var description: String = ""
-    @State var screenshots: [Screenshot] = []
+    @StateObject var keyboardRepository: KeyboardRepository = .init()
+    @StateObject var viewModel: RequestAFeatureViewModel
+    
+    init(viewModel: RequestAFeatureViewModel = .init()) {
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
+
+    @State private var hasTappedSend: Bool = false
+    
+    func background(isValid: Bool) -> Colors {
+        let color: Colors = {
+            if !isValid {
+                return .error
+            } else {
+                return .surface
+            }
+        }()
+        return hasTappedSend ? color : .surface
+    }
+    
+    func onBackground(isValid: Bool) -> Colors {
+        let color: Colors = {
+            if !isValid {
+                return .onError
+            } else {
+                return .onSurfaceLight
+            }
+        }()
+        return hasTappedSend ? color : .onSurfaceLight
+    }
+    
+    func title(
+        isValid: Bool,
+        inputName: String,
+        prefix: String = "Enter",
+        suffix: String = ""
+    ) -> String {
+        "\(hasTappedSend && !isValid ? prefix : "") \(inputName) \(hasTappedSend && !isValid ? suffix : "")"
+    }
     
     // MARK: - UI
     var inputs: some View {
@@ -22,29 +57,105 @@ struct RequestAFeatureView: View {
             
             VStack(spacing: 16) {
                                 
-                TextField("", text: $emailAddress)
-                    .cardStyle(title: "Email Address")
-                
-                TextField("", text: $title)
-                    .cardStyle(title: "Title")
-                
-                TextField("", text: $description)
+                // MARK: TITLE
+                TextField("", text: $viewModel.inputTitle)
                     .cardStyle(
-                        title: "Description",
-                        lineLimit: 5
+                        title: title(
+                            isValid: viewModel.isValidTitle,
+                            inputName: "Title"
+                        ),
+                        titleColor: onBackground(isValid: viewModel.isValidTitle),
+                        background: background(isValid: viewModel.isValidTitle)
                     )
                 
+                // MARK: DESCRIPTION
+                VStack(alignment: .trailing, spacing: 8) {
+                    
+                    TextEditor(text: $viewModel.inputDescription)
+                        .transparentScrolling()
+                        .cardStyle(
+                            title: title(
+                                isValid: viewModel.isValidDescription,
+                                inputName: "Description",
+                                prefix: "Enter",
+                                suffix: "with min. of \(viewModel.inputDescriptionMinChar) Characters"
+                            ),
+                            titleColor: onBackground(isValid: viewModel.isValidDescription),
+                            lineLimit: 5,
+                            background: background(isValid: viewModel.isValidDescription)
+                        )
+                    
+                    Text("Min: \(viewModel.inputDescriptionMinChar) Characters")
+                        .textStyle(
+                            foregroundColor: .onSurfaceLight,
+                            font: .medium,
+                            size: 12,
+                            lineLimit: nil,
+                            lineSpacing: 2,
+                            textAlignment: .center
+                        )
+                }
+                
+                // MARK: SCREENSHOTS
                 ScrollView(.horizontal, showsIndicators: false) {
                     
                     HStack(spacing: 14) {
                         
-                        ForEach(screenshots) { screenshot in
+                        Button(action: uploadImageAction) {
                             
-                            Image(uiImage: screenshot.image)
-                                .resizable()
-                                .scaledToFill()
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Colors.onSurface.color)
+                                .opacity(0.08)
                                 .frame(width: 124, height: 184)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .overlay(
+                                    ZStack {
+                                        
+                                        Circle()
+                                            .fill(Colors.secondaryBlue.color)
+                                        
+                                        Icons.plusIcon.image
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                            .foregroundColor(Colors.surface.color)
+                                        
+                                    }
+                                    .frame(width: 34, height: 34),
+                                    alignment: .center
+                                )
+                            
+                        } //: Button
+                        
+                        ForEach(viewModel.inputScreenshots) { screenshot in
+                            
+                            ZStack(alignment: .topTrailing) {
+                                                   
+                                Image(uiImage: screenshot.image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 124, height: 178)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                
+                                Button(action: {
+                                    deleteImageAction(id: screenshot.id)
+                                }) {
+                                    
+                                    ZStack {
+                                        
+                                        Circle()
+                                            .fill(Colors.onSecondary.color)
+                                        
+                                        Icons.deleteIcon.image
+                                            .resizable()
+                                            .foregroundColor(Colors.secondaryBlue.color)
+                                        
+                                    } //: ZStack
+                                    .frame(width: 26, height: 26)
+                                    .offset(x: 8, y: -8)
+                                    
+                                } //: Button
+                                
+                            } //: ZStack
+                            .frame(width: 124, height: 184)
                             
                         } //: ForEach
                         
@@ -53,13 +164,62 @@ struct RequestAFeatureView: View {
                     .padding(.horizontal, 14)
                     
                 } //: ScrollView
-                .cardStyle(title: "Screenshot", contentPadding: false)
-
+                .cardStyle(
+                    title: title(
+                        isValid: viewModel.isValidScreenshots,
+                        inputName: "Screenshot",
+                        prefix: "Upload At least 1 "
+                    ),
+                    titleColor: onBackground(isValid: viewModel.isValidScreenshots),
+                    contentPadding: false,
+                    background: background(isValid: viewModel.isValidScreenshots)
+                )
+                
             } //: VStack
-            .padding(.vertical, 21)
+            .padding(.top, 21)
             .padding(.horizontal, 12)
+            .padding(.bottom, 184)
                         
         } //: ScrollView
+    }
+    
+    var bottomBar: some View {
+        VStack(spacing: 18) {
+            
+            Text("We will get back to you once we’ve received your report. We appreciate your support for this app.")
+                .textStyle(
+                    foregroundColor: .onSurface,
+                    font: .medium,
+                    size: 13,
+                    lineLimit: nil,
+                    lineSpacing: 2,
+                    textAlignment: .center
+                )
+                .padding(.horizontal, 2)
+            
+            Button(action: sendAction) {
+                
+                Text("Send Via Mail")
+                    .textStyle(
+                        foregroundColor: .onSecondary,
+                        font: .semibold,
+                        size: 16
+                    )
+                    .fillMaxWidth()
+                    .frame(height: 54)
+                
+            } //: Button
+            .background(Colors.secondaryBlue.color)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 12)
+            )
+            .padding(.bottom, 8)
+            
+        } //: VStack
+        .padding(.bottom, dimensions.insets.bottom)
+        .padding(.top, 8)
+        .padding(.horizontal, 18)
+        .background(Colors.background.color)
     }
     
     var body: some View {
@@ -69,48 +229,94 @@ struct RequestAFeatureView: View {
             inputs
             
             // MARK: ACTION
-            Button(action: sendAction) {
+            if !keyboardRepository.isShown {
                 
-                Text("Send Report Via")
-                    .textStyle(
-                        foregroundColor: .onSecondary,
-                        font: .semibold,
-                        size: 16
-                    )
+                bottomBar
                 
-            } //: Button
-            .fillMaxWidth()
-            .frame(height: 54)
-            .background(Colors.secondaryBlue.color)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 12)
-            )
-            .padding(.bottom, dimensions.insets.bottom)
-            .padding(.horizontal, 18)
+            } else {
+                
+                KeyboardToolbarView(doneAction: doneAction)
+                
+            } //: if-else
             
         } //: ZStack
         .fillMaxSize()
+        .withTopBar(title: "Request A Feature")
+        .imagePicker(
+            isPresented: $viewModel.isImagePickerShown,
+            onCompletion: imageSelectedAction
+        )
+        .sheet(isPresented: $viewModel.isShowingMailView) {
+            MailView(
+                subject: viewModel.inputTitle,
+                message: viewModel.inputDescription,
+                recipient: viewModel.inputRecipient,
+                screenshots: viewModel.inputScreenshots,
+                onSent: sentAction,
+                onError: {}
+            )
+        }
     }
     
     // MARK: - Actions
+    func doneAction() {
+        keyboardRepository.dismissKeyboard()
+    }
+    
     func sendAction() {
-        
+        withAnimation(.easeInOut(duration: 0.85)) {
+            hasTappedSend = true
+            viewModel.didTapSend()
+        }
+    }
+    
+    func uploadImageAction() {
+        withAnimation {
+            viewModel.didTapAddImage()
+        }
+    }
+    
+    func imageSelectedAction(image: UIImage?) {
+        DispatchQueue.main.async {
+            viewModel.didSelectImage(image)
+        }
+    }
+    
+    func deleteImageAction(id: String) {
+        withAnimation {
+            viewModel.didTapDeleteImage(id: id)
+        }
+    }
+    
+    func sentAction() {
+        withAnimation {
+            appViewModel.navigateToSettingsRoot()
+        }
     }
 }
 
 // MARK: - Preview
 struct RequestAFeature_Previews: PreviewProvider {
+    static var viewModel: RequestAFeatureViewModel = {
+        let viewModel = RequestAFeatureViewModel()
+        viewModel.inputDescription = "When I was..."
+        viewModel.inputScreenshots = [
+            .init(image: .testImage),
+            .init(image: .testImage),
+            .init(image: .testImage)
+        ]
+        return viewModel
+    }()
+    
     static var previews: some View {
-        RequestAFeatureView(
-            emailAddress: "example@mail.com",
-            title: "Pill Customization",
-            description: "I really want this...",
-            screenshots: [
-                .init(image: .testImage),
-                .init(image: .testImage),
-                .init(image: .testImage)
-            ]
-        )
+        Group {
+            
+            RequestAFeatureView(viewModel: viewModel)
+                .previewDisplayName("Filled In")
+            
+            RequestAFeatureView()
+                .previewDisplayName("Empty")
+        }
         .previewLayout(.sizeThatFits)
         .background(Colors.background.color)
         .environmentObject(TestData.createAppViewModel())

@@ -92,6 +92,7 @@ struct ShowAllRecordsView: View {
         } //: ScrollView
         .onAppear(perform: appViewModel.loadAllRecords)
         .onDisappear(perform: appViewModel.clearRecords)
+        .withTopBar(title: "Records")
     }
     
     // MARK: - Actions
@@ -103,7 +104,6 @@ struct ShowAllRecordsView_Previews: PreviewProvider {
         ShowAllRecordsView()
             .previewLayout(.sizeThatFits)
             .background(Colors.background.color)
-            .padding()
             .environmentObject(TestData.createAppViewModel())
     }
 }

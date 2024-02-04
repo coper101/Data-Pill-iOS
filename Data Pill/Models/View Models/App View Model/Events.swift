@@ -480,14 +480,6 @@ extension AppViewModel {
         isSettingsShown = false
     }
     
-    func didTapBackSettingsChild() {
-        activeSettingsScreen = nil
-    }
-    
-    func didTapSettingsChild(screen: SettingsScreen) {
-        activeSettingsScreen = screen
-    }
-    
     func navigateToSettingsRoot() {
         activeSettingsScreen = .none
     }

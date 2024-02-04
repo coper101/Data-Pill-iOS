@@ -44,6 +44,7 @@ struct NotificationSettingsView: View {
             .padding(.top, 21)
             
         } //: ScrollView
+        .withTopBar(title: "Notifications")
     }
     
     // MARK: - Actions

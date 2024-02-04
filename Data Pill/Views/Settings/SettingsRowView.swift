@@ -83,20 +83,8 @@ struct SettingsRowView<Content>: View where Content: View {
         VStack(spacing: 0) {
             
             // MARK: CONTENT
-            if let action {
+            content
                 
-                Button(action: action) {
-                    
-                    content
-                    
-                } //: Button
-                
-            } else {
-                
-                content
-                
-            } //: if-else
-            
             // MARK: DIVIDER
             if hasDivider {
                 

@@ -14,7 +14,7 @@ struct ReportABugView: View {
     @StateObject var keyboardRepository: KeyboardRepository = .init()
     @StateObject var viewModel: ReportABugViewModel
     
-    init(viewModel: ReportABugViewModel = .init(inputTitle: "Bug")) {
+    init(viewModel: ReportABugViewModel = .init()) {
         self._viewModel = .init(wrappedValue: viewModel)
     }
 
@@ -241,6 +241,7 @@ struct ReportABugView: View {
             
         } //: ZStack
         .fillMaxSize()
+        .withTopBar(title: "Report A Bug")
         .imagePicker(
             isPresented: $viewModel.isImagePickerShown,
             onCompletion: imageSelectedAction
@@ -297,8 +298,8 @@ struct ReportABugView: View {
 // MARK: - Preview
 struct ReportABugView_Previews: PreviewProvider {
     static var viewModel: ReportABugViewModel = {
-        let viewModel = ReportABugViewModel(inputTitle: "Bug")
-        viewModel.inputDescription = "When I was..."
+        let viewModel = ReportABugViewModel()
+        viewModel.inputDescription = "I really want this..."
         viewModel.inputScreenshots = [
             .init(image: .testImage),
             .init(image: .testImage),
@@ -313,7 +314,7 @@ struct ReportABugView_Previews: PreviewProvider {
             ReportABugView(viewModel: viewModel)
                 .previewDisplayName("Filled In")
             
-            ReportABugView(viewModel: .init(inputTitle: "Bug"))
+            ReportABugView()
                 .previewDisplayName("Empty")
         }
         .previewLayout(.sizeThatFits)

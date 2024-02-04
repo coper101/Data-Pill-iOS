@@ -127,7 +127,6 @@ final class AppViewModel: ObservableObject {
     @Published var isSettingsShown = false
     @Published var activeSettingsScreen: SettingsScreen? = nil
     
-    
     @Published var isSyncingPlan = false
     @Published var isSyncingTodaysData = false
     @Published var isSyncingOldData = false

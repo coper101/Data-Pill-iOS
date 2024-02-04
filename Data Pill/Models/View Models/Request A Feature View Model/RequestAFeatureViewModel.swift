@@ -1,15 +1,15 @@
 //
-//  ReportABugViewModel.swift
+//  RequestAFeatureViewModel.swift.swift
 //  Data Pill
 //
-//  Created by Wind Versi on 1/2/24.
+//  Created by Wind Versi on 4/2/24.
 //
 
 import Combine
 import OSLog
 import MessageUI
 
-final class ReportABugViewModel: ObservableObject {
+final class RequestAFeatureViewModel: ObservableObject {
     
     var subscriptions: Set<AnyCancellable> = .init()
                 
@@ -47,7 +47,7 @@ final class ReportABugViewModel: ObservableObject {
         isValidScreenshots
     }
     
-    init(inputTitle: String = "Bug") {
+    init(inputTitle: String = "New Feature") {
         self.inputTitle = inputTitle
     }
 }
