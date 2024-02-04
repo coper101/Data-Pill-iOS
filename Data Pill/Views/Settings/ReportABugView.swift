@@ -5,19 +5,6 @@
 //  Created by Wind Versi on 20/1/24.
 //
 
-public extension View {
-    
-    func transparentScrolling() -> some View {
-        if #available(iOS 16.0, *) {
-            return scrollContentBackground(.hidden)
-        } else {
-            return onAppear {
-                UITextView.appearance().backgroundColor = .clear
-            }
-        }
-    }
-}
-
 import SwiftUI
 
 struct ReportABugView: View {
@@ -26,7 +13,6 @@ struct ReportABugView: View {
     @Environment(\.dimensions) var dimensions: Dimensions
     @StateObject var keyboardRepository: KeyboardRepository = .init()
     @StateObject var viewModel: ReportABugViewModel
-    
     
     init(viewModel: ReportABugViewModel = .init(inputTitle: "Bug")) {
         self._viewModel = .init(wrappedValue: viewModel)
