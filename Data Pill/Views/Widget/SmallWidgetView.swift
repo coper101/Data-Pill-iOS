@@ -28,7 +28,7 @@ struct SmallWidgetView: View {
     var dataUnit: Unit
     var localizedSubtitle: LocalizedStringKey
     var subtitle: String
-    var color: Colors
+    var color: Color
     
     var percentageUsed: Int {
         usedData.toPercentage(with: maxData)
@@ -170,7 +170,7 @@ struct SmallWidgetView_Previews: PreviewProvider {
                 dataUnit: .gb,
                 localizedSubtitle: "Today",
                 subtitle: "Today",
-                color: .secondaryBlue
+                color: Colors.secondaryBlue.color
             )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("\(size.rawValue)")

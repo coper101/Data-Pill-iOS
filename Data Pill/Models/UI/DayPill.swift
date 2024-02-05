@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Day: String, CaseIterable {
+enum Day: String, CaseIterable, Identifiable {
     case sunday
     case monday
     case tuesday
@@ -36,6 +36,10 @@ extension Day {
         case .saturday:
             "Sat"
         }
+    }
+    
+    var id: String {
+        self.shortName
     }
 }
 

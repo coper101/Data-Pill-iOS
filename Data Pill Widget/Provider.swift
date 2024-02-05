@@ -25,7 +25,7 @@ struct Provider: IntentTimelineProvider {
             dataUnit: .gb,
             localizedSubtitle: "Day",
             subtitle: "Day",
-            color: .surface,
+            color: Colors.surface.color,
             usageType: .daily
         )
     }
@@ -71,9 +71,9 @@ struct Provider: IntentTimelineProvider {
         widgetModel.getLatestData()
         
         let todaysDate = widgetModel.todaysData.date ?? .init()
-        var color: Colors {
+        var color: Color {
             let weekday = todaysDate.toDateComp().weekday ?? 1
-            let defaultColor = widgetModel.dayColors.values.first ?? .secondaryBlue
+            let defaultColor = widgetModel.dayColors.values.first ?? Colors.secondaryBlue.color
             return widgetModel.dayColors[weekday.toDay()] ?? defaultColor
         }
         let isPlan = usageType == .plan

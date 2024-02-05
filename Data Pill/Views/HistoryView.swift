@@ -13,7 +13,7 @@ struct HistoryView: View {
     @Environment(\.dimensions) var dimensions: Dimensions
 
     var paddingHorizontal: CGFloat = 21
-    var dayColors: [Day: Colors]
+    var dayColors: [Day: Color]
     var weekData: [Data]
     var dataLimitPerDay: Double
     var usageType: ToggleItem

@@ -14,7 +14,7 @@ struct DraggablePillView: View {
     @State private var cardOffset: CGSize = .zero
     
     var date: Date = .init()
-    var color: Colors
+    var color: Color
     var percentage: Int
     var usageType: ToggleItem
     
@@ -92,14 +92,14 @@ struct DraggablePillView_Previews: PreviewProvider {
         Group {
             
             DraggablePillView(
-                color: .secondaryBlue,
+                color: Colors.secondaryBlue.color,
                 percentage: 20,
                 usageType: .daily
             )
             .previewDisplayName("Filled")
             
             DraggablePillView(
-                color: .secondaryBlue,
+                color: Colors.secondaryBlue.color,
                 percentage: 20,
                 usageType: .daily,
                 showFillLine: true

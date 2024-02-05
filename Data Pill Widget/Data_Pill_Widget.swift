@@ -57,7 +57,7 @@ struct Widget_Previews: PreviewProvider {
                 dataUnit: .gb,
                 localizedSubtitle: "TODAY",
                 subtitle: "TODAY",
-                color: .secondaryBlue
+                color: Colors.secondaryBlue.color
             )
             .previewContext(WidgetPreviewContext(family: .systemSmall))
             .previewDisplayName("iOS 16 Below / System / Small")
@@ -71,7 +71,7 @@ struct Widget_Previews: PreviewProvider {
                 dataUnit: .gb,
                 localizedSubtitle: "USED",
                 subtitle: "USED",
-                color: .secondaryBlue
+                color: Colors.secondaryBlue.color
             )
             .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
             .previewDisplayName("Accessory / Rectangular")
@@ -90,7 +90,7 @@ struct Widget_Previews: PreviewProvider {
        dataUnit: .gb,
        localizedSubtitle: "USED",
        subtitle: "USED",
-       color: .secondaryBlue,
+       color: Colors.secondaryBlue.color,
        usageType: .daily
     )
 }

@@ -12,17 +12,66 @@ enum FillUsage {
     case deduct
 }
 
+struct CustomizeDayColorView: View {
+    // MARK: - Props
+    var dayColors: [Day: Color]
+    var day: Day
+    var editAction: (Day, Color) -> Void
+    
+    // MARK: - UI
+    var body: some View {
+        ZStack {
+            
+            Circle()
+                .fill(Colors.surface.color)
+            
+            Circle()
+                .fill(dayColors[day] ?? Colors.surface.color)
+                .padding(12)
+            
+        } //: ZStack
+        .frame(width: 54, height: 54)
+        .overlay(
+            ColorPicker(
+                "",
+                selection: .init(
+                    get: {
+                        dayColors[day] ?? Color.white
+                    },
+                    set: { color in
+                        editAction(day, color)
+                    }
+                )
+            )
+            .labelsHidden()
+            .opacity(0.015)
+            .buttonStyle(ScaleButtonStyle())
+        )
+        .section(
+            title: day.shortName,
+            atTop: false,
+            alignment: .center
+        )
+    }
+    
+    // MARK: - Actions
+}
+
 struct CustomizePillView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
     
-    @State private var labelsInWeekly: Bool = true
-    @State private var labelsInDaily: Bool = true
-    @State private var fillUsageType: FillUsage = .accumulate
+    static let minPercentage = 30
+    static let maxPercentage = 60
     
-    var sortedDays: [Day] {
-        appViewModel.dayColors.keys.sorted(by: { $0.ordinal() > $1.ordinal() })
+    @State private var todaysUsagePercentageAccumulate: Int = minPercentage
+    @State private var todaysUsagePercentageDeduct: Int = maxPercentage
+    
+    var percentage: Int {
+        (appViewModel.fillUsageType == .accumulate) ?
+            todaysUsagePercentageAccumulate :
+            todaysUsagePercentageDeduct
     }
 
     // MARK: - UI
@@ -54,21 +103,25 @@ struct CustomizePillView: View {
             HStack(spacing: 0) {
                 
                 BasePillView(
-                    percentage: 30,
+                    percentage: percentage,
                     isContentShown: true,
                     hasBackground: true,
-                    color: .secondaryBlue,
+                    color: appViewModel.todaysColor,
                     customSize: pillSize,
                     label: {
-                        Text("TODAY")
-                            .textStyle(
-                                foregroundColor: .onSecondary,
-                                font: .semibold,
-                                size: 16
-                            )
-                            .padding(.horizontal, 14)
-                            .fillMaxHeight(alignment: .top)
-                            .fillMaxWidth(alignment: .trailing)
+                        if appViewModel.labelsInDaily {
+                            
+                            Text("TODAY")
+                                .textStyle(
+                                    foregroundColor: .onSecondary,
+                                    font: .semibold,
+                                    size: 16
+                                )
+                                .padding(.horizontal, 14)
+                                .fillMaxHeight(alignment: .top)
+                                .fillMaxWidth(alignment: .trailing)
+                            
+                        } //: if
                     },
                     faintLabel: {}
                 )
@@ -80,29 +133,30 @@ struct CustomizePillView: View {
                 
                 Spacer()
                 
-                ZStack() {
+                ZStack {
                     
-                    ForEach(
-                        Array(defaultDayColors.keys).sorted(by: { $1.ordinal() > $0.ordinal() }),
-                        id: \.rawValue
-                    ) { day in
+                    ForEach(Day.allCases) { day in
                         
                         BasePillView(
                             percentage: pillPercentage(day: day),
                             isContentShown: true,
                             hasBackground: false,
-                            color: defaultDayColors[day] ?? .secondaryBlue,
+                            color: appViewModel.dayColors[day] ?? Colors.secondaryBlue.color,
                             customSize: pillSize,
                             label: {
-                                Text(day.shortName.uppercased())
-                                    .textStyle(
-                                        foregroundColor: .onSecondary,
-                                        font: .semibold,
-                                        size: 12
-                                    )
-                                    .padding(.horizontal, 10)
-                                    .fillMaxHeight(alignment: .top)
-                                    .fillMaxWidth(alignment: .trailing)
+                                if appViewModel.labelsInWeekly {
+                                    
+                                    Text(day.shortName.uppercased())
+                                        .textStyle(
+                                            foregroundColor: .onSecondary,
+                                            font: .semibold,
+                                            size: 12
+                                        )
+                                        .padding(.horizontal, 10)
+                                        .fillMaxHeight(alignment: .top)
+                                        .fillMaxWidth(alignment: .trailing)
+                                    
+                                } //: if
                             },
                             faintLabel: {}
                         )
@@ -127,28 +181,12 @@ struct CustomizePillView: View {
             
             HStack(spacing: 18) {
                 
-                ForEach(sortedDays, id: \.self) { day in
+                ForEach(Day.allCases) { day in
                     
-                    Button(action: { editDayColorAction(day: day) }) {
-                        
-                        ZStack {
-                            
-                            Circle()
-                                .fill(Colors.surface.color)
-                            
-                            Circle()
-                                .fill(appViewModel.dayColors[day]?.color ?? Color.white)
-                                .padding(12)
-                            
-                        } //: ZStack
-                        .frame(width: 54, height: 54)
-                      
-                    } //: Button
-                    .buttonStyle(ScaleButtonStyle())
-                    .section(
-                        title: day.shortName,
-                        atTop: false,
-                        alignment: .center
+                    CustomizeDayColorView(
+                        dayColors: appViewModel.dayColors,
+                        day: day,
+                        editAction: editDayColorAction
                     )
                     
                 } //: ForEach
@@ -180,7 +218,7 @@ struct CustomizePillView: View {
                         hasDivider: true
                     ) {
                         RadioButtonView(
-                            isSelected: fillUsageType == .accumulate,
+                            isSelected: appViewModel.fillUsageType == .accumulate,
                             action: { fillUsageTypeAction(type: .accumulate) }
                         )
                         .padding(.vertical, 4)
@@ -189,7 +227,7 @@ struct CustomizePillView: View {
                     SettingsRowView(title: "Deduct") {
                         
                         RadioButtonView(
-                            isSelected: fillUsageType == .deduct, 
+                            isSelected: appViewModel.fillUsageType == .deduct,
                             action: { fillUsageTypeAction(type: .deduct) }
                         )
                         .padding(.vertical, 4)
@@ -209,7 +247,7 @@ struct CustomizePillView: View {
                     ) {
                         SlideToggleView(
                             activeColor: .secondaryBlue,
-                            isOn: $labelsInWeekly
+                            isOn: $appViewModel.labelsInDaily
                         )
                         .padding(.vertical, 4)
                     }
@@ -219,7 +257,7 @@ struct CustomizePillView: View {
                     ) {
                         SlideToggleView(
                             activeColor: .secondaryBlue,
-                            isOn: $labelsInDaily
+                            isOn: $appViewModel.labelsInWeekly
                         )
                         .padding(.vertical, 4)
                     }
@@ -234,18 +272,31 @@ struct CustomizePillView: View {
             
         } //: ScrollView
         .withTopBar(title: "Customize Pill")
+        .onChange(of: appViewModel.fillUsageType) { type in
+            withAnimation(
+                .easeInOut(duration: 0.8)
+                .speed(0.2)
+                .repeatForever(autoreverses: false)
+            ) {
+                if type == .accumulate {
+                    todaysUsagePercentageAccumulate = Self.maxPercentage
+                } else {
+                    todaysUsagePercentageDeduct = Self.minPercentage
+                }
+            }
+        }
     }
     
     // MARK: - Actions
-    func editDayColorAction(day: Day) {
+    func editDayColorAction(day: Day, color: Color) {
         withAnimation {
-            
+            appViewModel.didEditDayColor(day: day, color: color)
         }
     }
     
     func fillUsageTypeAction(type: FillUsage) {
         withAnimation {
-            fillUsageType = type
+            appViewModel.didTapNewUsageType(type)
         }
     }
 }

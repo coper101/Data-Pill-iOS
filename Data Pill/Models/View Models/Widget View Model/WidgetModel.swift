@@ -5,7 +5,7 @@
 //  Created by Wind Versi on 28/11/22.
 //
 
-import Foundation
+import SwiftUI
 import Combine
 
 final class WidgetModel {
@@ -65,7 +65,7 @@ final class WidgetModel {
     
     // MARK: - UI
     /// Weekday color can be customizable in the future
-    @Published var dayColors: [Day: Colors] = defaultDayColors
+    @Published var dayColors: [Day: Color] = defaultDayColors
     
     // MARK: - Initializer
     /// - parameters:

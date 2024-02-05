@@ -39,7 +39,7 @@ struct RectangularWidgetView: View {
     var maxData: Double
     var dataUnit: Unit
     var subtitle: String
-    var color: Colors
+    var color: Color
     
     var percentageUsed: Int {
         usedData.toPercentage(with: maxData)
@@ -64,7 +64,7 @@ struct RectangularWidgetView: View {
                         hasBackground: true,
                         backgroundColor: .widgetTint,
                         backgroundOpacity: 0.5,
-                        color: .widgetTint,
+                        color: Colors.widgetTint.color,
                         widthScale: 0,
                         customSize: .init(
                             width: width * 0.6,
@@ -155,7 +155,7 @@ struct RectangularWidgetView_Previews: PreviewProvider {
                     maxData: 0.99,
                     dataUnit: .gb,
                     subtitle: "Mon",
-                    color: .secondaryBlue
+                    color: Colors.secondaryBlue.color
                 )
                 .previewLayout(.sizeThatFits)
                 .previewDisplayName("Rectangular / \(size.width)x\(size.height)")

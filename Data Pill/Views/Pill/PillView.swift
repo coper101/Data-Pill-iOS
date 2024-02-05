@@ -12,7 +12,7 @@ struct PillView: View {
     @Environment(\.dimensions) var dimensions: Dimensions
     @Namespace private var animation
 
-    var color: Colors
+    var color: Color
     var percentage: Int
     var date: Date
     var hasBackground = true

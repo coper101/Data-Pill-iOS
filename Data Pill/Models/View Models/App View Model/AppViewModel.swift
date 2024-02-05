@@ -75,6 +75,10 @@ final class AppViewModel: ObservableObject {
     @Published var todaysLastNotificationDate: Date?
     @Published var planLastNotificationDate: Date?
     
+    @Published var fillUsageType: FillUsage = .accumulate
+    @Published var labelsInWeekly: Bool = true
+    @Published var labelsInDaily: Bool = true
+    
     /// [B] Data Usage
     @Published var startDate = Date()
     @Published var endDate = Date()
@@ -218,7 +222,14 @@ final class AppViewModel: ObservableObject {
     }
     
     /// Weekday color can be customizable in the future
-    @Published var dayColors: [Day: Colors] = defaultDayColors
+    @Published var dayColors: [Day: Color] = defaultDayColors
+    
+    var todaysColor: Color {
+        let todaysDate = todaysData.date ?? .init()
+        let weekday = todaysDate.toDateComp().weekday ?? 1
+        let defaultColor = dayColors.values.first ?? Colors.secondaryBlue.color
+        return dayColors[weekday.toDay()] ?? defaultColor
+    }
     
     /// Settings
     @Published var isDarkMode = false

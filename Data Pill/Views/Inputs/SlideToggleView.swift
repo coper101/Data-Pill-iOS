@@ -11,7 +11,7 @@ struct SlideToggleView: View {
     // MARK: - Props
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     let minXOffset: CGFloat = 4
-    let maxXOffset: CGFloat = 25
+    let maxXOffset: CGFloat = 27
     var activeColor: Colors = .onSurfaceLight
     var inactiveColor: Colors = .onSurfaceLight2
     @Binding var isOn: Bool
@@ -62,8 +62,16 @@ struct SlideToggleView: View {
 // MARK: - Preview
 struct SlideToggleView_Previews: PreviewProvider {
     static var previews: some View {
-        SlideToggleView(isOn: .constant(false))
-            .previewLayout(.sizeThatFits)
-            .padding()
+        Group {
+            
+            SlideToggleView(isOn: .constant(true))
+                .previewDisplayName("ON")
+            
+            SlideToggleView(isOn: .constant(false))
+                .previewDisplayName("OFF")
+
+        }
+        .previewLayout(.sizeThatFits)
+        .padding()
     }
 }

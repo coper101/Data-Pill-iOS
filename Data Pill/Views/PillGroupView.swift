@@ -16,12 +16,6 @@ struct PillGroupView: View {
         appViewModel.todaysData.date ?? .init()
     }
     
-    var color: Colors {
-        let weekday = todaysDate.toDateComp().weekday ?? 1
-        let defaultColor = appViewModel.dayColors.values.first ?? .secondaryBlue
-        return appViewModel.dayColors[weekday.toDay()] ?? defaultColor
-    }
-    
     // MARK: - UI
     var body: some View {
         VStack(spacing: 0) {
@@ -43,7 +37,7 @@ struct PillGroupView: View {
                 Button(action: dataPillAction) {
                     
                     PillView(
-                        color: color,
+                        color: appViewModel.todaysColor,
                         percentage: appViewModel.dataUsedInPercentage,
                         date: todaysDate,
                         usageType: appViewModel.usageType,

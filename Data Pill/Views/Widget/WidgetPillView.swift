@@ -17,7 +17,7 @@ struct WidgetPillView: View {
     var dataUnit: Unit
     var localizedSubtitle: LocalizedStringKey
     var subtitle: String
-    var color: Colors
+    var color: Color
     
     // MARK: - UI
     var smallWidget: some View {

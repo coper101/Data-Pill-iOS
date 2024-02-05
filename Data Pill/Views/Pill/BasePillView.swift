@@ -21,6 +21,8 @@ enum PillOrientation: String, CaseIterable, Identifiable {
 
 struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View {
     // MARK: - Props
+    @Namespace private var animation
+
     var percentage: Int
     
     var isContentShown = true
@@ -32,7 +34,7 @@ struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View
     var hasBackground: Bool
     var backgroundColor = Colors.surface
     var backgroundOpacity = 1.0
-    var color: Colors
+    var color: Color
     
     var widthScale: CGFloat = 0.45
     var customSize: CGSize? = nil
@@ -76,7 +78,7 @@ struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View
             
             // Layer 1: FILL COLOR
             RoundedRectangle(cornerRadius: cornerRadius)
-                .fill(color.color)
+                .fill(color)
             
             // Layer 2: SHINE
             LinearGradient(
@@ -87,21 +89,24 @@ struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View
                 startPoint: .top,
                 endPoint: .bottom
             )
+            .matchedGeometryEffect(id: "Fill", in: animation)
             
             // Layer 3: LABEL
             label
                 .fillMaxHeight(alignment: .top)
                 .padding(.top, paddingTop)
+                .matchedGeometryEffect(id: "Label", in: animation)
              
         } //: ZStack
         .frame(
             height: (CGFloat(percentage) / 100) * height
         )
+        .compositingGroup()
     }
     
     var horizontalPill: some View {
         RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(color.color)
+            .fill(color)
             .frame(
                 width: (CGFloat(percentage) / 100) * width
             )
@@ -135,7 +140,7 @@ struct BasePillView<Label, FaintLabel>: View where Label: View, FaintLabel: View
                     title: fillLineTitle,
                     titleCharCount: fillLineTitleCharCount
                 )
-                    .offset(y: fillLineYOffset)
+                .offset(y: fillLineYOffset)
             }
             
         } //: ZStack
@@ -180,7 +185,7 @@ struct BasePillView_Previews: PreviewProvider {
                     isContentShown: true,
                     orientation: orientation,
                     hasBackground: true,
-                    color: .secondaryBlue,
+                    color: Colors.secondaryBlue.color,
                     customSize: (orientation == .vertical) ?
                         .init(width: 230, height: 500) :
                         .init(width: 100, height: 30),
@@ -196,7 +201,7 @@ struct BasePillView_Previews: PreviewProvider {
                         fillLineTitleCharCount: "Today".count,
                         orientation: orientation,
                         hasBackground: true,
-                        color: .secondaryBlue,
+                        color: Colors.secondaryBlue.color,
                         label: {},
                         faintLabel: {}
                     )

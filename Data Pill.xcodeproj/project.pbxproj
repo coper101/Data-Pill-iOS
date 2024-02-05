@@ -613,6 +613,17 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		277A0DB72B6F89BF0064B865 /* Settings Components */ = {
+			isa = PBXGroup;
+			children = (
+				27BF5FDA2B6F7EF4006DD737 /* SettingsTopBarView.swift */,
+				278337C42B58189B00EAC8C5 /* SettingsRowView.swift */,
+				279244242B6BA42300F4FA67 /* ImagePickerView.swift */,
+				27BF5FCD2B6E5AFC006DD737 /* ShareSheetView.swift */,
+			);
+			path = "Settings Components";
+			sourceTree = "<group>";
+		};
 		27801DA328D6C96800201339 = {
 			isa = PBXGroup;
 			children = (
@@ -807,15 +818,12 @@
 		278337C82B5BB23700EAC8C5 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				27BF5FDA2B6F7EF4006DD737 /* SettingsTopBarView.swift */,
-				278337C42B58189B00EAC8C5 /* SettingsRowView.swift */,
 				278337C92B5BB25100EAC8C5 /* CustomizePillView.swift */,
 				279244222B665ACE00F4FA67 /* NotificationSettingsView.swift */,
 				278337CB2B5BB26900EAC8C5 /* ShowAllRecordsView.swift */,
 				278337CD2B5BB27600EAC8C5 /* ReportABugView.swift */,
 				278337CF2B5BB27D00EAC8C5 /* RequestAFeatureView.swift */,
-				279244242B6BA42300F4FA67 /* ImagePickerView.swift */,
-				27BF5FCD2B6E5AFC006DD737 /* ShareSheetView.swift */,
+				277A0DB72B6F89BF0064B865 /* Settings Components */,
 			);
 			path = Settings;
 			sourceTree = "<group>";

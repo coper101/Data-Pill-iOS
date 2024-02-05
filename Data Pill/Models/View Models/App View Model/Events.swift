@@ -592,4 +592,13 @@ extension AppViewModel {
     func clearRecords() {
         allData.removeAll()
     }
+    
+    // MARK: Pill Customization
+    func didTapNewUsageType(_ type: FillUsage) {
+        fillUsageType = type
+    }
+    
+    func didEditDayColor(day: Day, color: Color) {
+        dayColors[day] = color
+    }
 }
