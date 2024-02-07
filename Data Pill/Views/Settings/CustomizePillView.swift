@@ -70,8 +70,8 @@ struct CustomizePillView: View {
     
     var percentage: Int {
         (appViewModel.fillUsageType == .accumulate) ?
-            todaysUsagePercentageAccumulate :
-            todaysUsagePercentageDeduct
+        todaysUsagePercentageDeduct :
+        todaysUsagePercentageAccumulate
     }
 
     // MARK: - UI
@@ -192,9 +192,9 @@ struct CustomizePillView: View {
                 } //: ForEach
                 
             } //: HStack
+            .padding(.horizontal, 21)
                         
         } //: ScrollView
-        .padding(.horizontal, 21)
     }
     
     var body: some View {
@@ -231,6 +231,7 @@ struct CustomizePillView: View {
                             action: { fillUsageTypeAction(type: .deduct) }
                         )
                         .padding(.vertical, 4)
+                        .transition(.scale)
                     }
                     
                 } //: VStack
@@ -272,19 +273,6 @@ struct CustomizePillView: View {
             
         } //: ScrollView
         .withTopBar(title: "Customize Pill")
-        .onChange(of: appViewModel.fillUsageType) { type in
-            withAnimation(
-                .easeInOut(duration: 0.8)
-                .speed(0.2)
-                .repeatForever(autoreverses: false)
-            ) {
-                if type == .accumulate {
-                    todaysUsagePercentageAccumulate = Self.maxPercentage
-                } else {
-                    todaysUsagePercentageDeduct = Self.minPercentage
-                }
-            }
-        }
     }
     
     // MARK: - Actions
