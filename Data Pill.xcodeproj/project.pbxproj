@@ -43,6 +43,10 @@
 		276626F92B4AACDA00613C82 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276626F82B4AACDA00613C82 /* Configuration.swift */; };
 		277944682B5C14B6006A2FF7 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277944672B5C14B6006A2FF7 /* RadioButtonView.swift */; };
 		2779446A2B5FDB76006A2FF7 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277944692B5FDB76006A2FF7 /* Container.swift */; };
+		277A0DB92B73B2DA0064B865 /* FillUsageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A0DB82B73B2DA0064B865 /* FillUsageType.swift */; };
+		277A0DBA2B73B2E40064B865 /* FillUsageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A0DB82B73B2DA0064B865 /* FillUsageType.swift */; };
+		277A0DBC2B73B5010064B865 /* ColorValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A0DBB2B73B5010064B865 /* ColorValue.swift */; };
+		277A0DBD2B73B5050064B865 /* ColorValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A0DBB2B73B5010064B865 /* ColorValue.swift */; };
 		27801DB128D6C96800201339 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB028D6C96800201339 /* AppView.swift */; };
 		27801DB428D6C96800201339 /* PillGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB328D6C96800201339 /* PillGroupView.swift */; };
 		27801DB728D6C96800201339 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27801DB628D6C96800201339 /* AppViewModel.swift */; };
@@ -316,6 +320,8 @@
 		276626F82B4AACDA00613C82 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		277944672B5C14B6006A2FF7 /* RadioButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonView.swift; sourceTree = "<group>"; };
 		277944692B5FDB76006A2FF7 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
+		277A0DB82B73B2DA0064B865 /* FillUsageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillUsageType.swift; sourceTree = "<group>"; };
+		277A0DBB2B73B5010064B865 /* ColorValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorValue.swift; sourceTree = "<group>"; };
 		27801DAC28D6C96800201339 /* Data Pill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Data Pill.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27801DB028D6C96800201339 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		27801DB328D6C96800201339 /* PillGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillGroupView.swift; sourceTree = "<group>"; };
@@ -1038,6 +1044,8 @@
 				27E77750293B68D00031456D /* Widget.swift */,
 				27BB19EC2972D1F400851E14 /* AccessibilityLabels.swift */,
 				2792441E2B64EB0A00F4FA67 /* Screenshot.swift */,
+				277A0DB82B73B2DA0064B865 /* FillUsageType.swift */,
+				277A0DBB2B73B5010064B865 /* ColorValue.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1313,6 +1321,7 @@
 				27D056EC2A51589A00A6EC04 /* Mock_Local_Database.swift in Sources */,
 				278337D02B5BB27D00EAC8C5 /* RequestAFeatureView.swift in Sources */,
 				27801E1728E82B9100201339 /* TextInputView.swift in Sources */,
+				277A0DBC2B73B5010064B865 /* ColorValue.swift in Sources */,
 				27801DFB28DA0B0D00201339 /* NavRowView.swift in Sources */,
 				278FB31128FAA00F00BE78C2 /* Animation.swift in Sources */,
 				27801DFF28DA13C500201339 /* DataPlanLimitView.swift in Sources */,
@@ -1370,6 +1379,7 @@
 				270B264D2963E516001B316F /* GuideView.swift in Sources */,
 				27801E1928E951A100201339 /* NetworkDataRepository.swift in Sources */,
 				27801E0D28E0C02200201339 /* DateInputView.swift in Sources */,
+				277A0DB92B73B2DA0064B865 /* FillUsageType.swift in Sources */,
 				27D056DE2A50B23000A6EC04 /* RemoteSubscriptionOperation.swift in Sources */,
 				27E7772029336AA10031456D /* Unit.swift in Sources */,
 				27801E2328E9B29D00201339 /* LocalDatabase.swift in Sources */,
@@ -1470,6 +1480,7 @@
 			files = (
 				27E777392934B33C0031456D /* NetworkDataRepository.swift in Sources */,
 				27E777382934AF060031456D /* WidgetModel.swift in Sources */,
+				277A0DBD2B73B5050064B865 /* ColorValue.swift in Sources */,
 				27D056EA2A5157C100A6EC04 /* LocalIdentifiers.swift in Sources */,
 				27D056C92A50425A00A6EC04 /* PlanOperation.swift in Sources */,
 				27D056E22A5153B300A6EC04 /* AppDataKeys.swift in Sources */,
@@ -1493,6 +1504,7 @@
 				27E7771B293367610031456D /* Color.swift in Sources */,
 				27E7774F2935010D0031456D /* Entry.swift in Sources */,
 				27E7774D293500BB0031456D /* Provider.swift in Sources */,
+				277A0DBA2B73B2E40064B865 /* FillUsageType.swift in Sources */,
 				27E7772329336CAC0031456D /* Text.swift in Sources */,
 				27E7773F2934B3CB0031456D /* StepperValueTypes.swift in Sources */,
 				27E7773A2934B3400031456D /* AppDataRepository.swift in Sources */,

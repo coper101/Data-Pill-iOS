@@ -58,10 +58,35 @@ extension AppViewModel {
             .sink { [weak self] in self?.lastSyncedToRemoteDate = $0 }
             .store(in: &cancellables)
         
+        /// Settings
+        /// - Appearance
         appDataRepository.isDarkModePublisher
             .sink { [weak self] in self?.isDarkMode = $0 }
             .store(in: &cancellables)
         
+        appDataRepository.fillUsageTypePublisher
+            .sink { [weak self] in self?.fillUsageType = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.hasLabelsInDailyPublisher
+            .sink { [weak self] in self?.labelsInDaily = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.hasLabelsInWeeklyPublisher
+            .sink { [weak self] in self?.labelsInWeekly = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dayColorsPublisher
+            .sink { [weak self] dayColors in
+                if dayColors.isEmpty {
+                    self?.dayColors = defaultDayColors
+                    return
+                }
+                self?.dayColors = dayColors
+            }
+            .store(in: &cancellables)
+        
+        /// - Notification
         appDataRepository.hasDailyNotificationPublisher
             .sink { [weak self] in self?.hasDailyNotification = $0 }
             .store(in: &cancellables)

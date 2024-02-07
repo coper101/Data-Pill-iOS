@@ -23,6 +23,11 @@ final class LocalStorage {
         return defaults.string(forKey: key.rawValue)
     }
     
+    static func getAnyItem(forKey key: Keys) -> Any? {
+        guard let defaults = getUserDefaults() else { return nil }
+        return defaults.object(forKey: key.rawValue)
+    }
+    
     static func getDateItem(forKey key: Keys) -> Date? {
         guard let defaults = getUserDefaults() else { return nil }
         return defaults.object(forKey: key.rawValue) as? Date
@@ -36,5 +41,10 @@ final class LocalStorage {
     static func getDoubleItem(forKey key: Keys) -> Double {
         guard let defaults = getUserDefaults() else { return 0 }
         return defaults.double(forKey: key.rawValue)
+    }
+    
+    static func getIntegerItem(forKey key: Keys) -> Int {
+        guard let defaults = getUserDefaults() else { return 0 }
+        return defaults.integer(forKey: key.rawValue)
     }
 }

@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-enum FillUsage {
-    case accumulate
-    case deduct
-}
-
 struct CustomizeDayColorView: View {
     // MARK: - Props
     var dayColors: [Day: Color]

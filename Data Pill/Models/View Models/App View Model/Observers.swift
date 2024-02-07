@@ -87,11 +87,40 @@ extension AppViewModel {
     }
     
     func observeSettings() {
+        /// Section: Appearance
         $isDarkMode
             .removeDuplicates()
             .sink { [weak self] in self?.appDataRepository.setIsDarkMode($0) }
             .store(in: &cancellables)
         
+        /// - Customize Pill
+        $fillUsageType
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in self?.appDataRepository.setFillUsageType($0) }
+            .store(in: &cancellables)
+        
+        $labelsInDaily
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in self?.appDataRepository.setHasLabelsInDaily($0) }
+            .store(in: &cancellables)
+        
+        $labelsInWeekly
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in self?.appDataRepository.setHasLabelsInWeekly($0) }
+            .store(in: &cancellables)
+        
+        $dayColors
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in
+                self?.appDataRepository.setDayColors($0)
+            }
+            .store(in: &cancellables)
+        
+        /// Section: Notification
         $hasDailyNotification
             .removeDuplicates()
             .sink { [weak self] in

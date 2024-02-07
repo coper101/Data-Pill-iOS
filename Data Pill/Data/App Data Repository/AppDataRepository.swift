@@ -5,7 +5,7 @@
 //  Created by Wind Versi on 3/10/22.
 //
 
-import Foundation
+import SwiftUI
 
 // MARK: - Protocol
 protocol AppDataRepositoryProtocol {
@@ -72,11 +72,35 @@ protocol AppDataRepositoryProtocol {
     
     /// [9] Settings
     
-    /// [9.1] Dark Mode
+    /// [9.1A] Dark Mode
     var isDarkMode: Bool { get set }
     var isDarkModePublisher: Published<Bool>.Publisher { get }
     
     func setIsDarkMode(_ enabled: Bool) -> Void
+    
+    /// [9.1B]
+    var fillUsageType: FillUsage { get set }
+    var fillUsageTypePublisher: Published<FillUsage>.Publisher { get }
+    
+    func setFillUsageType(_ type: FillUsage) -> Void
+    
+    /// [9.1C]
+    var hasLabelsInDaily: Bool { get set }
+    var hasLabelsInDailyPublisher: Published<Bool>.Publisher { get }
+    
+    func setHasLabelsInDaily(_ enabled: Bool) -> Void
+    
+    /// [9.1D]
+    var hasLabelsInWeekly: Bool { get set }
+    var hasLabelsInWeeklyPublisher: Published<Bool>.Publisher { get }
+    
+    func setHasLabelsInWeekly(_ enabled: Bool) -> Void
+    
+    /// [9.1F]
+    var dayColors: [Day: Color] { get set }
+    var dayColorsPublisher: Published<[Day: Color]>.Publisher { get }
+    
+    func setDayColors(_ dayColors: [Day: Color]) -> Void
     
     /// [9.2] Notification
     var hasDailyNotification: Bool { get set }
@@ -147,9 +171,25 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     @Published var lastSyncedToRemoteDate: Date?
     var lastSyncedToRemoteDatePublisher: Published<Date?>.Publisher { $lastSyncedToRemoteDate }
     
-    /// [9.1]
+    /// [9.1A]
     @Published var isDarkMode: Bool = false
     var isDarkModePublisher: Published<Bool>.Publisher { $isDarkMode }
+    
+    /// [9.1B]
+    @Published var fillUsageType: FillUsage = .accumulate
+    var fillUsageTypePublisher: Published<FillUsage>.Publisher { $fillUsageType }
+    
+    /// [9.1C]
+    @Published var hasLabelsInDaily: Bool = true
+    var hasLabelsInDailyPublisher: Published<Bool>.Publisher { $hasLabelsInDaily }
+    
+    /// [9.1D]
+    @Published var hasLabelsInWeekly: Bool = true
+    var hasLabelsInWeeklyPublisher: Published<Bool>.Publisher { $hasLabelsInWeekly }
+    
+    /// [9.1F]
+    @Published var dayColors: [Day: Color] = defaultDayColors
+    var dayColorsPublisher: Published<[Day: Color]>.Publisher { $dayColors }
     
     /// [9.2]
     @Published var hasDailyNotification: Bool = false
@@ -222,6 +262,12 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         }
         
         getIsDarkMode()
+        
+        getFillUsageType()
+        getHasLabelsInDaily()
+        getHasLabelsInWeekly()
+        getDayColors()
+        
         getHasDailyNotification()
         getHasPlanNotification()
         getTodaysLastNotificationDate()
@@ -333,7 +379,7 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
         getLastSyncedToRemote()
     }
     
-    /// [9.1]
+    /// [9.1A]
     func getIsDarkMode() {
         isDarkMode = LocalStorage.getBoolItem(forKey: .isDarkMode)
     }
@@ -341,6 +387,61 @@ final class AppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     func setIsDarkMode(_ enabled: Bool) {
         LocalStorage.setItem(enabled, forKey: .isDarkMode)
         getIsDarkMode()
+    }
+    
+    /// [9.1B]
+    func getFillUsageType() {
+        let fillUsageTypeIndex = LocalStorage.getIntegerItem(forKey: .fillUsageType)
+        fillUsageType = FillUsage(rawValue: fillUsageTypeIndex) ?? .accumulate
+    }
+    
+    func setFillUsageType(_ type: FillUsage) {
+        LocalStorage.setItem(type.rawValue, forKey: .fillUsageType)
+        getFillUsageType()
+    }
+    
+    /// [9.1C]
+    func getHasLabelsInDaily() {
+        hasLabelsInDaily = LocalStorage.getBoolItem(forKey: .hasLabelInDaily)
+    }
+    
+    func setHasLabelsInDaily(_ enabled: Bool) {
+        LocalStorage.setItem(enabled, forKey: .hasLabelInDaily)
+        getHasLabelsInDaily()
+    }
+    
+    /// [9.1D]
+    func getHasLabelsInWeekly() {
+        hasLabelsInWeekly = LocalStorage.getBoolItem(forKey: .hasLabelInWeekly)
+    }
+    
+    func setHasLabelsInWeekly(_ enabled: Bool) {
+        LocalStorage.setItem(enabled, forKey: .hasLabelInWeekly)
+        getHasLabelsInWeekly()
+    }
+    
+    /// [9.1E]
+    func getDayColors() {
+        let dayColorValues = LocalStorage.getAnyItem(forKey: .dayColors) as? [String: String]
+        guard let dayColorValues else {
+            return
+        }
+        var dayColors: [Day: Color] = [:]
+        dayColorValues.forEach { (dayValue, colorValue) in
+            if let day = Day(rawValue: dayValue), let color = Color(rawValue: colorValue) {
+                dayColors[day] = color
+            }
+        }
+        self.dayColors = dayColors
+    }
+    
+    func setDayColors(_ dayColors: [Day: Color]) {
+        var dayColorValues: [String: String] = [:]
+        dayColors.forEach { (day, color) in
+            dayColorValues[day.rawValue] = color.rawValue
+        }
+        LocalStorage.setItem(dayColorValues, forKey: .dayColors)
+        getDayColors()
     }
     
     /// [9.2]

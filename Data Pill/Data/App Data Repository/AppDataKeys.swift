@@ -34,9 +34,17 @@ enum Keys: String {
     case lastSyncToRemoteDate = "Last_Synced_To_Remote_Date"
     
     /// Settings
+    /// - Appearance
     case isDarkMode = "Is_Dark_Mode"
+    case fillUsageType = "Fill_Usage_Type"
+    case hasLabelInDaily = "Has_Labels_In_Daily"
+    case hasLabelInWeekly = "Has_Labels_In_Weekly"
+    case dayColors = "Day_Colors"
+
+    /// - Notification
     case hasDailyNotification = "Has_Daily_Notification"
     case hasPlanNotification = "Has_Plan_Notification"
     case todaysLastNotificationDate = "Todays_Last_Notification_Date"
     case planLastNotificationDate = "Plan_Last_Notification_Date"
+    
 }
