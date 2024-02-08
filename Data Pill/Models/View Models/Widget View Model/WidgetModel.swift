@@ -146,6 +146,16 @@ extension WidgetModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.dataError = $0 }
             .store(in: &cancellables)
+        
+        appDataRepository.dayColorsPublisher
+            .sink { [weak self] dayColors in
+                if dayColors.isEmpty {
+                    self?.dayColors = defaultDayColors
+                    return
+                }
+                self?.dayColors = dayColors
+            }
+            .store(in: &cancellables)
     }
     
     func republishNetworkData() {
