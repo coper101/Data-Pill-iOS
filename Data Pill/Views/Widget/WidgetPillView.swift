@@ -12,6 +12,7 @@ struct WidgetPillView: View {
     // MARK: - Props
     @Environment(\.widgetFamily) var widgetFamily
     @Environment(\.colorScheme) var colorScheme
+    var fillUsageType: FillUsage
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
@@ -22,6 +23,7 @@ struct WidgetPillView: View {
     // MARK: - UI
     var smallWidget: some View {
         SmallWidgetView(
+            fillUsageType: fillUsageType,
             usedData: usedData,
             maxData: maxData,
             dataUnit: dataUnit,
@@ -33,6 +35,7 @@ struct WidgetPillView: View {
     
     var rectangularWidget: some View {
         RectangularWidgetView(
+            fillUsageType: fillUsageType,
             usedData: usedData,
             maxData: maxData,
             dataUnit: dataUnit,

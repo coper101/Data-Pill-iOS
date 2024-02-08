@@ -62,10 +62,11 @@ struct PillGroupView: View {
                     
                     VStack(spacing: 0) {
                         
-                        // USED
+                        // USED or REMAINING
                         UsedCardView(
                             usedData: appViewModel.usedData,
                             maxData: appViewModel.maxData,
+                            fillUsageType: appViewModel.fillUsageType,
                             dataUnit: appViewModel.unit,
                             width: cardWidth
                         )

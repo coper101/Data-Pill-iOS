@@ -35,6 +35,7 @@ enum RectangularWidgetSize: String, Identifiable, CaseIterable {
 
 struct RectangularWidgetView: View {
     // MARK: - Props
+    var fillUsageType: FillUsage
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
@@ -42,7 +43,15 @@ struct RectangularWidgetView: View {
     var color: Color
     
     var percentageUsed: Int {
-        usedData.toPercentage(with: maxData)
+        let percentageUsed = usedData.toPercentage(with: maxData)
+        let percentageRemaining = 100 - percentageUsed
+        
+        switch fillUsageType {
+        case .accumulate:
+            return percentageUsed
+        case .deduct:
+            return percentageRemaining
+        }
     }
     
     // MARK: - UI
@@ -151,6 +160,7 @@ struct RectangularWidgetView_Previews: PreviewProvider {
             let size = widgetSize.size
             if #available(iOS 16.0, *) {
                 RectangularWidgetView(
+                    fillUsageType: .accumulate,
                     usedData: 0.3334,
                     maxData: 0.99,
                     dataUnit: .gb,

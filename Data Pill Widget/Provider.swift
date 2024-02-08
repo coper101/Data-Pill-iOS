@@ -26,7 +26,8 @@ struct Provider: IntentTimelineProvider {
             localizedSubtitle: "Day",
             subtitle: "Day",
             color: Colors.surface.color,
-            usageType: .daily
+            usageType: .daily,
+            fillUsageType: .accumulate
         )
     }
 
@@ -88,7 +89,8 @@ struct Provider: IntentTimelineProvider {
             localizedSubtitle: localizedSubtitle,
             subtitle: subtitle,
             color: color,
-            usageType: usageType
+            usageType: usageType,
+            fillUsageType: widgetModel.fillUsageType
         )
         
         return newEntry

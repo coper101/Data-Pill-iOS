@@ -17,4 +17,5 @@ struct SimpleEntry: TimelineEntry {
     let subtitle: String
     let color: Color
     let usageType: ToggleItem
+    let fillUsageType: FillUsage
 }

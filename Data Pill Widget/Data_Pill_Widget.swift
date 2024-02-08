@@ -26,6 +26,7 @@ struct Data_Pill_Widget: Widget {
             provider: Provider(widgetModel: .init())
         ) { entry in
             WidgetPillView(
+                fillUsageType: entry.fillUsageType,
                 usedData: entry.usedData,
                 maxData: entry.maxData,
                 dataUnit: entry.dataUnit,
@@ -52,6 +53,7 @@ struct Widget_Previews: PreviewProvider {
         } else {
             
             WidgetPillView(
+                fillUsageType: .accumulate, 
                 usedData: 0.5,
                 maxData: 1,
                 dataUnit: .gb,
@@ -66,6 +68,7 @@ struct Widget_Previews: PreviewProvider {
         
         if #available(iOS 16.0, *) {
             WidgetPillView(
+                fillUsageType: .accumulate,
                 usedData: 0.5,
                 maxData: 1,
                 dataUnit: .gb,
@@ -91,6 +94,7 @@ struct Widget_Previews: PreviewProvider {
        localizedSubtitle: "USED",
        subtitle: "USED",
        color: Colors.secondaryBlue.color,
-       usageType: .daily
+       usageType: .daily,
+       fillUsageType: .accumulate
     )
 }

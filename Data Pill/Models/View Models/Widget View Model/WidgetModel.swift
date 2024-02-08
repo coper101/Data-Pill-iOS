@@ -32,6 +32,8 @@ final class WidgetModel {
     
     @Published var dataError: DatabaseError?
     
+    @Published var fillUsageType: FillUsage = .accumulate
+    
     /// [C] Network Data
     @Published var totalUsedData = 0.0
     
@@ -126,6 +128,21 @@ extension WidgetModel {
         appDataRepository.unitPublisher
             .sink { [weak self] in self?.unit = $0 }
             .store(in: &cancellables)
+        
+        /// Settings
+        appDataRepository.dayColorsPublisher
+            .sink { [weak self] dayColors in
+                if dayColors.isEmpty {
+                    self?.dayColors = defaultDayColors
+                    return
+                }
+                self?.dayColors = dayColors
+            }
+            .store(in: &cancellables)
+        
+        appDataRepository.fillUsageTypePublisher
+            .sink { [weak self] in self?.fillUsageType = $0 }
+            .store(in: &cancellables)
     }
     
     func republishDataUsage() {
@@ -145,16 +162,6 @@ extension WidgetModel {
         dataUsageRepository.dataErrorPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.dataError = $0 }
-            .store(in: &cancellables)
-        
-        appDataRepository.dayColorsPublisher
-            .sink { [weak self] dayColors in
-                if dayColors.isEmpty {
-                    self?.dayColors = defaultDayColors
-                    return
-                }
-                self?.dayColors = dayColors
-            }
             .store(in: &cancellables)
     }
     

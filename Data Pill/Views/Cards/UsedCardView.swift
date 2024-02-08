@@ -11,11 +11,29 @@ struct UsedCardView: View {
     // MARK: - Props
     var usedData: Double
     var maxData: Double
+    var fillUsageType: FillUsage
     var dataUnit: Unit
     var width: CGFloat
     
     var percentageUsed: Int {
-        usedData.toPercentage(with: maxData)
+        let percentageUsed = usedData.toPercentage(with: maxData)
+        let percentageRemaining = 100 - percentageUsed
+        
+        switch fillUsageType {
+        case .accumulate:
+            return percentageUsed
+        case .deduct:
+            return percentageRemaining
+        }
+    }
+    
+    var subtitle: LocalizedStringKey {
+        switch fillUsageType {
+        case .accumulate:
+            return "USED"
+        case .deduct:
+            return "LEFT"
+        }
     }
     
     var data: String {
@@ -26,7 +44,7 @@ struct UsedCardView: View {
     var body: some View {
         ItemCardView(
             style: .mini,
-            subtitle: "USED",
+            subtitle: subtitle,
             verticalSpacing: 5,
             isToggleOn: .constant(false),
             width: width
@@ -80,16 +98,29 @@ struct UsedCardView: View {
 
 // MARK: - Preview
 struct UsedCardView_Previews: PreviewProvider {
-    static var appViewModel: AppViewModel = .init()
+    static var appViewModel: AppViewModel = TestData.createAppViewModel()
     
     static var previews: some View {
-        UsedCardView(
-            usedData: 0.13,
-            maxData: 0.3,
-            dataUnit: appViewModel.unit,
-            width: 150
-        )
-            .previewLayout(.sizeThatFits)
-            .padding()
+        Group {
+            UsedCardView(
+                usedData: 0.13,
+                maxData: 0.3,
+                fillUsageType: .accumulate,
+                dataUnit: appViewModel.unit,
+                width: 150
+            )
+            .previewDisplayName("Accumulate")
+            
+            UsedCardView(
+                usedData: 0.13,
+                maxData: 0.3,
+                fillUsageType: .deduct,
+                dataUnit: appViewModel.unit,
+                width: 150
+            )
+            .previewDisplayName("Deduct")
+        }
+        .previewLayout(.sizeThatFits)
+        .padding()
     }
 }

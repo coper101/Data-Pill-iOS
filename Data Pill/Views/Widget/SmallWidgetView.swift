@@ -23,6 +23,7 @@ enum SmallWidgetSize: Int, Identifiable, CaseIterable {
 
 struct SmallWidgetView: View {
     // MARK: - Props
+    var fillUsageType: FillUsage
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
@@ -31,7 +32,15 @@ struct SmallWidgetView: View {
     var color: Color
     
     var percentageUsed: Int {
-        usedData.toPercentage(with: maxData)
+        let percentageUsed = usedData.toPercentage(with: maxData)
+        let percentageRemaining = 100 - percentageUsed
+        
+        switch fillUsageType {
+        case .accumulate:
+            return percentageUsed
+        case .deduct:
+            return percentageRemaining
+        }
     }
     
     var data: String {
@@ -165,6 +174,7 @@ struct SmallWidgetView_Previews: PreviewProvider {
         ForEach(SmallWidgetSize.allCases) { size in
             let theSize = CGFloat(size.rawValue)
             SmallWidgetView(
+                fillUsageType: .accumulate,
                 usedData: 0.09,
                 maxData: 0.9,
                 dataUnit: .gb,

@@ -117,7 +117,15 @@ final class AppViewModel: ObservableObject {
     }
     
     var dataUsedInPercentage: Int {
-        usedData.toPercentage(with: maxData)
+        let percentageUsed = usedData.toPercentage(with: maxData)
+        let percentageRemaining = 100 - percentageUsed
+        
+        switch fillUsageType {
+        case .accumulate:
+            return percentageUsed
+        case .deduct:
+            return percentageRemaining
+        }
     }
     
     // MARK: - UI
