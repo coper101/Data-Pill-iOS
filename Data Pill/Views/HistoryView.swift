@@ -18,6 +18,7 @@ struct HistoryView: View {
     var dataLimitPerDay: Double
     var usageType: ToggleItem
     
+    var hasLabel: Bool = true
     var showFilledLines: Bool = false
     var closeAction: () -> Void
     
@@ -83,6 +84,7 @@ struct HistoryView: View {
                             percentage: data.dailyUsedData.toGB()
                                 .toPercentage(with: dataLimitPerDay),
                             usageType: usageType,
+                            hasLabel: hasLabel,
                             hasBackground: isFirstPill && showFilledLines,
                             showFillLine: showFilledLines,
                             hasPillOutline: isFirstPill && showFilledLines, /// show for first pill only - Sunday

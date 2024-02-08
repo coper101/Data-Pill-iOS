@@ -40,6 +40,7 @@ struct PillGroupView: View {
                         color: appViewModel.todaysColor,
                         percentage: appViewModel.dataUsedInPercentage,
                         date: todaysDate,
+                        hasLabel: appViewModel.labelsInDaily,
                         usageType: appViewModel.usageType,
                         customSize: .init(
                             width: dimensions.pillWidth,
@@ -149,7 +150,6 @@ struct PillGroupView: View {
             
         } //: VStack
         .padding(.horizontal, dimensions.horizontalPadding)
-        //        .padding(.vertical, dimensions.horizontalPadding)
     }
     
     // MARK: - Actions

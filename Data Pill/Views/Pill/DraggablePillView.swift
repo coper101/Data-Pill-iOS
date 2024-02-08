@@ -18,9 +18,10 @@ struct DraggablePillView: View {
     var percentage: Int
     var usageType: ToggleItem
     
-    var hasBackground = false
-    var showFillLine = false
-    var hasPillOutline = false /// for tracking pill outline
+    var hasLabel: Bool = true
+    var hasBackground: Bool = false
+    var showFillLine: Bool = false
+    var hasPillOutline: Bool = false /// for tracking pill outline
     
     var widthScale: CGFloat = 0.45
     
@@ -63,11 +64,13 @@ struct DraggablePillView: View {
     
     var body: some View {
         ZStack {
+            
             PillView(
                 color: color,
                 percentage: percentage,
                 date: date,
                 hasBackground: hasBackground,
+                hasLabel: hasLabel,
                 usageType: usageType,
                 widthScale: widthScale,
                 showFillLine: showFillLine,
@@ -79,8 +82,8 @@ struct DraggablePillView: View {
             .`if`(!showFillLine) { view in
                 view.gesture(drag)
             }
-        }
-        
+            
+        } //: ZStack
     }
     
     // MARK: - Actions

@@ -214,6 +214,7 @@ struct AppView: View {
                     weekData: appViewModel.thisWeeksData,
                     dataLimitPerDay: appViewModel.dataLimitPerDay,
                     usageType: appViewModel.usageType,
+                    hasLabel: appViewModel.labelsInWeekly,
                     showFilledLines: appViewModel.isLongPressedOutside,
                     closeAction: closeAction
                 )
