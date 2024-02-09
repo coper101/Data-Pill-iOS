@@ -32,19 +32,18 @@ struct SmallWidgetView: View {
     var color: Color
     
     var percentageUsed: Int {
-        let percentageUsed = usedData.toPercentage(with: maxData)
-        let percentageRemaining = 100 - percentageUsed
-        
-        switch fillUsageType {
-        case .accumulate:
-            return percentageUsed
-        case .deduct:
-            return percentageRemaining
-        }
+        usedData.displayedUsageInPercentage(
+            maxData: maxData,
+            fillUsageType: fillUsageType
+        )
     }
     
-    var data: String {
-        "\(usedData.toDp(n: 2)) / \(maxData.toDp(n: 2))"
+    var dataUsed: String {
+        usedData.displayedUsage(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: dataUnit
+        )
     }
     
     // MARK: - UI
@@ -108,7 +107,7 @@ struct SmallWidgetView: View {
                     .padding(.top, 7)
                                     
                     // Row 2: DATA USED
-                    Text(verbatim: "\(data) \(showUnit ? dataUnit.rawValue : "")")
+                    Text(verbatim: dataUsed)
                         .multilineTextAlignment(.trailing)
                         .textStyle(
                             foregroundColor: .onSurface,

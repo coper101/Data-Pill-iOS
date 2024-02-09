@@ -43,15 +43,18 @@ struct RectangularWidgetView: View {
     var color: Color
     
     var percentageUsed: Int {
-        let percentageUsed = usedData.toPercentage(with: maxData)
-        let percentageRemaining = 100 - percentageUsed
-        
-        switch fillUsageType {
-        case .accumulate:
-            return percentageUsed
-        case .deduct:
-            return percentageRemaining
-        }
+        usedData.displayedUsageInPercentage(
+            maxData: maxData,
+            fillUsageType: fillUsageType
+        )
+    }
+    
+    var dataUsed: String {
+        usedData.calculateUsedData(fillUsageType: fillUsageType).toDp(n: 4)
+    }
+    
+    var dataMax: String {
+        maxData.toDp(n: 4)
     }
     
     // MARK: - UI
@@ -103,7 +106,7 @@ struct RectangularWidgetView: View {
                 ) {
                     
                     // Row 1: DATA USED
-                    Text(verbatim: "\(usedData.toDp(n: 4))")
+                    Text(verbatim: dataUsed)
                         .textStyle(
                             foregroundColor: .widgetTint,
                             font: .bold,
@@ -114,7 +117,7 @@ struct RectangularWidgetView: View {
                     // Row 2: SUBTITLE
                     HStack(spacing: 3) {
                         
-                        Text(verbatim: "\(maxData.toDp(n: 4))")
+                        Text(verbatim: dataMax)
                             
                         Text(dataUnit.rawValue)
                             .kerning(1.0)

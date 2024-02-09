@@ -147,7 +147,7 @@ extension Double {
         }
         return percentage
     }
-    
+        
     /// Convert decimal number from MB to GB
     /// no changes for unit that is not MB
     /// - Parameter unit: A value to specify the current unit to convet from
@@ -176,6 +176,38 @@ extension Double {
             return 0
         }
         return self * 1_000_000
+    }
+    
+    /// Calculate the used amount based on `FillUsage` type
+    func calculateUsedData(fillUsageType: FillUsage) -> Double {
+        let usedData = self
+        switch fillUsageType {
+        case .accumulate:
+            return usedData
+        case .deduct:
+            return 100 - usedData
+        }
+    }
+    
+    /// Displayed used amount over max amount (limit)
+    func displayedUsage(maxData: Double, fillUsageType: FillUsage, dataUnit: Unit) -> String {
+        let used = self.calculateUsedData(fillUsageType: fillUsageType).toDp(n: 2)
+        var max = maxData.toDp(n: 2)
+        return "\(used) / \(max) \(dataUnit.rawValue)"
+    }
+    
+    /// Displayed used amount in percentage
+    func displayedUsageInPercentage(maxData: Double, fillUsageType: FillUsage) -> Int {
+        let usedData = self
+        let percentageUsed = usedData.toPercentage(with: maxData)
+        let percentageRemaining = 100 - percentageUsed
+
+        switch fillUsageType {
+        case .accumulate:
+            return percentageUsed
+        case .deduct:
+            return percentageRemaining
+        }
     }
 }
 

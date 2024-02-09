@@ -62,7 +62,7 @@ struct PillGroupView: View {
                     
                     VStack(spacing: 0) {
                         
-                        // USED or REMAINING
+                        // USED or LEFT
                         UsedCardView(
                             usedData: appViewModel.usedData,
                             maxData: appViewModel.maxData,

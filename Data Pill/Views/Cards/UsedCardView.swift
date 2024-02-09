@@ -15,16 +15,20 @@ struct UsedCardView: View {
     var dataUnit: Unit
     var width: CGFloat
     
-    var percentageUsed: Int {
-        let percentageUsed = usedData.toPercentage(with: maxData)
-        let percentageRemaining = 100 - percentageUsed
-        
-        switch fillUsageType {
-        case .accumulate:
-            return percentageUsed
-        case .deduct:
-            return percentageRemaining
-        }
+    var percentageUsed: String {
+        let percentage = usedData.displayedUsageInPercentage(
+            maxData: maxData,
+            fillUsageType: fillUsageType
+        )
+        return "\(percentage)"
+    }
+    
+    var dataUsed: String {
+        usedData.displayedUsage(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: dataUnit
+        )
     }
     
     var subtitle: LocalizedStringKey {
@@ -34,10 +38,6 @@ struct UsedCardView: View {
         case .deduct:
             return "LEFT"
         }
-    }
-    
-    var data: String {
-        "\(usedData.toDp(n: 2)) / \(maxData.toDp(n: 2)) \(dataUnit.rawValue)"
     }
         
     // MARK: - UI
@@ -56,7 +56,7 @@ struct UsedCardView: View {
                 spacing: 0
             ) {
                 
-                Text(verbatim: "\(percentageUsed)")
+                Text(verbatim: percentageUsed)
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .semibold,
@@ -77,7 +77,7 @@ struct UsedCardView: View {
             } //: HStack
             
             // Row 2: DATA
-            Text(verbatim: "\(data)")
+            Text(verbatim: dataUsed)
                 .textStyle(
                     foregroundColor: .onSurface,
                     font: .semibold,
@@ -86,7 +86,7 @@ struct UsedCardView: View {
                 )
                 .opacity(0.5)
                 .padding(.bottom, 10)
-                .id(data)
+                .id(dataUsed)
                 .accessibilityLabel(AccessibilityLabels.dataUsedAmount.rawValue)
             
         } //: ItemCardView
