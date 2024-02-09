@@ -12,6 +12,7 @@ enum Icons: String {
     case bugIcon = "Bug"
     case closeIcon = "X Mark Icon"
     case deleteIcon = "Delete"
+    case dataPacket = "Data Packet"
     case moonIcon = "Moon"
     case fileIcon = "File"
     case minusIcon = "Minus"

@@ -114,6 +114,20 @@ struct SettingsView: View {
                             title: "Show All Records",
                             icon: .fileIcon,
                             iconColor: .secondaryGreen,
+                            hasDivider: true,
+                            action: {}
+                        ) {
+                            
+                        } //: SettingsRowView
+                        
+                    }
+                    
+                    NavigationLink(destination: EditDataUnitView()) {
+                        
+                        SettingsRowView(
+                            title: "Data Unit",
+                            icon: .dataPacket,
+                            iconColor: .secondaryGreen,
                             action: {}
                         ) {
                             
