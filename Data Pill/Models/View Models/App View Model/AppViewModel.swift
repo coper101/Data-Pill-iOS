@@ -123,6 +123,14 @@ final class AppViewModel: ObservableObject {
         )
     }
     
+    var dataUsed: String {
+        usedData.displayedUsage(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: unit
+        )
+    }
+    
     // MARK: - UI
     @Published var isGuideShown = false
     @Published var isPlanActive = false

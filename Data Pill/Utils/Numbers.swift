@@ -178,25 +178,44 @@ extension Double {
         return self * 1_000_000
     }
     
-    /// Calculate the used amount based on `FillUsage` type
-    func calculateUsedData(fillUsageType: FillUsage) -> Double {
+    /// Calculate the used amount (GB) based on `FillUsage` type
+    func calculateUsedData(maxData: Double, fillUsageType: FillUsage, dataUnit: Unit) -> Double {
         let usedData = self
+        var result: Double = 0
         switch fillUsageType {
         case .accumulate:
-            return usedData
+            result = usedData
         case .deduct:
-            return 100 - usedData
+            result = maxData - usedData
+        }
+        switch dataUnit {
+        case .gb:
+            return result
+        case .mb:
+            return result.toMB()
         }
     }
     
-    /// Displayed used amount over max amount (limit)
+    /// Displayed used amount (GB) over max amount (GB limit)
     func displayedUsage(maxData: Double, fillUsageType: FillUsage, dataUnit: Unit) -> String {
-        let used = self.calculateUsedData(fillUsageType: fillUsageType).toDp(n: 2)
-        var max = maxData.toDp(n: 2)
-        return "\(used) / \(max) \(dataUnit.rawValue)"
+        var used = self.calculateUsedData(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: dataUnit
+        )
+        var max = maxData
+        
+        switch dataUnit {
+        case .gb:
+            break
+        case .mb:
+            max = max.toMB()
+        }
+        
+        return "\(used.toDp(n: 2)) / \(max.toDp(n: 2)) \(dataUnit.rawValue)"
     }
     
-    /// Displayed used amount in percentage
+    /// Displayed used amount (GB) in percentage
     func displayedUsageInPercentage(maxData: Double, fillUsageType: FillUsage) -> Int {
         let usedData = self
         let percentageUsed = usedData.toPercentage(with: maxData)

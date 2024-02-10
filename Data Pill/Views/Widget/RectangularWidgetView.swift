@@ -50,7 +50,11 @@ struct RectangularWidgetView: View {
     }
     
     var dataUsed: String {
-        usedData.calculateUsedData(fillUsageType: fillUsageType).toDp(n: 4)
+        usedData.calculateUsedData(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: dataUnit
+        ).toDp(n: 4)
     }
     
     var dataMax: String {

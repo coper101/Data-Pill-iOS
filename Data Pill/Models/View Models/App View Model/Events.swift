@@ -601,4 +601,9 @@ extension AppViewModel {
     func didEditDayColor(day: Day, color: Color) {
         dayColors[day] = color
     }
+    
+    // MARK: Data Unit
+    func didEditUnit(unit: Unit) {
+        self.unit = unit
+    }
 }
