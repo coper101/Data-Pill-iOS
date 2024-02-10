@@ -50,15 +50,26 @@ struct RectangularWidgetView: View {
     }
     
     var dataUsed: String {
-        usedData.calculateUsedData(
+        let amount = usedData.calculateUsedData(
             maxData: maxData,
             fillUsageType: fillUsageType,
             dataUnit: dataUnit
-        ).toDp(n: 4)
+        )
+        return Self.setDp(amount: amount, dataUnit: dataUnit)
     }
     
     var dataMax: String {
-        maxData.toDp(n: 4)
+        let amount = maxData.calculateMaxData(dataUnit: dataUnit)
+        return Self.setDp(amount: amount, dataUnit: dataUnit)
+    }
+    
+    static func setDp(amount: Double, dataUnit: Unit) -> String {
+        switch dataUnit {
+        case .gb:
+            return amount.toDp(n: 2)
+        case .mb:
+            return amount.toDp(n: 0)
+        }
     }
     
     // MARK: - UI
@@ -162,14 +173,17 @@ struct RectangularWidgetView: View {
 
 // MARK: - Preview
 struct RectangularWidgetView_Previews: PreviewProvider {
+    static let usedData = 1.123456 /// 1,123 MB (whole number only), 1.12 GB (2 dp max)
+    static let maxData = 5.123456 /// 5,123 MB  (whole number only), 5.12 (2dp max)
+    
     static var previews: some View {
         ForEach(RectangularWidgetSize.allCases) { widgetSize in
             let size = widgetSize.size
             if #available(iOS 16.0, *) {
                 RectangularWidgetView(
                     fillUsageType: .accumulate,
-                    usedData: 0.3334,
-                    maxData: 0.99,
+                    usedData: usedData,
+                    maxData: maxData,
                     dataUnit: .gb,
                     subtitle: "Mon",
                     color: Colors.secondaryBlue.color

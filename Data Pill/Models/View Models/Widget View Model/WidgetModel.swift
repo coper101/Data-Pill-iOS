@@ -125,10 +125,6 @@ final class WidgetModel {
 extension WidgetModel {
     
     func republishAppData() {
-        appDataRepository.unitPublisher
-            .sink { [weak self] in self?.unit = $0 }
-            .store(in: &cancellables)
-        
         /// Settings
         appDataRepository.dayColorsPublisher
             .sink { [weak self] dayColors in
@@ -142,6 +138,10 @@ extension WidgetModel {
         
         appDataRepository.fillUsageTypePublisher
             .sink { [weak self] in self?.fillUsageType = $0 }
+            .store(in: &cancellables)
+        
+        appDataRepository.dataUnitPublisher
+            .sink { [weak self] in self?.unit = $0 }
             .store(in: &cancellables)
     }
     

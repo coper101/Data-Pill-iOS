@@ -82,7 +82,7 @@ struct UsedCardView: View {
                     foregroundColor: .onSurface,
                     font: .semibold,
                     size: 14,
-                    lineLimit: 1
+                    lineLimit: 2
                 )
                 .opacity(0.5)
                 .padding(.bottom, 10)
@@ -98,25 +98,28 @@ struct UsedCardView: View {
 
 // MARK: - Preview
 struct UsedCardView_Previews: PreviewProvider {
-    static var appViewModel: AppViewModel = TestData.createAppViewModel()
+    static var dataUnit: Unit = .mb
+    
+    static let usedData = 1.123456 /// 1,123 MB (whole number only), 1.12 GB (2 dp max)
+    static let maxData = 5.123456 /// 5,123 MB  (whole number only), 5.12 (2dp max)
     
     static var previews: some View {
         Group {
             UsedCardView(
-                usedData: 0.13,
-                maxData: 0.3,
+                usedData: usedData,
+                maxData: maxData,
                 fillUsageType: .accumulate,
-                dataUnit: appViewModel.unit,
-                width: 150
+                dataUnit: dataUnit,
+                width: 100
             )
             .previewDisplayName("Accumulate")
             
             UsedCardView(
-                usedData: 0.13,
-                maxData: 0.3,
+                usedData: usedData,
+                maxData: maxData,
                 fillUsageType: .deduct,
-                dataUnit: appViewModel.unit,
-                width: 150
+                dataUnit: dataUnit,
+                width: 100
             )
             .previewDisplayName("Deduct")
         }

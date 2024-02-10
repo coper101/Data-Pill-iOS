@@ -136,5 +136,12 @@ extension AppViewModel {
                 self?.didTapNotification(enabled: $0)
             }
             .store(in: &cancellables)
+        
+        /// - Data
+        $unit
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] in self?.appDataRepository.setDataUnit($0) }
+            .store(in: &cancellables)
     }
 }

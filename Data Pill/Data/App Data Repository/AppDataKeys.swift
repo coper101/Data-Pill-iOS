@@ -47,4 +47,6 @@ enum Keys: String {
     case todaysLastNotificationDate = "Todays_Last_Notification_Date"
     case planLastNotificationDate = "Plan_Last_Notification_Date"
     
+    /// - Data
+    case dataUnitType = "Data_Unit_Type"
 }

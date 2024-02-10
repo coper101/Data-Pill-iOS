@@ -26,10 +26,6 @@ extension AppViewModel {
             .sink { [weak self] in self?.isPeriodAuto = $0 }
             .store(in: &cancellables)
         
-        appDataRepository.unitPublisher
-            .sink { [weak self] in self?.unit = $0 }
-            .store(in: &cancellables)
-        
         appDataRepository.dataPlusStepperValuePublisher
             .sink { [weak self] in self?.dataPlusStepperValue = $0 }
             .store(in: &cancellables)
@@ -101,6 +97,11 @@ extension AppViewModel {
         
         appDataRepository.planLastNotificationDatePublisher
             .sink { [weak self] in self?.planLastNotificationDate = $0 }
+            .store(in: &cancellables)
+        
+        /// - Data
+        appDataRepository.dataUnitPublisher
+            .sink { [weak self] in self?.unit = $0 }
             .store(in: &cancellables)
     }
     

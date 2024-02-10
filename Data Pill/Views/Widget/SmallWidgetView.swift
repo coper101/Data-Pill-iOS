@@ -51,7 +51,6 @@ struct SmallWidgetView: View {
         GeometryReader { reader in
             let height = reader.size.height
             let width = reader.size.width
-            let showUnit = showUnit(width)
             
             HStack(
                 alignment: .center,
@@ -169,13 +168,16 @@ struct SmallWidgetView: View {
 
 // MARK: - Preview
 struct SmallWidgetView_Previews: PreviewProvider {
+    static let usedData = 1.123456 /// 1,123 MB (whole number only), 1.12 GB (2 dp max)
+    static let maxData = 5.123456 /// 5,123 MB  (whole number only), 5.12 (2dp max)
+    
     static var previews: some View {
         ForEach(SmallWidgetSize.allCases) { size in
             let theSize = CGFloat(size.rawValue)
             SmallWidgetView(
                 fillUsageType: .accumulate,
-                usedData: 0.09,
-                maxData: 0.9,
+                usedData: usedData,
+                maxData: maxData,
                 dataUnit: .gb,
                 localizedSubtitle: "Today",
                 subtitle: "Today",

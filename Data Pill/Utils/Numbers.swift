@@ -179,6 +179,7 @@ extension Double {
     }
     
     /// Calculate the used amount (GB) based on `FillUsage` type
+    /// - converts to MB based on `Unit`
     func calculateUsedData(maxData: Double, fillUsageType: FillUsage, dataUnit: Unit) -> Double {
         let usedData = self
         var result: Double = 0
@@ -196,23 +197,33 @@ extension Double {
         }
     }
     
+    /// Calculate the max amount (GB)
+    /// - converts to MB based on `Unit`
+    func calculateMaxData(dataUnit: Unit) -> Double {
+        let max = self
+        switch dataUnit {
+        case .gb:
+            return max
+        case .mb:
+            return max.toMB()
+        }
+    }
+    
     /// Displayed used amount (GB) over max amount (GB limit)
     func displayedUsage(maxData: Double, fillUsageType: FillUsage, dataUnit: Unit) -> String {
-        var used = self.calculateUsedData(
+        let used = self.calculateUsedData(
             maxData: maxData,
             fillUsageType: fillUsageType,
             dataUnit: dataUnit
         )
-        var max = maxData
+        let max = maxData.calculateMaxData(dataUnit: dataUnit)
         
         switch dataUnit {
         case .gb:
-            break
+            return "\(used.toDp(n: 2)) / \(max.toDp(n: 2)) \(dataUnit.rawValue)"
         case .mb:
-            max = max.toMB()
+            return "\(used.toDp(n: 0)) / \(max.toDp(n: 0)) \(dataUnit.rawValue)"
         }
-        
-        return "\(used.toDp(n: 2)) / \(max.toDp(n: 2)) \(dataUnit.rawValue)"
     }
     
     /// Displayed used amount (GB) in percentage
