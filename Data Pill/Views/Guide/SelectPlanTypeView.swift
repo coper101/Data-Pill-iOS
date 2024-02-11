@@ -7,15 +7,108 @@
 
 import SwiftUI
 
+struct PlanSample {
+    let name: String
+    let amount: Int
+    let price: Int
+    let tint: Colors
+}
+
+struct PlanSampleView: View {
+    // MARK: - Props
+    var plan: PlanSample
+    
+    // MARK: - UI
+    var body: some View {
+        ZStack {
+            
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Colors.shadow.color)
+                .frame(width: 180, height: 224)
+                .offset(x: 13, y: 12)
+            
+            VStack(spacing: 0) {
+                                            
+                // MARK: PLAN NAME
+                Text(plan.name.uppercased())
+                    .textStyle(
+                        foregroundColor: plan.tint,
+                        font: .bold,
+                        size: 16
+                    )
+                    .padding(.top, 16)
+                
+                Spacer()
+                
+                // MARK: AMOUNT
+                HStack(alignment: .bottom, spacing: 6) {
+                    
+                    Text("\(plan.amount)")
+                        .textStyle(
+                            foregroundColor: plan.tint,
+                            font: .bold,
+                            size: 38
+                        )
+                    
+                    Text("GB")
+                        .textStyle(
+                            foregroundColor: plan.tint,
+                            font: .bold,
+                            size: 28
+                        )
+                        .alignmentGuide(.bottom) { $0.height + 2}
+                    
+                } //: HStack
+                
+                // MARK: PRICE
+                Text("$\(plan.price) / month")
+                    .textStyle(
+                        foregroundColor: plan.tint,
+                        font: .semibold,
+                        size: 18
+                    )
+                    .padding(.top, 16)
+                
+                Spacer()
+                
+            } //: VStack
+            .frame(width: 180, height: 218)
+            .background(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 15))
+            
+        } //: ZStack
+        .frame(width: 180 + 30, height: 224 + 30)
+    }
+    
+    // MARK: - Actions
+}
+
+
 struct SelectPlanTypeView: View {
     // MARK: - Props
-    @State private var titleOpacity = 0.2
-    @State private var descriptionOpacity = 0.2
-    @State private var yepButtonOpacity = 0.2
-    @State private var nopeButtonOpacity = 0.2
-    
     var planAction: Action
     var nonPlanAction: Action
+    
+    let planSamples: [PlanSample] = [
+        .init(
+            name: "Basic",
+            amount: 10,
+            price: 10,
+            tint: .secondaryGreen
+        ),
+        .init(
+            name: "Pro",
+            amount: 25,
+            price: 15,
+            tint: .secondaryOrange
+        ),
+        .init(
+            name: "Premium",
+            amount: 50,
+            price: 25,
+            tint: .secondaryBlue
+        )
+    ]
     
     // MARK: - UI
     var body: some View {
@@ -24,71 +117,56 @@ struct SelectPlanTypeView: View {
             spacing: 28
         ) {
             
-            // Row 1:
+            // MARK: TITLE
             Text(
                 "Do you have a Data Plan?",
                 comment: "Prompt user to select if they have a data plan in User Guide"
             )
-                .textStyle(
-                    foregroundColor: .onBackground,
-                    font: .semibold,
-                    size: 20
-                )
-                .opacity(titleOpacity)
-            
-            // Row 2:
-            Text(
-                "A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. ",
-                comment: "An explanation of the Data Plan"
+            .textStyle(
+                foregroundColor: .onSecondary,
+                font: .semibold,
+                size: 22
             )
-                .textStyle(
-                    foregroundColor: .onBackground,
-                    font: .semibold,
-                    size: 20,
-                    lineLimit: 20,
-                    lineSpacing: 3
-                )
-                .opacity(descriptionOpacity)
+            .padding(.horizontal, 28)
             
-            // Row 3: SELECTION
+            // MARK: ILLUSTRATIONS
+            ScrollView(.horizontal, showsIndicators: false) {
+                
+                HStack(spacing: 10) {
+                    
+                    ForEach(planSamples, id: \.name) { plan in
+                        
+                        PlanSampleView(plan: plan)
+                    }
+                    
+                } //: HStack
+                .padding(.horizontal, 12)
+                
+            } //: ScrollView
+                        
+            // MARK: ACTIONS
             Spacer(minLength: 0)
             
-            VStack(spacing: 14) {
+            HStack(spacing: 18) {
                 
                 LargeButtonView(
                     title: "Yep",
+                    hasOutline: true,
                     id: "Yep",
                     action: planAction
                 )
-                .opacity(yepButtonOpacity)
                 
                 LargeButtonView(
                     title: "Nope",
                     id: "Nope",
                     action: nonPlanAction
                 )
-                .opacity(nopeButtonOpacity)
 
             } //: VStack
             .fillMaxWidth()
+            .padding(.horizontal, 28)
             
         } //: VStack
-        .onAppear {
-            titleOpacity = 1.0
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                withAnimation(.easeIn(duration: 0.5)) {
-                    descriptionOpacity = 1.0
-                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
-                withAnimation(.easeIn(duration: 0.8)) {
-                    yepButtonOpacity = 1.0
-                }
-                withAnimation(.easeIn(duration: 1.0).delay(0.8)) {
-                    nopeButtonOpacity = 1.0
-                }
-            }
-        }
     }
     
     // MARK: - Actions
@@ -101,6 +179,8 @@ struct SelectPlanTypeView_Previews: PreviewProvider {
             planAction: {},
             nonPlanAction: {}
         )
-            .previewLayout(.sizeThatFits)
+        .previewLayout(.sizeThatFits)
+        .padding(.vertical, 21)
+        .background(Colors.secondaryBlue.color)
     }
 }

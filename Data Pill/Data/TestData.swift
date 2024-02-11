@@ -11,7 +11,8 @@ class TestData {
     
     // MARK: - Dependencies
     static func createAppViewModel(
-        activeSettingsScreen: SettingsScreen? = nil
+        activeSettingsScreen: SettingsScreen? = nil,
+        wasGuideShown: Bool = true
     ) -> AppViewModel {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
@@ -70,11 +71,15 @@ class TestData {
             updateToLatestPlanAfterwards: true
         )
         
+        let appDataRepository = AppDataRepository()
+        appDataRepository.setWasGuideShown(wasGuideShown)
+        
         let viewModel = AppViewModel(
+            appDataRepository: appDataRepository,
             dataUsageRepository: dataRepo,
             dataUsageRemoteRepository: MockSuccessDataUsageRemoteRepository()
         )
-        
+                
         viewModel.activeSettingsScreen = activeSettingsScreen
         
         /// Update created Today's Data (added automatically by app)

@@ -456,15 +456,19 @@ struct AppView_Previews: PreviewProvider {
         let viewModel = AppViewModel(dataUsageRepository: dataRepo)
         return viewModel
     }
-    
-    static var appViewModel = TestData.createAppViewModel()
-    
+        
     static var previews: some View {
         AppView()
             .previewLayout(.sizeThatFits)
-            .environmentObject(appViewModel)
+            .environmentObject(TestData.createAppViewModel())
             .padding(.top, 20)
-            .previewDisplayName("Working App")
+            .previewDisplayName("Existing User")
+        
+        AppView()
+            .previewLayout(.sizeThatFits)
+            .environmentObject(TestData.createAppViewModel(wasGuideShown: false))
+            .padding(.top, 20)
+            .previewDisplayName("New User")
 
         AppView()
             .previewLayout(.sizeThatFits)

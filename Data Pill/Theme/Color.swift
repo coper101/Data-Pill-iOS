@@ -31,6 +31,9 @@ enum Colors: String {
     case widgetBackground = "Widget Background"
     case widgetTint = "Widget Tint"
     
+    case shadow = "Shadow"
+    case shadowDark = "Shadow Dark"
+    
     // Day Pill
     case secondaryBlue = "Secondary Blue"
     case secondaryBrown = "Secondary Brown"

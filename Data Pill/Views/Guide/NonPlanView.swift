@@ -9,41 +9,20 @@ import SwiftUI
 
 struct NonPlanView: View {
     // MARK: - Props
-    @State private var titleOpacity = 0.2
-    @State private var descriptionOpacity = 0.2
-    @State private var buttonOpacity = 0.5
-    @State private var planCardOpacity = 0.5
-    @State private var isPlanActive = false
-    
     var startAction: Action
+    
+    @State private var isPlanActive = false
     
     // MARK: - UI
     var body: some View {
         VStack(
             alignment: .leading,
-            spacing: 28
+            spacing: 38
         ) {
-            
-            // Row 1: TITLE SELECTION
-            Text(
-                "Nope.",
-                comment: "Title to indicate the user doesn't have a Data Plan"
-            )
-                .textStyle(
-                    foregroundColor: .onBackground,
-                    font: .semibold,
-                    size: 20
-                )
-                .opacity(titleOpacity)
-                .animation(
-                    .easeIn(duration: 0.5),
-                    value: titleOpacity
-                )
-            
-            // Row 2: DESCRIPTION
+            // MARK: DESCRIPTION
             VStack(
                 alignment: .leading,
-                spacing: 19
+                spacing: 28
             ) {
                 
                 Text(
@@ -58,70 +37,55 @@ struct NonPlanView: View {
                     
             } //: VStack
             .textStyle(
-                foregroundColor: .onBackground,
+                foregroundColor: .onSecondary,
                 font: .semibold,
                 size: 20,
                 lineLimit: 10,
-                lineSpacing: 3
+                lineSpacing: 5
             )
-            .opacity(descriptionOpacity)
             
-            // Row 3: VISUAL GUIDE
-            DataPlanCardView(
-                editType: nil,
-                startDate: .init(),
-                endDate: Calendar.current.date(byAdding: .day, value: 30, to: .init())!,
-                numberOfdays: 30,
-                periodAction: {},
-                dataAmountAction: {},
-                startPeriodAction: {},
-                endPeriodAction: {},
-                isPlanActive: $isPlanActive,
-                dataAmountValue: .constant("20"),
-                dataAmount: 20,
-                plusDataAction: {},
-                minusDataAction: {},
-                didChangePlusStepperValue: { _ in },
-                didChangeMinusStepperValue: { _ in }
-            )
-            .disabled(true)
-            .cardShadow(scheme: .light)
+            // MARK: ILLUSTRATION
+            ZStack(alignment: .top) {
+                
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Colors.shadowDark.color)
+                    .fillMaxWidth()
+                    .frame(height: isPlanActive ? 152 : 56)
+                    .offset(x: 11, y: 12)
+                
+                DataPlanCardView(
+                    editType: nil,
+                    startDate: .init(),
+                    endDate: Calendar.current.date(byAdding: .day, value: 30, to: .init())!,
+                    numberOfdays: 30,
+                    periodAction: {},
+                    dataAmountAction: {},
+                    startPeriodAction: {},
+                    endPeriodAction: {},
+                    isPlanActive: $isPlanActive,
+                    dataAmountValue: .constant("20"),
+                    dataAmount: 20,
+                    activeColor: .secondaryGreen,
+                    plusDataAction: {},
+                    minusDataAction: {},
+                    didChangePlusStepperValue: { _ in },
+                    didChangeMinusStepperValue: { _ in }
+                )
+                .disabled(true)
+            }
             .padding(.top, 16)
-            .opacity(planCardOpacity)
            
-            // Row 4: ACTION
+            // MARK: ACTION
             Spacer()
 
-            ButtonView(
-                type: .start,
-                fullWidth: true
-            ) { _ in
-                startAction()
-            }
-            .fillMaxWidth()
-            .opacity(buttonOpacity)
+            StartButtonView(action: startAction)
             
         } //: VStack
+        .padding(.horizontal, 28)
         .onAppear {
-            titleOpacity = 1.0
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                withAnimation(.easeIn(duration: 0.5)) {
-                    descriptionOpacity = 1.0
-                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 7.0) {
-                withAnimation(.easeIn(duration: 1.0)) {
-                    planCardOpacity = 1.0
-                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 9.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 withAnimation {
-                    isPlanActive.toggle()
-                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 11.0) {
-                withAnimation(.easeIn(duration: 1.5)) {
-                    buttonOpacity = 1.0
+                    isPlanActive = true
                 }
             }
         }
@@ -135,5 +99,7 @@ struct NonPlanView_Previews: PreviewProvider {
     static var previews: some View {
         NonPlanView(startAction: {})
             .previewLayout(.sizeThatFits)
+            .padding(.vertical, 21)
+            .background(Colors.secondaryBlue.color)
     }
 }

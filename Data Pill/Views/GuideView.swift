@@ -16,6 +16,7 @@ enum Step {
 struct GuideView: View {
     // MARK: - Props
     @EnvironmentObject var appViewModel: AppViewModel
+    @Environment(\.dimensions) var dimensions: Dimensions
     @State var step = Step.selectPlan
     
     // MARK: - UI
@@ -25,47 +26,80 @@ struct GuideView: View {
             spacing: 0
         ) {
             
-            // Row 1: HEADER
-            Text(
-                "Get Started",
-                comment: "Header for user guide for first time users"
-            )
-                .textStyle(
-                    foregroundColor: Colors.onBackground,
-                    font: .semibold,
-                    size: 28
-                )
-                .padding(.top, 31)
-                .padding(.bottom, 42)
+            // MARK: HEADER
+            Group {
+                
+                switch step {
+                case .selectPlan:
+                    Text(
+                        "Get Started",
+                        comment: "Header for user guide for first time users"
+                    )
+                case .plan:
+                    Text(
+                        "Great!",
+                        comment: ""
+                    )
+                case .nonPlan:
+                    Text(
+                        "No Worries!",
+                        comment: ""
+                    )
+                }
+            }
+            .textStyle(
+                foregroundColor: Colors.onSecondary,
+                font: .bold,
+                size: 32
+            )        
+            .padding(.top, 31)
+            .padding(.bottom, 42)
+            .padding(.horizontal, 28)
             
-            // Row 2: CONTENT
+            // MARK: CONTENT
             switch step {
             case .selectPlan:
                 SelectPlanTypeView(
                     planAction: didTapPlan,
                     nonPlanAction: didTapNonPlan
                 )
+                .transition(.opacity)
             case .plan:
                 PlanView(startAction: didTapStartPlan)
+                    .transition(.opacity)
             case .nonPlan:
                 NonPlanView(startAction: didTapStartNonPlan)
+                    .transition(.opacity)
             }
             
         } //: VStack
-        .padding(.bottom, 24)
-        .padding(.horizontal, 28)
         .fillMaxWidth()
+        .padding(.bottom, 24 + dimensions.insets.bottom)
+        .background(
+            ZStack {
+                
+                Colors.secondaryBlue.color
+                
+                LinearGradient(
+                    colors: [Color.white.opacity(0.1), Color.white.opacity(0)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                
+            } //: ZStack
+        )
+        .ignoresSafeArea(.container, edges: .bottom)
     }
     
     // MARK: - Actions
     func didTapPlan() {
-        withAnimation(.easeOut(duration: 0.5)) {
+        withAnimation(.linear(duration: 0.2)) {
             step = .plan
         }
     }
     
     func didTapNonPlan() {
-        withAnimation(.easeOut(duration: 0.5)) {
+        withAnimation(.linear(duration: 0.2)) {
             step = .nonPlan
         }
     }
@@ -84,6 +118,6 @@ struct GuideView_Previews: PreviewProvider {
     static var previews: some View {
         GuideView()
             .previewLayout(.sizeThatFits)
-            .environmentObject(AppViewModel())
+            .environmentObject(TestData.createAppViewModel())
     }
 }

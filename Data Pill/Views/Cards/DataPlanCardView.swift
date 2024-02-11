@@ -30,6 +30,7 @@ struct DataPlanCardView: View {
     @Binding var dataAmountValue: String
     var dataAmount: Double
     var dataUnit: Unit = .gb
+    var activeColor: Colors = .onSurfaceLight
     
     var plusDataAction: Action
     var minusDataAction: Action
@@ -106,6 +107,7 @@ struct DataPlanCardView: View {
             backgroundColor: editType == nil ? .surface : .background,
             isToggleOn: $isPlanActive,
             hasToggle: editType == nil,
+            activeColor: activeColor,
             textColor: editType == nil ? .onSurfaceLight2 : .onBackground
         ) {
             
@@ -159,7 +161,7 @@ struct DataPlanCardView: View {
 
 // MARK: - Preview
 struct DataPlanCardView_Previews: PreviewProvider {
-    static var appViewModel: AppViewModel = .init()
+    static var appViewModel: AppViewModel = TestData.createAppViewModel()
     
     static var previews: some View {
         Group {
