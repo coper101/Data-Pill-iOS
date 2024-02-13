@@ -33,7 +33,7 @@ extension NotificationItem {
         case .dailyUsage:
             return "You've used up \(percentage)% of your data today"
         case .planUsage:
-            return "Please turn off mobile data / wifi now"
+            return "Please turn off mobile data now"
         }
     }
 }

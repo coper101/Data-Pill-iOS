@@ -57,6 +57,7 @@ struct EditDataUnitView: View {
             .padding(.horizontal, 24)
 
         } //: ScrollView
+        .withTopBar(title: "Data Unit")
     }
     
     // MARK: - Actions
