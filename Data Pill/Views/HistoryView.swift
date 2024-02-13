@@ -17,6 +17,7 @@ struct HistoryView: View {
     var weekData: [Data]
     var dataLimitPerDay: Double
     var usageType: ToggleItem
+    var fillUsageType: FillUsage
     
     var hasLabel: Bool = true
     var showFilledLines: Bool = false
@@ -77,6 +78,10 @@ struct HistoryView: View {
                     {
                         
                         let isFirstPill = index == 0
+                        let percentage = data.dailyUsedData.displayedUsageInPercentage(
+                            maxData: dataLimitPerDay,
+                            fillUsageType: fillUsageType
+                        )
                         
                         DraggablePillView(
                             date: date,
@@ -123,6 +128,7 @@ struct HistoryView_Previews: PreviewProvider {
                 weekData: repo().thisWeeksData,
                 dataLimitPerDay: dataLimitPerDay,
                 usageType: .daily,
+                fillUsageType: .accumulate,
                 closeAction: {}
             )
             .previewDisplayName("All Days / Filled")
@@ -132,6 +138,7 @@ struct HistoryView_Previews: PreviewProvider {
                 weekData: repo().thisWeeksData,
                 dataLimitPerDay: dataLimitPerDay,
                 usageType: .daily,
+                fillUsageType: .accumulate,
                 showFilledLines: true,
                 closeAction: {}
             )
@@ -142,6 +149,7 @@ struct HistoryView_Previews: PreviewProvider {
                 weekData: repo(allDays: false).thisWeeksData,
                 dataLimitPerDay: dataLimitPerDay,
                 usageType: .daily,
+                fillUsageType: .accumulate,
                 closeAction: {}
             )
             .previewDisplayName("Missing Days / Filled")
@@ -151,6 +159,7 @@ struct HistoryView_Previews: PreviewProvider {
                 weekData: repo(allDays: false).thisWeeksData,
                 dataLimitPerDay: dataLimitPerDay,
                 usageType: .daily,
+                fillUsageType: .accumulate,
                 showFilledLines: true,
                 closeAction: {}
             )
