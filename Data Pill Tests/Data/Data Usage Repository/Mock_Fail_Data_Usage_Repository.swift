@@ -44,6 +44,8 @@ final class MockErrorDataUsageRepository: DataUsageRepositoryProtocol {
     }
     
     /// [1B] Data
+    func getAllData(maxNumber: Int?) -> [Data_Pill.Data] { [] }
+    
     func addData(
         date: Date,
         totalUsedData: Double,

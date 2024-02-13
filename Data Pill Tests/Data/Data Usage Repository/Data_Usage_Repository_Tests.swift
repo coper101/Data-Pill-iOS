@@ -51,7 +51,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         )
         
         // (3) Then
-        let allData = repository.getAllData()
+        let allData = repository.getAllData(maxNumber: nil)
         XCTAssertEqual(allData.count, 2)
         
         let data = try XCTUnwrap(allData.first { $0.date == date })
@@ -98,7 +98,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
         let todaysDate = Calendar.current.startOfDay(for: .init())
 
         // (2) When
-        let allData = repository.getAllData()
+        let allData = repository.getAllData(maxNumber: nil)
             .filter { $0.date != todaysDate }
         
         // (3) Then
@@ -513,7 +513,7 @@ final class Data_Usage_Repository_Tests: XCTestCase {
     func test_get_all_data_has_error() throws {
         // (1) Given
         // (2) When
-        let allData = mockErrorRepository.getAllData()
+        let allData = mockErrorRepository.getAllData(maxNumber: nil)
         
         // (3) Then
         XCTAssertEqual(

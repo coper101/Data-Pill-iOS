@@ -180,7 +180,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
         XCTAssertEqual(plan.planLimit, 0)
         
         /// - Local: Old Data (None)
-        let allData = appViewModel.dataUsageRepository.getAllData()
+        let allData = appViewModel.dataUsageRepository.getAllData(maxNumber: nil)
         let oldData = allData.filter { $0.date != todaysDate }
         XCTAssertTrue(oldData.isEmpty)
         
@@ -295,7 +295,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
         XCTAssertEqual(plan.planLimit, 0)
         
         /// - Local: Old Data (None)
-        let allData = appViewModel.dataUsageRepository.getAllData()
+        let allData = appViewModel.dataUsageRepository.getAllData(maxNumber: nil)
         let oldData = allData.filter { $0.date != todaysDate }
         XCTAssertTrue(oldData.isEmpty)
         
@@ -410,7 +410,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
         XCTAssertEqual(plan.planLimit, 0)
         
         /// - Local: Old Data (None)
-        let allData = appViewModel.dataUsageRepository.getAllData()
+        let allData = appViewModel.dataUsageRepository.getAllData(maxNumber: nil)
         let oldData = allData.filter { $0.date != todaysDate }
         XCTAssertTrue(oldData.isEmpty)
         
@@ -647,7 +647,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
         XCTAssertNil(todaysData.lastSyncedToRemoteDate)
         
         /// - Local: Check New Data (Old Data - Yesterday)
-        let allData = appViewModel.dataUsageRepository.getAllData()
+        let allData = appViewModel.dataUsageRepository.getAllData(maxNumber: nil)
         let oldData = allData.filter { $0.date != todaysDate }
         XCTAssertTrue(oldData.isEmpty)
         
@@ -768,7 +768,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
         XCTAssertNil(todaysData.lastSyncedToRemoteDate)
         
         /// - Local: Check New Data (Old Data - Yesterday)
-        let allData = appViewModel.dataUsageRepository.getAllData()
+        let allData = appViewModel.dataUsageRepository.getAllData(maxNumber: nil)
         let oldData = allData.filter { $0.date != todaysDate }
         XCTAssertTrue(oldData.isEmpty)
         
@@ -932,7 +932,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
         XCTAssertNotNil(todaysData.lastSyncedToRemoteDate)
         
         /// - Local: Check New Data (Old Data - Yesterday)
-        let allData = appViewModel.dataUsageRepository.getAllData()
+        let allData = appViewModel.dataUsageRepository.getAllData(maxNumber: nil)
         let oldData = allData.filter { $0.date != todaysDate }
         XCTAssertEqual(oldData.count, 1)
         
@@ -1091,7 +1091,7 @@ final class App_View_Model_Cloud_Sync_Tests: XCTestCase {
         XCTAssertNotNil(todaysData.lastSyncedToRemoteDate)
         
         /// - Local: Check New Data (Old Data - Yesterday)
-        let allData = appViewModel.dataUsageRepository.getAllData()
+        let allData = appViewModel.dataUsageRepository.getAllData(maxNumber: nil)
         let oldData = allData.filter { $0.date != todaysDate }
         XCTAssertEqual(oldData.count, 1)
         

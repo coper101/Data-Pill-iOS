@@ -12,6 +12,15 @@ import CloudKit
 
 final class MockFailDataUsageRemoteRepository: ObservableObject, DataUsageRemoteRepositoryProtocol {
     
+    @Published var uploadOldDataCount = 0
+    var uploadOldDataCountPublisher: Published<Int>.Publisher { $uploadOldDataCount }
+
+    @Published var uploadOldDataTotalCount = 0
+    var uploadOldDataTotalCountPublisher: Published<Int>.Publisher { $uploadOldDataTotalCount }
+
+    @Published var downloadOldDataTotalCount = 0
+    var downloadOldDataTotalCountPublisher: Published<Int>.Publisher { $downloadOldDataTotalCount }
+    
     // MARK: - User
     func isDatabaseAccessible() -> AnyPublisher<Bool, Error> {
         Fail(error: RemoteDatabaseError.accountError(.noAccount))

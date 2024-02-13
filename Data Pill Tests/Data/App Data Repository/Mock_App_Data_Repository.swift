@@ -6,7 +6,7 @@
 //
 
 @testable import Data_Pill
-import Foundation
+import SwiftUI
 import Combine
 
 final class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
@@ -46,6 +46,43 @@ final class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     @Published var lastSyncedToRemoteDate: Date?
     var lastSyncedToRemoteDatePublisher: Published<Date?>.Publisher { $lastSyncedToRemoteDate }
+    
+    /// [8.1A]
+    @Published var isDarkMode: Bool = false
+    var isDarkModePublisher: Published<Bool>.Publisher { $isDarkMode }
+    
+    /// [8.1B]
+    @Published var fillUsageType: FillUsage = .accumulate
+    var fillUsageTypePublisher: Published<FillUsage>.Publisher { $fillUsageType }
+    
+    /// [8.1C]
+    @Published var hasLabelsInDaily: Bool = true
+    var hasLabelsInDailyPublisher: Published<Bool>.Publisher { $hasLabelsInDaily }
+    
+    /// [8.1D]
+    @Published var hasLabelsInWeekly: Bool = true
+    var hasLabelsInWeeklyPublisher: Published<Bool>.Publisher { $hasLabelsInWeekly }
+    
+    /// [8.1F]
+    @Published var dayColors: [Day: Color] = defaultDayColors
+    var dayColorsPublisher: Published<[Day: Color]>.Publisher { $dayColors }
+    
+    /// [8.2]
+    @Published var hasDailyNotification: Bool = false
+    var hasDailyNotificationPublisher: Published<Bool>.Publisher { $hasDailyNotification }
+    
+    @Published var hasPlanNotification: Bool = false
+    var hasPlanNotificationPublisher: Published<Bool>.Publisher { $hasPlanNotification }
+    
+    @Published var todaysLastNotificationDate: Date?
+    var todaysLastNotificationDatePublisher: Published<Date?>.Publisher { $todaysLastNotificationDate }
+    
+    @Published var planLastNotificationDate: Date?
+    var planLastNotificationDatePublisher: Published<Date?>.Publisher { $planLastNotificationDate }
+    
+    /// [8.3]
+    @Published var dataUnit: Data_Pill.Unit = .gb
+    var dataUnitPublisher: Published<Data_Pill.Unit>.Publisher { $dataUnit }
     
     init(
         usageType: ToggleItem = .daily,
@@ -120,6 +157,73 @@ final class MockAppDataRepository: ObservableObject, AppDataRepositoryProtocol {
     
     func setLastSyncedToRemoteDate(_ date: Date) {
         self.lastSyncedToRemoteDate = date
+    }
+    
+    /// [8.1A]
+    func getIsDarkMode() {}
+    
+    func setIsDarkMode(_ enabled: Bool) {
+        isDarkMode = enabled
+    }
+    
+    /// [8.1B]
+    func getFillUsageType() {}
+    
+    func setFillUsageType(_ type: FillUsage) {
+        fillUsageType = type
+    }
+    
+    /// [8.1C]
+    func getHasLabelsInDaily() {}
+    
+    func setHasLabelsInDaily(_ enabled: Bool) {
+        hasLabelsInDaily = enabled
+    }
+    
+    /// [8.1D]
+    func getHasLabelsInWeekly() {}
+    
+    func setHasLabelsInWeekly(_ enabled: Bool) {
+        hasLabelsInWeekly = enabled
+    }
+    
+    /// [8.1E]
+    func getDayColors() {}
+    
+    func setDayColors(_ dayColors: [Day: Color]) {
+        self.dayColors = dayColors
+    }
+    
+    /// [8.2]
+    func getHasDailyNotification() {}
+    
+    func setHasDailyNotification(_ enabled: Bool) {
+        hasDailyNotification = enabled
+    }
+    
+    func getHasPlanNotification() {}
+    
+    func setHasPlanNotification(_ enabled: Bool) {
+        hasPlanNotification = enabled
+    }
+    
+    func getTodaysLastNotificationDate() {}
+
+    func setTodaysLastNotificationDate(_ date: Date) {
+        todaysLastNotificationDate = date
+    }
+    
+    func getPlanLastNotificationDate() {}
+
+    func setPlanLastNotificationDate(_ date: Date) {
+        planLastNotificationDate = date
+    }
+    
+    /// [8.3]
+    func getDataUnit() {}
+    
+    func setDataUnit(_ type: Data_Pill.Unit) {
+        dataUnit = type
     }
 }
 

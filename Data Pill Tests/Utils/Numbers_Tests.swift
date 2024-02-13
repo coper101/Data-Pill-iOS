@@ -237,4 +237,349 @@ final class Numbers_Tests: XCTestCase {
         // (3) Then
         XCTAssertEqual(output, 0)
     }
+    
+    // MARK: Displays
+    /// - Calculated Used Data
+    func test_calculate_used_data_accumulate_in_gb() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        let unit = Unit.gb
+        // (2) When
+        let output = used.calculateUsedData(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, 1)
+    }
+    
+    func test_calculate_used_data_accumulate_in_mb() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        let unit = Unit.mb
+        // (2) When
+        let output = used.calculateUsedData(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, 1_000)
+    }
+    
+    func test_calculate_used_data_accumulate_in_gb_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        let unit = Unit.gb
+        // (2) When
+        let output = used.calculateUsedData(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, 0)
+    }
+    
+    func test_calculate_used_data_accumulate_in_mb_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        let unit = Unit.mb
+        // (2) When
+        let output = used.calculateUsedData(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, 0)
+    }
+    
+    func test_calculate_used_data_deduct_in_gb() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        let unit = Unit.gb
+        // (2) When
+        let output = used.calculateUsedData(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, 4)
+    }
+    
+    func test_calculate_used_data_deduct_in_mb() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        let unit = Unit.mb
+        // (2) When
+        let output = used.calculateUsedData(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, 4_000)
+    }
+    
+    func test_calculate_used_data_deduct_in_gb_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        let unit = Unit.gb
+        // (2) When
+        let output = used.calculateUsedData(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, 0)
+    }
+    
+    func test_calculate_used_data_deduct_in_mb_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        let unit = Unit.mb
+        // (2) When
+        let output = used.calculateUsedData(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, 0)
+    }
+    
+    /// - Calculated Used Data
+    func test_calculate_max_data_in_gb() throws {
+        // (1) Given
+        let max = 5.0
+        let unit = Unit.gb
+        // (2) When
+        let output = max.calculateMaxData(dataUnit: unit)
+        // (3) Then
+        XCTAssertEqual(output, 5)
+    }
+    
+    func test_calculate_max_data_in_gb_zero() throws {
+        // (1) Given
+        let max = 0.0
+        let unit = Unit.gb
+        // (2) When
+        let output = max.calculateMaxData(dataUnit: unit)
+        // (3) Then
+        XCTAssertEqual(output, 0)
+    }
+    
+    func test_calculate_max_data_in_mb() throws {
+        // (1) Given
+        let max = 5.0
+        let unit = Unit.mb
+        // (2) When
+        let output = max.calculateMaxData(dataUnit: unit)
+        // (3) Then
+        XCTAssertEqual(output, 5_000)
+    }
+    
+    func test_calculate_max_data_in_mb_zero() throws {
+        // (1) Given
+        let max = 0.0
+        let unit = Unit.mb
+        // (2) When
+        let output = max.calculateMaxData(dataUnit: unit)
+        // (3) Then
+        XCTAssertEqual(output, 0)
+    }
+    
+    /// - displayed usage
+    func test_displayed_usage_accumulate_in_gb() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        let unit = Unit.gb
+        // (2) When
+        let output = used.displayedUsage(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, "1 / 5 GB")
+    }
+    
+    func test_displayed_usage_accumulate_in_gb_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        let unit = Unit.gb
+        // (2) When
+        let output = used.displayedUsage(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, "0 / 5 GB")
+    }
+    
+    func test_displayed_usage_deduct_in_gb() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        let unit = Unit.gb
+        // (2) When
+        let output = used.displayedUsage(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, "4 / 5 GB")
+    }
+    
+    func test_displayed_usage_deduct_in_gb_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        let unit = Unit.gb
+        // (2) When
+        let output = used.displayedUsage(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, "5 / 5 GB")
+    }
+    
+    func test_displayed_usage_accumulate_in_mb() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        let unit = Unit.mb
+        // (2) When
+        let output = used.displayedUsage(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, "1,000 / 5,000 MB")
+    }
+    
+    func test_displayed_usage_accumulate_in_mb_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        let unit = Unit.mb
+        // (2) When
+        let output = used.displayedUsage(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, "0 / 5,000 MB")
+    }
+    
+    func test_displayed_usage_deduct_in_mb() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        let unit = Unit.mb
+        // (2) When
+        let output = used.displayedUsage(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, "4,000 / 5,000 MB")
+    }
+    
+    func test_displayed_usage_deduct_in_mb_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        let unit = Unit.mb
+        // (2) When
+        let output = used.displayedUsage(
+            maxData: max,
+            fillUsageType: type,
+            dataUnit: unit
+        )
+        // (3) Then
+        XCTAssertEqual(output, "5,000 / 5,000 MB")
+    }
+    
+    /// - displayed usaged in percentage
+    func test_displayed_usaged_in_percentage_accumulate() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        // (2) When
+        let output = used.displayedUsageInPercentage(maxData: max, fillUsageType: type)
+        // (3) Then
+        XCTAssertEqual(output, 20)
+    }
+    
+    func test_displayed_usaged_in_percentage_accumulate_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.accumulate
+        // (2) When
+        let output = used.displayedUsageInPercentage(maxData: max, fillUsageType: type)
+        // (3) Then
+        XCTAssertEqual(output, 0)
+    }
+    
+    func test_displayed_usaged_in_percentage_deduct() throws {
+        // (1) Given
+        let used = 1.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        // (2) When
+        let output = used.displayedUsageInPercentage(maxData: max, fillUsageType: type)
+        // (3) Then
+        XCTAssertEqual(output, 80)
+    }
+    
+    func test_displayed_usaged_in_percentage_deduct_zero() throws {
+        // (1) Given
+        let used = 0.0
+        let max = 5.0
+        let type = FillUsage.deduct
+        // (2) When
+        let output = used.displayedUsageInPercentage(maxData: max, fillUsageType: type)
+        // (3) Then
+        XCTAssertEqual(output, 100)
+    }
 }
