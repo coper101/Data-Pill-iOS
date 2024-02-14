@@ -1,11 +1,26 @@
 /* No comment provided by engineer. */
+"%@ %@ %@" = "%@ %@ %@";
+
+/* No comment provided by engineer. */
 "%@ Days" = "%@ 天";
+
+/* No comment provided by engineer. */
+"%@ GB" = "%@ GB";
+
+/* No comment provided by engineer. */
+"%@ MB" = "%@ MB";
 
 /* No comment provided by engineer. */
 "%lld" = "%lld";
 
 /* No comment provided by engineer. */
-"$%lld / month" = "每月%lld元人民币";
+"$%lld / month" = "每月%lld美元";
+
+/* No comment provided by engineer. */
+"Accumulate" = "累积";
+
+/* No comment provided by engineer. */
+"APPEARANCE" = "界面外观";
 
 /* No comment provided by engineer. */
 "Auto" = "自动的";
@@ -20,13 +35,34 @@
 "Content" = "Content";
 
 /* No comment provided by engineer. */
+"Customize Pill" = "定制";
+
+/* No comment provided by engineer. */
 "Daily" = "每日";
+
+/* No comment provided by engineer. */
+"DAILY" = "每日";
 
 /* No comment provided by engineer. */
 "Daily\nLimit" = "每日\n限额";
 
 /* No comment provided by engineer. */
 "Daily Limit" = "每日限额";
+
+/* No comment provided by engineer. */
+"Daily Usage" = "每日使用量";
+
+/* No comment provided by engineer. */
+"DAILY USAGE" = "每日使用量";
+
+/* No comment provided by engineer. */
+"Daily Usage, Plan Usage" = "每日使用量, 计划使用量";
+
+/* No comment provided by engineer. */
+"Dark Mode" = "暗黑模式";
+
+/* No comment provided by engineer. */
+"DATA" = "数据";
 
 /* No comment provided by engineer. */
 "Data Amount" = "数据量";
@@ -37,6 +73,12 @@
 /* No comment provided by engineer. */
 "Data Plan" = "流量套餐";
 
+/* No comment provided by engineer. */
+"Data Unit" = "数据单位";
+
+/* No comment provided by engineer. */
+"Deduct" = "扣除";
+
 /* Prompt user to select if they have a data plan in User Guide */
 "Do you have a Data Plan?" = "你有流量套餐吗？";
 
@@ -44,7 +86,16 @@
 "Done" = "完毕";
 
 /* No comment provided by engineer. */
+"Exceeds 90% of Limit" = "超过限制的90%";
+
+/* No comment provided by engineer. */
+"Exceeds 100% of Limit" = "超过限制的100%";
+
+/* No comment provided by engineer. */
 "Exceeds maximum data amount" = "超过最大数据量";
+
+/* No comment provided by engineer. */
+"FILL USAGE" = "填充使用量";
 
 /* No comment provided by engineer. */
 "Fri" = "周五";
@@ -65,10 +116,25 @@
 "If you ever subscribe to a plan in the future, toggle Data Plan." = "如果您将来订阅某个套餐，请切换流量套餐。";
 
 /* No comment provided by engineer. */
+"In Daily" = "每日";
+
+/* No comment provided by engineer. */
+"In Weekly" = "每周";
+
+/* No comment provided by engineer. */
+"LABELS" = "标签";
+
+/* No comment provided by engineer. */
+"LAST %lld RECORDS" = "最后%lld条记录";
+
+/* No comment provided by engineer. */
 "LEFT" = "剩余";
 
 /* No comment provided by engineer. */
 "Manual" = "手册";
+
+/* No comment provided by engineer. */
+"MB" = "MB";
 
 /* No comment provided by engineer. */
 "Min: %lld Characters" = "最少: %lld 个字符";
@@ -89,6 +155,12 @@
 "Notification" = "通知";
 
 /* No comment provided by engineer. */
+"NOTIFICATION" = "通知";
+
+/* No comment provided by engineer. */
+"Notifications" = "通知";
+
+/* No comment provided by engineer. */
 "Ok" = "好的";
 
 /* No comment provided by engineer. */
@@ -107,7 +179,28 @@
 "Plan Limit" = "套餐限制";
 
 /* No comment provided by engineer. */
+"Plan Usage" = "计划使用量";
+
+/* No comment provided by engineer. */
+"PLAN USAGE" = "计划使用量";
+
+/* No comment provided by engineer. */
 "Please allow notification in settings to get notifications" = "请在设置中允许通知以接收通知。";
+
+/* No comment provided by engineer. */
+"Records" = "记录";
+
+/* No comment provided by engineer. */
+"Report a Bug" = "报告错误";
+
+/* No comment provided by engineer. */
+"Report A Bug" = "报告错误";
+
+/* No comment provided by engineer. */
+"Request a Feature" = "请求功能";
+
+/* No comment provided by engineer. */
+"Request A Feature" = "请求功能";
 
 /* No comment provided by engineer. */
 "Sat" = "周六";
@@ -124,6 +217,9 @@
 /* No comment provided by engineer. */
 "Settings" = "设置";
 
+/* No comment provided by engineer. */
+"Show All Records" = "显示所有记录";
+
 /* Error message when the app can't read the data from the device */
 "Sorry, the data can’t be loaded from the Storage." = "抱歉，无法从存储中加载数据。";
 
@@ -131,10 +227,16 @@
 "Start" = "开始";
 
 /* No comment provided by engineer. */
+"Subtitle" = "Subtitle";
+
+/* No comment provided by engineer. */
 "Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
 
 /* No comment provided by engineer. */
 "Sun" = "周日";
+
+/* No comment provided by engineer. */
+"SUPPORT" = "支持";
 
 /* No comment provided by engineer. */
 "Synced" = "同步";
@@ -177,6 +279,9 @@
 
 /* No comment provided by engineer. */
 "Wed" = "周三";
+
+/* No comment provided by engineer. */
+"WEEKLY" = "每周";
 
 /* No comment provided by engineer. */
 "Yep" = "有";

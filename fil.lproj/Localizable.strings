@@ -14,7 +14,7 @@
 "%lld" = "%lld";
 
 /* No comment provided by engineer. */
-"$%lld / month" = "₱%lld / month";
+"$%lld / month" = "$%lld / month";
 
 /* No comment provided by engineer. */
 "Accumulate" = "Iponin";
