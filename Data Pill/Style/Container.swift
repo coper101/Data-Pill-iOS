@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SectionModifier: ViewModifier {
     // MARK: Props
-    var title: String?
+    var title: LocalizedStringKey?
     var atTop: Bool
     var alignment: HorizontalAlignment
     
@@ -20,7 +20,7 @@ struct SectionModifier: ViewModifier {
             // MARK: HEADER (TOP)
             if atTop, let title {
                 
-                Text(title.uppercased())
+                Text(title)
                     .textStyle(
                         foregroundColor: .onSurfaceLight,
                         size: 14
@@ -34,7 +34,7 @@ struct SectionModifier: ViewModifier {
             // MARK: HEADER (BOTTOM)
             if !atTop, let title {
                 
-                Text(title.uppercased())
+                Text(title)
                     .textStyle(
                         foregroundColor: .onSurfaceLight,
                         size: 14
@@ -52,7 +52,7 @@ struct SectionModifier: ViewModifier {
 extension View {
     
     func section(
-        title: String?,
+        title: LocalizedStringKey?,
         atTop: Bool = true,
         alignment: HorizontalAlignment = .leading
     ) -> some View {
@@ -65,7 +65,7 @@ extension View {
         )
     }
     
-    func rowSection(title: String?, background: Colors = .surface) -> some View {
+    func rowSection(title: LocalizedStringKey?, background: Colors = .surface) -> some View {
         self
             .background(background.color)
             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -73,7 +73,7 @@ extension View {
     }
     
     func cardStyle(
-        title: String,
+        title: LocalizedStringKey,
         titleColor: Colors = .onSurfaceLight,
         lineLimit: Int = 1,
         contentPadding: Bool = true,

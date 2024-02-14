@@ -5,7 +5,7 @@
 //  Created by Wind Versi on 28/11/22.
 //
 
-import Foundation
+import SwiftUI
 
 enum Day: String, CaseIterable, Identifiable {
     case sunday
@@ -18,6 +18,25 @@ enum Day: String, CaseIterable, Identifiable {
 }
 
 extension Day {
+    
+    var shortNameLocalized: LocalizedStringKey {
+        switch self {
+        case .sunday:
+            "Sun"
+        case .monday:
+            "Mon"
+        case .tuesday:
+            "Tue"
+        case .wednesday:
+            "Wed"
+        case .thursday:
+            "Thu"
+        case .friday:
+            "Fri"
+        case .saturday:
+            "Sat"
+        }
+    }
     
     var shortName: String {
         switch self {

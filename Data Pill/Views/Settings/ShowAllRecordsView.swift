@@ -25,7 +25,7 @@ extension DataRecord: Identifiable {
         )
     }
     
-    var displayedAmount: String {
+    var displayedAmount: LocalizedStringKey {
         let amountInMB = usedAmount.toMB()
         let amountInGB = usedAmount.toGB()
         if amountInMB >= 1_000_000 {
@@ -85,7 +85,7 @@ struct ShowAllRecordsView: View {
                 } //: ForEach
                 
             } //: VStack
-            .rowSection(title: "Last \(records.count) Records")
+            .rowSection(title: "LAST \(records.count) RECORDS")
             .padding(.horizontal, dimensions.horizontalPadding)
             .padding(.vertical, 12)
              

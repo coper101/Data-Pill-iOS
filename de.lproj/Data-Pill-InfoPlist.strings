@@ -1,3 +1,6 @@
 /* Bundle name */
 "CFBundleName" = "Data Pill";
 
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "This app lets upload screenshots to report a bug";
+

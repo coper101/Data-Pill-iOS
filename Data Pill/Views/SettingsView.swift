@@ -12,7 +12,7 @@ struct SettingsView: View {
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.dimensions) var dimensions: Dimensions
     
-    var notificationSubtitle: String? {
+    var notificationSubtitle: LocalizedStringKey? {
         let hasDailyNotif = appViewModel.hasDailyNotification
         let hasPlanNotif = appViewModel.hasPlanNotification
         if hasDailyNotif && hasPlanNotif {
@@ -83,7 +83,7 @@ struct SettingsView: View {
                     }
 
                 } //: VStack
-                .rowSection(title: "Appearance")
+                .rowSection(title: "APPEARANCE")
                 
                 // MARK: - NOTIFICATION
                 VStack(spacing: 0) {
@@ -103,7 +103,7 @@ struct SettingsView: View {
                     }
                     
                 } //: VStack
-                .rowSection(title: "Notification")
+                .rowSection(title: "NOTIFICATION")
                 
                 // MARK: - DATA
                 VStack(spacing: 0) {
@@ -136,7 +136,7 @@ struct SettingsView: View {
                     }
                     
                 } //: VStack
-                .rowSection(title: "data")
+                .rowSection(title: "DATA")
                 
                 // MARK: - SUPPORT
                 VStack(spacing: 0) {
@@ -167,7 +167,7 @@ struct SettingsView: View {
                     }
                     
                 } //: VStack
-                .rowSection(title: "Support")
+                .rowSection(title: "SUPPORT")
 
             } //: VStack
             .padding(.horizontal, 21)

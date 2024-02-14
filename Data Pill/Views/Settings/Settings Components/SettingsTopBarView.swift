@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsTopBarModifier: ViewModifier {
     // MARK: - Props
-    var title: String
+    var title: LocalizedStringKey
     
     // MARK: - UI
     func body(content: Content) -> some View {
@@ -28,7 +28,7 @@ struct SettingsTopBarModifier: ViewModifier {
 
 extension View {
     
-    func withTopBar(title: String) -> some View {
+    func withTopBar(title: LocalizedStringKey) -> some View {
         self.modifier(SettingsTopBarModifier(title: title))
     }
 }
@@ -36,7 +36,7 @@ extension View {
 struct SettingsTopBarView: View {
     // MARK: - Props
     @Environment(\.presentationMode) var presentationMode
-    var title: String
+    var title: LocalizedStringKey
 
     // MARK: - UI
     var body: some View {

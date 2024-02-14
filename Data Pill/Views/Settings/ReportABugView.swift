@@ -47,7 +47,7 @@ struct ReportABugView: View {
         inputName: String,
         prefix: String = "Enter",
         suffix: String = ""
-    ) -> String {
+    ) -> LocalizedStringKey {
         "\(hasTappedSend && !isValid ? prefix : "") \(inputName) \(hasTappedSend && !isValid ? suffix : "")"
     }
     

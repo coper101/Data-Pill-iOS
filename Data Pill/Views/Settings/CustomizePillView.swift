@@ -43,7 +43,7 @@ struct CustomizeDayColorView: View {
             .buttonStyle(ScaleButtonStyle())
         )
         .section(
-            title: day.shortName,
+            title: day.shortNameLocalized,
             atTop: false,
             alignment: .center
         )
@@ -121,7 +121,7 @@ struct CustomizePillView: View {
                     faintLabel: {}
                 )
                 .section(
-                    title: "Daily",
+                    title: "DAILY",
                     atTop: false,
                     alignment: .center
                 )
@@ -160,7 +160,7 @@ struct CustomizePillView: View {
                     
                 } //: ZStack
                 .section(
-                    title: "Weekly",
+                    title: "WEEKLY",
                     atTop: false,
                     alignment: .center
                 )
@@ -230,7 +230,7 @@ struct CustomizePillView: View {
                     }
                     
                 } //: VStack
-                .rowSection(title: "Fill Usage")
+                .rowSection(title: "FILL USAGE")
                 .padding(.horizontal, 24)
                 .padding(.top, 34)
                 
@@ -259,7 +259,7 @@ struct CustomizePillView: View {
                     }
                     
                 } //: VStack
-                .rowSection(title: "Labels")
+                .rowSection(title: "LABELS")
                 .padding(.horizontal, 24)
                 .padding(.top, 34)
 

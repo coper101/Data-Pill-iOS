@@ -26,7 +26,7 @@ struct NotificationSettingsView: View {
                     .padding(.vertical, 4)
                     
                 }
-                .rowSection(title: "Daily Usage")
+                .rowSection(title: "DAILY USAGE")
                 
                 SettingsRowView(title: "Exceeds 100% of Limit") {
                     
@@ -37,7 +37,7 @@ struct NotificationSettingsView: View {
                     .padding(.vertical, 4)
                     
                 }
-                .rowSection(title: "Plan Usage")
+                .rowSection(title: "PLAN USAGE")
                 
             } //: VStack
             .padding(.horizontal, 24)

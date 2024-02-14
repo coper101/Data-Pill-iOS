@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SettingsRowView<Content>: View where Content: View {
     // MARK: - Props
-    var title: String
-    var subtitle: String?
+    var title: LocalizedStringKey
+    var subtitle: LocalizedStringKey?
     var icon: Icons?
     var iconColor: Colors?
     var hasDivider: Bool = false
