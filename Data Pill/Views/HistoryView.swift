@@ -23,7 +23,7 @@ struct HistoryView: View {
     var showFilledLines: Bool = false
     var closeAction: () -> Void
     
-    var descendingWeeksData: [Data] {
+    var thisWeekData: [Data] {
         weekData.sorted {
             guard
                 let date1 = $0.date,
@@ -67,7 +67,7 @@ struct HistoryView: View {
             ZStack {
                 
                 ForEach(
-                    Array(descendingWeeksData.enumerated()),
+                    Array(thisWeekData.enumerated()),
                     id: \.element
                 ) { index, data in
                     
@@ -78,7 +78,7 @@ struct HistoryView: View {
                     {
                         
                         let isFirstPill = index == 0
-                        let percentage = data.dailyUsedData.displayedUsageInPercentage(
+                        let percentage = data.dailyUsedData.toGB().displayedUsageInPercentage(
                             maxData: dataLimitPerDay,
                             fillUsageType: fillUsageType
                         )
@@ -86,8 +86,7 @@ struct HistoryView: View {
                         DraggablePillView(
                             date: date,
                             color: color,
-                            percentage: data.dailyUsedData.toGB()
-                                .toPercentage(with: dataLimitPerDay),
+                            percentage: percentage,
                             usageType: usageType,
                             hasLabel: hasLabel,
                             hasBackground: isFirstPill && showFilledLines,
