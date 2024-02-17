@@ -7,6 +7,7 @@
 
 import UserNotifications
 import OSLog
+import SwiftUI
 
 enum NotificationItem: String {
     case dailyUsage = "Daily_Usage"
@@ -22,18 +23,18 @@ extension NotificationItem {
     var title: String {
         switch self {
         case .dailyUsage:
-            return "⚠️ Daily Usage Limit Exceeded"
+            return NSLocalizedString("⚠️ Daily Usage Limit Exceeded", comment: "")
         case .planUsage:
-            return "❗️Data Plan Usage Limit Exceeded❗️"
+            return NSLocalizedString("❗️Data Plan Usage Limit Exceeded❗️", comment: "")
         }
     }
     
-    func subtitle(percentage: Int) -> String {
+    func body(percentage: Int) -> String {
         switch self {
         case .dailyUsage:
-            return "You've used up \(percentage)% of your data today"
+            return .init(format: NSLocalizedString("You've used up %lld%% of your data today", comment: ""), percentage)
         case .planUsage:
-            return "Please turn off mobile data now"
+            return NSLocalizedString("Please turn off mobile data now", comment: "")
         }
     }
 }
@@ -103,7 +104,7 @@ final class LocalNotificationManager: ObservableObject, LocalNotification {
     func scheduleNow(notification: NotificationItem, amountUsageInPercentage: Int) async {
         let content = UNMutableNotificationContent()
         content.title = notification.title
-        content.subtitle = notification.subtitle(percentage: amountUsageInPercentage)
+        content.body = notification.body(percentage: amountUsageInPercentage)
         content.sound = UNNotificationSound.default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)

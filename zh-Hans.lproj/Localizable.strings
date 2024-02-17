@@ -289,3 +289,14 @@
 /* No comment provided by engineer. */
 "You have reached the max limit" = "您已达到数据使用的最大限制";
 
+/* Notification Title for Daily Usage */
+"⚠️ Daily Usage Limit Exceeded" = "⚠️ 日使用限额已超过";
+
+/* Notification Subtitle for Daily Usage */
+"You've used up %lld%% of your data today" = "您今天已经使用了%lld%%的数据";
+
+/* Notification Title for Plan Usage */
+"❗️Data Plan Usage Limit Exceeded❗️" = "❗️数据套餐使用限额已超出❗️";
+
+/* Notification Subtitle for Plan Usage */
+"Please turn off mobile data now" = "请立即关闭移动数据";

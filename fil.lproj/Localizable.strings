@@ -289,3 +289,14 @@
 /* No comment provided by engineer. */
 "You have reached the max limit" = "Naabot mo na ang max na limitasyon";
 
+/* Notification Title for Daily Usage */
+"⚠️ Daily Usage Limit Exceeded" = "⚠️ Lumampas Ka Na Sa Limit Sa Araw Na Ito";
+
+/* Notification Subtitle for Daily Usage */
+"You've used up %lld%% of your data today" = "Naubos mo na ang %lld%% ng iyong data sa araw na ito";
+
+/* Notification Title for Plan Usage */
+"❗️Data Plan Usage Limit Exceeded❗️" = "❗️Lumampas Ka Na Sa Limit Ng Data Plan❗️";
+
+/* Notification Subtitle for Plan Usage */
+"Please turn off mobile data now" = "Paki-off ng iyong mobile data ngayon";

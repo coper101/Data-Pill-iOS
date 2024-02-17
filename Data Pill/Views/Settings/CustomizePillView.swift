@@ -23,7 +23,7 @@ struct CustomizeDayColorView: View {
             Circle()
                 .fill(dayColors[day] ?? Colors.surface.color)
                 .padding(12)
-            
+                        
         } //: ZStack
         .frame(width: 54, height: 54)
         .overlay(
