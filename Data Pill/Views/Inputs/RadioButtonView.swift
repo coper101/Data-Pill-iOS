@@ -34,7 +34,7 @@ struct RadioButtonView: View {
             if isSelected {
                 
                 Circle()
-                    .fill(Colors.background.color)
+                    .fill(Colors.surface.color)
                     .padding(8)
                 
             } //: if
