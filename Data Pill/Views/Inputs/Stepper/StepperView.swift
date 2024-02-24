@@ -29,12 +29,16 @@ struct StepperView: View {
                 showStepperValue: hasLongPressedMinus,
                 onChangeStepperValue: onChangeMinusStepperValue,
                 operator: .minus,
-                action: minusAction,
-                closeAction: closeAction
+                action: {},
+                closeAction: {}
             )
             .simultaneousGesture(
-                LongPressGesture(minimumDuration: 0.3)
+                LongPressGesture(minimumDuration: 0.6)
                     .onEnded(longPressedMinusAction)
+            )
+            .simultaneousGesture(
+                TapGesture()
+                    .onEnded(pressedMinusAction)
             )
             
             // Col 2: VALUE
@@ -49,12 +53,16 @@ struct StepperView: View {
                 showStepperValue: hasLongPressedPlus,
                 onChangeStepperValue: onChangeAddStepperValue,
                 operator: .plus,
-                action: plusAction,
-                closeAction: closeAction
+                action: {},
+                closeAction: {}
             )
             .simultaneousGesture(
-                LongPressGesture(minimumDuration: 0.3)
+                LongPressGesture(minimumDuration: 0.6)
                     .onEnded(longPressedPlusAction)
+            )
+            .simultaneousGesture(
+                TapGesture()
+                    .onEnded(pressedPlusAction)
             )
             
         } //: HStack
@@ -63,21 +71,21 @@ struct StepperView: View {
     
     // MARK: - Actions
     
-    func closeAction() {
-        hasLongPressedPlus = false
-        hasLongPressedMinus = false
-    }
-    
     // MARK: Minus
     func onChangeMinusStepperValue(value: Double) {
         minusStepperValueAction(value)
         hasLongPressedMinus = false
     }
     
-    func longPressedMinusAction(value: Bool) {
-        if hasLongPressedPlus {
-            hasLongPressedPlus = false
+    func pressedMinusAction() {
+        if hasLongPressedMinus {
+            hasLongPressedMinus = false
+            return
         }
+        minusAction()
+    }
+    
+    func longPressedMinusAction(value: Bool) {
         hasLongPressedMinus = true
     }
     
@@ -87,10 +95,15 @@ struct StepperView: View {
         hasLongPressedPlus = false
     }
     
-    func longPressedPlusAction(value: Bool) {
-        if hasLongPressedMinus {
-            hasLongPressedMinus = false
+    func pressedPlusAction() {
+        if hasLongPressedPlus {
+            hasLongPressedPlus = false
+            return
         }
+        plusAction()
+    }
+    
+    func longPressedPlusAction(value: Bool) {
         hasLongPressedPlus = true
     }
 }

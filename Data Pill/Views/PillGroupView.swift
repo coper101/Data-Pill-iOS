@@ -16,27 +16,31 @@ struct PillGroupView: View {
         appViewModel.todaysData.date ?? .init()
     }
     
-    var color: Colors {
-        let weekday = todaysDate.toDateComp().weekday ?? 1
-        return appViewModel.days[weekday - 1].color
-    }
-    
     // MARK: - UI
     var body: some View {
-        VStack(spacing: dimensions.spaceInBetween) {
+        VStack(spacing: 0) {
             
-            // MARK: - Row 1: Pill Group
+            // MARK: - Row 1: Top Bar
+            TopBarView(
+                syncStatus: appViewModel.syncStatus,
+                settingsAction: settingsAction
+            )
+            .padding(.bottom, dimensions.spaceBottomTopBar)
+            
+            // MARK: - Row 2: Pill Group
             HStack(
                 alignment: .center,
                 spacing: dimensions.spaceInBetween
             ) {
-
+                
                 // Col 1: DATA PILL
                 Button(action: dataPillAction) {
+                    
                     PillView(
-                        color: color,
-                        percentage: appViewModel.dateUsedInPercentage,
+                        color: appViewModel.todaysColor,
+                        percentage: appViewModel.dataUsedInPercentage,
                         date: todaysDate,
+                        hasLabel: appViewModel.labelsInDaily,
                         usageType: appViewModel.usageType,
                         customSize: .init(
                             width: dimensions.pillWidth,
@@ -44,7 +48,8 @@ struct PillGroupView: View {
                         ),
                         isContentShown: !appViewModel.isHistoryShown
                     )
-                }
+                    
+                } //: Button
                 .buttonStyle(
                     ScaleButtonStyle(minScale: 0.9)
                 )
@@ -57,25 +62,26 @@ struct PillGroupView: View {
                     
                     VStack(spacing: 0) {
                         
-                        // USED
+                        // USED or LEFT
                         UsedCardView(
                             usedData: appViewModel.usedData,
                             maxData: appViewModel.maxData,
+                            fillUsageType: appViewModel.fillUsageType,
                             dataUnit: appViewModel.unit,
                             width: cardWidth
                         )
-
+                        
                         Spacer()
-
+                        
                         // USAGE TOGGLE
                         UsageCardView(
                             selectedItem: $appViewModel.usageType,
                             width: cardWidth,
                             isPlanActive: appViewModel.isPlanActive
                         )
-
+                        
                         Spacer()
-
+                        
                         // AUTO DATA PERIOD TOGGLE
                         AutoPeriodCardView(
                             isAuto: $appViewModel.isPeriodAuto,
@@ -87,11 +93,11 @@ struct PillGroupView: View {
                     .fillMaxSize()
                     
                 } //: GeometryReader
-
+                
             } //: HStack
             .frame(height: dimensions.maxPillHeight)
             
-            // MARK: - Row 2: Data Plan
+            // MARK: - Row 3: Data Plan
             DataPlanCardView(
                 startDate: appViewModel.startDate,
                 endDate: appViewModel.endDate,
@@ -102,13 +108,15 @@ struct PillGroupView: View {
                 endPeriodAction: {},
                 isPlanActive: $appViewModel.isPlanActive,
                 dataAmountValue: $appViewModel.dataValue,
+                dataAmount: appViewModel.dataAmount,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
                 didChangeMinusStepperValue: { _ in }
             )
+            .padding(.top, dimensions.spaceInBetween)
             
-            // MARK: - Row 3: Data Limit
+            // MARK: - Row 4: Data Limit
             HStack(spacing: dimensions.spaceInBetween) {
                 
                 if appViewModel.isPlanActive {
@@ -139,10 +147,10 @@ struct PillGroupView: View {
                 
             } //: HStack
             .frame(height: dimensions.planLimitCardsHeight)
+            .padding(.top, dimensions.spaceInBetween)
             
         } //: VStack
         .padding(.horizontal, dimensions.horizontalPadding)
-        .padding(.vertical, dimensions.horizontalPadding)
     }
     
     // MARK: - Actions
@@ -176,19 +184,46 @@ struct PillGroupView: View {
         }
     }
     
+    func settingsAction() {
+        appViewModel.showSettings()
+    }
 }
 
 // MARK: - Preview
 struct PillGroupView_Previews: PreviewProvider {
     static var appViewModelPlan: AppViewModel {
-        let model = AppViewModel()
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        dataRepo.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
+        )
+        
+        let model = AppViewModel(dataUsageRepository: dataRepo)
         model.isPlanActive = true
+        
         return model
     }
     
     static var appViewModelNonPlan: AppViewModel {
-        let model = AppViewModel()
+        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
+        let dataRepo = DataUsageRepository(database: database)
+        dataRepo.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
+        )
+        
+        let model = AppViewModel(dataUsageRepository: dataRepo)
         model.isPlanActive = false
+        
         return model
     }
     

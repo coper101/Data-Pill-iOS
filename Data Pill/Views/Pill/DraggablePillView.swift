@@ -14,13 +14,14 @@ struct DraggablePillView: View {
     @State private var cardOffset: CGSize = .zero
     
     var date: Date = .init()
-    var color: Colors
+    var color: Color
     var percentage: Int
     var usageType: ToggleItem
     
-    var hasBackground = false
-    var showFillLine = false
-    var hasPillOutline = false /// for tracking pill outline
+    var hasLabel: Bool = true
+    var hasBackground: Bool = false
+    var showFillLine: Bool = false
+    var hasPillOutline: Bool = false /// for tracking pill outline
     
     var widthScale: CGFloat = 0.45
     
@@ -63,11 +64,13 @@ struct DraggablePillView: View {
     
     var body: some View {
         ZStack {
+            
             PillView(
                 color: color,
                 percentage: percentage,
                 date: date,
                 hasBackground: hasBackground,
+                hasLabel: hasLabel,
                 usageType: usageType,
                 widthScale: widthScale,
                 showFillLine: showFillLine,
@@ -79,8 +82,8 @@ struct DraggablePillView: View {
             .`if`(!showFillLine) { view in
                 view.gesture(drag)
             }
-        }
-        
+            
+        } //: ZStack
     }
     
     // MARK: - Actions
@@ -92,14 +95,14 @@ struct DraggablePillView_Previews: PreviewProvider {
         Group {
             
             DraggablePillView(
-                color: .secondaryBlue,
+                color: Colors.secondaryBlue.color,
                 percentage: 20,
                 usageType: .daily
             )
             .previewDisplayName("Filled")
             
             DraggablePillView(
-                color: .secondaryBlue,
+                color: Colors.secondaryBlue.color,
                 percentage: 20,
                 usageType: .daily,
                 showFillLine: true

@@ -5,14 +5,15 @@
 //  Created by Wind Versi on 9/10/22.
 //
 
-import Foundation
+import SwiftUI
 
-let dayPills: [DayPill] = [
-    .init(color: .secondaryBrown, day: .sunday),
-    .init(color: .secondaryRed, day: .monday),
-    .init(color: .secondaryGreen, day: .tuesday),
-    .init(color: .secondaryPink, day: .wednesday),
-    .init(color: .secondaryOrange, day: .thursday),
-    .init(color: .secondaryPurple, day: .friday),
-    .init(color: .secondaryBlue, day: .saturday)
+let defaultDayColors: [Day: Color] = [
+    .sunday: Colors.secondaryBrown.color,
+    .monday: Colors.secondaryRed.color,
+    .tuesday: Colors.secondaryGreen.color,
+    .wednesday : Colors.secondaryPink.color,
+    .thursday : Colors.secondaryOrange.color,
+    .friday : Colors.secondaryPurple.color,
+    .saturday : Colors.secondaryBlue.color
 ]
+

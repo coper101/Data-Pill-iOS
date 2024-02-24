@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "824037F2-BD7F-4259-8B35-48063DAE6EB2"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "03CF1F9D-7B81-465B-8AE1-034A8641B154"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data Pill/Data/DataUsageRemoteRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "486"
+            endingLineNumber = "486"
+            landmarkName = "syncOldLocalData(_:lastSyncedDate:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FD711578-39B2-4451-89B2-B080B75836BA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data Pill/Data/DataUsageRemoteRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "498"
+            endingLineNumber = "498"
+            landmarkName = "syncOldLocalData(_:lastSyncedDate:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6F45EFBE-5AFD-4350-B835-202F97B6A0DB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data Pill/Data/DataUsageRemoteRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "451"
+            endingLineNumber = "451"
+            landmarkName = "syncOldLocalData(_:lastSyncedDate:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D49E9E53-864E-4DEA-AA5C-06B230AA4A25"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data Pill/Data/DataUsageRemoteRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "379"
+            endingLineNumber = "379"
+            landmarkName = "syncTodaysData(_:isSyncedToRemote:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D49E9E53-864E-4DEA-AA5C-06B230AA4A25 - af74131169aeeaa2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Data_Pill.DataUsageRemoteRepository.syncTodaysData(_: Data_Pill.Data, isSyncedToRemote: Swift.Bool) -&gt; Combine.AnyPublisher&lt;Swift.Bool, Swift.Error&gt;"
+                  moduleName = "Data Pill"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/windversi/Desktop/iOS%20Projects/App%20Challenge/Data-Pill-iOS/Data%20Pill/Data/DataUsageRemoteRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "366"
+                  endingLineNumber = "366"
+                  offsetFromSymbolStart = "748">
+               </Location>
+               <Location
+                  uuid = "D49E9E53-864E-4DEA-AA5C-06B230AA4A25 - af74131169aeeaa2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Data_Pill.DataUsageRemoteRepository.syncTodaysData(_: Data_Pill.Data, isSyncedToRemote: Swift.Bool) -&gt; Combine.AnyPublisher&lt;Swift.Bool, Swift.Error&gt;"
+                  moduleName = "Data Pill"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/windversi/Desktop/iOS%20Projects/App%20Challenge/Data-Pill-iOS/Data%20Pill/Data/DataUsageRemoteRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "366"
+                  endingLineNumber = "366"
+                  offsetFromSymbolStart = "812">
+               </Location>
+               <Location
+                  uuid = "D49E9E53-864E-4DEA-AA5C-06B230AA4A25 - af74131169aeeaa2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Data_Pill.DataUsageRemoteRepository.syncTodaysData(_: Data_Pill.Data, isSyncedToRemote: Swift.Bool) -&gt; Combine.AnyPublisher&lt;Swift.Bool, Swift.Error&gt;"
+                  moduleName = "Data Pill"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/windversi/Desktop/iOS%20Projects/App%20Challenge/Data-Pill-iOS/Data%20Pill/Data/DataUsageRemoteRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "366"
+                  endingLineNumber = "366"
+                  offsetFromSymbolStart = "1984">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BAF87110-8A15-4857-862A-D182C6D4B9C6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data Pill/Models/AppViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1061"
+            endingLineNumber = "1061"
+            landmarkName = "syncOldThenRemoteData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D636DE84-3D01-4FF9-AAC1-45B65D331E49"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data Pill/Data/DataUsageRemoteRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "423"
+            endingLineNumber = "423"
+            landmarkName = "syncOldLocalData(_:lastSyncedDate:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D636DE84-3D01-4FF9-AAC1-45B65D331E49 - 633bab20470c9241"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Data_Pill.DataUsageRemoteRepository.syncOldLocalData(_: Swift.Array&lt;Data_Pill.Data&gt;, lastSyncedDate: Swift.Optional&lt;Foundation.Date&gt;) -&gt; Combine.AnyPublisher&lt;(Swift.Bool, Swift.Bool, Swift.Array&lt;Data_Pill.RemoteData&gt;), Swift.Error&gt;"
+                  moduleName = "Data Pill"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/windversi/Desktop/iOS%20Projects/App%20Challenge/Data-Pill-iOS/Data%20Pill/Data/DataUsageRemoteRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "408"
+                  endingLineNumber = "408"
+                  offsetFromSymbolStart = "1512">
+               </Location>
+               <Location
+                  uuid = "D636DE84-3D01-4FF9-AAC1-45B65D331E49 - 6fae7607ab9a7c78"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Bool) -&gt; Combine.AnyPublisher&lt;(Swift.Array&lt;Data_Pill.Data&gt;, Swift.Array&lt;Data_Pill.Data&gt;), Swift.Never&gt; in Data_Pill.DataUsageRemoteRepository.syncOldLocalData(_: Swift.Array&lt;Data_Pill.Data&gt;, lastSyncedDate: Swift.Optional&lt;Foundation.Date&gt;) -&gt; Combine.AnyPublisher&lt;(Swift.Bool, Swift.Bool, Swift.Array&lt;Data_Pill.RemoteData&gt;), Swift.Error&gt;"
+                  moduleName = "Data Pill"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/windversi/Desktop/iOS%20Projects/App%20Challenge/Data-Pill-iOS/Data%20Pill/Data/DataUsageRemoteRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "408"
+                  endingLineNumber = "408"
+                  offsetFromSymbolStart = "748">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B40ED451-9059-4369-BE8C-49451ED50CAF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data Pill/Data/DataUsageRemoteRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "401"
+            endingLineNumber = "401"
+            landmarkName = "syncTodaysData(_:isSyncedToRemote:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B40ED451-9059-4369-BE8C-49451ED50CAF - af74131169aeed2f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Data_Pill.DataUsageRemoteRepository.syncTodaysData(_: Data_Pill.Data, isSyncedToRemote: Swift.Bool) -&gt; Combine.AnyPublisher&lt;Swift.Bool, Swift.Error&gt;"
+                  moduleName = "Data Pill"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/windversi/Desktop/iOS%20Projects/App%20Challenge/Data-Pill-iOS/Data%20Pill/Data/DataUsageRemoteRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "401"
+                  endingLineNumber = "401"
+                  offsetFromSymbolStart = "1378">
+               </Location>
+               <Location
+                  uuid = "B40ED451-9059-4369-BE8C-49451ED50CAF - f35a39602baa3b26"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Bool) -&gt; Combine.AnyPublisher&lt;Swift.Bool, Swift.Error&gt; in Data_Pill.DataUsageRemoteRepository.syncTodaysData(_: Data_Pill.Data, isSyncedToRemote: Swift.Bool) -&gt; Combine.AnyPublisher&lt;Swift.Bool, Swift.Error&gt;"
+                  moduleName = "Data Pill"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/windversi/Desktop/iOS%20Projects/App%20Challenge/Data-Pill-iOS/Data%20Pill/Data/DataUsageRemoteRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "401"
+                  endingLineNumber = "401"
+                  offsetFromSymbolStart = "365">
+               </Location>
+               <Location
+                  uuid = "B40ED451-9059-4369-BE8C-49451ED50CAF - f35a39602baa3b47"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Bool) -&gt; Combine.AnyPublisher&lt;Swift.Bool, Swift.Error&gt; in Data_Pill.DataUsageRemoteRepository.syncTodaysData(_: Data_Pill.Data, isSyncedToRemote: Swift.Bool) -&gt; Combine.AnyPublisher&lt;Swift.Bool, Swift.Error&gt;"
+                  moduleName = "Data Pill"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/windversi/Desktop/iOS%20Projects/App%20Challenge/Data-Pill-iOS/Data%20Pill/Data/DataUsageRemoteRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "402"
+                  endingLineNumber = "402"
+                  offsetFromSymbolStart = "383">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

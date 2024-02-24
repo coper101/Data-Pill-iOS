@@ -15,6 +15,7 @@ struct SimpleEntry: TimelineEntry {
     let dataUnit: Unit
     let localizedSubtitle: LocalizedStringKey
     let subtitle: String
-    let color: Colors
+    let color: Color
     let usageType: ToggleItem
+    let fillUsageType: FillUsage
 }

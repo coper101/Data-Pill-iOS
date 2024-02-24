@@ -1,8 +1,26 @@
 /* No comment provided by engineer. */
+"%@ %@ %@" = "%@ %@ %@";
+
+/* No comment provided by engineer. */
 "%@ Days" = "%@ Araw";
 
-/* An explanation of the Data Plan */
-"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ang Data Plan ay isang subscription service kung saan nagbabayad ka bawat piryud upang gumamit ng nakapirming halaga ng mobile data.";
+/* No comment provided by engineer. */
+"%@ GB" = "%@ GB";
+
+/* No comment provided by engineer. */
+"%@ MB" = "%@ MB";
+
+/* No comment provided by engineer. */
+"%lld" = "%lld";
+
+/* No comment provided by engineer. */
+"$%lld / month" = "$%lld / month";
+
+/* No comment provided by engineer. */
+"Accumulate" = "Iponin";
+
+/* No comment provided by engineer. */
+"APPEARANCE" = "HITSURA";
 
 /* No comment provided by engineer. */
 "Auto" = "Auto";
@@ -14,13 +32,37 @@
 "Card" = "Card";
 
 /* No comment provided by engineer. */
+"Content" = "Content";
+
+/* No comment provided by engineer. */
+"Customize Pill" = "I-customize ang Pill";
+
+/* No comment provided by engineer. */
 "Daily" = "Araw-araw";
+
+/* No comment provided by engineer. */
+"DAILY" = "KADA ARAW";
 
 /* No comment provided by engineer. */
 "Daily\nLimit" = "Limit\nKada Araw";
 
 /* No comment provided by engineer. */
 "Daily Limit" = "Limit Kada Araw";
+
+/* No comment provided by engineer. */
+"Daily Usage" = "Pang-araw-araw na Paggamit";
+
+/* No comment provided by engineer. */
+"DAILY USAGE" = "PANG-ARAW-ARAW NA PAGGAMIT";
+
+/* No comment provided by engineer. */
+"Daily Usage, Plan Usage" = "Pang-araw-araw na Paggamit, Paggamit ng Plan";
+
+/* No comment provided by engineer. */
+"Dark Mode" = "Dark Mode";
+
+/* No comment provided by engineer. */
+"DATA" = "DATA";
 
 /* No comment provided by engineer. */
 "Data Amount" = "Dami ng Data";
@@ -31,6 +73,12 @@
 /* No comment provided by engineer. */
 "Data Plan" = "Data Plan";
 
+/* No comment provided by engineer. */
+"Data Unit" = "Yunit ng Data";
+
+/* No comment provided by engineer. */
+"Deduct" = "Ibawas";
+
 /* Prompt user to select if they have a data plan in User Guide */
 "Do you have a Data Plan?" = "May Data Plan ka ba?";
 
@@ -38,7 +86,16 @@
 "Done" = "Tapos Na";
 
 /* No comment provided by engineer. */
+"Exceeds 90% of Limit" = "Paglumampas sa 90%";
+
+/* No comment provided by engineer. */
+"Exceeds 100% of Limit" = "Paglumampas sa 100%";
+
+/* No comment provided by engineer. */
 "Exceeds maximum data amount" = "Lampas sa maximum na halaga ng data";
+
+/* No comment provided by engineer. */
+"FILL USAGE" = "PAGPUNAN NG PAGGAMIT";
 
 /* No comment provided by engineer. */
 "Fri" = "Biyernes";
@@ -46,14 +103,41 @@
 /* No comment provided by engineer. */
 "From" = "Mula Sa";
 
+/* No comment provided by engineer. */
+"GB" = "GB";
+
 /* Header for user guide for first time users */
 "Get Started" = "Magsimula";
+
+/* No comment provided by engineer. */
+"Great!" = "Ayos!";
 
 /* The description for Non Data Plan selection */
 "If you ever subscribe to a plan in the future, toggle Data Plan." = "Kung sakaling mag-subscribe ka sa isang Plan sa hinaharap, i-toggle ang Data Plan.";
 
 /* No comment provided by engineer. */
+"In Daily" = "Sa Kada-araw";
+
+/* No comment provided by engineer. */
+"In Weekly" = "Sa Lingguhan";
+
+/* No comment provided by engineer. */
+"LABELS" = "MGA LABEL";
+
+/* No comment provided by engineer. */
+"LAST %lld RECORDS" = "HULING %lld REKORD";
+
+/* No comment provided by engineer. */
+"LEFT" = "NATITIRA";
+
+/* No comment provided by engineer. */
 "Manual" = "Manwal";
+
+/* No comment provided by engineer. */
+"MB" = "MB";
+
+/* No comment provided by engineer. */
+"Min: %lld Characters" = "Hind bababa sa %lld Karakter";
 
 /* No comment provided by engineer. */
 "Mon" = "Lunes";
@@ -62,10 +146,22 @@
 "NA" = "NA";
 
 /* No comment provided by engineer. */
+"No Worries!" = "Walang Problema!";
+
+/* No comment provided by engineer. */
 "Nope" = "Wala";
 
-/* Title to indicate the user doesn't have a Data Plan */
-"Nope." = "Wala.";
+/* No comment provided by engineer. */
+"Notification" = "Notification";
+
+/* No comment provided by engineer. */
+"NOTIFICATION" = "NOTIFICATION";
+
+/* No comment provided by engineer. */
+"Notifications" = "Notification";
+
+/* No comment provided by engineer. */
+"Ok" = "Ok";
 
 /* No comment provided by engineer. */
 "Period" = "Piryud";
@@ -83,13 +179,46 @@
 "Plan Limit" = "Limit ng Plan";
 
 /* No comment provided by engineer. */
+"Plan Usage" = "Paggamit ng Plan";
+
+/* No comment provided by engineer. */
+"PLAN USAGE" = "PAGGAMIT NG PLAN";
+
+/* No comment provided by engineer. */
+"Please allow notification in settings to get notifications" = "Mangyaring payagan ang notification sa Settings upang makakuha ng mga notification";
+
+/* No comment provided by engineer. */
+"Records" = "Mga Rekord";
+
+/* No comment provided by engineer. */
+"Report a Bug" = "Mag-report ng Bug";
+
+/* No comment provided by engineer. */
+"Report A Bug" = "Mag-report ng Bug";
+
+/* No comment provided by engineer. */
+"Request a Feature" = "Humiling ng Feature";
+
+/* No comment provided by engineer. */
+"Request A Feature" = "Humiling ng Feature";
+
+/* No comment provided by engineer. */
 "Sat" = "Sabado";
 
 /* Button title save */
 "Save" = "I-save";
 
+/* No comment provided by engineer. */
+"Send Via Mail" = "I-send sa via email";
+
 /* A guide message to user on how to set the data plan and period */
 "Set the amount of data in your plan and the period it starts and ends." = "Itakda ang dami ng data sa iyong plano at ang panahon na magsisimula at magtatapos ito.";
+
+/* No comment provided by engineer. */
+"Settings" = "Settings";
+
+/* No comment provided by engineer. */
+"Show All Records" = "Ipakita Lahat ng Rekord";
 
 /* Error message when the app can't read the data from the device */
 "Sorry, the data can’t be loaded from the Storage." = "Paumanhin, hindi ma-load ang data mula sa Storage.";
@@ -98,10 +227,19 @@
 "Start" = "Magsimula";
 
 /* No comment provided by engineer. */
+"Subtitle" = "Subtitle";
+
+/* No comment provided by engineer. */
 "Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
 
 /* No comment provided by engineer. */
 "Sun" = "Linggo";
+
+/* No comment provided by engineer. */
+"SUPPORT" = "SUPORTA";
+
+/* No comment provided by engineer. */
+"Synced" = "Naka-sync";
 
 /* The title for viewing all the data usage for the week */
 "This Week" = "Ngayong Linggo";
@@ -137,11 +275,31 @@
 "USED" = "GINAMIT";
 
 /* No comment provided by engineer. */
+"We will get back to you once we’ve received your report. We appreciate your support for this app." = "Babalik kami sa iyo kapag natanggap na namin ang iyong ulat. Pinahahalagahan namin ang iyong suporta para sa app na ito.";
+
+/* No comment provided by engineer. */
 "Wed" = "Miyerkules";
+
+/* No comment provided by engineer. */
+"WEEKLY" = "LINGGUHAN";
 
 /* No comment provided by engineer. */
 "Yep" = "Meron";
 
-/* Title to indicate the user does have a Data Plan */
-"Yep." = "Meron.";
+/* No comment provided by engineer. */
+"You have reached the max limit" = "Naabot mo na ang max na limitasyon";
 
+/* Notification Title for Daily Usage */
+"⚠️ Daily Usage Limit Exceeded" = "⚠️ Lumampas Ka Na Sa Limit Sa Araw Na Ito";
+
+/* Notification Subtitle for Daily Usage */
+"You've used up %lld%% of your data today" = "Naubos mo na ang %lld%% ng iyong data sa araw na ito";
+
+/* Notification Title for Plan Usage */
+"❗️Data Plan Usage Limit Exceeded❗️" = "❗️Lumampas Ka Na Sa Limit Ng Data Plan❗️";
+
+/* Notification Subtitle for Plan Usage */
+"Please turn off mobile data now" = "Paki-off ng iyong mobile data ngayon";
+
+/* Edit Data Amount or Limit Stepper Tip */
+"Tip: Long press - or + to change precision" = "Tip: Humawak nang matagal sa - o + upang baguhin ang precision.";

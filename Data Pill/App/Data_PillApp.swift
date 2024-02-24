@@ -6,32 +6,63 @@
 //
 
 import SwiftUI
-import OSLog
-
-enum Screen {
-    case guide
-    case overview
-}
 
 @main
 struct Data_PillApp: App {
-    @StateObject private var appViewModel = AppViewModel()
-
+    // MARK: - Props
+    @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
+    @StateObject var appViewModel: AppViewModel
+    @StateObject var localNotificationManager: LocalNotificationManager
+    
+    init() {
+        
+        let localNotificationManager = LocalNotificationManager.shared
+        _localNotificationManager = .init(wrappedValue: localNotificationManager)
+        
+        let appViewModel = Self.createAppViewModel()
+        _appViewModel = .init(wrappedValue: appViewModel)
+    }
+    
+    // MARK: - UI
     var body: some Scene {
         WindowGroup {
-            AppView()
-                .environmentObject(appViewModel)
-                .background(Colors.background.color)
-                .sheet(
-                    isPresented: $appViewModel.isGuideShown,
-                    onDismiss: {}
-                ) {
-                    GuideView()
-                        .environmentObject(appViewModel)
-                }
-                .onAppear {
-                    appViewModel.showGuide()
-                }
+            if ProcessInfo.isRunningUnitTests {
+                
+                EmptyView()
+                
+            } else {
+                
+                AppView()
+                    .environmentObject(appViewModel)
+                
+            } //: if-else
+        }
+    }
+}
+
+extension Data_PillApp {
+    
+    static func createAppViewModel() -> AppViewModel {
+        if !ProcessInfo.isUITesting {
+            return .init()
+        }
+        
+        /// * UI Testing *
+        if ProcessInfo.isMockedCloud && ProcessInfo.isMockedMobileData {
+            return .init(
+                dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: MockCloudDatabase()),
+                networkDataRepository: MockNetworkDataRepository(automaticUpdates: true)
+            )
+        } else if ProcessInfo.isMockedCloud {
+            return .init(
+                dataUsageRemoteRepository: DataUsageRemoteRepository(remoteDatabase: MockCloudDatabase())
+            )
+        } else if ProcessInfo.isMockedMobileData {
+            return .init(
+                networkDataRepository: MockNetworkDataRepository(automaticUpdates: true)
+            )
+        } else {
+            return .init()
         }
     }
 }

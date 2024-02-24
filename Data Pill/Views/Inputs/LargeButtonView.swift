@@ -12,16 +12,9 @@ struct LargeButtonView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     var title: LocalizedStringKey
     var disabled: Bool = false
+    var hasOutline: Bool = false
     var id: String
     var action: Action
-    
-    var backgroundColor: Colors {
-        (colorScheme == .light) ? .surface : .tertiary
-    }
-    
-    var color: Colors {
-        (colorScheme == .light) ? .onBackground : .onTertiary
-    }
     
     // MARK: - UI
     var body: some View {
@@ -32,19 +25,26 @@ struct LargeButtonView: View {
                     title,
                     comment: "Button title for User Guide"
                 )
-                    .textStyle(
-                        foregroundColor: color,
-                        font: .semibold,
-                        size: 20
-                    )
-                    .id(id)
+                .textStyle(
+                    foregroundColor: .onSecondary,
+                    font: .semibold,
+                    size: 22
+                )
+                .id(id)
                 
             } //: ZStack
             .frame(height: 118)
             .fillMaxWidth()
-            .background(backgroundColor.color)
+            .background(Color.white.opacity(0.1))
             .clipShape(
                 RoundedRectangle(cornerRadius: 15)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(
+                        Colors.onSecondary.color, 
+                        lineWidth: hasOutline ? 2 : 0
+                    )
             )
         } //: Button
         .buttonStyle(ScaleButtonStyle())
@@ -57,12 +57,25 @@ struct LargeButtonView: View {
 // MARK: - Preview
 struct LargeButtonView_Previews: PreviewProvider {
     static var previews: some View {
-        LargeButtonView(
-            title: "Title",
-            id: "Title",
-            action: {}
-        )
-            .previewLayout(.sizeThatFits)
-            .padding()
+        Group {
+            
+            LargeButtonView(
+                title: "Title",
+                id: "Title",
+                action: {}
+            )
+            .previewDisplayName("w/o outline")
+            
+            LargeButtonView(
+                title: "Title",
+                hasOutline: true,
+                id: "Title",
+                action: {}
+            )
+            .previewDisplayName("w/ outline")
+        }
+        .previewLayout(.sizeThatFits)
+        .padding()
+        .background(Colors.secondaryBlue.color)
     }
 }

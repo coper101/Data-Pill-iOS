@@ -11,22 +11,40 @@ struct UsedCardView: View {
     // MARK: - Props
     var usedData: Double
     var maxData: Double
+    var fillUsageType: FillUsage
     var dataUnit: Unit
     var width: CGFloat
     
-    var percentageUsed: Int {
-        usedData.toPercentage(with: maxData)
+    var percentageUsed: String {
+        let percentage = usedData.displayedUsageInPercentage(
+            maxData: maxData,
+            fillUsageType: fillUsageType
+        )
+        return "\(percentage)"
     }
     
-    var data: String {
-        "\(usedData.toDp(n: 2)) / \(maxData.toDp(n: 2)) \(dataUnit.rawValue)"
+    var dataUsed: String {
+        usedData.displayedUsage(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: dataUnit
+        )
+    }
+    
+    var subtitle: LocalizedStringKey {
+        switch fillUsageType {
+        case .accumulate:
+            return "USED"
+        case .deduct:
+            return "LEFT"
+        }
     }
         
     // MARK: - UI
     var body: some View {
         ItemCardView(
             style: .mini,
-            subtitle: "USED",
+            subtitle: subtitle,
             verticalSpacing: 5,
             isToggleOn: .constant(false),
             width: width
@@ -38,7 +56,7 @@ struct UsedCardView: View {
                 spacing: 0
             ) {
                 
-                Text(verbatim: "\(percentageUsed)")
+                Text(verbatim: percentageUsed)
                     .textStyle(
                         foregroundColor: .onSurface,
                         font: .semibold,
@@ -59,16 +77,16 @@ struct UsedCardView: View {
             } //: HStack
             
             // Row 2: DATA
-            Text(verbatim: "\(data)")
+            Text(verbatim: dataUsed)
                 .textStyle(
                     foregroundColor: .onSurface,
                     font: .semibold,
                     size: 14,
-                    lineLimit: 1
+                    lineLimit: 2
                 )
                 .opacity(0.5)
                 .padding(.bottom, 10)
-                .id(data)
+                .id(dataUsed)
                 .accessibilityLabel(AccessibilityLabels.dataUsedAmount.rawValue)
             
         } //: ItemCardView
@@ -80,16 +98,32 @@ struct UsedCardView: View {
 
 // MARK: - Preview
 struct UsedCardView_Previews: PreviewProvider {
-    static var appViewModel: AppViewModel = .init()
+    static var dataUnit: Unit = .mb
+    
+    static let usedData = 1.123456 /// 1,123 MB (whole number only), 1.12 GB (2 dp max)
+    static let maxData = 5.123456 /// 5,123 MB  (whole number only), 5.12 (2dp max)
     
     static var previews: some View {
-        UsedCardView(
-            usedData: 0.13,
-            maxData: 0.3,
-            dataUnit: appViewModel.unit,
-            width: 150
-        )
-            .previewLayout(.sizeThatFits)
-            .padding()
+        Group {
+            UsedCardView(
+                usedData: usedData,
+                maxData: maxData,
+                fillUsageType: .accumulate,
+                dataUnit: dataUnit,
+                width: 100
+            )
+            .previewDisplayName("Accumulate")
+            
+            UsedCardView(
+                usedData: usedData,
+                maxData: maxData,
+                fillUsageType: .deduct,
+                dataUnit: dataUnit,
+                width: 100
+            )
+            .previewDisplayName("Deduct")
+        }
+        .previewLayout(.sizeThatFits)
+        .padding()
     }
 }

@@ -26,5 +26,4 @@ class Validator {
         let underMin = value < min
         return overMax || underMin
     }
-    
 }

@@ -26,13 +26,13 @@ struct PillTitleView: View {
             getPillTitle(with: usageType, on: date),
             comment: "Title for type of data usage"
         )
-            .textStyle(
-                foregroundColor: color,
-                font: .semibold,
-                size: 20
-            )
-            .matchedGeometryEffect(id: "usageType", in: animation)
-            .transition(.opacity.animation(.easeOut(duration: 0.7)))
+        .textStyle(
+            foregroundColor: color,
+            font: .semibold,
+            size: 20
+        )
+        .matchedGeometryEffect(id: "usageType", in: animation)
+        .transition(.opacity.animation(.easeOut(duration: 0.7)))
     }
     
     var body: some View {

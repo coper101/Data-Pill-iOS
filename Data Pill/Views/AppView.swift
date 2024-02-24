@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
-import WidgetKit
 
 struct AppView: View {
     // MARK: - Props
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @EnvironmentObject var appViewModel: AppViewModel
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.dimensions) var dimensions: Dimensions
@@ -25,11 +25,16 @@ struct AppView: View {
             dimensions.planCardHeight : dimensions.planCardHeightDisabled
         
         return (
+            dimensions.horizontalPadding +
+            dimensions.topBarHeight +
+            dimensions.spaceBottomTopBar +
             dimensions.maxPillHeight +
-                planCardHeight +
+            dimensions.spaceInBetween +
+            planCardHeight +
+            dimensions.spaceInBetween +
             dimensions.planLimitCardsHeight +
-            (dimensions.spaceInBetween * 2) +
-            (dimensions.horizontalPadding * 2)
+            dimensions.horizontalPadding +
+            dimensions.insets.bottom + 21
         )
     }
     
@@ -45,11 +50,14 @@ struct AppView: View {
     // MARK: - UI
     var body: some View {
         ZStack {
+            
+            Colors.background.color
 
             // MARK: Layer 0: Today's Data Pill
             PillGroupView()
                 .fillMaxHeight(alignment: .top)
                 .padding(.top, dimensions.insets.top)
+                .padding(.bottom, dimensions.insets.bottom + 21)
                 .position(
                     x: dimensions.screen.width * 0.5,
                     y: (dimensions.screen.height * 0.5) + contentSpacing
@@ -105,6 +113,7 @@ struct AppView: View {
                         endPeriodAction: endPeriodAction,
                         isPlanActive: .constant(false),
                         dataAmountValue: $appViewModel.dataValue,
+                        dataAmount: appViewModel.dataAmount,
                         plusDataAction: plusDataAction,
                         minusDataAction: minusDataAction,
                         didChangePlusStepperValue: changeStepperPlusDataAction,
@@ -201,10 +210,12 @@ struct AppView: View {
             // MARK: Layer 6: Week's History
             if appViewModel.isHistoryShown {
                 HistoryView(
-                    days: appViewModel.days,
+                    dayColors: appViewModel.dayColors,
                     weekData: appViewModel.thisWeeksData,
                     dataLimitPerDay: appViewModel.dataLimitPerDay,
                     usageType: appViewModel.usageType,
+                    fillUsageType: appViewModel.fillUsageType,
+                    hasLabel: appViewModel.labelsInWeekly,
                     showFilledLines: appViewModel.isLongPressedOutside,
                     closeAction: closeAction
                 )
@@ -250,6 +261,36 @@ struct AppView: View {
         .background(Colors.background.color)
         .onChange(of: scenePhase, perform: didChangeScenePhase)
         .onOpenURL(perform: appViewModel.didOpenURL)
+        .environmentObject(appViewModel)
+        .background(Colors.background.color)
+        .sheet(
+            isPresented: $appViewModel.isGuideShown,
+            onDismiss: {}
+        ) {
+            GuideView()
+                .environmentObject(appViewModel)
+        }
+        .fullScreenCover(isPresented: $appViewModel.isSettingsShown) {
+            SettingsView()
+        }
+        .onAppear {
+            appViewModel.showGuide()
+        }
+        .preferredColorScheme(appViewModel.colorScheme)
+        .alert(isPresented: $appViewModel.isNotificationAlertShown) {
+            Alert(
+                title: Text("Notification"),
+                message: Text("Please allow notification in settings to get notifications"),
+                primaryButton: .default(
+                    Text("Ok"),
+                    action: dimsmissAlertAction
+                ),
+                secondaryButton: .default(
+                    Text("Settings"),
+                    action: settingsAction
+                )
+            )
+        } //: alert
     }
     
     // MARK: - Actions
@@ -374,13 +415,27 @@ struct AppView: View {
     }
     
     func didChangeScenePhase(phase: ScenePhase) {
-        if phase == .active {
-            appViewModel.updatePlanPeriod()
-        } else if phase == .background {
-            WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.main.name)
+        switch phase {
+        case .background:
+            appViewModel.didChangeBackgroundScenePhase()
+        case .active:
+            appViewModel.didChangeActiveScenePhase()
+        default:
+            break
         }
     }
-
+    
+    /// Notification
+    func settingsAction() {
+        appViewModel.setIsNotificationAlertShown(false)
+    }
+    
+    func dimsmissAlertAction() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        UIApplication.shared.open(url)
+    }
 }
 
 // MARK: - Preview
@@ -389,66 +444,33 @@ struct AppView_Previews: PreviewProvider {
         let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
         let dataRepo = DataUsageRepository(database: database)
         dataRepo.dataError = .loadingContainer()
+        
+        dataRepo.addData(
+            date: Calendar.current.startOfDay(for: .init()),
+            totalUsedData: 0,
+            dailyUsedData: 0,
+            hasLastTotal: true,
+            isSyncedToRemote: false,
+            lastSyncedToRemoteDate: nil
+        )
+        
         let viewModel = AppViewModel(dataUsageRepository: dataRepo)
         return viewModel
     }
-    
-    static var appViewModel: AppViewModel {
-        let database = InMemoryLocalDatabase(container: .dataUsage, appGroup: .dataPill)
-        let dataRepo = DataUsageRepository(database: database)
-        let todaysDate = Date()
         
-        // 3 Days Ago
-        dataRepo.addData(
-            date: Calendar.current.date(
-                byAdding: .day, value: -3, to: todaysDate)!,
-            totalUsedData: 0,
-            dailyUsedData: 1_500,
-            hasLastTotal: true
-        )
-        // 2 Days Ago
-        dataRepo.addData(
-            date: Calendar.current.date(
-                byAdding: .day, value: -2, to: todaysDate)!,
-            totalUsedData: 0,
-            dailyUsedData: 5_000,
-            hasLastTotal: true
-        )
-        // Yesterday
-        dataRepo.addData(
-            date: Calendar.current.date(
-                byAdding: .day, value: -1, to: todaysDate)!,
-            totalUsedData: 0,
-            dailyUsedData: 2_100,
-            hasLastTotal: true
-        )
-       
-        // Update Database
-        dataRepo.updatePlan(
-            startDate: Calendar.current.date(
-                byAdding: .day, value: -3, to: todaysDate)!,
-            endDate: Calendar.current.date(
-                byAdding: .day, value: 0, to: todaysDate)!,
-            dataAmount: 10,
-            dailyLimit: 4,
-            planLimit: 9
-        )
-        
-        let viewModel = AppViewModel(dataUsageRepository: dataRepo)
-        
-        // Update created Today's Data (added automatically by app)
-        viewModel.refreshUsedDataToday(1000)
-        
-        return viewModel
-    }
-    
     static var previews: some View {
         AppView()
             .previewLayout(.sizeThatFits)
-            .environmentObject(appViewModel)
+            .environmentObject(TestData.createAppViewModel())
             .padding(.top, 20)
-            .previewDisplayName("Working App")
+            .previewDisplayName("Existing User")
         
+        AppView()
+            .previewLayout(.sizeThatFits)
+            .environmentObject(TestData.createAppViewModel(wasGuideShown: false))
+            .padding(.top, 20)
+            .previewDisplayName("New User")
+
         AppView()
             .previewLayout(.sizeThatFits)
             .environmentObject(appViewModelError)

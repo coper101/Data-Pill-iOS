@@ -10,6 +10,8 @@ import SwiftUI
 struct DataPlanLimitView: View {
     // MARK: - Props
     @Binding var dataLimitValue: String
+    @State var hasShownStepperTip: Bool = true
+
     var dataAmount: Double
     var dataUnit: Unit = .gb
     var isEditing: Bool
@@ -98,13 +100,20 @@ struct DataPlanLimitView: View {
                 .fillMaxWidth()
                 .padding(.bottom, 34)
                 .padding(.top, 16)
+                .withStepperTip(hasShownStepperTip: $hasShownStepperTip, isBelow: false)
             }
             
         } //: ItemCardView
         .accessibilityIdentifier(usageType == .plan ? "planLimit" : "dailyLimit")
+        .onAppear(perform: onAppear)
     }
     
     // MARK: - Actions
+    func onAppear() {
+        withAnimation {
+            hasShownStepperTip = false
+        }
+    }
 }
 
 // MARK: - Preview

@@ -4,19 +4,29 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Data Pill WidgetExtension.xcscheme_^#shared#^_</key>
+		<key>Data Pill Widget Extension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>isShown</key>
 			<true/>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Data Pill.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>isShown</key>
 			<true/>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>0</integer>
+		</dict>
+		<key>Mock Mobile Data.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>Mock iCloud And Mobile Data.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>

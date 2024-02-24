@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "02B9D489-F4C6-408F-862B-7192C1DD05FD",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Data Pill.xcodeproj",
+        "identifier" : "270EC9B92956A898008A27AA",
+        "name" : "Data Pill UI Tests"
+      }
+    }
+  ],
+  "version" : 1
+}

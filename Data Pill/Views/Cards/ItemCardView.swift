@@ -59,6 +59,7 @@ struct ItemCardView<Content>: View where Content: View {
     
     @Binding var isToggleOn: Bool
     var hasToggle = false
+    var activeColor: Colors = .onSurfaceLight
     
     var contentVertPadding: CGFloat = 14
     var contentHorPadding: CGFloat = 20
@@ -122,7 +123,10 @@ struct ItemCardView<Content>: View where Content: View {
                     secondaryLabel
                     
                     if hasToggle {
-                        SlideToggleView(isOn: $isToggleOn)
+                        SlideToggleView(
+                            activeColor: activeColor,
+                            isOn: $isToggleOn
+                        )
                     }
                     
                 } //: HStack

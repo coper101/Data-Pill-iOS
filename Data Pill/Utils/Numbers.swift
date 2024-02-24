@@ -68,6 +68,30 @@ extension Int {
         }
     }
     
+    func toDay() -> Day {
+        let weekday = self
+        if weekday == 1 {
+            return .sunday
+        }
+        else if weekday == 2 {
+            return .monday
+        }
+        else if weekday == 3 {
+            return .tuesday
+        }
+        else if weekday == 4 {
+            return .wednesday
+        }
+        else if weekday == 5 {
+            return .thursday
+        }
+        else if weekday == 6 {
+            return .friday
+        } else {
+            return .saturday
+        }
+    }
+    
 }
 
 extension Double {
@@ -123,7 +147,7 @@ extension Double {
         }
         return percentage
     }
-    
+        
     /// Convert decimal number from MB to GB
     /// no changes for unit that is not MB
     /// - Parameter unit: A value to specify the current unit to convet from
@@ -137,6 +161,84 @@ extension Double {
         /// no change
         return self
     }
+    
+    /// Convert decimal number from GB to MB
+    func toMB() -> Double {
+        if (self < 0) {
+            return 0
+        }
+        return self * 1_000
+    }
+    
+    /// Convert decimal number from MB to Bytes
+    func toBytesFromMegabytes() -> Double {
+        if (self < 0) {
+            return 0
+        }
+        return self * 1_000_000
+    }
+    
+    /// Calculate the used amount (GB) based on `FillUsage` type
+    /// - converts to MB based on `Unit`
+    func calculateUsedData(maxData: Double, fillUsageType: FillUsage, dataUnit: Unit) -> Double {
+        let usedData = self
+        var result: Double = 0
+        switch fillUsageType {
+        case .accumulate:
+            result = usedData
+        case .deduct:
+            result = maxData - usedData
+        }
+        switch dataUnit {
+        case .gb:
+            return result
+        case .mb:
+            return result.toMB()
+        }
+    }
+    
+    /// Calculate the max amount (GB)
+    /// - converts to MB based on `Unit`
+    func calculateMaxData(dataUnit: Unit) -> Double {
+        let max = self
+        switch dataUnit {
+        case .gb:
+            return max
+        case .mb:
+            return max.toMB()
+        }
+    }
+    
+    /// Displayed used amount (GB) over max amount (GB limit)
+    func displayedUsage(maxData: Double, fillUsageType: FillUsage, dataUnit: Unit) -> String {
+        let used = self.calculateUsedData(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: dataUnit
+        )
+        let max = maxData.calculateMaxData(dataUnit: dataUnit)
+        
+        switch dataUnit {
+        case .gb:
+            return "\(used.toDp(n: 2)) / \(max.toDp(n: 2)) \(dataUnit.rawValue)"
+        case .mb:
+            return "\(used.toDp(n: 0)) / \(max.toDp(n: 0)) \(dataUnit.rawValue)"
+        }
+    }
+    
+    /// Displayed used amount (GB) in percentage
+    func displayedUsageInPercentage(maxData: Double, fillUsageType: FillUsage) -> Int {
+        let usedData = self
+        let percentageUsed = usedData.toPercentage(with: maxData)
+        let percentageRemaining = 100 - percentageUsed
+
+        switch fillUsageType {
+        case .accumulate:
+            return percentageUsed
+        case .deduct:
+            return percentageRemaining
+        }
+    }
 }
 
 extension Int64 {
@@ -145,14 +247,18 @@ extension Int64 {
     func toMB() -> Double {
         Double(self) / pow(1_024, 2)
     }
-
+    
+    /// convert bytes (B) to megabytes (MB)
+    func toBytes() -> Double {
+        Double(self) * pow(1_024, 2)
+    }
 }
 
 extension UInt64 {
     
     /// convert UInt64 to Int64
     func toInt64() -> Int64 {
-        Int64(self)
+        .init(self)
     }
     
 }

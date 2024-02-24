@@ -12,18 +12,21 @@ struct PillView: View {
     @Environment(\.dimensions) var dimensions: Dimensions
     @Namespace private var animation
 
-    var color: Colors
+    var color: Color
     var percentage: Int
     var date: Date
-    var hasBackground = true
+    
+    var hasBackground: Bool = true
+    var hasLabel: Bool = true
     var usageType: ToggleItem
+    
     var widthScale: CGFloat = 0.45
     var customSize: CGSize? = nil
     
-    var isContentShown = true
-    var showFillLine = false
-    var hasPillOutline = false /// for tracking pill outline
-    var showPercentage = false
+    var isContentShown: Bool = true
+    var showFillLine: Bool = false
+    var hasPillOutline: Bool = false /// for tracking pill outline
+    var showPercentage: Bool = false
     
     // MARK: - UI
     var label: some View {
@@ -47,7 +50,7 @@ struct PillView: View {
             widthScale: widthScale,
             customSize: customSize,
             label: {
-                if percentage >= 15 {
+                if percentage >= 15 && hasLabel {
                     label
                 }
             },
@@ -67,7 +70,7 @@ struct PillView_Previews: PreviewProvider {
         Group {
             
             PillView(
-                color: appViewModel.days[0].color,
+                color: appViewModel.dayColors.values.first!,
                 percentage: percentage,
                 date: Date(),
                 usageType: .daily
@@ -77,7 +80,7 @@ struct PillView_Previews: PreviewProvider {
             )
             
             PillView(
-                color: appViewModel.days[0].color,
+                color: appViewModel.dayColors.values.first!,
                 percentage: percentage,
                 date: Date(),
                 usageType: .daily,

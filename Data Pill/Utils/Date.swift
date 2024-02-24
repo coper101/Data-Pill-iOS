@@ -31,10 +31,10 @@ extension Date {
     
     /// Formats the Date to `dd mm`
     /// e.g. 1 Jan
-    func toDayMonthFormat(locale identifier: String) -> String {
+    func toDayMonthFormat(locale identifier: String, format: String = "d MMM") -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = .init(identifier: identifier)
-        dateFormatter.dateFormat = "d MMM"
+        dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)
     }
     
@@ -59,7 +59,7 @@ extension Date {
         return dateFormatter.string(from: self)
     }
         
-    /// Returns the weekday index
+    /// Returns the weekday index from 1 - 7 : Sun - Sat
     /// e.g. 1 Jan 2022, Sat = 7
     func getWeekday() -> Int {
         self.toDateComp().weekday!

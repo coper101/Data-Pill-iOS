@@ -35,14 +35,41 @@ enum RectangularWidgetSize: String, Identifiable, CaseIterable {
 
 struct RectangularWidgetView: View {
     // MARK: - Props
+    var fillUsageType: FillUsage
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
     var subtitle: String
-    var color: Colors
+    var color: Color
     
     var percentageUsed: Int {
-        usedData.toPercentage(with: maxData)
+        usedData.displayedUsageInPercentage(
+            maxData: maxData,
+            fillUsageType: fillUsageType
+        )
+    }
+    
+    var dataUsed: String {
+        let amount = usedData.calculateUsedData(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: dataUnit
+        )
+        return Self.setDp(amount: amount, dataUnit: dataUnit)
+    }
+    
+    var dataMax: String {
+        let amount = maxData.calculateMaxData(dataUnit: dataUnit)
+        return Self.setDp(amount: amount, dataUnit: dataUnit)
+    }
+    
+    static func setDp(amount: Double, dataUnit: Unit) -> String {
+        switch dataUnit {
+        case .gb:
+            return amount.toDp(n: 2)
+        case .mb:
+            return amount.toDp(n: 0)
+        }
     }
     
     // MARK: - UI
@@ -64,7 +91,7 @@ struct RectangularWidgetView: View {
                         hasBackground: true,
                         backgroundColor: .widgetTint,
                         backgroundOpacity: 0.5,
-                        color: .widgetTint,
+                        color: Colors.widgetTint.color,
                         widthScale: 0,
                         customSize: .init(
                             width: width * 0.6,
@@ -94,7 +121,7 @@ struct RectangularWidgetView: View {
                 ) {
                     
                     // Row 1: DATA USED
-                    Text(verbatim: "\(usedData.toDp(n: 4))")
+                    Text(verbatim: dataUsed)
                         .textStyle(
                             foregroundColor: .widgetTint,
                             font: .bold,
@@ -105,7 +132,7 @@ struct RectangularWidgetView: View {
                     // Row 2: SUBTITLE
                     HStack(spacing: 3) {
                         
-                        Text(verbatim: "\(maxData.toDp(n: 4))")
+                        Text(verbatim: dataMax)
                             
                         Text(dataUnit.rawValue)
                             .kerning(1.0)
@@ -146,16 +173,20 @@ struct RectangularWidgetView: View {
 
 // MARK: - Preview
 struct RectangularWidgetView_Previews: PreviewProvider {
+    static let usedData = 1.123456 /// 1,123 MB (whole number only), 1.12 GB (2 dp max)
+    static let maxData = 5.123456 /// 5,123 MB  (whole number only), 5.12 (2dp max)
+    
     static var previews: some View {
         ForEach(RectangularWidgetSize.allCases) { widgetSize in
             let size = widgetSize.size
             if #available(iOS 16.0, *) {
                 RectangularWidgetView(
-                    usedData: 0.3334,
-                    maxData: 0.99,
+                    fillUsageType: .accumulate,
+                    usedData: usedData,
+                    maxData: maxData,
                     dataUnit: .gb,
                     subtitle: "Mon",
-                    color: .secondaryBlue
+                    color: Colors.secondaryBlue.color
                 )
                 .previewLayout(.sizeThatFits)
                 .previewDisplayName("Rectangular / \(size.width)x\(size.height)")

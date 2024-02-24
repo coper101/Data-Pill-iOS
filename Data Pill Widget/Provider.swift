@@ -25,8 +25,9 @@ struct Provider: IntentTimelineProvider {
             dataUnit: .gb,
             localizedSubtitle: "Day",
             subtitle: "Day",
-            color: .surface,
-            usageType: .daily
+            color: Colors.surface.color,
+            usageType: .daily,
+            fillUsageType: .accumulate
         )
     }
 
@@ -49,7 +50,7 @@ struct Provider: IntentTimelineProvider {
         let currentDate = Date()
         let entry = getNewEntry(for: configuration, date: currentDate)
         let timeline = Timeline(entries: [entry], policy: .atEnd)
-        Logger.widgetProvider.debug("timeline: \(timeline.entries)")
+        Logger.widgetProvider.debug("- WIDGET PROVIDER: ⏳ Timeline | Entries \(timeline.entries)")
         completion(timeline)
     }
     
@@ -71,9 +72,10 @@ struct Provider: IntentTimelineProvider {
         widgetModel.getLatestData()
         
         let todaysDate = widgetModel.todaysData.date ?? .init()
-        var color: Colors {
+        var color: Color {
             let weekday = todaysDate.toDateComp().weekday ?? 1
-            return widgetModel.days[weekday - 1].color
+            let defaultColor = widgetModel.dayColors.values.first ?? Colors.secondaryBlue.color
+            return widgetModel.dayColors[weekday.toDay()] ?? defaultColor
         }
         let isPlan = usageType == .plan
         let localizedSubtitle: LocalizedStringKey = isPlan ? "PLAN" : "TODAY"
@@ -87,7 +89,8 @@ struct Provider: IntentTimelineProvider {
             localizedSubtitle: localizedSubtitle,
             subtitle: subtitle,
             color: color,
-            usageType: usageType
+            usageType: usageType,
+            fillUsageType: widgetModel.fillUsageType
         )
         
         return newEntry

@@ -16,6 +16,8 @@ struct DataPlanCardView: View {
     // MARK: - Props
     @Environment(\.locale) var locale: Locale
 
+    @State var hasShownStepperTip: Bool = true
+
     var editType: EditDataPlan? = nil
     var startDate: Date
     var endDate: Date
@@ -28,7 +30,9 @@ struct DataPlanCardView: View {
     
     @Binding var isPlanActive: Bool
     @Binding var dataAmountValue: String
+    var dataAmount: Double
     var dataUnit: Unit = .gb
+    var activeColor: Colors = .onSurfaceLight
     
     var plusDataAction: Action
     var minusDataAction: Action
@@ -95,6 +99,7 @@ struct DataPlanCardView: View {
         .fillMaxWidth()
         .padding(.top, 28)
         .padding(.bottom, 12)
+        .withStepperTip(hasShownStepperTip: $hasShownStepperTip, isBelow: true)
     }
     
     var body: some View {
@@ -105,6 +110,7 @@ struct DataPlanCardView: View {
             backgroundColor: editType == nil ? .surface : .background,
             isToggleOn: $isPlanActive,
             hasToggle: editType == nil,
+            activeColor: activeColor,
             textColor: editType == nil ? .onSurfaceLight2 : .onBackground
         ) {
             
@@ -135,7 +141,7 @@ struct DataPlanCardView: View {
 
                     // Row 2: DATA AMOUNT
                     NavRowView(
-                        title: "\(dataAmountValue) \(dataUnit.rawValue)",
+                        title: "\(dataAmount) \(dataUnit.rawValue)",
                         subtitle: "",
                         action: dataAmountAction
                     )
@@ -151,14 +157,20 @@ struct DataPlanCardView: View {
             
         } //: ItemCardView
         .accessibilityIdentifier(AccessibilityLabels.dataPlan.rawValue)
+        .onAppear(perform: onAppear)
     }
     
     // MARK: - Actions
+    func onAppear() {
+        withAnimation {
+            hasShownStepperTip = false
+        }
+    }
 }
 
 // MARK: - Preview
 struct DataPlanCardView_Previews: PreviewProvider {
-    static var appViewModel: AppViewModel = .init()
+    static var appViewModel: AppViewModel = TestData.createAppViewModel()
     
     static var previews: some View {
         Group {
@@ -173,6 +185,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
                 endPeriodAction: {},
                 isPlanActive: .constant(false),
                 dataAmountValue: .constant("10"),
+                dataAmount: 10,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
@@ -190,6 +203,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
                 endPeriodAction: {},
                 isPlanActive: .constant(true),
                 dataAmountValue: .constant("10"),
+                dataAmount: 10,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
@@ -208,6 +222,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
                 endPeriodAction: {},
                 isPlanActive: .constant(false),
                 dataAmountValue: .constant("10"),
+                dataAmount: 10,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },
@@ -226,6 +241,7 @@ struct DataPlanCardView_Previews: PreviewProvider {
                 endPeriodAction: {},
                 isPlanActive: .constant(false),
                 dataAmountValue: .constant("10"),
+                dataAmount: 10,
                 plusDataAction: {},
                 minusDataAction: {},
                 didChangePlusStepperValue: { _ in },

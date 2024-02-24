@@ -9,6 +9,9 @@ import SwiftUI
 
 enum Colors: String {
     // App
+    case error = "Error"
+    case onError = "On Error"
+
     case background = "Background"
     case onBackground = "On Background"
     case onBackgroundLight = "On Background Light"
@@ -27,6 +30,9 @@ enum Colors: String {
 
     case widgetBackground = "Widget Background"
     case widgetTint = "Widget Tint"
+    
+    case shadow = "Shadow"
+    case shadowDark = "Shadow Dark"
     
     // Day Pill
     case secondaryBlue = "Secondary Blue"

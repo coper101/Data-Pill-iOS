@@ -23,19 +23,27 @@ enum SmallWidgetSize: Int, Identifiable, CaseIterable {
 
 struct SmallWidgetView: View {
     // MARK: - Props
+    var fillUsageType: FillUsage
     var usedData: Double
     var maxData: Double
     var dataUnit: Unit
     var localizedSubtitle: LocalizedStringKey
     var subtitle: String
-    var color: Colors
+    var color: Color
     
     var percentageUsed: Int {
-        usedData.toPercentage(with: maxData)
+        usedData.displayedUsageInPercentage(
+            maxData: maxData,
+            fillUsageType: fillUsageType
+        )
     }
     
-    var data: String {
-        "\(usedData.toDp(n: 2)) / \(maxData.toDp(n: 2))"
+    var dataUsed: String {
+        usedData.displayedUsage(
+            maxData: maxData,
+            fillUsageType: fillUsageType,
+            dataUnit: dataUnit
+        )
     }
     
     // MARK: - UI
@@ -43,7 +51,6 @@ struct SmallWidgetView: View {
         GeometryReader { reader in
             let height = reader.size.height
             let width = reader.size.width
-            let showUnit = showUnit(width)
             
             HStack(
                 alignment: .center,
@@ -99,7 +106,7 @@ struct SmallWidgetView: View {
                     .padding(.top, 7)
                                     
                     // Row 2: DATA USED
-                    Text(verbatim: "\(data) \(showUnit ? dataUnit.rawValue : "")")
+                    Text(verbatim: dataUsed)
                         .multilineTextAlignment(.trailing)
                         .textStyle(
                             foregroundColor: .onSurface,
@@ -128,7 +135,6 @@ struct SmallWidgetView: View {
             .padding(.vertical, 8)
             .padding(.horizontal, 10)
             .fillMaxSize()
-            .background(Colors.background.color)
             
         } //: GeometryReader
     }
@@ -162,16 +168,20 @@ struct SmallWidgetView: View {
 
 // MARK: - Preview
 struct SmallWidgetView_Previews: PreviewProvider {
+    static let usedData = 1.123456 /// 1,123 MB (whole number only), 1.12 GB (2 dp max)
+    static let maxData = 5.123456 /// 5,123 MB  (whole number only), 5.12 (2dp max)
+    
     static var previews: some View {
         ForEach(SmallWidgetSize.allCases) { size in
             let theSize = CGFloat(size.rawValue)
             SmallWidgetView(
-                usedData: 0.09,
-                maxData: 0.9,
+                fillUsageType: .accumulate,
+                usedData: usedData,
+                maxData: maxData,
                 dataUnit: .gb,
                 localizedSubtitle: "Today",
                 subtitle: "Today",
-                color: .secondaryBlue
+                color: Colors.secondaryBlue.color
             )
             .previewLayout(.sizeThatFits)
             .previewDisplayName("\(size.rawValue)")

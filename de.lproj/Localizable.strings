@@ -1,8 +1,26 @@
 /* No comment provided by engineer. */
+"%@ %@ %@" = "%@ %@ %@";
+
+/* No comment provided by engineer. */
 "%@ Days" = "%@ Tage";
 
-/* An explanation of the Data Plan */
-"A Data Plan is a subscription service where you pay every period to use a fixed amount of mobile data. " = "Ein Datentarif ist ein Abonnementdienst, bei dem Sie jeden Zeitraum bezahlen, um eine feste Menge mobiler Daten zu nutzen.";
+/* No comment provided by engineer. */
+"%@ GB" = "%@ GB";
+
+/* No comment provided by engineer. */
+"%@ MB" = "%@ GB";
+
+/* No comment provided by engineer. */
+"%lld" = "%lld";
+
+/* No comment provided by engineer. */
+"$%lld / month" = "$%lld / Monat";
+
+/* No comment provided by engineer. */
+"Accumulate" = "Ansammeln";
+
+/* No comment provided by engineer. */
+"APPEARANCE" = "ERSCHEINUNGSBILD";
 
 /* No comment provided by engineer. */
 "Auto" = "Auto";
@@ -14,13 +32,37 @@
 "Card" = "Card";
 
 /* No comment provided by engineer. */
+"Content" = "Content";
+
+/* No comment provided by engineer. */
+"Customize Pill" = "Pill Anpassen";
+
+/* No comment provided by engineer. */
 "Daily" = "Täglich";
+
+/* No comment provided by engineer. */
+"DAILY" = "TÄGLICH";
 
 /* No comment provided by engineer. */
 "Daily\nLimit" = "Tägliches \nLimit";
 
 /* No comment provided by engineer. */
 "Daily Limit" = "Tägliches Limit";
+
+/* No comment provided by engineer. */
+"Daily Usage" = "Tägliche Nutzung";
+
+/* No comment provided by engineer. */
+"DAILY USAGE" = "TÄGLICHE NUTZUNG";
+
+/* No comment provided by engineer. */
+"Daily Usage, Plan Usage" = "Tägliche Nutzung, Plan-Nutzung";
+
+/* No comment provided by engineer. */
+"Dark Mode" = "Dark Mode";
+
+/* No comment provided by engineer. */
+"DATA" = "DATEN";
 
 /* No comment provided by engineer. */
 "Data Amount" = "Datenmenge";
@@ -31,6 +73,12 @@
 /* No comment provided by engineer. */
 "Data Plan" = "Datentarif";
 
+/* No comment provided by engineer. */
+"Data Unit" = "Daten Einheit";
+
+/* No comment provided by engineer. */
+"Deduct" = "Abziehen";
+
 /* Prompt user to select if they have a data plan in User Guide */
 "Do you have a Data Plan?" = "Haben Sie einen Datentarif?";
 
@@ -38,7 +86,16 @@
 "Done" = "Fertig";
 
 /* No comment provided by engineer. */
+"Exceeds 90% of Limit" = "Übersteigt 90% des Limits";
+
+/* No comment provided by engineer. */
+"Exceeds 100% of Limit" = "Übersteigt 100% des Limits";
+
+/* No comment provided by engineer. */
 "Exceeds maximum data amount" = "Überschreitet die maximale Datenmenge";
+
+/* No comment provided by engineer. */
+"FILL USAGE" = "NUTZUNG AUFFÜLLEN";
 
 /* No comment provided by engineer. */
 "Fri" = "Fr";
@@ -46,14 +103,41 @@
 /* No comment provided by engineer. */
 "From" = "Von";
 
+/* No comment provided by engineer. */
+"GB" = "GB";
+
 /* Header for user guide for first time users */
 "Get Started" = "Loslegen";
+
+/* No comment provided by engineer. */
+"Great!" = "Super!";
 
 /* The description for Non Data Plan selection */
 "If you ever subscribe to a plan in the future, toggle Data Plan." = "Wenn Sie in Zukunft jemals einen Plan abonnieren, schalten Sie den Datentarif um.";
 
 /* No comment provided by engineer. */
+"In Daily" = "Täglich";
+
+/* No comment provided by engineer. */
+"In Weekly" = "Wöchentlich";
+
+/* No comment provided by engineer. */
+"LABELS" = "BESCHRIFTUNGEN";
+
+/* No comment provided by engineer. */
+"LAST %lld RECORDS" = "DIE LETZTEN %lld DATENSÄTZE";
+
+/* No comment provided by engineer. */
+"LEFT" = "VERBLEIBEND";
+
+/* No comment provided by engineer. */
 "Manual" = "Handbuch";
+
+/* No comment provided by engineer. */
+"MB" = "MB";
+
+/* No comment provided by engineer. */
+"Min: %lld Characters" = "Mindestens: %lld Zeichen";
 
 /* No comment provided by engineer. */
 "Mon" = "Mo";
@@ -62,10 +146,22 @@
 "NA" = "NA";
 
 /* No comment provided by engineer. */
+"No Worries!" = "Kein Problem!";
+
+/* No comment provided by engineer. */
 "Nope" = "Nö";
 
-/* Title to indicate the user doesn't have a Data Plan */
-"Nope." = "Nö.";
+/* No comment provided by engineer. */
+"Notification" = "Benachrichtigung";
+
+/* No comment provided by engineer. */
+"NOTIFICATION" = "BENACHRICHTIGUNG";
+
+/* No comment provided by engineer. */
+"Notifications" = "Benachrichtigung";
+
+/* No comment provided by engineer. */
+"Ok" = "OK";
 
 /* No comment provided by engineer. */
 "Period" = "Zeitraum";
@@ -83,25 +179,67 @@
 "Plan Limit" = "Planlimit";
 
 /* No comment provided by engineer. */
+"Plan Usage" = "Plan-Nutzung";
+
+/* No comment provided by engineer. */
+"PLAN USAGE" = "PLAN-NUTZUNG";
+
+/* No comment provided by engineer. */
+"Please allow notification in settings to get notifications" = "Bitte erlauben Sie Benachrichtigungen in den Einstellungen, um Benachrichtigungen zu erhalten";
+
+/* No comment provided by engineer. */
+"Records" = "Datensätze";
+
+/* No comment provided by engineer. */
+"Report a Bug" = "Melden Sie einen Fehler";
+
+/* No comment provided by engineer. */
+"Report A Bug" = "Melden Sie einen Fehler";
+
+/* No comment provided by engineer. */
+"Request a Feature" = "Eine Funktion Anfragen";
+
+/* No comment provided by engineer. */
+"Request A Feature" = "Eine Funktion Anfragen";
+
+/* No comment provided by engineer. */
 "Sat" = "Sa";
 
 /* Button title save */
 "Save" = "Sichern";
 
+/* No comment provided by engineer. */
+"Send Via Mail" = "Per E-Mail Senden";
+
 /* A guide message to user on how to set the data plan and period */
 "Set the amount of data in your plan and the period it starts and ends." = "Legen Sie die Datenmenge in Ihrem Plan und den Zeitraum fest, in dem er beginnt und endet.";
+
+/* No comment provided by engineer. */
+"Settings" = "Einstellungen";
+
+/* No comment provided by engineer. */
+"Show All Records" = "Alle Datensätze Anzeigen";
 
 /* Error message when the app can't read the data from the device */
 "Sorry, the data can’t be loaded from the Storage." = "Entschuldigung, die Daten können nicht aus dem Speicher geladen werden.";
 
 /* Button title start */
-"Start" = "Start";
+"Start" = "Anfang";
+
+/* No comment provided by engineer. */
+"Subtitle" = "Subtitle";
 
 /* No comment provided by engineer. */
 "Subtitle Subtitle Subtitle" = "Subtitle Subtitle Subtitle";
 
 /* No comment provided by engineer. */
 "Sun" = "So";
+
+/* No comment provided by engineer. */
+"SUPPORT" = "SUPPORT";
+
+/* No comment provided by engineer. */
+"Synced" = "Synchronisiert";
 
 /* The title for viewing all the data usage for the week */
 "This Week" = "In dieser Woche";
@@ -137,11 +275,31 @@
 "USED" = "VERBR.";
 
 /* No comment provided by engineer. */
+"We will get back to you once we’ve received your report. We appreciate your support for this app." = "Sobald wir Ihren Bericht erhalten haben, werden wir uns bei Ihnen melden. Wir schätzen Ihre Unterstützung für diese App.";
+
+/* No comment provided by engineer. */
 "Wed" = "Mi";
+
+/* No comment provided by engineer. */
+"WEEKLY" = "WÖCHENTLICH";
 
 /* No comment provided by engineer. */
 "Yep" = "Ja";
 
-/* Title to indicate the user does have a Data Plan */
-"Yep." = "Ja.";
+/* No comment provided by engineer. */
+"You have reached the max limit" = "Sie haben das maximale Limit erreicht";
 
+/* Notification Title for Daily Usage */
+"⚠️ Daily Usage Limit Exceeded" = "⚠️ Tägliches Nutzungsmaximum Überschritten";
+
+/* Notification Subtitle for Daily Usage */
+"You've used up %lld%% of your data today" = "Sie haben heute bereits %lld%% Ihrer Daten verbraucht";
+
+/* Notification Title for Plan Usage */
+"❗️Data Plan Usage Limit Exceeded❗️" = "❗️Datentarifnutzungslimit Überschritten❗️";
+
+/* Notification Subtitle for Plan Usage */
+"Please turn off mobile data now" = "Bitte schalten Sie jetzt mobile Daten aus";
+
+/* Edit Data Amount or Limit Stepper Tip */
+"Tip: Long press - or + to change precision" = "Tipp: Halten Sie lange auf - oder +, um die Genauigkeit zu ändern";

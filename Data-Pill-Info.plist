@@ -13,6 +13,11 @@
 		<string>SFProText-Semibold.ttf</string>
 		<string>SFProText-Heavy.ttf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

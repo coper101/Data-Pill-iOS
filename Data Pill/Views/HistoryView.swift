@@ -13,15 +13,17 @@ struct HistoryView: View {
     @Environment(\.dimensions) var dimensions: Dimensions
 
     var paddingHorizontal: CGFloat = 21
-    var days: [DayPill]
+    var dayColors: [Day: Color]
     var weekData: [Data]
     var dataLimitPerDay: Double
     var usageType: ToggleItem
+    var fillUsageType: FillUsage
     
+    var hasLabel: Bool = true
     var showFilledLines: Bool = false
     var closeAction: () -> Void
     
-    var descendingWeeksData: [Data] {
+    var thisWeekData: [Data] {
         weekData.sorted {
             guard
                 let date1 = $0.date,
@@ -45,13 +47,13 @@ struct HistoryView: View {
                     "This Week",
                     comment: "The title for viewing all the data usage for the week"
                 )
-                    .textStyle(
-                        foregroundColor: .onBackground,
-                        font: .bold,
-                        size: 30,
-                        maxWidth: .infinity,
-                        lineLimit: 1
-                    )
+                .textStyle(
+                    foregroundColor: .onBackground,
+                    font: .bold,
+                    size: 30,
+                    maxWidth: .infinity,
+                    lineLimit: 1
+                )
                 
                 // CLOSE
                 CloseIconView(action: closeAction)
@@ -65,24 +67,38 @@ struct HistoryView: View {
             ZStack {
                 
                 ForEach(
-                    Array(descendingWeeksData.enumerated()),
+                    Array(thisWeekData.enumerated()),
                     id: \.element
                 ) { index, data in
+                    
 
-                    let day = days[index]
-                    let isFirstPill = index == 0
-
-                    DraggablePillView(
-                        date: data.date ?? Date(),
-                        color: day.color,
-                        percentage: data.dailyUsedData.toGB()
-                            .toPercentage(with: dataLimitPerDay),
-                        usageType: usageType,
-                        hasBackground: isFirstPill && showFilledLines,
-                        showFillLine: showFilledLines,
-                        hasPillOutline: isFirstPill && showFilledLines, /// show for first pill only - Sunday
-                        widthScale: 0.65
-                    )
+                    if 
+                        let date = data.date,
+                        let color = dayColors[date.getWeekday().toDay()]
+                    {
+                        
+                        let isFirstPill = index == 0
+                        let percentage = data.dailyUsedData.toGB().displayedUsageInPercentage(
+                            maxData: dataLimitPerDay,
+                            fillUsageType: fillUsageType
+                        )
+                        
+                        DraggablePillView(
+                            date: date,
+                            color: color,
+                            percentage: percentage,
+                            usageType: usageType,
+                            hasLabel: hasLabel,
+                            hasBackground: isFirstPill && showFilledLines,
+                            showFillLine: showFilledLines,
+                            hasPillOutline: isFirstPill && showFilledLines, /// show for first pill only - Sunday
+                            widthScale: 0.65
+                        )
+                        
+                    } else {
+                        
+                        EmptyView()
+                    }
 
                 } //: ForEach
                 
@@ -98,36 +114,59 @@ struct HistoryView: View {
 
 // MARK: - Preview
 struct HistoryView_Previews: PreviewProvider {
-    static var repo = DataUsageFakeRepository(thisWeeksData: weeksDataSample)
+    static func repo(allDays: Bool = true) -> DataUsageFakeRepository {
+        .init(thisWeeksData: allDays ? TestData.weeksDataSample : TestData.weeksDataWithMissingDaysSample)
+    }
     static var dataLimitPerDay = 2.0
     
     static var previews: some View {
-        
         Group {
             
             HistoryView(
-                days: dayPills,
-                weekData: repo.thisWeeksData,
+                dayColors: defaultDayColors,
+                weekData: repo().thisWeeksData,
                 dataLimitPerDay: dataLimitPerDay,
                 usageType: .daily,
+                fillUsageType: .accumulate,
                 closeAction: {}
             )
-            .previewDisplayName("Filled")
+            .previewDisplayName("All Days / Filled")
             
             HistoryView(
-                days: dayPills,
-                weekData: repo.thisWeeksData,
+                dayColors: defaultDayColors,
+                weekData: repo().thisWeeksData,
                 dataLimitPerDay: dataLimitPerDay,
                 usageType: .daily,
+                fillUsageType: .accumulate,
                 showFilledLines: true,
                 closeAction: {}
             )
-            .previewDisplayName("Filled Lines")
+            .previewDisplayName("All Days / Filled Lines")
+            
+            HistoryView(
+                dayColors: defaultDayColors,
+                weekData: repo(allDays: false).thisWeeksData,
+                dataLimitPerDay: dataLimitPerDay,
+                usageType: .daily,
+                fillUsageType: .accumulate,
+                closeAction: {}
+            )
+            .previewDisplayName("Missing Days / Filled")
+            
+            HistoryView(
+                dayColors: defaultDayColors,
+                weekData: repo(allDays: false).thisWeeksData,
+                dataLimitPerDay: dataLimitPerDay,
+                usageType: .daily,
+                fillUsageType: .accumulate,
+                showFilledLines: true,
+                closeAction: {}
+            )
+            .previewDisplayName("Missing Days / Filled Lines")
             
         }
         // .environment(\.locale, .simplifiedChinese)
         // .environment(\.locale, .filipino)
-
     }
 }
 

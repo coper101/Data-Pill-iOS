@@ -1,0 +1,42 @@
+{
+  "configurations" : [
+    {
+      "id" : "2FC7BDDC-BA88-439B-B7E2-03329533A9FC",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "-com.apple.CoreData.SQLDebug 3",
+        "enabled" : false
+      },
+      {
+        "argument" : "-com.apple.CoreData.ConcurrencyDebug 1",
+        "enabled" : false
+      }
+    ],
+    "environmentVariableEntries" : [
+      {
+        "key" : "IS_RUNNING_UNIT_TESTS",
+        "value" : "1"
+      }
+    ]
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "Data_Usage_Repository_Test_Case\/test_update_bulk_data_are_synced_and_synced_data()"
+      ],
+      "target" : {
+        "containerPath" : "container:Data Pill.xcodeproj",
+        "identifier" : "278FB2C828F2E55900BE78C2",
+        "name" : "Data Pill Tests"
+      }
+    }
+  ],
+  "version" : 1
+}
