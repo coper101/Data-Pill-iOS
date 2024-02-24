@@ -16,6 +16,8 @@ struct DataPlanCardView: View {
     // MARK: - Props
     @Environment(\.locale) var locale: Locale
 
+    @State var hasShownStepperTip: Bool = true
+
     var editType: EditDataPlan? = nil
     var startDate: Date
     var endDate: Date
@@ -97,6 +99,7 @@ struct DataPlanCardView: View {
         .fillMaxWidth()
         .padding(.top, 28)
         .padding(.bottom, 12)
+        .withStepperTip(hasShownStepperTip: $hasShownStepperTip, isBelow: true)
     }
     
     var body: some View {
@@ -154,9 +157,15 @@ struct DataPlanCardView: View {
             
         } //: ItemCardView
         .accessibilityIdentifier(AccessibilityLabels.dataPlan.rawValue)
+        .onAppear(perform: onAppear)
     }
     
     // MARK: - Actions
+    func onAppear() {
+        withAnimation {
+            hasShownStepperTip = false
+        }
+    }
 }
 
 // MARK: - Preview

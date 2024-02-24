@@ -7,6 +7,59 @@
 
 import SwiftUI
 
+struct StepperTip: ViewModifier {
+    // MARK: Props
+    @Binding var hasShownStepperTip: Bool
+    var isBelow: Bool
+    
+    // MARK: UI
+    var tip: some View {
+        Group {
+            if !hasShownStepperTip {
+                
+                Text("Tip: Long press - or + to change precision")
+                    .textStyle(
+                        foregroundColor: .onBackgroundLight,
+                        font: .semibold,
+                        size: 14,
+                        lineLimit: 2,
+                        lineSpacing: 2,
+                        textAlignment: .leading
+                    )
+                    .fillMaxWidth(alignment: .leading)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 14)
+                    .background(Colors.surface.color)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 6.5) {
+                            withAnimation {
+                                hasShownStepperTip = true
+                            }
+                        }
+                    }
+                
+            } //: if
+        }
+    }
+    
+    func body(content: Content) -> some View {
+        VStack(spacing: 21) {
+            
+            if !isBelow {
+                tip
+            }
+            
+            content
+            
+            if isBelow {
+                tip
+            }
+            
+        } //: VStack
+    }
+}
+
 extension View {
     
     /// Applies the given transform if the given condition evaluates to `true`.
@@ -59,6 +112,10 @@ extension View {
         } else {
             return self.navigationBarHidden(true)
         }
+    }
+    
+    func withStepperTip(hasShownStepperTip: Binding<Bool>, isBelow: Bool) -> some View {
+        modifier(StepperTip(hasShownStepperTip: hasShownStepperTip, isBelow: isBelow))
     }
 }
 
