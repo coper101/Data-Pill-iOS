@@ -300,3 +300,6 @@
 
 /* Notification Subtitle for Plan Usage */
 "Please turn off mobile data now" = "请立即关闭移动数据";
+
+/* Edit Data Amount or Limit Stepper Tip */
+"Tip: Long press - or + to change precision" = "提示：长按 - 或 + 可以更改精度";

@@ -300,3 +300,6 @@
 
 /* Notification Subtitle for Plan Usage */
 "Please turn off mobile data now" = "Paki-off ng iyong mobile data ngayon";
+
+/* Edit Data Amount or Limit Stepper Tip */
+"Tip: Long press - or + to change precision" = "Tip: Humawak nang matagal sa - o + upang baguhin ang precision.";
